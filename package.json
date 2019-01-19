@@ -1,0 +1,19 @@
+{
+  "name": "xtal-element",
+  "version": "0.0.0",
+  "description": "TBD",
+  "main": "xtal-element.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahrus/xtal-element.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahrus/xtal-element/issues"
+  },
+  "homepage": "https://github.com/bahrus/xtal-element#readme"
+}
