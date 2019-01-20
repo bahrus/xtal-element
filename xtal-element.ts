@@ -67,7 +67,7 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
             this.init(this).then(model =>{
                 this.value = model;
                 if(this.mainTemplate !== undefined){
-                    if(esc){
+                    if(esc && esc.addEventListeners !== undefined){
                         esc.addEventListeners(this.root, esc);
                     }
                     if(rc && rc.init !== undefined){
