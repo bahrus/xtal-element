@@ -50,7 +50,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
                         esc.addEventListeners(this.root, esc);
                     }
                     if (rc && rc.init !== undefined) {
-                        rc.init(this.mainTemplate, rc, this.shadowRoot);
+                        rc.init(this.mainTemplate, rc, this.root);
                     }
                     else {
                         this.root.appendChild(this.mainTemplate.content.cloneNode(true));
