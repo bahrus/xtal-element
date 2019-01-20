@@ -1,4 +1,4 @@
-import { XtallatX } from 'xtal-latx/xtal-latx.js';
+import { XtallatX, disabled } from 'xtal-latx/xtal-latx.js';
 class XtalElement extends XtallatX(HTMLElement) {
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
@@ -14,6 +14,7 @@ class XtalElement extends XtallatX(HTMLElement) {
         });
     }
     connectedCallback() {
+        this._upgradeProperties([disabled]);
         this._connected = true;
         this.onPropsChange();
     }
@@ -21,6 +22,7 @@ class XtalElement extends XtallatX(HTMLElement) {
         if (this._disabled || !this._connected || !this.ready)
             return;
         const rc = this.renderContext;
+        const esc = this.eventSwitchContext;
         if (this._initialized) {
             this.update(this).then(model => {
                 this.value = model;
@@ -32,11 +34,19 @@ class XtalElement extends XtallatX(HTMLElement) {
         else {
             this.init(this).then(model => {
                 this.value = model;
-                if (rc && rc.init !== undefined) {
+                if (this.mainTemplate !== undefined) {
                     this.attachShadow({ mode: 'open' });
-                    rc.init(this.mainTemplate, rc, this.shadowRoot);
+                    if (esc) {
+                        esc.addEventListeners(this.shadowRoot, esc);
+                    }
+                    if (rc && rc.init !== undefined) {
+                        rc.init(this.mainTemplate, rc, this.shadowRoot);
+                    }
+                    else {
+                        this.shadowRoot.appendChild(this.mainTemplate.content.cloneNode(true));
+                    }
+                    this._initialized = true;
                 }
-                this._initialized = true;
             });
         }
     }
