@@ -2,7 +2,7 @@ import {XtallatX, disabled} from 'xtal-latx/xtal-latx.js';
 import {RenderContext} from 'trans-render/init.d.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 
-abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
+export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
     _initialized!: boolean;
 
     get noShadow(){
