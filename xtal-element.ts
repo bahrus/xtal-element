@@ -2,16 +2,16 @@ import {XtallatX, disabled} from 'xtal-latx/xtal-latx.js';
 import {RenderContext} from 'trans-render/init.d.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 
-abstract class XtalElement<Model> extends XtallatX(HTMLElement){
+abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
     _initialized!: boolean;
 
     get noShadow(){
         return false;
     }
 
-    abstract async init(element: this) : Promise<Model>;
+    abstract async init(element: this) : Promise<ValueType>;
 
-    abstract async update(element: this) : Promise<Model>;
+    abstract async update(element: this) : Promise<ValueType>;
 
     abstract get mainTemplate(): HTMLTemplateElement;
 
@@ -26,11 +26,11 @@ abstract class XtalElement<Model> extends XtallatX(HTMLElement){
         this.onPropsChange();
     }
 
-    _value!: Model;
+    _value!: ValueType;
     get value(){
         return this._value;
     }
-    set value(nv: Model){
+    set value(nv: ValueType){
         this._value = nv;
         this.de('value', {
             value: nv
