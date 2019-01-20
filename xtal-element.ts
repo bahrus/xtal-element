@@ -41,17 +41,20 @@ abstract class XtalElement<Model> extends XtallatX(HTMLElement){
 
     onPropsChange(){
         if(this._disabled || !this._connected || !this.ready) return;
+        const rc = this.renderContext;
         if(this._initialized){
             this.update(this).then(model =>{
                 this.value = model;
-
+                if(rc && rc.update){
+                    rc.update(rc, this.shadowRoot!)
+                }
             })
         }else{
             this.init(this).then(model =>{
                 this.value = model;
-                if(this.renderContext && this.renderContext.init !== undefined){
+                if(rc && rc.init !== undefined){
                     this.attachShadow({mode:'open'});
-                    this.renderContext.init(this.mainTemplate, this.renderContext, this.shadowRoot!)
+                    rc.init(this.mainTemplate, rc, this.shadowRoot!)
                 }
                 this._initialized = true;
             })
