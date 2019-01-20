@@ -9,9 +9,9 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
         return false;
     }
 
-    abstract async init(element: this) : Promise<ValueType>;
+    abstract async init() : Promise<ValueType>;
 
-    abstract async update(element: this) : Promise<ValueType>;
+    abstract async update() : Promise<ValueType>;
 
     abstract get mainTemplate(): HTMLTemplateElement;
 
