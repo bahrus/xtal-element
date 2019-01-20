@@ -1,5 +1,8 @@
 import { XtallatX, disabled } from 'xtal-latx/xtal-latx.js';
 class XtalElement extends XtallatX(HTMLElement) {
+    get noShadow() {
+        return false;
+    }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
         this.onPropsChange();
@@ -18,6 +21,14 @@ class XtalElement extends XtallatX(HTMLElement) {
         this._connected = true;
         this.onPropsChange();
     }
+    get root() {
+        if (this.noShadow)
+            return this;
+        if (this.shadowRoot == null) {
+            this.attachShadow({ mode: 'open' });
+        }
+        return this.shadowRoot;
+    }
     onPropsChange() {
         if (this._disabled || !this._connected || !this.ready)
             return;
@@ -27,7 +38,7 @@ class XtalElement extends XtallatX(HTMLElement) {
             this.update(this).then(model => {
                 this.value = model;
                 if (rc && rc.update) {
-                    rc.update(rc, this.shadowRoot);
+                    rc.update(rc, this.root);
                 }
             });
         }
@@ -35,15 +46,14 @@ class XtalElement extends XtallatX(HTMLElement) {
             this.init(this).then(model => {
                 this.value = model;
                 if (this.mainTemplate !== undefined) {
-                    this.attachShadow({ mode: 'open' });
                     if (esc) {
-                        esc.addEventListeners(this.shadowRoot, esc);
+                        esc.addEventListeners(this.root, esc);
                     }
                     if (rc && rc.init !== undefined) {
                         rc.init(this.mainTemplate, rc, this.shadowRoot);
                     }
                     else {
-                        this.shadowRoot.appendChild(this.mainTemplate.content.cloneNode(true));
+                        this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                     }
                     this._initialized = true;
                 }

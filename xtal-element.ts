@@ -5,6 +5,10 @@ import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 abstract class XtalElement<Model> extends XtallatX(HTMLElement){
     _initialized!: boolean;
 
+    get noShadow(){
+        return false;
+    }
+
     abstract async init(element: this) : Promise<Model>;
 
     abstract async update(element: this) : Promise<Model>;
@@ -40,6 +44,14 @@ abstract class XtalElement<Model> extends XtallatX(HTMLElement){
         this.onPropsChange();
     }
 
+    get root() : HTMLElement | DocumentFragment{
+        if(this.noShadow) return this;
+        if(this.shadowRoot == null){
+            this.attachShadow({mode: 'open'});
+        }
+        return this.shadowRoot!;
+    }
+
     onPropsChange(){
         if(this._disabled || !this._connected || !this.ready) return;
         const rc = this.renderContext;
@@ -48,21 +60,20 @@ abstract class XtalElement<Model> extends XtallatX(HTMLElement){
             this.update(this).then(model =>{
                 this.value = model;
                 if(rc && rc.update){
-                    rc.update(rc, this.shadowRoot!);
+                    rc.update(rc, this.root);
                 }
             })
         }else{
             this.init(this).then(model =>{
                 this.value = model;
                 if(this.mainTemplate !== undefined){
-                    this.attachShadow({mode:'open'});
                     if(esc){
-                        esc.addEventListeners(this.shadowRoot!, esc);
+                        esc.addEventListeners(this.root, esc);
                     }
                     if(rc && rc.init !== undefined){
                         rc.init(this.mainTemplate, rc, this.shadowRoot!)
                     }else{
-                        this.shadowRoot!.appendChild(this.mainTemplate.content.cloneNode(true));
+                        this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                     }
                     this._initialized = true;
                 }
