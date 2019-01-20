@@ -7,6 +7,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "xtal-latx": "0.0.88",
+    "trans-render": "0.0.35",
+    "event-switch": "0.0.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/xtal-element.git"
