@@ -48,7 +48,7 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
         this.onPropsChange();
     }
 
-    get root() : HTMLElement | DocumentFragment{
+    get root() : HTMLElement | ShadowRoot{
         if(this.noShadow) return this;
         if(this.shadowRoot == null){
             this.attachShadow({mode: 'open'});
