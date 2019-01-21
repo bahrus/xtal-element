@@ -1,5 +1,5 @@
 import {XtallatX, disabled} from 'xtal-latx/xtal-latx.js';
-import {RenderContext} from 'trans-render/init.d.js';
+import {RenderContext, RenderOptions} from 'trans-render/init.d.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 
 export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
@@ -7,6 +7,13 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
 
     get noShadow(){
         return false;
+    }
+
+    get renderOptions() : RenderOptions{
+        return {
+            prepend: false,
+            matchNext: false,
+        }
     }
 
     abstract async init() : Promise<ValueType>;
@@ -71,7 +78,7 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
                         esc.addEventListeners(this.root, esc);
                     }
                     if(rc && rc.init !== undefined){
-                        rc.init(this.mainTemplate, rc, this.root)
+                        rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     }else{
                         this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                     }

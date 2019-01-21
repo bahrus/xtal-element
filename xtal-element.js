@@ -3,6 +3,12 @@ export class XtalElement extends XtallatX(HTMLElement) {
     get noShadow() {
         return false;
     }
+    get renderOptions() {
+        return {
+            prepend: false,
+            matchNext: false,
+        };
+    }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
         this.onPropsChange();
@@ -50,7 +56,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
                         esc.addEventListeners(this.root, esc);
                     }
                     if (rc && rc.init !== undefined) {
-                        rc.init(this.mainTemplate, rc, this.root);
+                        rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     }
                     else {
                         this.root.appendChild(this.mainTemplate.content.cloneNode(true));
