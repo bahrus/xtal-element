@@ -10,10 +10,7 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
     }
 
     get renderOptions() : RenderOptions{
-        return {
-            prepend: false,
-            matchNext: false,
-        }
+        return {}
     }
 
     abstract async init() : Promise<ValueType>;

@@ -4,10 +4,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
         return false;
     }
     get renderOptions() {
-        return {
-            prepend: false,
-            matchNext: false,
-        };
+        return {};
     }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
