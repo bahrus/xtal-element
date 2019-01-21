@@ -57,14 +57,14 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
         const rc = this.renderContext;
         const esc = this.eventSwitchContext;
         if(this._initialized){
-            this.update(this).then(model =>{
+            this.update().then(model =>{
                 this.value = model;
                 if(rc && rc.update){
                     rc.update(rc, this.root);
                 }
             })
         }else{
-            this.init(this).then(model =>{
+            this.init().then(model =>{
                 this.value = model;
                 if(this.mainTemplate !== undefined){
                     if(esc && esc.addEventListeners !== undefined){

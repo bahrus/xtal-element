@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "xtal-latx": "0.0.88",
-    "trans-render": "0.0.37",
+    "trans-render": "0.0.38",
     "event-switch": "0.0.5"
   },
   "repository": {
