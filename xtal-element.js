@@ -10,11 +10,11 @@ export class XtalElement extends XtallatX(HTMLElement) {
         super.attributeChangedCallback(n, ov, nv);
         this.onPropsChange();
     }
-    get value() {
-        return this._value;
+    get viewModel() {
+        return this._viewModel;
     }
-    set value(nv) {
-        this._value = nv;
+    set viewModel(nv) {
+        this._viewModel = nv;
         this.de('value', {
             value: nv
         });
@@ -39,7 +39,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
         const esc = this.eventSwitchContext;
         if (this._initialized) {
             this.update().then(model => {
-                this.value = model;
+                this.viewModel = model;
                 if (rc && rc.update) {
                     rc.update(rc, this.root);
                 }
@@ -47,7 +47,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
         }
         else {
             this.init().then(model => {
-                this.value = model;
+                this.viewModel = model;
                 if (this.mainTemplate !== undefined) {
                     if (esc && esc.addEventListeners !== undefined) {
                         esc.addEventListeners(this.root, esc);

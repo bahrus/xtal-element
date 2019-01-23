@@ -2,7 +2,7 @@ import {XtallatX, disabled} from 'xtal-latx/xtal-latx.js';
 import {RenderContext, RenderOptions} from 'trans-render/init.d.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 
-export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
+export abstract class XtalElement<ViewModel> extends XtallatX(HTMLElement){
     _initialized!: boolean;
 
     get noShadow(){
@@ -13,9 +13,9 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
         return {}
     }
 
-    abstract async init() : Promise<ValueType>;
+    abstract async init() : Promise<ViewModel>;
 
-    abstract async update() : Promise<ValueType>;
+    abstract async update() : Promise<ViewModel>;
 
     abstract get mainTemplate(): HTMLTemplateElement;
 
@@ -30,12 +30,12 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
         this.onPropsChange();
     }
 
-    _value!: ValueType;
-    get value(){
-        return this._value;
+    _viewModel!: ViewModel;
+    get viewModel(){
+        return this._viewModel;
     }
-    set value(nv: ValueType){
-        this._value = nv;
+    set viewModel(nv: ViewModel){
+        this._viewModel = nv;
         this.de('value', {
             value: nv
         });
@@ -62,14 +62,14 @@ export abstract class XtalElement<ValueType> extends XtallatX(HTMLElement){
         const esc = this.eventSwitchContext;
         if(this._initialized){
             this.update().then(model =>{
-                this.value = model;
+                this.viewModel = model;
                 if(rc && rc.update){
                     rc.update(rc, this.root);
                 }
             })
         }else{
             this.init().then(model =>{
-                this.value = model;
+                this.viewModel = model;
                 if(this.mainTemplate !== undefined){
                     if(esc && esc.addEventListeners !== undefined){
                         esc.addEventListeners(this.root, esc);
