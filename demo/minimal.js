@@ -1,18 +1,36 @@
 import { XtalElement } from '../xtal-element.js';
 import { createTemplate } from '../utils.js';
 import { init } from 'trans-render/init.js';
+import { update } from 'trans-render/update.js';
+import { addEventListeners } from 'event-switch/event-switch.js';
 const template = createTemplate(/* html */ `<div></div>`);
 export class Minimal extends XtalElement {
-    get eventSwitchContext() {
-        return {};
+    constructor() {
+        super(...arguments);
+        this._renderContext = null;
     }
-    get renderContext() {
+    get eventSwitchContext() {
         return {
-            init: init,
-            transform: {
-                div: x => this.viewModel
+            addEventListeners: addEventListeners,
+            eventSwitch: {
+                click: {
+                    action: (e, ctx) => {
+                        this.onPropsChange();
+                    }
+                }
             }
         };
+    }
+    get renderContext() {
+        if (this._renderContext === null) {
+            this._renderContext = {
+                init: init,
+                transform: {
+                    div: x => this.viewModel
+                }
+            };
+        }
+        return this._renderContext;
     }
     async init() {
         return new Promise(resolve => {
@@ -20,8 +38,10 @@ export class Minimal extends XtalElement {
         });
     }
     async update() {
-        this.root.innerHTML = '';
-        return this.init();
+        this.renderContext.update = update;
+        return new Promise(resolve => {
+            resolve('That tickles.');
+        });
     }
     get mainTemplate() {
         return template;
