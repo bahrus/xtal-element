@@ -14,7 +14,7 @@ As we'll see, satisfying these requirements suggests creating a starting point t
 
 ## Minimal Setup
 
-The code below shows the minimal amount of code needed to define a custom element using this library without any non optimal corner cutting..  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
+The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
 ```TypeScript
 import {XtalElement} from '../xtal-element.js';
@@ -26,29 +26,26 @@ import {addEventListeners} from 'event-switch/event-switch.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 const template = createTemplate(/* html */`<div></div>`);
 export class Minimal extends XtalElement<string>{
-    get eventSwitchContext() {
-        return {
-            addEventListeners: addEventListeners,
-            eventSwitch:{
-                click:{
-                    action: (e: Event, ctx: EventSwitchContext) => {
-                        this.onPropsChange();
-                    }
-                }
-            }
 
-        } as EventSwitchContext;
-    }
-    _renderContext : RenderContext | null = null;
-    get renderContext(){
-        if(this._renderContext === null){
-            this._renderContext = {
-                init: init,
-                transform:{
-                    div: x=> this.viewModel
-                }
-            }
+    _eventSwitchContext  = {
+        addEventListeners: addEventListeners,
+        eventSwitch:{
+            click: e => this.onPropsChange(),
         }
+
+    } as EventSwitchContext;
+
+    get eventSwitchContext() {
+        return this._eventSwitchContext;
+    }
+
+    _renderContext = {
+        init: init,
+        transform:{
+            div: x=> this.viewModel
+        }
+    } as RenderContext;
+    get renderContext(){
         return this._renderContext;
     }
         

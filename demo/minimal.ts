@@ -7,30 +7,26 @@ import {addEventListeners} from 'event-switch/event-switch.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 const template = createTemplate(/* html */`<div></div>`);
 export class Minimal extends XtalElement<string>{
-    get eventSwitchContext() {
-        return {
-            addEventListeners: addEventListeners,
-            eventSwitch:{
-                click: e => this.onPropsChange(),
-                // click:{
-                //     action: (e: Event, ctx: EventSwitchContext) => {
-                //         this.onPropsChange();
-                //     }
-                // }
-            }
 
-        } as EventSwitchContext;
-    }
-    _renderContext : RenderContext | null = null;
-    get renderContext(){
-        if(this._renderContext === null){
-            this._renderContext = {
-                init: init,
-                transform:{
-                    div: x=> this.viewModel
-                }
-            }
+    _eventSwitchContext  = {
+        addEventListeners: addEventListeners,
+        eventSwitch:{
+            click: e => this.onPropsChange(),
         }
+
+    } as EventSwitchContext;
+
+    get eventSwitchContext() {
+        return this._eventSwitchContext;
+    }
+
+    _renderContext = {
+        init: init,
+        transform:{
+            div: x=> this.viewModel
+        }
+    } as RenderContext;
+    get renderContext(){
         return this._renderContext;
     }
         

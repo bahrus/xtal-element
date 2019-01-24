@@ -7,25 +7,23 @@ const template = createTemplate(/* html */ `<div></div>`);
 export class Minimal extends XtalElement {
     constructor() {
         super(...arguments);
-        this._renderContext = null;
-    }
-    get eventSwitchContext() {
-        return {
+        this._eventSwitchContext = {
             addEventListeners: addEventListeners,
             eventSwitch: {
                 click: e => this.onPropsChange(),
             }
         };
+        this._renderContext = {
+            init: init,
+            transform: {
+                div: x => this.viewModel
+            }
+        };
+    }
+    get eventSwitchContext() {
+        return this._eventSwitchContext;
     }
     get renderContext() {
-        if (this._renderContext === null) {
-            this._renderContext = {
-                init: init,
-                transform: {
-                    div: x => this.viewModel
-                }
-            };
-        }
         return this._renderContext;
     }
     async init() {
