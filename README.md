@@ -51,7 +51,7 @@ export class Minimal extends XtalElement<string>{
         
     async init(){
         return new Promise<string>(resolve =>{
-            resolve('Greetings, Earthling.');
+            resolve('👽 Greetings, Earthling. 👽');
         })
     }
     async update(){
