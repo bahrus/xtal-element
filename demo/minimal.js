@@ -13,11 +13,7 @@ export class Minimal extends XtalElement {
         return {
             addEventListeners: addEventListeners,
             eventSwitch: {
-                click: {
-                    action: (e, ctx) => {
-                        this.onPropsChange();
-                    }
-                }
+                click: e => this.onPropsChange(),
             }
         };
     }
