@@ -64,3 +64,4 @@ export class XtalElement extends XtallatX(HTMLElement) {
         }
     }
 }
+//# sourceMappingURL=xtal-element.js.map
