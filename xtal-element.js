@@ -49,8 +49,8 @@ export class XtalElement extends XtallatX(HTMLElement) {
             this.init().then(model => {
                 this.viewModel = model;
                 if (this.mainTemplate !== undefined) {
-                    if (esc && esc.addEventListeners !== undefined) {
-                        esc.addEventListeners(this.root, esc);
+                    if (esc && esc.eventManager !== undefined) {
+                        esc.eventManager(this.root, esc);
                     }
                     if (rc && rc.init !== undefined) {
                         rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
@@ -64,4 +64,3 @@ export class XtalElement extends XtallatX(HTMLElement) {
         }
     }
 }
-//# sourceMappingURL=xtal-element.js.map

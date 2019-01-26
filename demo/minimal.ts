@@ -9,8 +9,8 @@ const template = createTemplate(/* html */`<div></div>`);
 export class Minimal extends XtalElement<string>{
 
     _eventSwitchContext  = {
-        addEventListeners: addEventListeners,
-        eventSwitch:{
+        eventManager: addEventListeners,
+        eventRules:{
             click: e => this.onPropsChange(),
         }
 
@@ -22,7 +22,7 @@ export class Minimal extends XtalElement<string>{
 
     _renderContext = {
         init: init,
-        transform:{
+        Transform:{
             div: x=> this.viewModel
         }
     } as RenderContext;

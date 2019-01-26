@@ -8,14 +8,14 @@ export class Minimal extends XtalElement {
     constructor() {
         super(...arguments);
         this._eventSwitchContext = {
-            addEventListeners: addEventListeners,
-            eventSwitch: {
+            eventManager: addEventListeners,
+            eventRules: {
                 click: e => this.onPropsChange(),
             }
         };
         this._renderContext = {
             init: init,
-            transform: {
+            Transform: {
                 div: x => this.viewModel
             }
         };
@@ -43,4 +43,3 @@ export class Minimal extends XtalElement {
     get ready() { return true; }
 }
 customElements.define('mini-mal', Minimal);
-//# sourceMappingURL=minimal.js.map

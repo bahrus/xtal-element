@@ -17,8 +17,8 @@ const template = createTemplate(/* html */`<div>
 export class Minimal extends XtalElement<string>{
 
     _eventSwitchContext  = {
-        addEventListeners: addEventListeners,
-        eventSwitch:{
+        eventManager: addEventListeners,
+        eventRules:{
             click: e => this.onPropsChange(),
             slotchange: e =>{
                 console.log('in slot change');
@@ -33,7 +33,7 @@ export class Minimal extends XtalElement<string>{
     _renderContext = {
         init: init,
         transform:{
-            div: x=> this.viewModel
+            div: () => this.viewModel
         }
     } as RenderContext;
     get renderContext(){

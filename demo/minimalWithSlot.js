@@ -16,8 +16,8 @@ export class Minimal extends XtalElement {
     constructor() {
         super(...arguments);
         this._eventSwitchContext = {
-            addEventListeners: addEventListeners,
-            eventSwitch: {
+            eventManager: addEventListeners,
+            eventRules: {
                 click: e => this.onPropsChange(),
                 slotchange: e => {
                     console.log('in slot change');
@@ -27,7 +27,7 @@ export class Minimal extends XtalElement {
         this._renderContext = {
             init: init,
             transform: {
-                div: x => this.viewModel
+                div: () => this.viewModel
             }
         };
     }
@@ -54,4 +54,3 @@ export class Minimal extends XtalElement {
     get ready() { return true; }
 }
 customElements.define('mini-mal', Minimal);
-//# sourceMappingURL=minimalWithSlot.js.map

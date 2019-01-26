@@ -28,8 +28,8 @@ const template = createTemplate(/* html */`<div></div>`);
 export class Minimal extends XtalElement<string>{
 
     _eventSwitchContext  = {
-        addEventListeners: addEventListeners,
-        eventSwitch:{
+        eventManager: addEventListeners,
+        eventRules:{
             click: e => this.onPropsChange(),
         }
 
@@ -41,7 +41,7 @@ export class Minimal extends XtalElement<string>{
 
     _renderContext = {
         init: init,
-        transform:{
+        Transform:{
             div: x=> this.viewModel
         }
     } as RenderContext;
@@ -51,7 +51,7 @@ export class Minimal extends XtalElement<string>{
         
     async init(){
         return new Promise<string>(resolve =>{
-            resolve('👽 Greetings, Earthling. 👽');
+            resolve('Greetings, Earthling.');
         })
     }
     async update(){
@@ -70,5 +70,5 @@ customElements.define('mini-mal', Minimal);
 
 ## Progressive Enhancement Support
 
-Quite often, a web component, after initializing, needs to retrieve some entity before it can really render anything meaningful.  In the meantime, perhaps we want to display something, like a loading mask and or a summary of what the component is showing.  That means using light children, that, only when we have someting better to show, should dis[lay. 
+Quite often, a web component, after initializing, needs to retrieve some entity before it can really render anything meaningful.  In the meantime, perhaps we want to display something, like a loading mask and or a summary of what the component is showing.  That means using light children, that, only when we have someting better to show, should display. 
 

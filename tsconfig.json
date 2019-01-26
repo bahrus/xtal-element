@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
-		"target": "es2017",
-		"module":"ES6",
-		"sourceMap": true,
-		"experimentalDecorators": true,
+		"target": "esnext",
+		"module":"esnext",
+		"sourceMap": false,
+		"experimentalDecorators": false,
 		"strict": true,
 		"newLine": "LF"
 	},
