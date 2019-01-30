@@ -1,4 +1,4 @@
-import {XtalElement} from '../xtal-element.js';
+import {XtalViewElement} from '../xtal-view-element.js';
 import {createTemplate} from '../utils.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
@@ -6,7 +6,7 @@ import { RenderContext } from 'trans-render/init.d.js';
 import {addEventListeners} from 'event-switch/event-switch.js';
 import {EventSwitchContext} from 'event-switch/event-switch.d.js';
 const template = createTemplate(/* html */`<div></div>`);
-export class Minimal extends XtalElement<string>{
+export class MinimalView extends XtalViewElement<string>{
 
     _eventSwitchContext  = {
         eventManager: addEventListeners,
@@ -46,4 +46,4 @@ export class Minimal extends XtalElement<string>{
     }
     get ready(){return true;}
 }
-customElements.define('mini-mal', Minimal);
+customElements.define('mini-mal-view', MinimalView);
