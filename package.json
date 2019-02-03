@@ -9,14 +9,14 @@
   },
   "dependencies": {
     "xtal-latx": "0.0.88",
-    "trans-render": "0.0.56",
+    "trans-render": "0.0.59",
     "event-switch": "0.0.10"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/xtal-element.git"
   },
-  "author": "",
+  "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/xtal-element/issues"
