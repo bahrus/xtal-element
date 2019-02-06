@@ -14,7 +14,7 @@ export class XtalViewElement extends XtalElement {
             return false;
         //TODO: add abort support
         const rc = this.renderContext;
-        const esc = this.eventSwitchContext;
+        const esc = this.eventContext;
         if (this._initialized) {
             this.update().then(model => {
                 this.viewModel = model;

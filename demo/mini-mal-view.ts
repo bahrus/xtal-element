@@ -1,27 +1,31 @@
 import {XtalViewElement} from '../xtal-view-element.js';
-import {createTemplate} from '../utils.js';
+import {createTemplate, newRenderContext} from '../utils.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 import { RenderContext } from 'trans-render/init.d.js';
 import {newEventContext} from 'event-switch/event-switch.js';
 import {EventContext} from 'event-switch/event-switch.d.js';
 const template = createTemplate(/* html */`<div></div>`);
+
 export class MinimalView extends XtalViewElement<string>{
 
-    _eventSwitchContext  = newEventContext({
+    _eventContext  = newEventContext({
         click: e => this.onPropsChange()
     });
 
-    get eventSwitchContext() {
-        return this._eventSwitchContext;
+    get eventContext() {
+        return this._eventContext;
     }
 
-    _renderContext = {
-        init: init,
-        Transform:{
+    // _renderContext = {
+    //     init: init,
+    //     Transform:{
+    //         div: x=> this.viewModel
+    //     }
+    // } as RenderContext;
+    _renderContext = newRenderContext({
             div: x=> this.viewModel
-        }
-    } as RenderContext;
+    })
     get renderContext(){
         return this._renderContext;
     }

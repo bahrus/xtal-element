@@ -1,6 +1,6 @@
 import {XtallatX, disabled} from 'xtal-latx/xtal-latx.js';
 import {RenderContext, RenderOptions} from 'trans-render/init.d.js';
-import {EventSwitchContext} from 'event-switch/event-switch.d.js';
+import {EventContext} from 'event-switch/event-switch.d.js';
 
 export abstract class XtalElement extends XtallatX(HTMLElement){
     _initialized!: boolean;
@@ -19,7 +19,7 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
 
     abstract get renderContext(): RenderContext;
 
-    abstract get eventSwitchContext(): EventSwitchContext;
+    abstract get eventContext(): EventContext;
 
 
     attributeChangedCallback(n: string, ov: string, nv: string) {
