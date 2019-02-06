@@ -9,12 +9,6 @@ export class MinimalView extends XtalViewElement {
         this._eventContext = newEventContext({
             click: e => this.onPropsChange()
         });
-        // _renderContext = {
-        //     init: init,
-        //     Transform:{
-        //         div: x=> this.viewModel
-        //     }
-        // } as RenderContext;
         this._renderContext = newRenderContext({
             div: x => this.viewModel
         });

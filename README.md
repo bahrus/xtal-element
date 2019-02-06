@@ -12,39 +12,30 @@ xtal-element's target audience is those who are looking for a base class that:
 
 As we'll see, satisfying these requirements suggests creating a starting point that is a bit more complex than the primitive custom element definition.  This base library doesn't claim to be the best fit for all types of web components, but focuses on some common needs.
 
-## Minimal Setup
+## Minimal XtalViewElement Setup
 
 The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
 ```TypeScript
-import {XtalElement} from '../xtal-element.js';
-import {createTemplate} from '../utils.js';
-import {init} from 'trans-render/init.js';
+import {XtalViewElement} from '../xtal-view-element.js';
+import {createTemplate, newRenderContext} from '../utils.js';
 import {update} from 'trans-render/update.js';
-import { RenderContext } from 'trans-render/init.d.js';
-import {addEventListeners} from 'event-switch/event-switch.js';
-import {EventSwitchContext} from 'event-switch/event-switch.d.js';
+import {newEventContext} from 'event-switch/event-switch.js';
 const template = createTemplate(/* html */`<div></div>`);
-export class Minimal extends XtalElement<string>{
 
-    _eventSwitchContext  = {
-        eventManager: addEventListeners,
-        eventRules:{
-            click: e => this.onPropsChange(),
-        }
+export class MinimalView extends XtalViewElement<string>{
 
-    } as EventSwitchContext;
+    _eventContext  = newEventContext({
+        click: e => this.onPropsChange()
+    });
 
-    get eventSwitchContext() {
-        return this._eventSwitchContext;
+    get eventContext() {
+        return this._eventContext;
     }
 
-    _renderContext = {
-        init: init,
-        Transform:{
+    _renderContext = newRenderContext({
             div: x=> this.viewModel
-        }
-    } as RenderContext;
+    })
     get renderContext(){
         return this._renderContext;
     }
@@ -65,7 +56,7 @@ export class Minimal extends XtalElement<string>{
     }
     get ready(){return true;}
 }
-customElements.define('mini-mal', Minimal);
+customElements.define('mini-mal-view', MinimalView);
 ```
 
 ## Progressive Enhancement Support
