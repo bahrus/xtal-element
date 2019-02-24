@@ -1,4 +1,4 @@
-import {XtallatX, disabled} from 'xtal-latx/xtal-latx.js';
+import {XtallatX, disabled} from './xtal-latx.js';
 import {RenderContext, RenderOptions} from 'trans-render/init.d.js';
 import {EventContext} from 'event-switch/event-switch.d.js';
 

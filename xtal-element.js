@@ -1,4 +1,4 @@
-import { XtallatX, disabled } from 'xtal-latx/xtal-latx.js';
+import { XtallatX, disabled } from './xtal-latx.js';
 export class XtalElement extends XtallatX(HTMLElement) {
     get noShadow() {
         return false;
