@@ -38,12 +38,12 @@ export class XtalElement extends XtallatX(HTMLElement) {
                 if (this._initialized && rc.update !== undefined) {
                     rc.update(rc, this.root);
                 }
-                else {
+                else if (!this._initialized) {
                     rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     //rc.update = this.update;
                 }
             }
-            else {
+            else if (!this._initialized) {
                 this.root.appendChild(this.mainTemplate.content.cloneNode(true));
             }
             this._initialized = true;
