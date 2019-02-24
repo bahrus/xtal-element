@@ -17,7 +17,7 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
     }
 
     onPropsChange(): boolean{
-        if(!super.onPropsChange()) return false;
+        //if(!super.onPropsChange()) return false;
         //TODO: add abort support
         const rc = this.renderContext;
         const esc = this.eventContext;
