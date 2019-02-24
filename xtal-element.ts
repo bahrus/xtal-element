@@ -55,7 +55,7 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
                 
             }
             if(rc && rc.init !== undefined){
-                if(this._initialized){
+                if(this._initialized && rc.update !== undefined){
                     rc.update!(rc, this.root);
                 }else{
                     rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
