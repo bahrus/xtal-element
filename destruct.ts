@@ -28,7 +28,7 @@ export function  getScript(srcScript: HTMLScriptElement, ignore: string) : IScri
     
 }
 
-export function destruct(target: any, prop: string, megaProp: string = 'input'){
+export function destruct(target: any, prop: string, megaProp: string = '_input'){
     let debouncers = (<any>target)._debouncers;
     if(!debouncers) debouncers =  (<any>target)._debouncers = {};
     let debouncer = debouncers[megaProp];
@@ -37,12 +37,13 @@ export function destruct(target: any, prop: string, megaProp: string = 'input'){
             (<any>t)[megaProp] = Object.assign({}, (<any>t)[megaProp]);
         }, 10);  //use task sceduler?
     }
+    const symb = Symbol(prop);
     Object.defineProperty(target, prop, {
         get: function () {
-            return this['_' + prop];
+            return this[symb];
         },
         set: function (val) {
-            this['_' + prop] = val;
+            this[symb] = val;
             if(this[megaProp]) {
                 this[megaProp][prop] = val;
                 debouncer(this);
