@@ -28,7 +28,7 @@ export function observeCssSelector(superClass) {
                 host.shadowRoot.appendChild(style);
             }
             else {
-                document.body.appendChild(style);
+                document.head.appendChild(style);
             }
             this._boundInsertListener = insertListener.bind(this);
             const container = host ? host.shadowRoot : document;

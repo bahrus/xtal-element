@@ -41,7 +41,7 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
             if(host !== null){
                 host.shadowRoot.appendChild(style);
             }else{
-                document.body.appendChild(style);
+                document.head.appendChild(style);
             }
             this._boundInsertListener = insertListener.bind(this);
             const container = host ? host.shadowRoot : document;
