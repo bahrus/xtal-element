@@ -13,7 +13,7 @@ export interface IXtallatXI extends HTMLElement {
      * @param val 
      * @param trueVal String to set attribute if true.
      */
-    attr(name: string, val: string | boolean, trueVal?: string): void;
+    attr(name: string, val: string | boolean | symbol, trueVal?: string): void;
     /**
      * Dispatch Custom Event
      * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
@@ -59,9 +59,15 @@ export function XtallatX<TBase extends Constructor<HTMLElement>>(superClass: TBa
          * @param val 
          * @param trueVal String to set attribute if true.
          */
-        attr(name: string, val: string | boolean | null, trueVal?: string) {
-            const v = val ? 'set' : 'remove';  //verb
-            (<any>this)[v + 'Attribute'](name, trueVal || val);
+        attr(name: string, val: string | boolean | symbol | null, trueVal?: string) {
+            switch(typeof(val)){
+                case 'symbol':
+                    break;
+                default:
+                    const v = val ? 'set' : 'remove';  //verb
+                    (<any>this)[v + 'Attribute'](name, trueVal || val);
+            }
+
         }
         _evCount: { [key: string]: number } = {};
         /**
