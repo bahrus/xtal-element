@@ -30,13 +30,8 @@ export function XtallatX(superClass) {
          * @param trueVal String to set attribute if true.
          */
         attr(name, val, trueVal) {
-            switch (typeof (val)) {
-                case 'symbol':
-                    break;
-                default:
-                    const v = val ? 'set' : 'remove'; //verb
-                    this[v + 'Attribute'](name, trueVal || val);
-            }
+            const v = val ? 'set' : 'remove'; //verb
+            this[v + 'Attribute'](name, trueVal || val);
         }
         /**
          * Turn number into string with even and odd values easy to query via css.
