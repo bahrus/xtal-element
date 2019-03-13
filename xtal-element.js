@@ -6,6 +6,9 @@ export class XtalElement extends XtallatX(HTMLElement) {
     get renderOptions() {
         return {};
     }
+    get updateContext() {
+        return null;
+    }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
         this.onPropsChange();
@@ -26,7 +29,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
     onPropsChange() {
         if (this._disabled || !this._connected || !this.ready)
             return false;
-        const rc = this.renderContext;
+        const rc = this.initContext;
         const esc = this.eventContext;
         if (this.mainTemplate !== undefined) {
             if (esc && esc.eventManager !== undefined) {
@@ -35,12 +38,16 @@ export class XtalElement extends XtallatX(HTMLElement) {
                 }
             }
             if (rc && rc.init !== undefined) {
-                if (this._initialized && rc.update !== undefined) {
-                    rc.update(rc, this.root);
+                if (this._initialized) {
+                    if (this.updateContext !== null) {
+                        this.updateContext.update(this.updateContext, this.root);
+                    }
+                    else if (rc.update) {
+                        rc.update(rc, this.root);
+                    }
                 }
-                else if (!this._initialized) {
+                else {
                     rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
-                    //rc.update = this.update;
                 }
             }
             else if (!this._initialized) {

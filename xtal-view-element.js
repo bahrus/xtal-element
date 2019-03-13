@@ -10,7 +10,7 @@ export class XtalViewElement extends XtalElement {
         });
     }
     onPropsChange() {
-        const rc = this.renderContext;
+        const rc = this.initContext;
         const esc = this.eventContext;
         if (this._initialized) {
             this.update().then(model => {

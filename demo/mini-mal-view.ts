@@ -17,7 +17,7 @@ export class MinimalView extends XtalViewElement<string>{
     _renderContext = newRenderContext({
             div: x=> this.viewModel
     })
-    get renderContext(){
+    get initContext(){
         return this._renderContext;
     }
         
@@ -27,7 +27,7 @@ export class MinimalView extends XtalViewElement<string>{
         })
     }
     async update(){
-        this.renderContext.update = update;
+        this.initContext.update = update;
         return new Promise<string>(resolve =>{
             resolve('That tickles.');
         })

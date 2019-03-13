@@ -17,7 +17,7 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
     }
 
     onPropsChange(): boolean{
-        const rc = this.renderContext;
+        const rc = this.initContext;
         const esc = this.eventContext;
         if(this._initialized){
             this.update().then(model =>{

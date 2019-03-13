@@ -17,7 +17,11 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
 
     abstract get ready(): boolean;
 
-    abstract get renderContext(): RenderContext;
+    abstract get initContext(): RenderContext;
+
+    get updateContext(): RenderContext | null{
+        return null;
+    }
 
     abstract get eventContext(): EventContext;
 
@@ -45,7 +49,7 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
 
     onPropsChange() : boolean{
         if(this._disabled || !this._connected || !this.ready) return false;
-        const rc = this.renderContext;  
+        const rc = this.initContext;  
         const esc = this.eventContext;
         if(this.mainTemplate !== undefined){
             if(esc && esc.eventManager !== undefined){
@@ -55,13 +59,15 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
                 
             }
             if(rc && rc.init !== undefined){
-                if(this._initialized && rc.update !== undefined){
-                    rc.update!(rc, this.root);
-                }else if(!this._initialized){
+                if(this._initialized){
+                    if(this.updateContext !== null){
+                        this.updateContext.update!(this.updateContext, this.root);
+                    }else if(rc.update){
+                        rc.update!(rc, this.root);
+                    }
+                }else{
                     rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
-                    //rc.update = this.update;
                 }
-                
             }else if(!this._initialized){
                 this.root.appendChild(this.mainTemplate.content.cloneNode(true));
             }
