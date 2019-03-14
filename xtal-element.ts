@@ -23,6 +23,7 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
         return null;
     }
 
+
     abstract get eventContext(): EventContext;
 
 
@@ -49,7 +50,8 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
 
     onPropsChange() : boolean{
         if(this._disabled || !this._connected || !this.ready) return false;
-        const rc = this.initContext;  
+        const ic = this.initContext;
+        const uc = this.updateContext;  
         const esc = this.eventContext;
         if(this.mainTemplate !== undefined){
             if(esc && esc.eventManager !== undefined){
@@ -58,19 +60,21 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
                 }
                 
             }
-            if(rc && rc.init !== undefined){
-                if(this._initialized){
-                    if(this.updateContext !== null){
-                        this.updateContext.update!(this.updateContext, this.root);
-                    }else if(rc.update){
-                        rc.update!(rc, this.root);
-                    }
-                }else{
-                    rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
+            if(!this._initialized){
+                if(ic !== null && ic.init !== undefined){
+                    ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
                 }
-            }else if(!this._initialized){
+            }else{
                 this.root.appendChild(this.mainTemplate.content.cloneNode(true));
             }
+            
+
+            if(uc !== null){
+                if(uc.update !== undefined){
+                    uc.update(uc, this.root);
+                }
+            }    
+            
             this._initialized = true;
         }
         return true;
