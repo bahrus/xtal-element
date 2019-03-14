@@ -42,9 +42,9 @@ export class XtalElement extends XtallatX(HTMLElement) {
                 if (ic !== null && ic.init !== undefined) {
                     ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
                 }
-            }
-            else {
-                this.root.appendChild(this.mainTemplate.content.cloneNode(true));
+                else {
+                    this.root.appendChild(this.mainTemplate.content.cloneNode(true));
+                }
             }
             if (uc !== null) {
                 if (uc.update !== undefined) {

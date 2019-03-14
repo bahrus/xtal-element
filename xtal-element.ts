@@ -63,9 +63,9 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
             if(!this._initialized){
                 if(ic !== null && ic.init !== undefined){
                     ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
+                }else{
+                    this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                 }
-            }else{
-                this.root.appendChild(this.mainTemplate.content.cloneNode(true));
             }
             
 
