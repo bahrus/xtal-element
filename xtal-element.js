@@ -40,6 +40,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
             }
             if (!this._initialized) {
                 if (ic !== null && ic.init !== undefined) {
+                    ic.host = this;
                     ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
                 }
                 else {
@@ -47,6 +48,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
                 }
             }
             if (uc !== null) {
+                uc.host = this;
                 if (uc.update !== undefined) {
                     uc.update(uc, this.root);
                 }
