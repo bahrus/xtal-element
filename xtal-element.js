@@ -9,6 +9,9 @@ export class XtalElement extends XtallatX(HTMLElement) {
     get updateContext() {
         return null;
     }
+    get eventContext() {
+        return null;
+    }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
         this.onPropsChange();
@@ -33,7 +36,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
         const uc = this.updateContext;
         const esc = this.eventContext;
         if (this.mainTemplate !== undefined) {
-            if (esc && esc.eventManager !== undefined) {
+            if (esc !== null && esc.eventManager !== undefined) {
                 if (!this._initialized) {
                     esc.eventManager(this.root, esc);
                 }

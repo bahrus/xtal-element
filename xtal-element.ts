@@ -24,7 +24,9 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
     }
 
 
-    abstract get eventContext(): EventContext;
+    get eventContext(): EventContext | null{
+        return null;
+    }
 
 
     attributeChangedCallback(n: string, ov: string, nv: string) {
@@ -54,7 +56,7 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
         const uc = this.updateContext;  
         const esc = this.eventContext;
         if(this.mainTemplate !== undefined){
-            if(esc && esc.eventManager !== undefined){
+            if(esc !== null && esc.eventManager !== undefined){
                 if(!this._initialized){
                     esc.eventManager(this.root, esc);
                 }
