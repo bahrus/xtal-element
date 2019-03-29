@@ -9,8 +9,6 @@
 		"watch": true
 	},
 	"exclude":[
-		"build",
-		"bower_components",
 		"node_modules"
 	]
 
