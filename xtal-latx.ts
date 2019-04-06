@@ -26,7 +26,7 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase) {
     return class extends superClass implements IXtallatXI {
 
-        static get observedAttributes(){return [];}
+        static get observedAttributes(){return [disabled];}
         [evCount]: { [key: string]: number } = {};
         /**
          * Turn number into string with even and odd values easy to query via css.
