@@ -1,6 +1,6 @@
-import { XtallatX, disabled } from './xtal-latx.js';
-import { up } from 'trans-render/hydrate.js';
-export class XtalElement extends XtallatX(HTMLElement) {
+import { XtallatX } from './xtal-latx.js';
+import { up, hydrate, disabled } from 'trans-render/hydrate.js';
+export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     get noShadow() {
         return false;
     }

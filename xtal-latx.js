@@ -1,4 +1,3 @@
-import { hydrate } from 'trans-render/hydrate.js';
 const evCount = Symbol('evCount');
 const to$ = Symbol('to$');
 export const incAttr = Symbol('incAttr');
@@ -8,7 +7,7 @@ export const incAttr = Symbol('incAttr');
  */
 export function XtallatX(superClass) {
     var _a;
-    return class extends hydrate(superClass) {
+    return class extends superClass {
         constructor() {
             super(...arguments);
             this[_a] = {};

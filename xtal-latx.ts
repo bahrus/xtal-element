@@ -23,8 +23,8 @@ type Constructor<T = {}> = new (...args: any[]) => T;
  * Base class for many xtal- components
  * @param superClass
  */
-export function XtallatX<TBase extends Constructor<HTMLElement>>(superClass: TBase) {
-    return class extends (hydrate(superClass) as Constructor<IHydrate>) implements IXtallatXI, IHydrate {
+export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase) {
+    return class extends superClass implements IXtallatXI {
 
         static get observedAttributes(){return [];}
         [evCount]: { [key: string]: number } = {};
