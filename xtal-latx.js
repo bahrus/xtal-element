@@ -1,7 +1,7 @@
 import { hydrate } from 'trans-render/hydrate.js';
 const evCount = Symbol('evCount');
 const to$ = Symbol('to$');
-const incAttr = Symbol('incAttr');
+export const incAttr = Symbol('incAttr');
 /**
  * Base class for many xtal- components
  * @param superClass

@@ -1,7 +1,7 @@
 import {hydrate, IHydrate, disabled} from 'trans-render/hydrate.js';
 const evCount = Symbol('evCount');
 const to$ = Symbol('to$');
-const incAttr = Symbol('incAttr');
+export const incAttr = Symbol('incAttr');
 export interface IXtallatXI extends HTMLElement {
 
     /**
