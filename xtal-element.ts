@@ -1,6 +1,7 @@
 import {XtallatX, disabled} from './xtal-latx.js';
 import {RenderContext, RenderOptions} from 'trans-render/init.d.js';
 import {EventContext} from 'event-switch/event-switch.d.js';
+import {up} from 'trans-render/hydrate.js';
 
 export abstract class XtalElement extends XtallatX(HTMLElement){
     _initialized!: boolean;
@@ -37,7 +38,7 @@ export abstract class XtalElement extends XtallatX(HTMLElement){
 
     _connected!: boolean;
     connectedCallback(){
-        this._upgradeProperties([disabled])
+        this[up]([disabled])
         this._connected = true;
         this.onPropsChange();
     }

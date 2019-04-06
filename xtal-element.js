@@ -1,4 +1,5 @@
 import { XtallatX, disabled } from './xtal-latx.js';
+import { up } from 'trans-render/hydrate.js';
 export class XtalElement extends XtallatX(HTMLElement) {
     get noShadow() {
         return false;
@@ -17,7 +18,7 @@ export class XtalElement extends XtallatX(HTMLElement) {
         this.onPropsChange();
     }
     connectedCallback() {
-        this._upgradeProperties([disabled]);
+        this[up]([disabled]);
         this._connected = true;
         this.onPropsChange();
     }
