@@ -1,5 +1,4 @@
-import {hydrate, IHydrate} from 'trans-render/hydrate.js';
-export const disabled = 'disabled';
+import {hydrate, IHydrate, disabled} from 'trans-render/hydrate.js';
 const evCount = Symbol('evCount');
 const to$ = Symbol('to$');
 const incAttr = Symbol('incAttr');
@@ -27,7 +26,7 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export function XtallatX<TBase extends Constructor<HTMLElement>>(superClass: TBase) {
     return class extends (hydrate(superClass) as Constructor<IHydrate>) implements IXtallatXI, IHydrate {
 
-
+        static get observedAttributes(){return [];}
         [evCount]: { [key: string]: number } = {};
         /**
          * Turn number into string with even and odd values easy to query via css.

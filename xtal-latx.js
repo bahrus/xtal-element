@@ -1,5 +1,4 @@
 import { hydrate } from 'trans-render/hydrate.js';
-export const disabled = 'disabled';
 const evCount = Symbol('evCount');
 const to$ = Symbol('to$');
 const incAttr = Symbol('incAttr');
@@ -14,6 +13,7 @@ export function XtallatX(superClass) {
             super(...arguments);
             this[_a] = {};
         }
+        static get observedAttributes() { return []; }
         /**
          * Turn number into string with even and odd values easy to query via css.
          * @param n
