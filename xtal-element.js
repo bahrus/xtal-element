@@ -1,6 +1,7 @@
 import { XtallatX } from './xtal-latx.js';
+import { DataDecorators } from './data-decorators.js';
 import { up, hydrate, disabled } from 'trans-render/hydrate.js';
-export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
+export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
     get noShadow() {
         return false;
     }
