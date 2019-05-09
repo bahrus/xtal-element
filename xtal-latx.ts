@@ -1,7 +1,7 @@
 import {hydrate, IHydrate, disabled} from 'trans-render/hydrate.js';
-const evCount = Symbol('evCount');
-const to$ = Symbol('to$');
-export const incAttr = Symbol('incAttr');
+//const evCount = Symbol('evCount');
+//const to$ = Symbol('to$');
+//export const incAttr = Symbol('incAttr');
 export interface IXtallatXI extends IHydrate {
 
     /**
@@ -27,12 +27,12 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
     return class extends superClass implements IXtallatXI {
 
         static get observedAttributes(){return [disabled];}
-        [evCount]: { [key: string]: number } = {};
+        evCount: { [key: string]: number } = {};
         /**
          * Turn number into string with even and odd values easy to query via css.
          * @param n 
          */
-        [to$](n: number) {
+        to$(n: number) {
             const mod = n % 2;
             return (n - mod) / 2 + '-' + mod;
         }
@@ -40,14 +40,14 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * Increment event count
          * @param name
          */
-        [incAttr](name: string) {
-            const ec = this[evCount];
+        incAttr(name: string) {
+            const ec = this.evCount;
             if (name in ec) {
                 ec[name]++;
             } else {
                 ec[name] = 0;
             }
-            this.attr('data-' + name, this[to$](ec[name]));
+            this.attr('data-' + name, this.to$(ec[name]));
         }
 
 
@@ -65,7 +65,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 composed: false,
             } as CustomEventInit);
             this.dispatchEvent(newEvent);
-            this[incAttr](eventName);
+            this.incAttr(eventName);
             return newEvent;
         }
 

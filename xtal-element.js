@@ -1,6 +1,6 @@
 import { XtallatX } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
-import { up, hydrate, disabled } from 'trans-render/hydrate.js';
+import { hydrate, disabled } from 'trans-render/hydrate.js';
 export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
     get noShadow() {
         return false;
@@ -19,7 +19,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         this.onPropsChange();
     }
     connectedCallback() {
-        this[up]([disabled]);
+        this.propUp([disabled]);
         this._connected = true;
         this.onPropsChange();
     }
