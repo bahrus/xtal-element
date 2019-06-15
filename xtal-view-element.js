@@ -10,6 +10,8 @@ export class XtalViewElement extends XtalElement {
         });
     }
     onPropsChange() {
+        if (this._disabled || !this._connected || !this.ready)
+            return false;
         const rc = this.initContext;
         const esc = this.eventContext;
         if (this._initialized) {
