@@ -18,11 +18,10 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
 
     onPropsChange(): boolean{
         if(this._disabled || !this._connected || !this.ready) return false;
-        const rc = this.initContext;
-        const esc = this.eventContext;
         if(this._initialized){
             this.update().then(model =>{
                 this.viewModel = model;
+                const rc = this.initContext;
                 if(rc && rc.update){
                     rc.update(rc, this.root);
                 }
@@ -31,9 +30,11 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
             this.init().then(model =>{
                 this.viewModel = model;
                 if(this.mainTemplate !== undefined){
+                    const esc = this.eventContext;
                     if(esc && esc.eventManager !== undefined){
                         esc.eventManager(this.root, esc);
                     }
+                    const rc = this.initContext;
                     if(rc && rc.init !== undefined){
                         rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     }else{
