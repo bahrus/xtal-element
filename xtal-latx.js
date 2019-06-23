@@ -1,4 +1,8 @@
 import { disabled } from 'trans-render/hydrate.js';
+const stcRe = /(\-\w)/g;
+export function lispToCamel(s) {
+    return s.replace(stcRe, function (m) { return m[1].toUpperCase(); });
+}
 /**
  * Base class for many xtal- components
  * @param superClass
