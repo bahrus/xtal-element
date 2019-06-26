@@ -15,7 +15,7 @@ export class XtalViewElement extends XtalElement {
         if (this._initialized) {
             this.update().then(model => {
                 this.viewModel = model;
-                const rc = this.initContext;
+                const rc = this.initRenderContext;
                 if (rc && rc.update) {
                     rc.update(rc, this.root);
                 }
@@ -29,7 +29,7 @@ export class XtalViewElement extends XtalElement {
                     if (esc && esc.eventManager !== undefined) {
                         esc.eventManager(this.root, esc);
                     }
-                    const rc = this.initContext;
+                    const rc = this.initRenderContext;
                     if (rc && rc.init !== undefined) {
                         rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     }

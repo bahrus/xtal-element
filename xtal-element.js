@@ -8,7 +8,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return {};
     }
-    get updateContext() {
+    get updateRenderContext() {
         return null;
     }
     get eventContext() {
@@ -34,8 +34,8 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     onPropsChange() {
         if (this._disabled || !this._connected || !this.ready)
             return false;
-        const ic = this.initContext;
-        const uc = this.updateContext;
+        const ic = this.initRenderContext;
+        const uc = this.updateRenderContext;
         const esc = this.eventContext;
         if (this.mainTemplate !== undefined) {
             if (esc !== null && esc.eventManager !== undefined) {

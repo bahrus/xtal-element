@@ -19,9 +19,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get ready(): boolean;
 
-    abstract get initContext(): RenderContext;
+    abstract get initRenderContext(): RenderContext;
 
-    get updateContext(): RenderContext | null{
+    get updateRenderContext(): RenderContext | null{
         return null;
     }
 
@@ -54,8 +54,8 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     onPropsChange() : boolean{
         if(this._disabled || !this._connected || !this.ready) return false;
-        const ic = this.initContext;
-        const uc = this.updateContext;  
+        const ic = this.initRenderContext;
+        const uc = this.updateRenderContext;  
         const esc = this.eventContext;
         if(this.mainTemplate !== undefined){
             if(esc !== null && esc.eventManager !== undefined){
