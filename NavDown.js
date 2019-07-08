@@ -1,5 +1,4 @@
 export class NavDown {
-    //_debouncer!: any;
     constructor(seed, match, notify, max, ignore = null, mutDebounce = 50) {
         this.seed = seed;
         this.match = match;
@@ -8,37 +7,13 @@ export class NavDown {
         this.ignore = ignore;
         this.mutDebounce = mutDebounce;
         this._inMutLoop = false;
-        //this.init();
     }
     init() {
-        // this._debouncer = debounce(() =>{
-        //     this.sync();
-        // }, this.mutDebounce);
         this.sync();
-        this.addMutObs(this.seed.parentElement);
-    }
-    addMutObs(elToObs) {
-        if (elToObs === null)
-            return;
-        const nodes = [];
-        this._mutObs = new MutationObserver((m) => {
-            this._inMutLoop = true;
-            m.forEach(mr => {
-                mr.addedNodes.forEach(node => {
-                    if (node.nodeType === 1) {
-                        const el = node;
-                        el.dataset.__pdWIP = '1';
-                        nodes.push(el);
-                    }
-                });
-            });
-            nodes.forEach(node => delete node.dataset.__pdWIP);
-            this.sync();
-            this._inMutLoop = false;
-            //this._debouncer(true);
+        import('./NDAddMut.js').then(({ addMutObs }) => {
+            addMutObs(this.seed.parentElement, this);
         });
-        this._mutObs.observe(elToObs, { childList: true });
-        // (<any>elToObs)._addedMutObs = true;
+        //this.addMutObs(this.seed.parentElement);
     }
     sibCheck(sib, c) { }
     sync(c = 0) {

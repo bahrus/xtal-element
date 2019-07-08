@@ -1,43 +1,16 @@
-//import {debounce} from './debounce.js';
 type ElTest = (el: Element | null) => boolean;
 export class NavDown{
-    //_debouncer!: any;
-    constructor(public seed: Element, public match: string | ElTest, public notify:(nd: NavDown) => void, public max: number, public ignore: string | null = null, public mutDebounce: number = 50){
-        //this.init();
-    }
+    constructor(public seed: Element, public match: string | ElTest, public notify:(nd: NavDown) => void, public max: number, public ignore: string | null = null, public mutDebounce: number = 50){}
     _sis!:boolean; //seed is start
     _inMutLoop = false;
     init(){
-        // this._debouncer = debounce(() =>{
-        //     this.sync();
-        // }, this.mutDebounce);
         this.sync();
-        this.addMutObs(this.seed.parentElement);
+        import('./NDAddMut.js').then(({addMutObs}) =>{
+            addMutObs(this.seed.parentElement, this);
+        })
+        //this.addMutObs(this.seed.parentElement);
     }
-    addMutObs(elToObs: Element | null) {
-        if(elToObs === null) return;
-        const nodes: HTMLElement[] = [];
-        this._mutObs = new MutationObserver((m: MutationRecord[]) => {
-            this._inMutLoop = true;
-            m.forEach(mr =>{
-                mr.addedNodes.forEach(node =>{
-                    if(node.nodeType === 1){
-                        const el = node as HTMLElement;
-                        el.dataset.__pdWIP = '1';
-                        nodes.push(el);
-                    }
-                    
-                    
-                })
-            });
-            nodes.forEach(node => delete node.dataset.__pdWIP);
-            this.sync();
-            this._inMutLoop = false;
-            //this._debouncer(true);
-        });
-        this._mutObs.observe(elToObs, { childList: true });
-        // (<any>elToObs)._addedMutObs = true;
-    }
+
     sibCheck(sib: Element, c: number){}
     sync(c = 0){
         const isF = typeof this.match === 'function';
