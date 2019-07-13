@@ -31,6 +31,8 @@ export class XtalViewElement extends XtalElement {
                     }
                     const rc = this.initRenderContext;
                     if (rc && rc.init !== undefined) {
+                        if (!this.renderOptions.initializedCallback)
+                            this.renderOptions.initializedCallback = this.initCallback;
                         rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     }
                     else {
