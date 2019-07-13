@@ -47,8 +47,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
             if (!this._initialized) {
                 if (ic !== null && ic.init !== undefined) {
                     ic.host = this;
-                    if (!this.renderOptions.initializedCallback)
-                        this.renderOptions.initializedCallback = this.initCallback;
+                    //if(!this.renderOptions.initializedCallback) this.renderOptions.initializedCallback = this.initCallback;
                     ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
                 }
                 else {
