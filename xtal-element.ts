@@ -21,6 +21,8 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get initRenderContext(): RenderContext;
 
+    initCallback(ctx: RenderContext, target: Element | DocumentFragment){}
+
     get updateRenderContext(): RenderContext | null{
         return null;
     }
@@ -67,6 +69,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
             if(!this._initialized){
                 if(ic !== null && ic.init !== undefined){
                     ic.host = this;
+                    if(!this.renderOptions.initializedCallback) this.renderOptions.initializedCallback = this.initCallback;
                     ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
                 }else{
                     this.root.appendChild(this.mainTemplate.content.cloneNode(true));
