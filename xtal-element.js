@@ -37,7 +37,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         return this.shadowRoot;
     }
     onPropsChange() {
-        if (this._disabled || !this._connected || !this.ready)
+        if (this._disabled || !this._connected || !this.readyToInit)
             return false;
         const ic = this.initRenderContext;
         const uc = this.updateRenderContext;

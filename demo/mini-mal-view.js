@@ -33,6 +33,6 @@ export class MinimalView extends XtalViewElement {
     get mainTemplate() {
         return template;
     }
-    get ready() { return true; }
+    get readyToInit() { return true; }
 }
 customElements.define('mini-mal-view', MinimalView);

@@ -10,7 +10,7 @@ export class XtalViewElement extends XtalElement {
         });
     }
     onPropsChange() {
-        if (this._disabled || !this._connected || !this.ready)
+        if (this._disabled || !this._connected || !this.readyToInit)
             return false;
         if (this._initialized) {
             this.update().then(model => {

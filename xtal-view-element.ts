@@ -17,7 +17,7 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
     }
 
     onPropsChange(): boolean{
-        if(this._disabled || !this._connected || !this.ready) return false;
+        if(this._disabled || !this._connected || !this.readyToInit) return false;
         if(this._initialized){
             this.update().then(model =>{
                 this.viewModel = model;
