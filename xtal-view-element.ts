@@ -37,7 +37,7 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
                     const rc = this.initRenderContext;
                     if(rc && rc.init !== undefined){
                         const ro = this.renderOptions;
-                        const b = this.initCallback.bind(this);
+                        const b = this.initRenderCallback.bind(this);
                         if(!ro.initializedCallback) {
                             ro.initializedCallback = b;
                         }

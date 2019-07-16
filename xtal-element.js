@@ -12,7 +12,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return this._renderOptions;
     }
-    initCallback(ctx, target) { }
+    initRenderCallback(ctx, target) { }
     get updateRenderContext() {
         return null;
     }
