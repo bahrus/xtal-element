@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "event-switch": "0.0.12",
-    "trans-render": "0.0.125"
+    "trans-render": "0.0.126"
   },
   "repository": {
     "type": "git",

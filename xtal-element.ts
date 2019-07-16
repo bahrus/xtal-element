@@ -22,7 +22,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get initRenderContext(): RenderContext;
 
-    initCallback(ctx: RenderContext, target: Element | DocumentFragment){}
+    initCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
     get updateRenderContext(): RenderContext | null{
         return null;

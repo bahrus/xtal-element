@@ -1,5 +1,5 @@
 import { XtallatX } from "./xtal-latx.js";
-import { up, hydrate } from "trans-render/hydrate.js";
+import { hydrate } from "trans-render/hydrate.js";
 import { define } from "trans-render/define.js";
 import { destruct } from "./destruct.js";
 function $(str: string) {
@@ -21,7 +21,7 @@ export function refract(
     _connected = false;
     value!: any;
     connectedCallback() {
-      this[up](["input", "disabled"]);
+      this.propUp(["input", "disabled"]);
       this._connected = true;
     }
     _input: any;

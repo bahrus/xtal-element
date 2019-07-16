@@ -36,12 +36,12 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
                     }
                     const rc = this.initRenderContext;
                     if(rc && rc.init !== undefined){
+                        const ro = this.renderOptions;
                         const b = this.initCallback.bind(this);
-                        if(!this.renderOptions.initializedCallback) {
-                            console.log('b');
-                            this.renderOptions.initializedCallback = b;
+                        if(!ro.initializedCallback) {
+                            ro.initializedCallback = b;
                         }
-                        rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
+                        rc.init(this.mainTemplate, rc, this.root, ro);
                     }else{
                         this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                     }
