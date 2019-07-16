@@ -31,10 +31,10 @@ export class XtalViewElement extends XtalElement {
                     }
                     const rc = this.initRenderContext;
                     if (rc && rc.init !== undefined) {
-                        //const b = this.initCallback.bind(this);
+                        const b = this.initCallback.bind(this);
                         if (!this.renderOptions.initializedCallback) {
                             console.log('b');
-                            this.renderOptions.initializedCallback = this.initCallback;
+                            this.renderOptions.initializedCallback = b;
                         }
                         rc.init(this.mainTemplate, rc, this.root, this.renderOptions);
                     }
