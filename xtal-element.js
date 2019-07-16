@@ -2,11 +2,15 @@ import { XtallatX } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
 export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
+    constructor() {
+        super(...arguments);
+        this._renderOptions = {};
+    }
     get noShadow() {
         return false;
     }
     get renderOptions() {
-        return {};
+        return this._renderOptions;
     }
     initCallback(ctx, target) { }
     get updateRenderContext() {

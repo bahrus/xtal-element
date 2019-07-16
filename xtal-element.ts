@@ -11,8 +11,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         return false;
     }
 
+    _renderOptions = {};
     get renderOptions() : RenderOptions{
-        return {}
+        return this._renderOptions;
     }
 
     abstract get mainTemplate(): HTMLTemplateElement;
