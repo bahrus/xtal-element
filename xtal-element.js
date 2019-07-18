@@ -36,6 +36,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         }
         return this.shadowRoot;
     }
+    afterInitRenderCallback() { }
     onPropsChange() {
         if (this._disabled || !this._connected || !this.readyToInit)
             return false;
@@ -57,6 +58,8 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
                 else {
                     this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                 }
+                this._initialized = true;
+                this.afterInitRenderCallback();
             }
             if (uc !== null) {
                 uc.host = this;
@@ -64,7 +67,6 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
                     uc.update(uc, this.root);
                 }
             }
-            this._initialized = true;
         }
         return true;
     }

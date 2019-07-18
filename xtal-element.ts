@@ -55,6 +55,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         return this.shadowRoot!;
     }
 
+    afterInitRenderCallback(){}
     onPropsChange() : boolean{
         if(this._disabled || !this._connected || !this.readyToInit) return false;
         const ic = this.initRenderContext;
@@ -75,6 +76,8 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
                 }else{
                     this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                 }
+                this._initialized = true;
+                this.afterInitRenderCallback();
             }
             
 
@@ -85,7 +88,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
                 }
             }    
             
-            this._initialized = true;
+            
         }
         return true;
     }

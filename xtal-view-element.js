@@ -9,7 +9,6 @@ export class XtalViewElement extends XtalElement {
             value: nv
         });
     }
-    afterInitRenderCallback() { }
     onPropsChange() {
         if (this._disabled || !this._connected || !this.readyToInit)
             return false;
@@ -38,12 +37,12 @@ export class XtalViewElement extends XtalElement {
                             ro.initializedCallback = b;
                         }
                         rc.init(this.mainTemplate, rc, this.root, ro);
-                        this.afterInitRenderCallback();
                     }
                     else {
                         this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                     }
                     this._initialized = true;
+                    this.afterInitRenderCallback();
                 }
             });
         }
