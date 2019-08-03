@@ -1,8 +1,9 @@
 export class NavDown {
     //_debouncer!: any;
-    constructor(seed, match, notify, max, ignore = null, mutDebounce = 50) {
+    constructor(seed, match, careOf, notify, max, ignore = null, mutDebounce = 50) {
         this.seed = seed;
         this.match = match;
+        this.careOf = careOf;
         this.notify = notify;
         this.max = max;
         this.ignore = ignore;
@@ -49,13 +50,15 @@ export class NavDown {
             if (this.ignore === null || !ns.matches(this.ignore)) {
                 let isG = isF ? this.match(ns) : ns.matches(this.match);
                 if (isG) {
-                    this.matches.push(ns);
-                    c++;
-                    if (c >= this.max) {
-                        this.notify(this);
-                        return;
+                    const matchedElement = (this.careOf !== null) ? ns.querySelector(this.careOf) : ns;
+                    if (matchedElement !== null) {
+                        this.matches.push(matchedElement);
+                        c++;
+                        if (c >= this.max) {
+                            this.notify(this);
+                            return;
+                        }
                     }
-                    ;
                 }
                 this.sibCheck(ns, c);
             }

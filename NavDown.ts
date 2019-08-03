@@ -2,7 +2,7 @@
 type ElTest = (el: Element | null) => boolean;
 export class NavDown{
     //_debouncer!: any;
-    constructor(public seed: Element, public match: string | ElTest, public notify:(nd: NavDown) => void, public max: number, public ignore: string | null = null, public mutDebounce: number = 50){
+    constructor(public seed: Element, public match: string | ElTest, public careOf: string | null, public notify:(nd: NavDown) => void, public max: number, public ignore: string | null = null, public mutDebounce: number = 50){
         //this.init();
     }
     _sis!:boolean; //seed is start
@@ -47,12 +47,15 @@ export class NavDown{
             if(this.ignore === null || !ns.matches(this.ignore)){
                 let isG = isF ? (<any>this.match)(ns) : ns.matches(this.match as string);
                 if(isG){
-                    this.matches.push(ns);
-                    c++;
-                    if(c >= this.max ) {
-                        this.notify(this);
-                        return;
-                    };
+                    const matchedElement = (this.careOf !== null ) ? ns.querySelector(this.careOf) : ns;
+                    if(matchedElement !== null) {
+                        this.matches.push(matchedElement);
+                        c++;
+                        if(c >= this.max ) {
+                            this.notify(this);
+                            return;
+                        }
+                    }
                 }
                 this.sibCheck(ns, c);
                 
