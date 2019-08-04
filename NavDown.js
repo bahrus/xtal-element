@@ -50,7 +50,7 @@ export class NavDown {
             if (this.ignore === null || !ns.matches(this.ignore)) {
                 let isG = isF ? this.match(ns) : ns.matches(this.match);
                 if (isG) {
-                    const matchedElement = (this.careOf !== null) ? ns.querySelector(this.careOf) : ns;
+                    const matchedElement = (this.careOf !== undefined) ? ns.querySelector(this.careOf) : ns;
                     if (matchedElement !== null) {
                         this.matches.push(matchedElement);
                         c++;
