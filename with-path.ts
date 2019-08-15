@@ -26,22 +26,10 @@ export function WithPath<TBase extends Constructor<HTMLElement>>(superClass: TBa
             this.setAttribute(with_path, val);
         }
 
-        wrap(obj: any){
+        wrap(obj: any, target: object = {}){
             if (this._withPath) {
-                let mergedObj = {} as any;
-                createNestedProp(mergedObj, this._withPath.split('.'), obj, true);
-                return mergedObj;
-                // const retObj = mergedObj;
-                // const splitPath = this._withPath.split('.');
-                // const lenMinus1 = splitPath.length - 1;
-                // splitPath.forEach((pathToken, idx) => {
-                //     if(idx === lenMinus1){
-                //         mergedObj[pathToken] = obj;
-                //     }else{
-                //         mergedObj = mergedObj[pathToken] = {};
-                //     }
-                // })
-                // return retObj;
+                createNestedProp(target, this._withPath.split('.'), obj, true);
+                return target;
             }else{
                 return obj;
             }
