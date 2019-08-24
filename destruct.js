@@ -34,6 +34,7 @@ export function destruct(target, prop, megaProp = '_input') {
         }, 10); //use task sceduler?
     }
     const symb = Symbol(prop);
+    const origVal = target[prop];
     Object.defineProperty(target, prop, {
         get: function () {
             return this[symb];
@@ -52,4 +53,7 @@ export function destruct(target, prop, megaProp = '_input') {
         enumerable: true,
         configurable: true,
     });
+    if (origVal !== undefined) {
+        target[prop] = origVal;
+    }
 }
