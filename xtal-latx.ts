@@ -29,6 +29,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
     return class extends superClass implements IXtallatXI {
 
         static get observedAttributes(){return [disabled];}
+        /**
+         * Tracks how many times each event type was called.
+         */
         evCount: { [key: string]: number } = {};
         /**
          * Turn number into string with even and odd values easy to query via css.

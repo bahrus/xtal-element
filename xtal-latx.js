@@ -11,6 +11,9 @@ export function XtallatX(superClass) {
     return class extends superClass {
         constructor() {
             super(...arguments);
+            /**
+             * Tracks how many times each event type was called.
+             */
             this.evCount = {};
         }
         static get observedAttributes() { return [disabled]; }
