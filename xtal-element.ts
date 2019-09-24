@@ -20,7 +20,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get readyToInit(): boolean;
 
-    abstract get initRenderContext(): RenderContext;
+    get initRenderContext(): RenderContext | null{
+        return null;
+    };
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
@@ -28,7 +30,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         return null;
     }
 
-
+    _eC!: EventContext;
     get eventContext(): EventContext | null{
         return null;
     }
@@ -58,17 +60,16 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     afterInitRenderCallback(){}
     onPropsChange() : boolean{
         if(this._disabled || !this._connected || !this.readyToInit) return false;
-        const ic = this.initRenderContext;
         const uc = this.updateRenderContext;  
         const esc = this.eventContext;
         if(this.mainTemplate !== undefined){
-            if(esc !== null && esc.eventManager !== undefined){
-                if(!this._initialized){
-                    esc.eventManager(this.root, esc);
-                }
-                
-            }
             if(!this._initialized){
+                this._initialized = true;
+                if(esc !== null && esc.eventManager !== undefined){
+                        esc.eventManager(this.root, esc);
+                    
+                }
+                const ic = this.initRenderContext;
                 if(ic !== null && ic.init !== undefined){
                     ic.host = this;
                     //if(!this.renderOptions.initializedCallback) this.renderOptions.initializedCallback = this.initCallback;
@@ -76,7 +77,6 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
                 }else{
                     this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                 }
-                this._initialized = true;
                 this.afterInitRenderCallback();
             }
             

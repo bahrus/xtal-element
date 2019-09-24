@@ -12,6 +12,10 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return this._renderOptions;
     }
+    get initRenderContext() {
+        return null;
+    }
+    ;
     initRenderCallback(ctx, target) { }
     get updateRenderContext() {
         return null;
@@ -40,16 +44,15 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     onPropsChange() {
         if (this._disabled || !this._connected || !this.readyToInit)
             return false;
-        const ic = this.initRenderContext;
         const uc = this.updateRenderContext;
         const esc = this.eventContext;
         if (this.mainTemplate !== undefined) {
-            if (esc !== null && esc.eventManager !== undefined) {
-                if (!this._initialized) {
+            if (!this._initialized) {
+                this._initialized = true;
+                if (esc !== null && esc.eventManager !== undefined) {
                     esc.eventManager(this.root, esc);
                 }
-            }
-            if (!this._initialized) {
+                const ic = this.initRenderContext;
                 if (ic !== null && ic.init !== undefined) {
                     ic.host = this;
                     //if(!this.renderOptions.initializedCallback) this.renderOptions.initializedCallback = this.initCallback;
@@ -58,7 +61,6 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
                 else {
                     this.root.appendChild(this.mainTemplate.content.cloneNode(true));
                 }
-                this._initialized = true;
                 this.afterInitRenderCallback();
             }
             if (uc !== null) {
