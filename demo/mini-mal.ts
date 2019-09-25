@@ -12,10 +12,37 @@ const template = createTemplate(
 	  }
     </style>
     <!-- html -->
-    <button class="btn">Hello <slot>World</slot></button>`
+    <button class="btn">Hello |.name ?? World|</slot></button>`
 );
+const name = 'name';
 export class MiniMal extends XtalElement{
     get readyToInit(){return true;}
     get mainTemplate(){return template;}
+    _name!: string;
+    get name(){
+        return this._name;
+    }
+    set name(nv){
+        this.attr(name, nv);
+    }
+    connectedCallback(){
+        this.propUp([name]);
+        super.connectedCallback();
+    }
+    static get observedAttributes(){
+        return super.observedAttributes.concat([name]);
+    }
+    attributeChangedCallback(n: string, ov: string, nv: string){
+        switch(n){
+            case name:
+                this._name = nv;
+                break;
+        }
+    }
+    get initRenderContext(){
+        return newRenderContext({
+            button: ({target}) => interpolate(target, 'textContent', this, false),
+        })
+    }
 }
 customElements.define('mini-mal', MiniMal);
