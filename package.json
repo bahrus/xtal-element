@@ -13,7 +13,7 @@
     "trans-render": "0.0.136"
   },
   "devDependencies": {
-    "es-module-shims": "0.4.5",
+    "es-module-shims": "0.4.6",
     "xtal-test": "0.0.21"
   },
   "repository": {
