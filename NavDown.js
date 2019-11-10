@@ -15,8 +15,8 @@ export class NavDown {
         // this._debouncer = debounce(() =>{
         //     this.sync();
         // }, this.mutDebounce);
-        this.sync();
         this.addMutObs(this.seed.parentElement);
+        this.sync();
     }
     addMutObs(elToObs) {
         if (elToObs === null)
