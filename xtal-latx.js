@@ -51,6 +51,7 @@ export function XtallatX(superClass) {
                 detail: detail,
                 bubbles: true,
                 composed: false,
+                cancelable: true,
             });
             this.dispatchEvent(newEvent);
             this.incAttr(eventName);

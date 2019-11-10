@@ -68,6 +68,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 detail: detail,
                 bubbles: true,
                 composed: false,
+                cancelable: true, //https://dev.to/open-wc/composed-true-considered-harmful-5g59
             } as CustomEventInit);
             this.dispatchEvent(newEvent);
             this.incAttr(eventName);
