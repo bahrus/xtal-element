@@ -13,7 +13,7 @@ export class NavDown{
         // }, this.mutDebounce);
         this.addMutObs(this.seed.parentElement);
         this.sync();
-        
+        this.notify(this);
     }
     addMutObs(elToObs: Element | null) {
         if(elToObs === null) return;
