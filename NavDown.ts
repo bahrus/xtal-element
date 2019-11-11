@@ -34,6 +34,7 @@ export class NavDown{
             nodes.forEach(node => delete node.dataset.__pdWIP);
             this.sync();
             this._inMutLoop = false;
+            this.notify(this);
             //this._debouncer(true);
         });
         this._mutObs.observe(elToObs, { childList: true });
@@ -53,7 +54,7 @@ export class NavDown{
                         this.matches.push(matchedElement);
                         c++;
                         if(c >= this.max ) {
-                            this.notify(this);
+                            //this.notify(this);
                             return;
                         }
                     }
@@ -63,7 +64,7 @@ export class NavDown{
             }
             ns = ns.nextElementSibling;
         }
-        this.notify(this);
+        //this.notify(this);
     }
     _mutObs!: MutationObserver;
     public matches!: Element[];
