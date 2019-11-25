@@ -2,7 +2,7 @@ import { getHost } from './getHost.js';
 export function observeCssSelector(superClass) {
     const eventNames = ["animationstart", "MSAnimationStart", "webkitAnimationStart"];
     return class extends superClass {
-        addCSSListener(id, targetSelector, insertListener) {
+        addCSSListener(id, targetSelector, insertListener, customStyles = '') {
             // See https://davidwalsh.name/detect-node-insertion
             if (this._boundInsertListener)
                 return;
@@ -20,7 +20,7 @@ export function observeCssSelector(superClass) {
                 animation-duration: 0.001s;
                 animation-name: ${id};
             }
-            `;
+            ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
             const host = getHost(this);

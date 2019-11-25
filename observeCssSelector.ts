@@ -17,7 +17,7 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
 
         _boundInsertListener!: any;
 
-        addCSSListener(id: string, targetSelector: string, insertListener: any){
+        addCSSListener(id: string, targetSelector: string, insertListener: any, customStyles: string = ''){
             // See https://davidwalsh.name/detect-node-insertion
             if(this._boundInsertListener) return;
             const styleInner = /* css */`
@@ -34,7 +34,7 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
                 animation-duration: 0.001s;
                 animation-name: ${id};
             }
-            `;
+            ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
             const host = <any>getHost((<any>this as HTMLElement));
