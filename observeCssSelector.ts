@@ -45,7 +45,7 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
                 document.head.appendChild(style);
             }
             this._boundInsertListener = insertListener.bind(this);
-            const container = host ? host.shadowRoot : document;
+            const container = hostHasShadowRoot ? host.shadowRoot : document;
             eventNames.forEach(name =>{
                 container.addEventListener(name, this._boundInsertListener, false);
             })
