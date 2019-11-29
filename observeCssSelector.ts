@@ -38,7 +38,8 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
             const style = document.createElement('style');
             style.innerHTML = styleInner;
             const host = <any>getHost((<any>this as HTMLElement));
-            if(host !== null && host.shadowRoot){
+            const hostHasShadowRoot = host ? (host as HTMLElement).shadowRoot !== null : false;
+            if(hostHasShadowRoot){
                 host.shadowRoot.appendChild(style);
             }else{
                 document.head.appendChild(style);
