@@ -24,7 +24,7 @@ export function observeCssSelector(superClass) {
             const style = document.createElement('style');
             style.innerHTML = styleInner;
             const host = getHost(this);
-            if (host !== null) {
+            if (host !== null && host.shadowRoot) {
                 host.shadowRoot.appendChild(style);
             }
             else {
