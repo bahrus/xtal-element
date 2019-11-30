@@ -1,4 +1,4 @@
-import {getHost} from './getHost.js';
+import {getShadowContainer} from './getShadowContainer.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -37,33 +37,29 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
             ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
-            const host = <any>getHost((<any>this as HTMLElement));
-            const hostHasShadowRoot = host ? (host as HTMLElement).shadowRoot !== null : false;
-            if(hostHasShadowRoot){
-                host.shadowRoot.appendChild(style);
+            const host = <any>getShadowContainer((<any>this as HTMLElement));
+            const hostIsShadow = host.localName !== 'html';
+            if(hostIsShadow){
+                host.appendChild(style);
             }else{
                 document.head.appendChild(style);
             }
             this._boundInsertListener = insertListener.bind(this);
-            const container = hostHasShadowRoot ? host.shadowRoot : document;
+            const container = hostIsShadow ? host : document;
             eventNames.forEach(name =>{
                 container.addEventListener(name, this._boundInsertListener, false);
             })
-            // container.addEventListener("animationstart", this._boundInsertListener, false); // standard + firefox
-            // container.addEventListener("MSAnimationStart", this._boundInsertListener, false); // IE
-            // container.addEventListener("webkitAnimationStart", this._boundInsertListener, false); // Chrome + Safari
         }
 
         disconnectedCallback(){
             if(this._boundInsertListener){
-                const host = <any>getHost(this);
-                const container = host ? host.shadowRoot : document;
+                const host = <any>getShadowContainer((<any>this as HTMLElement));
+                const hostIsShadow = host.localName !== 'html';
+                const container = hostIsShadow ? host : document;
                 eventNames.forEach(name =>{
                     container.removeEventListener(name, this._boundInsertListener);
                 })
-                // document.removeEventListener("animationstart", this._boundInsertListener); // standard + firefox
-                // document.removeEventListener("MSAnimationStart", this._boundInsertListener); // IE
-                // document.removeEventListener("webkitAnimationStart", this._boundInsertListener); // Chrome + Safari
+                
             }
             if(super.disconnectedCallback !== undefined) super.disconnectedCallback();
         }
