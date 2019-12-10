@@ -1,4 +1,5 @@
 import { XtallatX } from './xtal-latx.js';
+import {hydrate} from 'trans-render/hydrate.js';
 
 const href = 'href';
 const service_url = 'service-url';
@@ -6,7 +7,7 @@ const fetch_in_progress = 'fetch-in-progress';
 const fetch_complete = 'fetch-complete';
 const title = 'title';
 
-export abstract class CorsAnywhere extends XtallatX(HTMLElement){
+export abstract class CorsAnywhere extends XtallatX(hydrate(HTMLElement)){
     _serviceUrl: string = 'https://cors-anywhere.herokuapp.com/';
    // _serviceUrl: string = 'https://crossorigin.me/';
     /** @type {string} Url of service that gets preview.
