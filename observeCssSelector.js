@@ -23,25 +23,25 @@ export function observeCssSelector(superClass) {
             ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
-            const host = getShadowContainer(this);
-            const hostIsShadow = host.localName !== 'html';
+            this._host = getShadowContainer(this);
+            const hostIsShadow = this._host.localName !== 'html';
             if (hostIsShadow) {
-                host.appendChild(style);
+                this._host.appendChild(style);
             }
             else {
                 document.head.appendChild(style);
             }
             this._boundInsertListener = insertListener.bind(this);
-            const container = hostIsShadow ? host : document;
+            const container = hostIsShadow ? this._host : document;
             eventNames.forEach(name => {
                 container.addEventListener(name, this._boundInsertListener, false);
             });
         }
         disconnectedCallback() {
             if (this._boundInsertListener) {
-                const host = getShadowContainer(this);
-                const hostIsShadow = host.localName !== 'html';
-                const container = hostIsShadow ? host : document;
+                //const host = <any>getShadowContainer((<any>this as HTMLElement));
+                const hostIsShadow = this._host.localName !== 'html';
+                const container = hostIsShadow ? this._host : document;
                 eventNames.forEach(name => {
                     container.removeEventListener(name, this._boundInsertListener);
                 });

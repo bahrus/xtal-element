@@ -1,4 +1,4 @@
-import { XtallatX } from 'xtal-latx/xtal-latx.js';
+import { XtallatX } from './xtal-latx.js';
 
 const href = 'href';
 const service_url = 'service-url';

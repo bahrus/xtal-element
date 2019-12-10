@@ -16,7 +16,7 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
     return class extends superClass {
 
         _boundInsertListener!: any;
-
+        _host: any;
         addCSSListener(id: string, targetSelector: string, insertListener: any, customStyles: string = ''){
             // See https://davidwalsh.name/detect-node-insertion
             if(this._boundInsertListener) return;
@@ -37,15 +37,15 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
             ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
-            const host = <any>getShadowContainer((<any>this as HTMLElement));
-            const hostIsShadow = host.localName !== 'html';
+            this._host = <any>getShadowContainer((<any>this as HTMLElement));
+            const hostIsShadow = this._host.localName !== 'html';
             if(hostIsShadow){
-                host.appendChild(style);
+                this._host.appendChild(style);
             }else{
                 document.head.appendChild(style);
             }
             this._boundInsertListener = insertListener.bind(this);
-            const container = hostIsShadow ? host : document;
+            const container = hostIsShadow ? this._host : document;
             eventNames.forEach(name =>{
                 container.addEventListener(name, this._boundInsertListener, false);
             })
@@ -53,9 +53,9 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
 
         disconnectedCallback(){
             if(this._boundInsertListener){
-                const host = <any>getShadowContainer((<any>this as HTMLElement));
-                const hostIsShadow = host.localName !== 'html';
-                const container = hostIsShadow ? host : document;
+                //const host = <any>getShadowContainer((<any>this as HTMLElement));
+                const hostIsShadow = this._host.localName !== 'html';
+                const container = hostIsShadow ? this._host : document;
                 eventNames.forEach(name =>{
                     container.removeEventListener(name, this._boundInsertListener);
                 })
