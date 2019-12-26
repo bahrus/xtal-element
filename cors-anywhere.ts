@@ -88,7 +88,7 @@ export abstract class CorsAnywhere extends XtallatX(hydrate(HTMLElement)){
 
     _connected = false;
     connectedCallback(){
-        this._upgradeProperties(['disabled', href, 'serviceUrl']);
+        this.propUp(['disabled', href, 'serviceUrl']);
         this._connected = true;
         this.de('connected',{
             value: this.href

@@ -1,4 +1,4 @@
-import { getShadowContainer } from './getShadowContainer.js';
+//import {getShadowContainer} from './getShadowContainer.js';
 export function observeCssSelector(superClass) {
     const eventNames = ["animationstart", "MSAnimationStart", "webkitAnimationStart"];
     return class extends superClass {
@@ -23,7 +23,7 @@ export function observeCssSelector(superClass) {
             ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
-            this._host = getShadowContainer(this);
+            this._host = this.getRootNode(); //experimental  <any>getShadowContainer((<any>this as HTMLElement));
             const hostIsShadow = this._host.localName !== 'html';
             if (hostIsShadow) {
                 this._host.appendChild(style);

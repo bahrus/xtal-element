@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "event-switch": "0.0.12",
-    "trans-render": "0.0.141"
+    "trans-render": "0.0.142"
   },
   "devDependencies": {
     "es-module-shims": "0.4.6",
