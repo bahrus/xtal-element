@@ -1,4 +1,4 @@
-import {getShadowContainer} from './getShadowContainer.js';
+//import {getShadowContainer} from './getShadowContainer.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -37,7 +37,10 @@ export function observeCssSelector<TBase extends Constructor<HTMLElement>>(super
             ${customStyles}`;
             const style = document.createElement('style');
             style.innerHTML = styleInner;
-            this._host = <any>getShadowContainer((<any>this as HTMLElement));
+            this._host = this.getRootNode();//experimental  <any>getShadowContainer((<any>this as HTMLElement));
+            if(this._host.nodeType === 9){
+                this._host = document.firstElementChild;
+            }
             const hostIsShadow = this._host.localName !== 'html';
             if(hostIsShadow){
                 this._host.appendChild(style);
