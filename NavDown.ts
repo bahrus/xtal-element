@@ -51,7 +51,7 @@ export class NavDown{
                 if(isG){
                     const matchedElements = (this.careOf !== undefined) ? Array.from(ns.querySelectorAll(this.careOf)) : [ns];
                     if(matchedElements !== null) {
-                        this.matches.concat(matchedElements);
+                        this.matches = this.matches.concat(matchedElements);
                         c++;
                         if(c >= this.max ) {
                             //this.notify(this);
