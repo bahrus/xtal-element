@@ -1,5 +1,5 @@
 //D'Oh  https://developer.mozilla.org/en-US/docs/Web/API/Node/getRootNode
-export function getShadowContainer(el) {
+export function getShadowContainerDeprecated(el) {
     let parent = el;
     while (parent = (parent.parentNode)) {
         if (parent.nodeType === 11) {
