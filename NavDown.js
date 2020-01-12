@@ -52,9 +52,9 @@ export class NavDown {
             if (this.ignore === null || !ns.matches(this.ignore)) {
                 let isG = isF ? this.match(ns) : ns.matches(this.match);
                 if (isG) {
-                    const matchedElement = (this.careOf !== undefined) ? ns.querySelector(this.careOf) : ns;
-                    if (matchedElement !== null) {
-                        this.matches.push(matchedElement);
+                    const matchedElements = (this.careOf !== undefined) ? Array.from(ns.querySelectorAll(this.careOf)) : [ns];
+                    if (matchedElements !== null) {
+                        this.matches.concat(matchedElements);
                         c++;
                         if (c >= this.max) {
                             //this.notify(this);
