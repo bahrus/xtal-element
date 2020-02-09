@@ -1,5 +1,4 @@
 export class NavDown {
-    //_debouncer!: any;
     constructor(seed, match, careOf, notify, max, ignore = null, mutDebounce = 50) {
         this.seed = seed;
         this.match = match;
@@ -9,12 +8,8 @@ export class NavDown {
         this.ignore = ignore;
         this.mutDebounce = mutDebounce;
         this._inMutLoop = false;
-        //this.init();
     }
     init() {
-        // this._debouncer = debounce(() =>{
-        //     this.sync();
-        // }, this.mutDebounce);
         this.addMutObs(this.seed.parentElement);
         this.sync();
         this.notify(this);
@@ -38,10 +33,8 @@ export class NavDown {
             this.sync();
             this._inMutLoop = false;
             this.notify(this);
-            //this._debouncer(true);
         });
         this._mutObs.observe(elToObs, { childList: true });
-        // (<any>elToObs)._addedMutObs = true;
     }
     sibCheck(sib, c) { }
     sync(c = 0) {
@@ -57,7 +50,6 @@ export class NavDown {
                         this.matches = this.matches.concat(matchedElements);
                         c++;
                         if (c >= this.max) {
-                            //this.notify(this);
                             return;
                         }
                     }
@@ -66,7 +58,6 @@ export class NavDown {
             }
             ns = ns.nextElementSibling;
         }
-        //this.notify(this);
     }
     disconnect() {
         this._mutObs.disconnect();

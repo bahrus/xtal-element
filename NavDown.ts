@@ -1,16 +1,11 @@
 //import {debounce} from './debounce.js';
 type ElTest = (el: Element | null) => boolean;
 export class NavDown{
-    //_debouncer!: any;
     constructor(public seed: Element, public match: string | ElTest, public careOf: string | undefined, public notify:(nd: NavDown) => void, public max: number, public ignore: string | null = null, public mutDebounce: number = 50){
-        //this.init();
     }
     _sis!:boolean; //seed is start
     _inMutLoop = false;
     init(){
-        // this._debouncer = debounce(() =>{
-        //     this.sync();
-        // }, this.mutDebounce);
         this.addMutObs(this.seed.parentElement);
         this.sync();
         this.notify(this);
@@ -35,10 +30,8 @@ export class NavDown{
             this.sync();
             this._inMutLoop = false;
             this.notify(this);
-            //this._debouncer(true);
         });
         this._mutObs.observe(elToObs, { childList: true });
-        // (<any>elToObs)._addedMutObs = true;
     }
     sibCheck(sib: Element, c: number){}
     sync(c = 0){
@@ -54,7 +47,6 @@ export class NavDown{
                         this.matches = this.matches.concat(matchedElements);
                         c++;
                         if(c >= this.max ) {
-                            //this.notify(this);
                             return;
                         }
                     }
@@ -64,7 +56,6 @@ export class NavDown{
             }
             ns = ns.nextElementSibling;
         }
-        //this.notify(this);
     }
     _mutObs!: MutationObserver;
     public matches!: Element[];
