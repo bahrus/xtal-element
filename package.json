@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "es-module-shims": "0.4.6",
-    "xtal-test": "0.0.42"
+    "xtal-test": "0.0.44"
   },
   "repository": {
     "type": "git",

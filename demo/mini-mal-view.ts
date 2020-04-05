@@ -17,9 +17,9 @@ export class MinimalView extends XtalViewElement<string>{
     }
 
     get initRenderContext(){
-        return this._initRC === undefined ? newRenderContext({
+        return newRenderContext({
             div: x=> this.viewModel
-        }) : this._initRC; //TODO: optional chaining
+        });
     }
         
     async init(){
