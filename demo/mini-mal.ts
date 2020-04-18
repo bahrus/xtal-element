@@ -1,4 +1,4 @@
-import {createTemplate, newRenderContext} from '../utils.js';
+import {createTemplate, newRenderContext} from '../newRenderContext.js';
 import {update} from 'trans-render/update.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {newEventContext} from 'event-switch/event-switch.js';

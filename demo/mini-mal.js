@@ -1,4 +1,4 @@
-import { createTemplate, newRenderContext } from '../utils.js';
+import { createTemplate, newRenderContext } from '../newRenderContext.js';
 import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement } from '../xtal-element.js';
 const template = createTemplate(
