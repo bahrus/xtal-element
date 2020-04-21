@@ -1,5 +1,6 @@
 import { XtalViewElement } from '../xtal-view-element.js';
-import { createTemplate, newRenderContext } from '../newRenderContext.js';
+import { createTemplate } from 'trans-render/createTemplate.js';
+import { newRenderContext } from '../newRenderContext.js';
 import { update } from 'trans-render/update.js';
 import { newEventContext } from 'event-switch/event-switch.js';
 const template = createTemplate(
