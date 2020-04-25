@@ -57,7 +57,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
             init: init,
             Transform: this.initTransform,
             host: this,
-            cache: this.constructor
+            cache: this.constructor,
         };
     }
     #renderContext: RenderContext | undefined;

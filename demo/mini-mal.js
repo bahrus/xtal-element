@@ -11,21 +11,25 @@ const template = createTemplate(
     <button class="btn">Hello |.name ?? World|</slot></button>`);
 const name = 'name';
 export class MiniMal extends XtalElement {
+    constructor() {
+        super(...arguments);
+        this.#updateTransform = {
+            button: ({ target }) => interpolate(target, 'textContent', this, false),
+        };
+    }
     get readyToInit() { return true; }
     get mainTemplate() { return template; }
     get initTransform() {
         return {
-            button: [{}, { click: this.clickHandler.bind(this) }]
+            button: [{}, { click: this.clickHandler }]
         };
     }
     ;
+    #updateTransform;
     get updateTransform() {
-        return {
-            button: ({ target }) => interpolate(target, 'textContent', this, false),
-        };
+        return this.#updateTransform;
     }
     clickHandler(e) {
-        console.log(this);
         this.name = 'me';
     }
     get name() {

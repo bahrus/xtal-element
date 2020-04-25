@@ -45,7 +45,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
             init: init,
             Transform: this.initTransform,
             host: this,
-            cache: this.constructor
+            cache: this.constructor,
         };
     }
     #renderContext;

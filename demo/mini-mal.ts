@@ -17,16 +17,16 @@ export class MiniMal extends XtalElement{
     get mainTemplate(){return template;}
     get initTransform(){ 
         return {
-            button: [{},{click: this.clickHandler.bind(this)}]
+            button: [{},{click: this.clickHandler}]
         } as TransformRules
     };
+    #updateTransform = {
+        button: ({target} : {target: HTMLElement}) => interpolate(target, 'textContent', this, false),
+    } as TransformRules;
     get updateTransform(){
-        return {
-            button: ({target} : {target: HTMLElement}) => interpolate(target, 'textContent', this, false),
-        }
+        return this.#updateTransform;
     }
     clickHandler(e: Event){
-        console.log(this);
         this.name = 'me';
     }
     _name!: string;

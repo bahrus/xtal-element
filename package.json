@@ -9,8 +9,7 @@
     "serve": "node node_modules/xtal-test/serve.js"
   },
   "dependencies": {
-    "event-switch": "0.0.12",
-    "trans-render": "0.0.164"
+    "trans-render": "0.0.166"
   },
   "devDependencies": {
     "es-module-shims": "0.4.6",
