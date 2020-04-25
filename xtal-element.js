@@ -1,35 +1,34 @@
 import { XtallatX } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
+//import {EventContext} from 'event-switch/event-switch.d.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
+import { init } from 'trans-render/init.js';
+import { update } from 'trans-render/update.js';
 export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
     constructor() {
+        //_initialized!: boolean;
         super(...arguments);
-        this._renderOptions = {};
+        this.#renderOptions = {};
     }
     get noShadow() {
         return false;
     }
+    #renderOptions;
     get renderOptions() {
-        return this._renderOptions;
+        return this.#renderOptions;
     }
-    get initRenderContext() {
-        return null;
+    get updateTransform() {
+        return undefined;
     }
-    ;
     initRenderCallback(ctx, target) { }
-    get updateRenderContext() {
-        return null;
-    }
-    get eventContext() {
-        return null;
-    }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
         this.onPropsChange();
     }
+    #connected;
     connectedCallback() {
         this.propUp([disabled]);
-        this._connected = true;
+        this.#connected = true;
         this.onPropsChange();
     }
     get root() {
@@ -41,33 +40,29 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         return this.shadowRoot;
     }
     afterInitRenderCallback() { }
+    initRenderContext() {
+        return {
+            init: init,
+            Transform: this.initTransform,
+            host: this,
+            cache: this.constructor
+        };
+    }
+    #renderContext;
     onPropsChange() {
-        if (this._disabled || !this._connected || !this.readyToInit)
+        if (this._disabled || !this.#connected || !this.readyToInit)
             return false;
-        const uc = this.updateRenderContext;
-        const esc = this.eventContext;
+        //const uc = this.updateRenderContext;  
         if (this.mainTemplate !== undefined) {
-            if (!this._initialized) {
-                this._initialized = true;
-                if (esc !== null && esc.eventManager !== undefined) {
-                    esc.eventManager(this.root, esc);
-                }
-                const ic = this.initRenderContext;
-                if (ic !== null && ic.init !== undefined) {
-                    ic.host = this;
-                    //if(!this.renderOptions.initializedCallback) this.renderOptions.initializedCallback = this.initCallback;
-                    ic.init(this.mainTemplate, ic, this.root, this.renderOptions);
-                }
-                else {
-                    this.root.appendChild(this.mainTemplate.content.cloneNode(true));
-                }
+            if (this.#renderContext === undefined) {
+                this.#renderContext = this.initRenderContext();
+                this.#renderContext.init(this.mainTemplate, this.#renderContext, this.root, this.renderOptions);
                 this.afterInitRenderCallback();
             }
-            if (uc !== null) {
-                uc.host = this;
-                if (uc.update !== undefined) {
-                    uc.update(uc, this.root);
-                }
+            if (this.updateTransform !== undefined) {
+                this.#renderContext.update = update;
+                this.#renderContext.Transform = this.updateTransform;
+                this.#renderContext?.update(this.#renderContext, this.root);
             }
         }
         return true;
