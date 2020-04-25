@@ -2,25 +2,39 @@ import {XtalViewElement} from '../xtal-view-element.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {newRenderContext} from '../newRenderContext.js';
 import {update} from 'trans-render/update.js';
-import {newEventContext} from 'event-switch/event-switch.js';
+import {PESettings} from 'trans-render/init.d.js';
 const template = createTemplate(
     /* html */`<div></div>`
 );
 
 export class MinimalView extends XtalViewElement<string>{
 
-    _eventContext  = newEventContext({
-        click: e => this.onPropsChange()
-    });
-
-    get eventContext() {
-        return this._eventContext;
+    get initTransform(){
+        return {
+            div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
+        }
     }
 
-    get initRenderContext(){
-        return newRenderContext({
-            div: x=> this.viewModel
-        });
+    get updateTransform(){
+        return {
+            div: this.viewModel
+        }
+    }
+
+    clickHandler(e: Event){
+        this.inc();
+    }
+
+    #count = 0;
+    get count(){
+        return this.#count;
+    }
+    set count(nv){
+        this.#count = nv;
+        this.onPropsChange();
+    }
+    inc(){
+        this.count++;
     }
         
     async init(){
@@ -29,9 +43,8 @@ export class MinimalView extends XtalViewElement<string>{
         })
     }
     async update(){
-        this.initRenderContext.update = update;
         return new Promise<string>(resolve =>{
-            resolve('That tickles.');
+            resolve('That tickles number ' + this.count);
         })
     }
     get mainTemplate(){

@@ -8,6 +8,18 @@
 </head>
 <body>
     <mini-mal-view></mini-mal-view>
-    <script type="module" src="./mini-mal-view.js"></script>
+    <!-- Use experimental import maps -->
+    <script defer src="../node_modules/es-module-shims/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+    {
+        "imports": {
+            "trans-render/": "../node_modules/trans-render/",
+            "xtal-element/": "../"
+        }
+    }
+    </script>
+    <script  type="module-shim">
+        import './mini-mal-view.js';
+    </script>
 </body>
 </html>

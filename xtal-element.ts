@@ -36,10 +36,10 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     }
 
 
-    #connected!: boolean;
+    _connected!: boolean;
     connectedCallback(){
         this.propUp([disabled]);
-        this.#connected = true;
+        this._connected = true;
         this.onPropsChange();
     }
 
@@ -61,21 +61,21 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         };
     }
     #renderContext: RenderContext | undefined;
-    onPropsChange() : boolean{
-        if(this._disabled || !this.#connected || !this.readyToInit) return false;
-        //const uc = this.updateRenderContext;  
-        if(this.mainTemplate !== undefined){
-            if(this.#renderContext === undefined){
-                this.#renderContext = this.initRenderContext();
-                this.#renderContext.init!(this.mainTemplate, this.#renderContext, this.root, this.renderOptions);
-                this.afterInitRenderCallback();
-            }
-            if(this.updateTransform !== undefined){
-                this.#renderContext!.update = update;
-                this.#renderContext.Transform = this.updateTransform;
-                this.#renderContext?.update!(this.#renderContext!, this.root);
-            }   
+    transRender(){
+        if(this.#renderContext === undefined){
+            this.#renderContext = this.initRenderContext();
+            this.#renderContext.init!(this.mainTemplate, this.#renderContext, this.root, this.renderOptions);
+            this.afterInitRenderCallback();
         }
+        if(this.updateTransform !== undefined){
+            this.#renderContext!.update = update;
+            this.#renderContext.Transform = this.updateTransform;
+            this.#renderContext?.update!(this.#renderContext!, this.root);
+        }
+    }
+    onPropsChange() : boolean{
+        if(this._disabled || !this._connected || !this.readyToInit) return false;
+        this.transRender();
         return true;
     }
 
