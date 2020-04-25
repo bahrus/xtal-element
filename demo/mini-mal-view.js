@@ -31,12 +31,12 @@ export class MinimalView extends XtalViewElement {
     inc() {
         this.count++;
     }
-    async init() {
+    init() {
         return new Promise(resolve => {
             resolve('Greetings, Earthling.');
         });
     }
-    async update() {
+    update() {
         return new Promise(resolve => {
             resolve('That tickles number ' + this.count);
         });

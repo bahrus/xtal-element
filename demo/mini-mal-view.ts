@@ -1,8 +1,7 @@
 import {XtalViewElement} from '../xtal-view-element.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {newRenderContext} from '../newRenderContext.js';
-import {update} from 'trans-render/update.js';
 import {PESettings} from 'trans-render/init.d.js';
+
 const template = createTemplate(
     /* html */`<div></div>`
 );
@@ -37,12 +36,12 @@ export class MinimalView extends XtalViewElement<string>{
         this.count++;
     }
         
-    async init(){
+    init(){
         return new Promise<string>(resolve =>{
             resolve('Greetings, Earthling.');
         })
     }
-    async update(){
+    update(){
         return new Promise<string>(resolve =>{
             resolve('That tickles number ' + this.count);
         })
