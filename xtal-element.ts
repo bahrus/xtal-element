@@ -52,6 +52,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     }
 
     afterInitRenderCallback(){}
+    afterUpdateRenderCallback(){}
     initRenderContext() : RenderContext{
         return {
             init: init,
@@ -60,17 +61,18 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
             cache: this.constructor,
         };
     }
-    #renderContext: RenderContext | undefined;
+    _renderContext: RenderContext | undefined;
     transRender(){
-        if(this.#renderContext === undefined){
-            this.#renderContext = this.initRenderContext();
-            this.#renderContext.init!(this.mainTemplate, this.#renderContext, this.root, this.renderOptions);
+        if(this._renderContext === undefined){
+            this._renderContext = this.initRenderContext();
+            this._renderContext.init!(this.mainTemplate, this._renderContext, this.root, this.renderOptions);
             this.afterInitRenderCallback();
         }
         if(this.updateTransform !== undefined){
-            this.#renderContext!.update = update;
-            this.#renderContext.Transform = this.updateTransform;
-            this.#renderContext?.update!(this.#renderContext!, this.root);
+            this._renderContext!.update = update;
+            this._renderContext.Transform = this.updateTransform;
+            this._renderContext?.update!(this._renderContext!, this.root);
+            this.afterUpdateRenderCallback();
         }
     }
     onPropsChange() : boolean{
