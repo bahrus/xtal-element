@@ -1,13 +1,11 @@
 import {XtallatX} from './xtal-latx.js';
 import {DataDecorators} from './data-decorators.js';
 import {RenderContext, RenderOptions, TransformRules, TransformValueOptions} from 'trans-render/init.d.js';
-//import {EventContext} from 'event-switch/event-switch.d.js';
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 
 export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
-    //_initialized!: boolean;
 
     get noShadow(){
         return false;

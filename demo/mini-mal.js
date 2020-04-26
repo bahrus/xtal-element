@@ -1,14 +1,7 @@
 import { createTemplate } from 'trans-render/createTemplate.js';
 import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement } from '../xtal-element.js';
-const template = createTemplate(
-/* html */ `
-    <style>
-    .btn {
-		  font-size: 200%;
-	  }
-    </style>
-    <button class="btn">Hello |.name ?? World|</slot></button>`);
+const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement {
     constructor() {
@@ -17,8 +10,21 @@ export class MiniMal extends XtalElement {
             button: ({ target }) => interpolate(target, 'textContent', this, false),
         };
     }
+    //  required in any implementing class
     get readyToInit() { return true; }
-    get mainTemplate() { return template; }
+    //required in any implementing class
+    get mainTemplate() {
+        return createTemplate(/* html */ `
+        <style>
+        .btn {
+            font-size: 200%;
+        }
+        </style>
+        <button class="btn">Hello |.name ?? World|</slot></button>
+    `, MiniMal, main);
+    }
+    ;
+    //required in any implementing class
     get initTransform() {
         return {
             button: [{}, { click: this.clickHandler }]
@@ -32,8 +38,10 @@ export class MiniMal extends XtalElement {
     clickHandler(e) {
         this.name = 'me';
     }
+    //boilerplate code
+    #name;
     get name() {
-        return this._name;
+        return this.#name;
     }
     set name(nv) {
         this.attr(name, nv);
@@ -48,7 +56,7 @@ export class MiniMal extends XtalElement {
     attributeChangedCallback(n, ov, nv) {
         switch (n) {
             case name:
-                this._name = nv;
+                this.#name = nv;
                 break;
         }
         this.onPropsChange();

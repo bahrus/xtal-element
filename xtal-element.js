@@ -1,12 +1,10 @@
 import { XtallatX } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
-//import {EventContext} from 'event-switch/event-switch.d.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
 import { init } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
 export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
     constructor() {
-        //_initialized!: boolean;
         super(...arguments);
         this.#renderOptions = {};
     }

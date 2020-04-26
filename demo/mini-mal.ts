@@ -1,27 +1,31 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {TransformRules, TransformValueOptions} from 'trans-render/init.d.js';
+import {TransformRules} from 'trans-render/init.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement} from '../xtal-element.js';
-const template = createTemplate(
-    /* html */`
-    <style>
-    .btn {
-		  font-size: 200%;
-	  }
-    </style>
-    <button class="btn">Hello |.name ?? World|</slot></button>`
-);
+
+const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement{
+    //  required in any implementing class
     get readyToInit(){return true;}
-    get mainTemplate(){return template;}
+    //required in any implementing class
+    get mainTemplate(){return createTemplate(/* html */`
+        <style>
+        .btn {
+            font-size: 200%;
+        }
+        </style>
+        <button class="btn">Hello |.name ?? World|</slot></button>
+    `, MiniMal, main)};
+    //required in any implementing class
     get initTransform(){ 
         return {
             button: [{},{click: this.clickHandler}]
         } as TransformRules
     };
+
     #updateTransform = {
-        button: ({target} : {target: HTMLElement}) => interpolate(target, 'textContent', this, false),
+        button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
     get updateTransform(){
         return this.#updateTransform;
@@ -29,9 +33,11 @@ export class MiniMal extends XtalElement{
     clickHandler(e: Event){
         this.name = 'me';
     }
-    _name!: string;
+
+    //boilerplate code
+    #name!: string;
     get name(){
-        return this._name;
+        return this.#name;
     }
     set name(nv){
         this.attr(name, nv);
@@ -46,11 +52,10 @@ export class MiniMal extends XtalElement{
     attributeChangedCallback(n: string, ov: string, nv: string){
         switch(n){
             case name:
-                this._name = nv;
+                this.#name = nv;
                 break;
         }
         this.onPropsChange();
     }
-
 }
 customElements.define('mini-mal', MiniMal);
