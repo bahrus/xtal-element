@@ -94,63 +94,70 @@ customElements.define('mini-mal', MiniMal);
 The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
 ```TypeScript
-import {XtalElement} from './xtal-element.js';
+import {XtalViewElement} from '../xtal-view-element.js';
+import {createTemplate} from 'trans-render/createTemplate.js';
+import {PESettings} from 'trans-render/init.d.js';
 
-export abstract class XtalViewElement<ViewModel> extends XtalElement{
+const template = createTemplate(
+    /* html */`<div></div>`
+);
+
+export class MinimalView extends XtalViewElement<string>{
+
+    //#region Required Members
+    get readyToInit(){return true;}
+
+    init(){
+        return new Promise<string>(resolve =>{
+            resolve('Greetings, Earthling.');
+        })
+    }
+
+    get readyToRender(){return true;}
+
+    update(){
+        return new Promise<string>(resolve =>{
+            resolve('That tickles, number ' + this.count);
+        })
+    }
+
+    get mainTemplate(){
+        return template;
+    }
     
-    abstract async init(signal: AbortSignal) : Promise<ViewModel>;
-
-    abstract async update(signal: AbortSignal) : Promise<ViewModel>;
-
-
-    constructor(){
-        super();
-        this.#state = 'constructed';
-        this.#controller = new AbortController();
-        this.#signal = this.#controller.signal
-    }
-
-    _viewModel!: ViewModel;
-    get viewModel(){
-        return this._viewModel;
-    }
-    set viewModel(nv: ViewModel){
-        this._viewModel = nv;
-        this.de('view-model', {
-            value: nv
-        });
-        this.transRender();
-    }
-
-    #state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
-    #controller: AbortController;
-    #signal: AbortSignal;
-
-    onPropsChange(): boolean {
-        if(super._disabled || !this._connected || !this.readyToInit) return false;
-        switch(this.#state){
-            case 'constructed':
-                this.init(this.#signal).then(model =>{
-                    this.viewModel = model;
-                    this.#state = 'initialized';
-                });
-                this.#state = 'initializing';
-            case 'updating':
-            case 'initializing':
-                //todo: abort
-                break; 
-            case 'updated':
-            case 'initialized':
-                this.update(this.#signal).then(model =>{
-                    this.viewModel = model;
-                    this.#state = 'updated';
-                })   
+    get initTransform(){
+        return {
+            div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
         }
-        return true;
-
-
     }
+
+    get updateTransform(){
+        return {
+            div: this.viewModel
+        }
+    }
+    //#endregion
+
+    clickHandler(e: Event){
+        this.inc();
+    }
+
+    #count = 0;
+    get count(){
+        return this.#count;
+    }
+    set count(nv){
+        this.#count = nv;
+        this.onPropsChange();
+    }
+    inc(){
+        this.count++;
+    }
+        
+
+
 }
+customElements.define('mini-mal-view', MinimalView);
 ```
 
 ## Progressive Enhancement Support
