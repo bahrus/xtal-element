@@ -54,10 +54,10 @@ export class MiniMal extends XtalElement {
     static get observedAttributes() {
         return super.observedAttributes.concat([name]);
     }
-    attributeChangedCallback(n, ov, nv) {
-        switch (n) {
+    attributeChangedCallback(name, oldVal, newVal) {
+        switch (name) {
             case name:
-                this.#name = nv;
+                this.#name = newVal;
                 break;
         }
         this.onPropsChange();

@@ -6,7 +6,6 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
 
     abstract async update(signal: AbortSignal) : Promise<ViewModel>;
 
-    
 
     constructor(){
         super();

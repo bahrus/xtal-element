@@ -22,7 +22,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get readyToInit(): boolean;
 
-    abstract get readyToRender(): boolean | string;
+    abstract get readyToRender(): boolean | string | symbol;
 
     get updateTransform(): TransformRules | undefined{
         return undefined;

@@ -12,6 +12,8 @@ xtal-element's target audience is those who are looking for a base class that:
 
 As we'll see, satisfying these requirements suggests creating a starting point that is a bit more complex than the primitive custom element definition.  This base library doesn't claim to be the best fit for all types of web components, but focuses on some common needs.
 
+xtal-element adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic / flexibility can pay off in some cases.
+
 ## Minimal XtalElement Setup
 
 XtalElement is the base class, and doesn't provide support for asynchronous retrieval of a view model property.
@@ -27,9 +29,11 @@ import {XtalElement} from '../xtal-element.js';
 const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement{
-    //  required in any implementing class
+
+    //#region Required Members
     get readyToInit(){return true;}
-    //required in any implementing class
+    get readyToRender(){return true;}
+
     get mainTemplate(){return createTemplate(/* html */`
         <style>
         .btn {
@@ -38,7 +42,7 @@ export class MiniMal extends XtalElement{
         </style>
         <button class="btn">Hello |.name ?? World|</slot></button>
     `, MiniMal, main)};
-    //required in any implementing class
+
     get initTransform(){ 
         return {
             button: [{},{click: this.clickHandler}]
@@ -51,11 +55,13 @@ export class MiniMal extends XtalElement{
     get updateTransform(){
         return this.#updateTransform;
     }
+    //#endregion
+
     clickHandler(e: Event){
         this.name = 'me';
     }
 
-    //boilerplate code
+    //#region boilerplate code
     #name!: string;
     get name(){
         return this.#name;
@@ -70,14 +76,15 @@ export class MiniMal extends XtalElement{
     static get observedAttributes(){
         return super.observedAttributes.concat([name]);
     }
-    attributeChangedCallback(n: string, ov: string, nv: string){
-        switch(n){
+    attributeChangedCallback(name: string, oldVal: string, newVal: string){
+        switch(name){
             case name:
-                this.#name = nv;
+                this.#name = newVal;
                 break;
         }
         this.onPropsChange();
     }
+    //#endregion
 }
 customElements.define('mini-mal', MiniMal);
 ```
@@ -87,49 +94,66 @@ customElements.define('mini-mal', MiniMal);
 The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
 ```TypeScript
-import {XtalViewElement} from '../xtal-view-element.js';
-import {createTemplate, newRenderContext} from '../utils.js';
-import {update} from 'trans-render/update.js';
-import {newEventContext} from 'event-switch/event-switch.js';
-const template = createTemplate(/* html */`<div></div>`);
+import {XtalElement} from './xtal-element.js';
 
-export class MinimalView extends XtalViewElement<string>{
+export abstract class XtalViewElement<ViewModel> extends XtalElement{
+    
+    abstract async init(signal: AbortSignal) : Promise<ViewModel>;
 
-    _eventContext  = newEventContext({
-        click: e => this.onPropsChange()
-    });
+    abstract async update(signal: AbortSignal) : Promise<ViewModel>;
 
-    get eventContext() {
-        return this._eventContext;
+
+    constructor(){
+        super();
+        this.#state = 'constructed';
+        this.#controller = new AbortController();
+        this.#signal = this.#controller.signal
     }
 
-    _renderContext = newRenderContext({
-            div: x=> this.viewModel
-    })
-    get renderContext(){
-        return this._renderContext;
+    _viewModel!: ViewModel;
+    get viewModel(){
+        return this._viewModel;
     }
-        
-    async init(){
-        return new Promise<string>(resolve =>{
-            resolve('Greetings, Earthling.');
-        })
+    set viewModel(nv: ViewModel){
+        this._viewModel = nv;
+        this.de('view-model', {
+            value: nv
+        });
+        this.transRender();
     }
-    async update(){
-        this.renderContext.update = update;
-        return new Promise<string>(resolve =>{
-            resolve('That tickles.');
-        })
+
+    #state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
+    #controller: AbortController;
+    #signal: AbortSignal;
+
+    onPropsChange(): boolean {
+        if(super._disabled || !this._connected || !this.readyToInit) return false;
+        switch(this.#state){
+            case 'constructed':
+                this.init(this.#signal).then(model =>{
+                    this.viewModel = model;
+                    this.#state = 'initialized';
+                });
+                this.#state = 'initializing';
+            case 'updating':
+            case 'initializing':
+                //todo: abort
+                break; 
+            case 'updated':
+            case 'initialized':
+                this.update(this.#signal).then(model =>{
+                    this.viewModel = model;
+                    this.#state = 'updated';
+                })   
+        }
+        return true;
+
+
     }
-    get mainTemplate(){
-        return template;
-    }
-    get ready(){return true;}
 }
-customElements.define('mini-mal-view', MinimalView);
 ```
 
 ## Progressive Enhancement Support
 
-Quite often, a web component, after initializing, needs to retrieve some entity before it can really render anything meaningful.  In the meantime, perhaps we want to display something, like a loading mask and or a summary of what the component is showing.  That means using light children, that, only when we have someting better to show, should display. 
+Quite often, a web component, after initializing, needs to retrieve some entity before it can really render anything meaningful.  In the meantime, perhaps we want to display something, like a loading mask and or a summary of what the component is showing.  That means using light children, that, only when we have something better to show, should display. 
 
