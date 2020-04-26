@@ -6,9 +6,11 @@ import {XtalElement} from '../xtal-element.js';
 const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement{
-    //  required in any implementing class
+
+    //#region Required Members
     get readyToInit(){return true;}
-    //required in any implementing class
+    get readyToRender(){return true;}
+
     get mainTemplate(){return createTemplate(/* html */`
         <style>
         .btn {
@@ -17,7 +19,7 @@ export class MiniMal extends XtalElement{
         </style>
         <button class="btn">Hello |.name ?? World|</slot></button>
     `, MiniMal, main)};
-    //required in any implementing class
+
     get initTransform(){ 
         return {
             button: [{},{click: this.clickHandler}]
@@ -30,11 +32,13 @@ export class MiniMal extends XtalElement{
     get updateTransform(){
         return this.#updateTransform;
     }
+    //#endregion
+
     clickHandler(e: Event){
         this.name = 'me';
     }
 
-    //boilerplate code
+    //#region boilerplate code
     #name!: string;
     get name(){
         return this.#name;
@@ -57,5 +61,6 @@ export class MiniMal extends XtalElement{
         }
         this.onPropsChange();
     }
+    //#endregion
 }
 customElements.define('mini-mal', MiniMal);

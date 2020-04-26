@@ -22,6 +22,8 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get readyToInit(): boolean;
 
+    abstract get readyToRender(): boolean | string;
+
     get updateTransform(): TransformRules | undefined{
         return undefined;
     }
@@ -60,11 +62,20 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         };
     }
     _renderContext: RenderContext | undefined;
+    _mainTemplate = 'mainTemplate';
     transRender(){
+        const readyToRender = this.readyToRender;
+        if(readyToRender === false) return;
+        if(typeof(readyToRender) === 'string'){
+            if(readyToRender !== this._mainTemplate){
+                this.root.innerHTML = '';
+                this._renderContext = undefined;
+            }
+        }
         if(this._renderContext === undefined){
             this._renderContext = this.initRenderContext();
             this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
-            this._renderContext.init!(this.mainTemplate, this._renderContext, this.root, this.renderOptions);
+            this._renderContext.init!((<any>this)[this._mainTemplate] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
         }
         if(this.updateTransform !== undefined){
             this._renderContext!.update = update;

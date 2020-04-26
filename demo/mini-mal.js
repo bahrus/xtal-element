@@ -9,10 +9,11 @@ export class MiniMal extends XtalElement {
         this.#updateTransform = {
             button: ({ target }) => interpolate(target, 'textContent', this, false),
         };
+        //#endregion
     }
-    //  required in any implementing class
+    //#region Required Members
     get readyToInit() { return true; }
-    //required in any implementing class
+    get readyToRender() { return true; }
     get mainTemplate() {
         return createTemplate(/* html */ `
         <style>
@@ -24,7 +25,6 @@ export class MiniMal extends XtalElement {
     `, MiniMal, main);
     }
     ;
-    //required in any implementing class
     get initTransform() {
         return {
             button: [{}, { click: this.clickHandler }]
@@ -35,10 +35,11 @@ export class MiniMal extends XtalElement {
     get updateTransform() {
         return this.#updateTransform;
     }
+    //#endregion
     clickHandler(e) {
         this.name = 'me';
     }
-    //boilerplate code
+    //#region boilerplate code
     #name;
     get name() {
         return this.#name;

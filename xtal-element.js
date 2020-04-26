@@ -7,6 +7,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     constructor() {
         super(...arguments);
         this.#renderOptions = {};
+        this._mainTemplate = 'mainTemplate';
     }
     get noShadow() {
         return false;
@@ -47,10 +48,19 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         };
     }
     transRender() {
+        const readyToRender = this.readyToRender;
+        if (readyToRender === false)
+            return;
+        if (typeof (readyToRender) === 'string') {
+            if (readyToRender !== this._mainTemplate) {
+                this.root.innerHTML = '';
+                this._renderContext = undefined;
+            }
+        }
         if (this._renderContext === undefined) {
             this._renderContext = this.initRenderContext();
             this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
-            this._renderContext.init(this.mainTemplate, this._renderContext, this.root, this.renderOptions);
+            this._renderContext.init(this[this._mainTemplate], this._renderContext, this.root, this.renderOptions);
         }
         if (this.updateTransform !== undefined) {
             this._renderContext.update = update;

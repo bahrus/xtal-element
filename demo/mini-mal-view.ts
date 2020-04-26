@@ -8,6 +8,27 @@ const template = createTemplate(
 
 export class MinimalView extends XtalViewElement<string>{
 
+    //#region Required Members
+    get readyToInit(){return true;}
+
+    init(){
+        return new Promise<string>(resolve =>{
+            resolve('Greetings, Earthling.');
+        })
+    }
+
+    get readyToRender(){return true;}
+
+    update(){
+        return new Promise<string>(resolve =>{
+            resolve('That tickles, number ' + this.count);
+        })
+    }
+
+    get mainTemplate(){
+        return template;
+    }
+    
     get initTransform(){
         return {
             div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
@@ -19,6 +40,7 @@ export class MinimalView extends XtalViewElement<string>{
             div: this.viewModel
         }
     }
+    //#endregion
 
     clickHandler(e: Event){
         this.inc();
@@ -36,19 +58,7 @@ export class MinimalView extends XtalViewElement<string>{
         this.count++;
     }
         
-    init(){
-        return new Promise<string>(resolve =>{
-            resolve('Greetings, Earthling.');
-        })
-    }
-    update(){
-        return new Promise<string>(resolve =>{
-            resolve('That tickles number ' + this.count);
-        })
-    }
-    get mainTemplate(){
-        return template;
-    }
-    get readyToInit(){return true;}
+
+
 }
 customElements.define('mini-mal-view', MinimalView);

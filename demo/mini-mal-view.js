@@ -7,6 +7,22 @@ export class MinimalView extends XtalViewElement {
         super(...arguments);
         this.#count = 0;
     }
+    //#region Required Members
+    get readyToInit() { return true; }
+    init() {
+        return new Promise(resolve => {
+            resolve('Greetings, Earthling.');
+        });
+    }
+    get readyToRender() { return true; }
+    update() {
+        return new Promise(resolve => {
+            resolve('That tickles, number ' + this.count);
+        });
+    }
+    get mainTemplate() {
+        return template;
+    }
     get initTransform() {
         return {
             div: [{}, { click: this.clickHandler }],
@@ -17,6 +33,7 @@ export class MinimalView extends XtalViewElement {
             div: this.viewModel
         };
     }
+    //#endregion
     clickHandler(e) {
         this.inc();
     }
@@ -31,19 +48,5 @@ export class MinimalView extends XtalViewElement {
     inc() {
         this.count++;
     }
-    init() {
-        return new Promise(resolve => {
-            resolve('Greetings, Earthling.');
-        });
-    }
-    update() {
-        return new Promise(resolve => {
-            resolve('That tickles number ' + this.count);
-        });
-    }
-    get mainTemplate() {
-        return template;
-    }
-    get readyToInit() { return true; }
 }
 customElements.define('mini-mal-view', MinimalView);
