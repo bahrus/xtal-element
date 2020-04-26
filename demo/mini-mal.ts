@@ -1,7 +1,7 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {TransformRules} from 'trans-render/init.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
-import {XtalElement} from '../xtal-element.js';
+import {XtalElement, propUp} from '../xtal-element.js';
 
 const main = Symbol();
 const name = 'name';
@@ -47,7 +47,7 @@ export class MiniMal extends XtalElement{
         this.attr(name, nv);
     }
     connectedCallback(){
-        this.propUp([name]);
+        this.pr([name]);
         super.connectedCallback();
     }
     static get observedAttributes(){

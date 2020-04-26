@@ -164,3 +164,5 @@ customElements.define('mini-mal-view', MinimalView);
 
 Quite often, a web component, after initializing, needs to retrieve some entity before it can really render anything meaningful.  In the meantime, perhaps we want to display something, like a loading mask and or a summary of what the component is showing.  That means using light children, that, only when we have something better to show, should display. 
 
+## Build-in decorator Transformers
+

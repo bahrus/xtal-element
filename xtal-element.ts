@@ -4,6 +4,7 @@ import {RenderContext, RenderOptions, TransformRules, TransformValueOptions} fro
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
+//export {propUp} from 'trans-render/hydrate.js';
 
 export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
 
@@ -38,7 +39,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     _connected!: boolean;
     connectedCallback(){
-        this.propUp([disabled]);
+        this[propUp]([disabled]);
         this._connected = true;
         this.onPropsChange();
     }
