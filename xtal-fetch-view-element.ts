@@ -117,6 +117,10 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
         }
         super.attributeChangedCallback(name, oldValue, newValue);
     }
+    connectedCallback(){
+        this.propUp([fetch$, href, 'reqInit', 'reqInitRequired']);
+        super.connectedCallback();
+    }
 
     //#endregion
 }

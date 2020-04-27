@@ -95,4 +95,8 @@ export class XtalFetchViewElement extends XtalViewElement {
         }
         super.attributeChangedCallback(name, oldValue, newValue);
     }
+    connectedCallback() {
+        this.propUp([fetch$, href, 'reqInit', 'reqInitRequired']);
+        super.connectedCallback();
+    }
 }
