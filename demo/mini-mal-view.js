@@ -1,3 +1,17 @@
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+};
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
+};
+var _count;
 import { XtalViewElement } from '../xtal-view-element.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
 const template = createTemplate(
@@ -5,7 +19,7 @@ const template = createTemplate(
 export class MinimalView extends XtalViewElement {
     constructor() {
         super(...arguments);
-        this.#count = 0;
+        _count.set(this, 0);
     }
     //#region Required Members
     get readyToInit() { return true; }
@@ -37,16 +51,16 @@ export class MinimalView extends XtalViewElement {
     clickHandler(e) {
         this.inc();
     }
-    #count;
     get count() {
-        return this.#count;
+        return __classPrivateFieldGet(this, _count);
     }
     set count(nv) {
-        this.#count = nv;
+        __classPrivateFieldSet(this, _count, nv);
         this.onPropsChange();
     }
     inc() {
         this.count++;
     }
 }
+_count = new WeakMap();
 customElements.define('mini-mal-view', MinimalView);
