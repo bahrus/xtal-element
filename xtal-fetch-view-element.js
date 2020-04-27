@@ -92,6 +92,8 @@ export class XtalFetchViewElement extends XtalViewElement {
                 this._reqInit = JSON.parse(newValue);
                 break;
             case href:
+                this._href = newValue;
+                break;
         }
         super.attributeChangedCallback(name, oldValue, newValue);
     }

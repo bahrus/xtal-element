@@ -113,6 +113,8 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
                 this._reqInit = JSON.parse(newValue);
                 break;
             case href:
+                this._href = newValue;
+                break;
 
         }
         super.attributeChangedCallback(name, oldValue, newValue);
