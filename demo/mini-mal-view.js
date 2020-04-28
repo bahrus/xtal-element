@@ -41,6 +41,7 @@ export class MinimalView extends XtalViewElement {
             resolve('That tickles, number ' + this.count);
         });
     }
+    //#endregion
     clickHandler(e) {
         this.inc();
     }

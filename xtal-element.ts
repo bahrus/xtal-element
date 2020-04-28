@@ -5,8 +5,11 @@ import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 
+export interface IXtalElement{
+    updateTransform?: TransformRules;
+}
 
-export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
+export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) implements IXtalElement{
 
     get noShadow(){
         return false;
@@ -25,7 +28,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get readyToRender(): boolean | string | symbol;
 
-    abstract get updateTransform(): TransformRules;
+    updateTransform: TransformRules | undefined;
+
+    // abstract get updateTransform(): TransformRules;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
@@ -70,6 +75,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
                 this.root.innerHTML = '';
                 this._renderContext = undefined;
             }
+        }
+        if(this.updateTransform === undefined){
+            this.root.innerHTML = '';
         }
         if(this._renderContext === undefined){
             this._renderContext = this.initRenderContext();

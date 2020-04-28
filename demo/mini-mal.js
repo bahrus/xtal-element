@@ -20,7 +20,8 @@ const name = 'name';
 export class MiniMal extends XtalElement {
     constructor() {
         super(...arguments);
-        //#region Required Members
+        //#region XtalElement Members
+        //#region required
         this.readyToInit = true;
         this.readyToRender = true;
         this.mainTemplate = createTemplate(/* html */ `
@@ -34,6 +35,8 @@ export class MiniMal extends XtalElement {
         this.initTransform = {
             button: [{}, { click: this.clickHandler }]
         };
+        //#endregion
+        //#region implemented members
         this.updateTransform = {
             button: ({ target }) => interpolate(target, 'textContent', this, false),
         };

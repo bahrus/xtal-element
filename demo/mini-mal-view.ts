@@ -19,21 +19,22 @@ export class MinimalView extends XtalViewElement<string>{
 
     readyToRender = true;
 
-    update(){
-        return new Promise<string>(resolve =>{
-            resolve('That tickles, number ' + this.count);
-        })
-    }
-
     mainTemplate = template;
     
     initTransform = {
         div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
     };
+
+    update(){
+        return new Promise<string>(resolve =>{
+            resolve('That tickles, number ' + this.count);
+        })
+    }
     
     updateTransform = () => ({
         div: this.viewModel,
     })
+    //#endregion
 
     clickHandler(e: Event){
         this.inc();

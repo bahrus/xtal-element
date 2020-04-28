@@ -7,7 +7,8 @@ const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement{
 
-    //#region Required Members
+    //#region XtalElement Members
+    //#region required
     readyToInit = true;
     readyToRender = true;
 
@@ -23,9 +24,11 @@ export class MiniMal extends XtalElement{
     initTransform = {
         button: [{},{click: this.clickHandler}]
     } as TransformRules;
-        
+    //#endregion
+    
+    //#region implemented members
     updateTransform = {
-        button: ({target}) => interpolate(target, 'textContent', this, false),
+        button: ({target} : {target:HTMLElement}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
     
     //#endregion

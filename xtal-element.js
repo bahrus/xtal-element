@@ -22,6 +22,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return __classPrivateFieldGet(this, _renderOptions);
     }
+    // abstract get updateTransform(): TransformRules;
     initRenderCallback(ctx, target) { }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
@@ -60,6 +61,9 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
                 this.root.innerHTML = '';
                 this._renderContext = undefined;
             }
+        }
+        if (this.updateTransform === undefined) {
+            this.root.innerHTML = '';
         }
         if (this._renderContext === undefined) {
             this._renderContext = this.initRenderContext();
