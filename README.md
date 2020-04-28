@@ -22,7 +22,7 @@ Here is a minimal example of a web component that extends XtalElement:
 
 ```TypeScript
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {TransformRules} from 'trans-render/init.d.js';
+import {TransformRules, TransformValueOptions, } from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement} from '../xtal-element.js';
 
@@ -30,7 +30,8 @@ const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement{
 
-    //#region Required Members
+    //#region XtalElement Members
+    //#region required
     readyToInit = true;
     readyToRender = true;
 
@@ -46,7 +47,9 @@ export class MiniMal extends XtalElement{
     initTransform = {
         button: [{},{click: this.clickHandler}]
     } as TransformRules;
-        
+    //#endregion
+
+    //#region implemented members
     updateTransform = {
         button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;

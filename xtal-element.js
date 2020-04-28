@@ -22,7 +22,6 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return __classPrivateFieldGet(this, _renderOptions);
     }
-    // abstract get updateTransform(): TransformRules;
     initRenderCallback(ctx, target) { }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);

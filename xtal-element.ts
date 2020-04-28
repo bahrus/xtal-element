@@ -1,15 +1,13 @@
 import {XtallatX} from './xtal-latx.js';
 import {DataDecorators} from './data-decorators.js';
-import {RenderContext, RenderOptions, TransformRules, TransformValueOptions} from 'trans-render/init.d.js';
+import {RenderContext, RenderOptions, TransformRules, TransformValueOptions} from 'trans-render/types.d.js';
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 
-export interface IXtalElement{
-    updateTransform?: TransformRules;
-}
+type TransformGetter = () => TransformValueOptions;
 
-export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) implements IXtalElement{
+export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
 
     get noShadow(){
         return false;
@@ -22,15 +20,14 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get mainTemplate(): HTMLTemplateElement;
 
-    abstract get initTransform(): TransformRules;
+    abstract get initTransform(): TransformValueOptions | TransformGetter ;
 
     abstract get readyToInit(): boolean;
 
     abstract get readyToRender(): boolean | string | symbol;
 
-    updateTransform: TransformRules | undefined;
+    updateTransform: TransformValueOptions | TransformGetter | undefined;
 
-    // abstract get updateTransform(): TransformRules;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 

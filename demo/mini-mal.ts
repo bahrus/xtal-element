@@ -1,5 +1,5 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {TransformRules} from 'trans-render/init.d.js';
+import {TransformRules, TransformValueOptions, } from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement} from '../xtal-element.js';
 
@@ -25,10 +25,10 @@ export class MiniMal extends XtalElement{
         button: [{},{click: this.clickHandler}]
     } as TransformRules;
     //#endregion
-    
+
     //#region implemented members
     updateTransform = {
-        button: ({target} : {target:HTMLElement}) => interpolate(target, 'textContent', this, false),
+        button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
     
     //#endregion
