@@ -50,7 +50,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     get root() : HTMLElement | ShadowRoot{
         if(this.noShadow) return this;
         if(this.shadowRoot == null){
-            this.attachShadow({mode: 'open'});
+            this.attachShadow({mode: 'open', delegatesFocus: true});
         }
         return this.shadowRoot!;
     }
