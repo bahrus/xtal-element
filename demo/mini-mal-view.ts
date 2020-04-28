@@ -31,13 +31,9 @@ export class MinimalView extends XtalViewElement<string>{
         div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
     };
     
-
-    get updateTransform(){
-        return {
-            div: this.viewModel,
-        }
-    }
-    //#endregion
+    updateTransform = () => ({
+        div: this.viewModel,
+    })
 
     clickHandler(e: Event){
         this.inc();

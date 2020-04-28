@@ -26,6 +26,9 @@ export class MinimalView extends XtalViewElement {
         this.initTransform = {
             div: [{}, { click: this.clickHandler }],
         };
+        this.updateTransform = () => ({
+            div: this.viewModel,
+        });
         _count.set(this, 0);
     }
     init() {
@@ -38,12 +41,6 @@ export class MinimalView extends XtalViewElement {
             resolve('That tickles, number ' + this.count);
         });
     }
-    get updateTransform() {
-        return {
-            div: this.viewModel,
-        };
-    }
-    //#endregion
     clickHandler(e) {
         this.inc();
     }

@@ -55,7 +55,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     initRenderContext() : RenderContext{
         return {
             init: init,
-            Transform: this.initTransform,
+            Transform: (typeof this.initTransform === 'function') ? this.initTransform() : this.initTransform,
             host: this,
             cache: this.constructor,
         };
@@ -78,7 +78,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         }
         if(this.updateTransform !== undefined){
             this._renderContext!.update = update;
-            this._renderContext.Transform = this.updateTransform;
+            this._renderContext.Transform = (typeof this.updateTransform === 'function') ? this.updateTransform() : this.updateTransform;
             this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
             this._renderContext?.update!(this._renderContext!, this.root);
         }

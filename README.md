@@ -124,11 +124,9 @@ export class MinimalView extends XtalViewElement<string>{
     };
     
 
-    get updateTransform(){
-        return {
-            div: this.viewModel,
-        }
-    }
+    updateTransform = () => ({
+        div: this.viewModel,
+    })
     //#endregion
 
     clickHandler(e: Event){
