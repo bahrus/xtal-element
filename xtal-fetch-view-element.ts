@@ -3,7 +3,6 @@ import {lispToCamel} from './xtal-latx.js'
 
 export const href = 'href';
 export const req_init = 'req-init';
-export const fetch$ = 'fetch';
 export const req_init_required = 'req-init-required';
 
 export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<TViewModel>{
@@ -26,19 +25,13 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
     }
 
     update(signal: AbortSignal){
+        this.root.innerHTML = '';
         return this.init(signal);
     }
 
     //
 
     //#region boilerplate
-    _fetch!: boolean;
-    get fetch() {
-        return this._fetch
-    }
-    set fetch(val) {
-        this.attr(fetch$, !!val, '');
-    }
 
     _href!: string;
     get href() {
@@ -88,7 +81,6 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
              * @type boolean
              * Indicates whether fetch request should be made.
              */
-            fetch$,
             href,
             req_init,
             req_init_required
@@ -102,7 +94,6 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
             //     this.debounceDurationHandler();
             //     break;
             case req_init_required:
-            case fetch$:
             //case cacheResults:
                 (<any>this)['_' + lispToCamel(name)] =  newValue !== null;
                 break;
@@ -120,7 +111,7 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
         super.attributeChangedCallback(name, oldValue, newValue);
     }
     connectedCallback(){
-        this.propUp([fetch$, href, 'reqInit', 'reqInitRequired']);
+        this.propUp([href, 'reqInit', 'reqInitRequired']);
         super.connectedCallback();
     }
 

@@ -14,7 +14,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     constructor() {
         super(...arguments);
         _renderOptions.set(this, {});
-        this._mainTemplate = 'mainTemplate';
+        this._mainTemplateProp = 'mainTemplate';
     }
     get noShadow() {
         return false;
@@ -59,7 +59,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         if (readyToRender === false)
             return;
         if (typeof (readyToRender) === 'string') {
-            if (readyToRender !== this._mainTemplate) {
+            if (readyToRender !== this._mainTemplateProp) {
                 this.root.innerHTML = '';
                 this._renderContext = undefined;
             }
@@ -67,7 +67,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         if (this._renderContext === undefined) {
             this._renderContext = this.initRenderContext();
             __classPrivateFieldGet(this, _renderOptions).initializedCallback = this.afterInitRenderCallback.bind(this);
-            this._renderContext.init(this[this._mainTemplate], this._renderContext, this.root, this.renderOptions);
+            this._renderContext.init(this[this._mainTemplateProp], this._renderContext, this.root, this.renderOptions);
         }
         if (this.updateTransform !== undefined) {
             this._renderContext.update = update;

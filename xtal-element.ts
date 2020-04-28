@@ -62,12 +62,12 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         };
     }
     _renderContext: RenderContext | undefined;
-    _mainTemplate = 'mainTemplate';
+    _mainTemplateProp = 'mainTemplate';
     transRender(){
         const readyToRender = this.readyToRender;
         if(readyToRender === false) return;
         if(typeof(readyToRender) === 'string'){
-            if(readyToRender !== this._mainTemplate){
+            if(readyToRender !== this._mainTemplateProp){
                 this.root.innerHTML = '';
                 this._renderContext = undefined;
             }
@@ -75,7 +75,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         if(this._renderContext === undefined){
             this._renderContext = this.initRenderContext();
             this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
-            this._renderContext.init!((<any>this)[this._mainTemplate] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
+            this._renderContext.init!((<any>this)[this._mainTemplateProp] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
         }
         if(this.updateTransform !== undefined){
             this._renderContext!.update = update;
