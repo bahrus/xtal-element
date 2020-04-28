@@ -25,7 +25,6 @@ export abstract class XtalFetchViewElement<TViewModel> extends XtalViewElement<T
     }
 
     update(signal: AbortSignal){
-        this.root.innerHTML = '';
         return this.init(signal);
     }
 

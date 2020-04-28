@@ -17,7 +17,6 @@ export class XtalFetchViewElement extends XtalViewElement {
         });
     }
     update(signal) {
-        this.root.innerHTML = '';
         return this.init(signal);
     }
     get href() {
