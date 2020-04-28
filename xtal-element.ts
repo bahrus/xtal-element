@@ -5,6 +5,7 @@ import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 
+
 export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
 
     get noShadow(){
@@ -24,9 +25,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get readyToRender(): boolean | string | symbol;
 
-    get updateTransform(): TransformRules | undefined{
-        return undefined;
-    }
+    abstract get updateTransform(): TransformRules;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 

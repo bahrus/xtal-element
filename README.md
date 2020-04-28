@@ -31,30 +31,26 @@ const name = 'name';
 export class MiniMal extends XtalElement{
 
     //#region Required Members
-    get readyToInit(){return true;}
-    get readyToRender(){return true;}
+    readyToInit = true;
+    readyToRender = true;
 
-    get mainTemplate(){return createTemplate(/* html */`
+    mainTemplate = createTemplate(/* html */`
         <style>
         .btn {
             font-size: 200%;
         }
         </style>
         <button class="btn">Hello |.name ?? World|</slot></button>
-    `, MiniMal, main)};
+    `, MiniMal, main);
 
-    get initTransform(){ 
-        return {
-            button: [{},{click: this.clickHandler}]
-        } as TransformRules
-    };
-
-    #updateTransform = {
+    initTransform = {
+        button: [{},{click: this.clickHandler}]
+    } as TransformRules;
+        
+    updateTransform = {
         button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
-    get updateTransform(){
-        return this.#updateTransform;
-    }
+    
     //#endregion
 
     clickHandler(e: Event){

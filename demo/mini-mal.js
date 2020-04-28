@@ -11,7 +11,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     privateMap.set(receiver, value);
     return value;
 };
-var _updateTransform, _name;
+var _name;
 import { createTemplate } from 'trans-render/createTemplate.js';
 import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement } from '../xtal-element.js';
@@ -20,18 +20,10 @@ const name = 'name';
 export class MiniMal extends XtalElement {
     constructor() {
         super(...arguments);
-        _updateTransform.set(this, {
-            button: ({ target }) => interpolate(target, 'textContent', this, false),
-        });
-        //#region boilerplate code
-        _name.set(this, void 0);
-        //#endregion
-    }
-    //#region Required Members
-    get readyToInit() { return true; }
-    get readyToRender() { return true; }
-    get mainTemplate() {
-        return createTemplate(/* html */ `
+        //#region Required Members
+        this.readyToInit = true;
+        this.readyToRender = true;
+        this.mainTemplate = createTemplate(/* html */ `
         <style>
         .btn {
             font-size: 200%;
@@ -39,16 +31,15 @@ export class MiniMal extends XtalElement {
         </style>
         <button class="btn">Hello |.name ?? World|</slot></button>
     `, MiniMal, main);
-    }
-    ;
-    get initTransform() {
-        return {
+        this.initTransform = {
             button: [{}, { click: this.clickHandler }]
         };
-    }
-    ;
-    get updateTransform() {
-        return __classPrivateFieldGet(this, _updateTransform);
+        this.updateTransform = {
+            button: ({ target }) => interpolate(target, 'textContent', this, false),
+        };
+        //#region boilerplate code
+        _name.set(this, void 0);
+        //#endregion
     }
     //#endregion
     clickHandler(e) {
@@ -61,7 +52,7 @@ export class MiniMal extends XtalElement {
         this.attr(name, nv);
     }
     connectedCallback() {
-        this.pr([name]);
+        this.propUp([name]);
         super.connectedCallback();
     }
     static get observedAttributes() {
@@ -76,5 +67,5 @@ export class MiniMal extends XtalElement {
         this.onPropsChange();
     }
 }
-_updateTransform = new WeakMap(), _name = new WeakMap();
+_name = new WeakMap();
 customElements.define('mini-mal', MiniMal);
