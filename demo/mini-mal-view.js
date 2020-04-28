@@ -19,32 +19,28 @@ const template = createTemplate(
 export class MinimalView extends XtalViewElement {
     constructor() {
         super(...arguments);
+        //#region Required Members
+        this.readyToInit = true;
+        this.readyToRender = true;
+        this.mainTemplate = template;
+        this.initTransform = {
+            div: [{}, { click: this.clickHandler }],
+        };
         _count.set(this, 0);
     }
-    //#region Required Members
-    get readyToInit() { return true; }
     init() {
         return new Promise(resolve => {
             resolve('Greetings, Earthling.');
         });
     }
-    get readyToRender() { return true; }
     update() {
         return new Promise(resolve => {
             resolve('That tickles, number ' + this.count);
         });
     }
-    get mainTemplate() {
-        return template;
-    }
-    get initTransform() {
-        return {
-            div: [{}, { click: this.clickHandler }],
-        };
-    }
     get updateTransform() {
         return {
-            div: this.viewModel
+            div: this.viewModel,
         };
     }
     //#endregion

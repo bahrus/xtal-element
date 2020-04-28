@@ -101,7 +101,7 @@ const template = createTemplate(
 export class MinimalView extends XtalViewElement<string>{
 
     //#region Required Members
-    get readyToInit(){return true;}
+    readyToInit = true
 
     init(){
         return new Promise<string>(resolve =>{
@@ -109,7 +109,7 @@ export class MinimalView extends XtalViewElement<string>{
         })
     }
 
-    get readyToRender(){return true;}
+    readyToRender = true;
 
     update(){
         return new Promise<string>(resolve =>{
@@ -117,19 +117,16 @@ export class MinimalView extends XtalViewElement<string>{
         })
     }
 
-    get mainTemplate(){
-        return template;
-    }
+    mainTemplate = template;
     
-    get initTransform(){
-        return {
-            div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
-        }
-    }
+    initTransform = {
+        div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
+    };
+    
 
     get updateTransform(){
         return {
-            div: this.viewModel
+            div: this.viewModel,
         }
     }
     //#endregion
