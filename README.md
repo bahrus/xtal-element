@@ -2,17 +2,27 @@
 
 xtal-element is yet another base element to use for creating web components.  The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
-xtal-element's target audience is those who are looking for a base class that:
+xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not everything.  
+
+For example, an interesting duality paradox that has existed for a number of years, has been between OOP vs Functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
+
+xtal-element, though, thinks that there is still a good case for classes, especially in the way it makes it easy to extend code.  So xtal-element doesn't go there.  Much of what xtal-element is striving to do is in fact focused squarely on getting the most out of inheritance.
+
+For example, it is often useful to build a base component that only uses primitive html elements built into the browser, as much as possible.  Then allow for extending classes to substitute the primitive html elements with the rapidly growing list of robust design libraries, in a kind of "lift and shift" approach.
+
+Web components typically upgrade in two steps -- starting with the light children, and then blossoming into the rich interface once the dependencies are downloaded.  With the approach mentioned above, maybe it would be possible to add a third stage?  Just an unproven thought.
+
+Anywan, xtal-element's target audience is those who are looking for a base class that:
 
 1.  Will benefit from the implementation of HTML Modules -- The default rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).  The base class is an abstract class.  Typescript then highlights what you need to implement.  No need to memorize or look things up.
-5.  Views web components as a mix between a kind of declarative function -- a function of its properties/attributes.  And as a view based on a view model.  Focus is on web components that create a logical, and optionally visual output of these properties / attributes.
+5.  Adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic / flexibility can pay off in some cases.
 
 As we'll see, satisfying these requirements suggests creating a starting point that is a bit more complex than the primitive custom element definition.  This base library doesn't claim to be the best fit for all types of web components, but focuses on some common needs.
 
-xtal-element adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic / flexibility can pay off in some cases.
+xtal-element 
 
 ## Minimal XtalElement Setup
 
@@ -24,9 +34,16 @@ Here is a minimal example of a web component that extends XtalElement:
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {TransformRules, TransformValueOptions, } from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
-import {XtalElement} from '../xtal-element.js';
+import {XtalElement} from 'xtal-element/xtal-element.js';
 
-const main = Symbol();
+const mainTemplate createTemplate(/* html */`
+    <style>
+    .btn {
+        font-size: 200%;
+    }
+    </style>
+    <button class="btn">Hello |.name ?? World|</slot></button>
+`;
 const name = 'name';
 export class MiniMal extends XtalElement{
 
@@ -35,14 +52,7 @@ export class MiniMal extends XtalElement{
     readyToInit = true;
     readyToRender = true;
 
-    mainTemplate = createTemplate(/* html */`
-        <style>
-        .btn {
-            font-size: 200%;
-        }
-        </style>
-        <button class="btn">Hello |.name ?? World|</slot></button>
-    `, MiniMal, main);
+    mainTemplate = mainTemplate;
 
     initTransform = {
         button: [{},{click: () => {this.name = 'me'}}]
