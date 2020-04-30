@@ -33,20 +33,18 @@ export class MiniMal extends XtalElement {
         <button class="btn">Hello |.name ?? World|</slot></button>
     `, MiniMal, main);
         this.initTransform = {
-            button: [{}, { click: this.clickHandler }]
+            button: [{}, { click: () => { this.name = 'me'; } }]
         };
         //#endregion
         //#region implemented members
         this.updateTransform = {
             button: ({ target }) => interpolate(target, 'textContent', this, false),
         };
+        //#endregion
+        //#endregion
         //#region boilerplate code
         _name.set(this, void 0);
         //#endregion
-    }
-    //#endregion
-    clickHandler(e) {
-        this.name = 'me';
     }
     get name() {
         return __classPrivateFieldGet(this, _name);

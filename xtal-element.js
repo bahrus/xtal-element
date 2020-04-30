@@ -50,7 +50,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
             cache: this.constructor,
         };
     }
-    transRender() {
+    transform() {
         var _a;
         const readyToRender = this.readyToRender;
         if (readyToRender === false)
@@ -79,7 +79,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     onPropsChange() {
         if (this._disabled || !this._connected || !this.readyToInit)
             return false;
-        this.transRender();
+        this.transform();
         return true;
     }
 }

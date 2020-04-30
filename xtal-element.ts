@@ -64,7 +64,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     }
     _renderContext: RenderContext | undefined;
     _mainTemplateProp = 'mainTemplate';
-    transRender(){
+    transform(){
         const readyToRender = this.readyToRender;
         if(readyToRender === false) return;
         if(typeof(readyToRender) === 'string'){
@@ -90,7 +90,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     }
     onPropsChange() : boolean{
         if(this._disabled || !this._connected || !this.readyToInit) return false;
-        this.transRender();
+        this.transform();
         return true;
     }
 

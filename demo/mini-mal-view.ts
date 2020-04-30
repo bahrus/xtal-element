@@ -1,19 +1,19 @@
 import {XtalViewElement} from '../xtal-view-element.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {PESettings} from 'trans-render/init.d.js';
+import {PESettings} from 'trans-render/types.d.js';
 
 const template = createTemplate(
     /* html */`<div></div>`
 );
 
-export class MinimalView extends XtalViewElement<string>{
+export class MinimalView extends XtalViewElement<[string, number]>{
 
     //#region Required Members
     readyToInit = true
 
     init(){
-        return new Promise<string>(resolve =>{
-            resolve('Greetings, Earthling.');
+        return new Promise<[string, number]>(resolve =>{
+            resolve(['Greetings, Earthling.', 0]);
         })
     }
 
@@ -25,31 +25,21 @@ export class MinimalView extends XtalViewElement<string>{
         div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
     };
 
-    update(){
-        return new Promise<string>(resolve =>{
-            resolve('That tickles, number ' + this.count);
-        })
-    }
+    // update(){
+    //     return new Promise<string>(resolve =>{
+    //         resolve('That tickles, number ' + this.count);
+    //     })
+    // }
     
     updateTransform = () => ({
-        div: this.viewModel,
+        div: `${this.viewModel[0]}  ${this.viewModel[1]}`,
     })
     //#endregion
 
     clickHandler(e: Event){
-        this.inc();
-    }
-
-    #count = 0;
-    get count(){
-        return this.#count;
-    }
-    set count(nv){
-        this.#count = nv;
-        this.onPropsChange();
-    }
-    inc(){
-        this.count++;
+        this.viewModel[1]++;
+        this.viewModel[0] = "Live long and prosper.";
+        this.transform();
     }
         
 

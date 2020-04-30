@@ -14,6 +14,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _state, _controller, _signal;
 import { XtalElement } from './xtal-element.js';
 export class XtalViewElement extends XtalElement {
+    // abstract async update(signal: AbortSignal) : Promise<ViewModel>;
     constructor() {
         super();
         _state.set(this, void 0);
@@ -31,7 +32,7 @@ export class XtalViewElement extends XtalElement {
         this.de('view-model', {
             value: nv
         });
-        this.transRender();
+        this.transform();
     }
     onPropsChange() {
         if (super._disabled || !this._connected || !this.readyToInit)
@@ -43,16 +44,16 @@ export class XtalViewElement extends XtalElement {
                     __classPrivateFieldSet(this, _state, 'initialized');
                 });
                 __classPrivateFieldSet(this, _state, 'initializing');
-            case 'updating':
+            //case 'updating':
             case 'initializing':
                 //todo: abort
                 break;
-            case 'updated':
-            case 'initialized':
-                this.update(__classPrivateFieldGet(this, _signal)).then(model => {
-                    this.viewModel = model;
-                    __classPrivateFieldSet(this, _state, 'updated');
-                });
+            //case 'updated':
+            // case 'initialized':
+            //     this.update(this.#signal).then(model =>{
+            //         this.viewModel = model;
+            //         this.#state = 'updated';
+            //     })   
         }
         return true;
     }

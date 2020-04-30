@@ -45,7 +45,7 @@ export class MiniMal extends XtalElement{
     `, MiniMal, main);
 
     initTransform = {
-        button: [{},{click: this.clickHandler}]
+        button: [{},{click: () => {this.name = 'me'}}]
     } as TransformRules;
     //#endregion
 
@@ -56,9 +56,6 @@ export class MiniMal extends XtalElement{
     
     //#endregion
 
-    clickHandler(e: Event){
-        this.name = 'me';
-    }
 
     //#region boilerplate code
     #name!: string;
@@ -153,6 +150,10 @@ export class MinimalView extends XtalViewElement<string>{
 }
 customElements.define('mini-mal-view', MinimalView);
 ```
+
+## Boilerplate Busting
+
+
 
 ## Progressive Enhancement Support
 

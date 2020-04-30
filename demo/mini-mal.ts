@@ -22,7 +22,7 @@ export class MiniMal extends XtalElement{
     `, MiniMal, main);
 
     initTransform = {
-        button: [{},{click: this.clickHandler}]
+        button: [{},{click: () => {this.name = 'me'}}]
     } as TransformRules;
     //#endregion
 
@@ -32,10 +32,7 @@ export class MiniMal extends XtalElement{
     } as TransformRules;
     
     //#endregion
-
-    clickHandler(e: Event){
-        this.name = 'me';
-    }
+    //#endregion
 
     //#region boilerplate code
     #name!: string;

@@ -4,7 +4,7 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
     
     abstract async init(signal: AbortSignal) : Promise<ViewModel>;
 
-    abstract async update(signal: AbortSignal) : Promise<ViewModel>;
+    // abstract async update(signal: AbortSignal) : Promise<ViewModel>;
 
 
     constructor(){
@@ -23,7 +23,7 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
         this.de('view-model', {
             value: nv
         });
-        this.transRender();
+        this.transform();
     }
 
     #state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
@@ -39,16 +39,16 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
                     this.#state = 'initialized';
                 });
                 this.#state = 'initializing';
-            case 'updating':
+            //case 'updating':
             case 'initializing':
                 //todo: abort
                 break; 
-            case 'updated':
-            case 'initialized':
-                this.update(this.#signal).then(model =>{
-                    this.viewModel = model;
-                    this.#state = 'updated';
-                })   
+            //case 'updated':
+            // case 'initialized':
+            //     this.update(this.#signal).then(model =>{
+            //         this.viewModel = model;
+            //         this.#state = 'updated';
+            //     })   
         }
         return true;
 
