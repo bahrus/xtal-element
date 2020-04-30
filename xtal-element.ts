@@ -20,13 +20,13 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract get mainTemplate(): HTMLTemplateElement;
 
-    abstract get initTransform(): TransformValueOptions | TransformGetter ;
+    abstract get initTransform(): TransformRules | TransformGetter ;
 
     abstract get readyToInit(): boolean;
 
     abstract get readyToRender(): boolean | string | symbol;
 
-    updateTransform: TransformValueOptions | TransformGetter | undefined;
+    updateTransform: TransformRules | TransformGetter | undefined;
 
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
@@ -57,7 +57,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     initRenderContext() : RenderContext{
         return {
             init: init,
-            Transform: (typeof this.initTransform === 'function') ? this.initTransform() : this.initTransform,
+            Transform: (typeof this.initTransform === 'function') ? (<any>this).initTransform() as TransformRules : this.initTransform,
             host: this,
             cache: this.constructor,
         };
@@ -83,7 +83,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         }
         if(this.updateTransform !== undefined){
             this._renderContext!.update = update;
-            this._renderContext.Transform = (typeof this.updateTransform === 'function') ? this.updateTransform() : this.updateTransform;
+            this._renderContext.Transform = (typeof this.updateTransform === 'function') ? (<any>this).updateTransform() as TransformRules : this.updateTransform;
             this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
             this._renderContext?.update!(this._renderContext!, this.root);
         }

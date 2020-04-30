@@ -85,6 +85,51 @@ export class MiniMal extends XtalElement{
 customElements.define('mini-mal', MiniMal);
 ```
 
+## TODO:  Updates based on property name change:
+
+```JavaScript
+mainTemplate = createTemplate(/* html */`
+    <section>
+        <h1></h1>
+        <h2></h2>
+    </section>
+    <footer>
+        <h3></h3>
+        <h4></h4>
+    </footer>
+`);
+
+export class Foo extends XtalElement{
+    prop1 = 'a';
+    prop2 = 'b';
+    prop3 = 'c';
+    updateTransforms = [
+        ({prop1}) =>{
+            section:{
+                h1: prop1
+            }
+        }
+        ({prop1, prop2}) =>{
+            section:{
+                h2: prop1 + prop2
+            }
+        }
+        ({prop1, prop3}) =>{
+            footer: {
+                h3: prop1 + prop3
+            }
+        }
+        ({prop1, prop2, prop3}){
+            footer:{
+                h4: prop1 + prop2 + prop3
+            }
+        }
+    }]
+}
+```
+
+Then when prop1 changes, do all 4 transformations, when prop2 changes, only the second and last, and when prop3 changes, do the third and last transformations.
+
 ## Minimal XtalViewElement Setup
 
 The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
