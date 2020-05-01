@@ -1,18 +1,21 @@
 # xtal-element
 
+<details>
+<summary>Target Audience</summary>
+
 xtal-element is yet another base element to use for creating web components.  The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
 xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not everything.  
 
-For example, an interesting duality paradox that has existed for a number of years, has been between OOP vs Functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
+For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, thinks that there is still a good case for classes, especially in the way it makes it easy to extend code.  So xtal-element doesn't go there.  Much of what xtal-element is striving to do is in fact focused squarely on getting the most out of inheritance.
+xtal-element, though, sticks with classes, because of the way it makes it easy to extend code.  Much of what xtal-element is striving to do is in fact focused squarely on getting the most out of inheritance.
 
 For example, it is often useful to build a base component that only uses primitive html elements built into the browser, as much as possible.  Then allow for extending classes to substitute the primitive html elements with the rapidly growing list of robust design libraries, in a kind of "lift and shift" approach.
 
 Web components typically upgrade in two steps -- starting with the light children, and then blossoming into the rich interface once the dependencies are downloaded.  With the approach mentioned above, maybe it would be possible to add a third stage?  Just an unproven thought.
 
-Anywan, xtal-element's target audience is those who are looking for a base class that:
+Anyway, xtal-element's target audience is those who are looking for a base class that:
 
 1.  Will benefit from the implementation of HTML Modules -- The default rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility to a whole other level.
@@ -22,7 +25,7 @@ Anywan, xtal-element's target audience is those who are looking for a base class
 
 As we'll see, satisfying these requirements suggests creating a starting point that is a bit more complex than the primitive custom element definition.  This base library doesn't claim to be the best fit for all types of web components, but focuses on some common needs.
 
-xtal-element 
+</details>
 
 ## Minimal XtalElement Setup
 
@@ -47,27 +50,29 @@ const mainTemplate createTemplate(/* html */`
 const name = 'name';
 export class MiniMal extends XtalElement{
 
-    //#region XtalElement Members
-    //#region required
+    //This property / field allows the developer to wait for some required properties to be set before doing anything.
     readyToInit = true;
+
+    //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
+    //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
     readyToRender = true;
+
 
     mainTemplate = mainTemplate;
 
+    //uses trans-render syntax: https://github.com/bahrus/trans-render
+    //initTransform is only done once.
     initTransform = {
         button: [{},{click: () => {this.name = 'me'}}]
     } as TransformRules;
-    //#endregion
 
-    //#region implemented members
+    // updateTransform is called anytime 
+    // this.attr(name, value) or this.onPropsChange(name)
     updateTransform = {
         button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
     
-    //#endregion
-
-
-    //#region boilerplate code
+    //Close to the metal boilerplate.  Leaving as is, waiting (im)patiently for Godot (decorators) 
     #name!: string;
     get name(){
         return this.#name;
@@ -76,6 +81,7 @@ export class MiniMal extends XtalElement{
         this.attr(name, nv);
     }
     connectedCallback(){
+
         this.propUp([name]);
         super.connectedCallback();
     }
@@ -90,7 +96,7 @@ export class MiniMal extends XtalElement{
         }
         this.onPropsChange();
     }
-    //#endregion
+    
 }
 customElements.define('mini-mal', MiniMal);
 ```
@@ -138,7 +144,7 @@ export class Foo extends XtalElement{
 }
 ```
 
-Then when prop1 changes, do all 4 transformations, when prop2 changes, only the second and last, and when prop3 changes, do the third and last transformations.
+When prop1 changes, all 4 transformations are performed on , when prop2 changes, only the second and last, and when prop3 changes, do the third and last transformations.
 
 ## Minimal XtalViewElement Setup
 

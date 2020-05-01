@@ -88,10 +88,13 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
             this._renderContext?.update!(this._renderContext!, this.root);
         }
     }
-    onPropsChange() : boolean{
-        if(this._disabled || !this._connected || !this.readyToInit) return false;
+    _propChangeQueue: string[] = [];
+    onPropsChange(name: string) {
+        this._propChangeQueue.push(name);
+        if(this._disabled || !this._connected || !this.readyToInit){
+            return;
+        };
         this.transform();
-        return true;
     }
 
 }
