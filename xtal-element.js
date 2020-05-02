@@ -15,6 +15,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         super(...arguments);
         _renderOptions.set(this, {});
         this._mainTemplateProp = 'mainTemplate';
+        this._propChangeQueue = new Set();
     }
     get noShadow() {
         return false;
@@ -25,12 +26,12 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     initRenderCallback(ctx, target) { }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
-        this.onPropsChange();
+        this.onPropsChange(n);
     }
     connectedCallback() {
         this.propUp([disabled]);
         this._connected = true;
-        this.onPropsChange();
+        this.onPropsChange(disabled);
     }
     get root() {
         if (this.noShadow)
@@ -76,11 +77,13 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
             ((_a = this._renderContext) === null || _a === void 0 ? void 0 : _a.update)(this._renderContext, this.root);
         }
     }
-    onPropsChange() {
-        if (this._disabled || !this._connected || !this.readyToInit)
-            return false;
+    onPropsChange(name) {
+        this._propChangeQueue.add(name);
+        if (this._disabled || !this._connected || !this.readyToInit) {
+            return;
+        }
+        ;
         this.transform();
-        return true;
     }
 }
 _renderOptions = new WeakMap();

@@ -119,7 +119,7 @@ export class Foo extends XtalElement{
     prop1 = 'a';
     prop2 = 'b';
     prop3 = 'c';
-    updateTransforms = [
+    selectiveUpdatesTransform = [
         ({prop1}) =>{
             section:{
                 h1: prop1
@@ -145,6 +145,22 @@ export class Foo extends XtalElement{
 ```
 
 When prop1 changes, all 4 transformations are performed on , when prop2 changes, only the second and last, and when prop3 changes, do the third and last transformations.
+
+## Inheritance -- tentative, rambling, TODO
+
+By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever one pleases.  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
+
+But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI, as it is, by design, much easier to do than with more traditional rendering method.  
+
+XtalElement's template processing can benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way amend any part of the document.
+
+To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).
+
+In particular, a subclass can add the following method:
+
+```TypeScript
+initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
+```
 
 ## Minimal XtalViewElement Setup
 

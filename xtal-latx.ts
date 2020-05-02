@@ -1,5 +1,5 @@
 import {hydrate, disabled} from 'trans-render/hydrate.js';
-import {IHydrate} from 'trans-render/init.d.js';
+import {IHydrate} from 'trans-render/types.d.js';
 
 const stcRe = /(\-\w)/g;
 export function lispToCamel(s: string){

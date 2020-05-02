@@ -6,6 +6,7 @@ import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 
 type TransformGetter = () => TransformValueOptions;
+type SelectiveUpdate = (propName: string) => TransformRules;
 
 export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
 
@@ -18,22 +19,23 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         return this.#renderOptions;
     }
 
-    abstract get mainTemplate(): HTMLTemplateElement;
+    abstract mainTemplate(): HTMLTemplateElement;
 
-    abstract get initTransform(): TransformRules | TransformGetter ;
+    abstract initTransform(): TransformRules | TransformGetter ;
 
-    abstract get readyToInit(): boolean;
+    abstract readyToInit: boolean;
 
-    abstract get readyToRender(): boolean | string | symbol;
+    abstract readyToRender: boolean | string | symbol;
 
     updateTransform: TransformRules | TransformGetter | undefined;
 
+    selectiveUpdatesTransform: TransformRules[] | undefined;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
     attributeChangedCallback(n: string, ov: string, nv: string) {
         super.attributeChangedCallback(n, ov, nv);
-        this.onPropsChange();
+        this.onPropsChange(n);
     }
 
 
@@ -41,7 +43,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     connectedCallback(){
         this.propUp([disabled]);
         this._connected = true;
-        this.onPropsChange();
+        this.onPropsChange(disabled);
     }
 
     get root() : HTMLElement | ShadowRoot{
@@ -57,7 +59,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     initRenderContext() : RenderContext{
         return {
             init: init,
-            Transform: (typeof this.initTransform === 'function') ? (<any>this).initTransform() as TransformRules : this.initTransform,
+            Transform: (typeof this.initTransform === 'function') ? (<any>this).initTransform() as TransformRules : this.initTransform as unknown as TransformRules,
             host: this,
             cache: this.constructor,
         };
@@ -88,9 +90,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
             this._renderContext?.update!(this._renderContext!, this.root);
         }
     }
-    _propChangeQueue: string[] = [];
+    _propChangeQueue: Set<string> = new Set();
     onPropsChange(name: string) {
-        this._propChangeQueue.push(name);
+        this._propChangeQueue.add(name);
         if(this._disabled || !this._connected || !this.readyToInit){
             return;
         };
