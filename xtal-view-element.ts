@@ -1,5 +1,9 @@
 import {XtalElement} from './xtal-element.js';
 
+export interface IPromiseAView{
+    host
+}
+
 export abstract class XtalViewElement<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
     abstract initViewModel(signal: AbortSignal) : Promise<InitViewModel>;
