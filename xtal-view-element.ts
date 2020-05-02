@@ -1,11 +1,11 @@
 import {XtalElement} from './xtal-element.js';
 
-export abstract class XtalViewElement<ViewModel> extends XtalElement{
+export abstract class XtalViewElement<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
-    abstract async init(signal: AbortSignal) : Promise<ViewModel>;
+    abstract initViewModel(signal: AbortSignal) : Promise<InitViewModel>;
 
     // abstract async update(signal: AbortSignal) : Promise<ViewModel>;
-
+    updateViewModel
 
     constructor(){
         super();
@@ -14,11 +14,11 @@ export abstract class XtalViewElement<ViewModel> extends XtalElement{
         this.#signal = this.#controller.signal
     }
 
-    _viewModel!: ViewModel;
+    _viewModel!: InitViewModel | UpdateViewModel;
     get viewModel(){
         return this._viewModel;
     }
-    set viewModel(nv: ViewModel){
+    set viewModel(nv){
         this._viewModel = nv;
         this.de('view-model', {
             value: nv

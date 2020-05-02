@@ -17,7 +17,7 @@ Web components typically upgrade in two steps -- starting with the light childre
 
 Anyway, xtal-element's target audience is those who are looking for a base class that:
 
-1.  Will benefit from the implementation of HTML Modules -- The default rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
+1.  Will benefit from the implementation of HTML Modules -- The rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).  The base class is an abstract class.  Typescript then highlights what you need to implement.  No need to memorize or look things up.
@@ -57,7 +57,9 @@ export class MiniMal extends XtalElement{
     //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
     readyToRender = true;
 
-
+    //XtalElement is intended for visual elements only.
+    //Templates need to be stored outside instances of web components for 
+    //optimal performance
     mainTemplate = mainTemplate;
 
     //uses trans-render syntax: https://github.com/bahrus/trans-render
@@ -72,7 +74,7 @@ export class MiniMal extends XtalElement{
         button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
     
-    //Close to the metal boilerplate.  Leaving as is, waiting (im)patiently for Godot (decorators) 
+    //Close to the metal boilerplate.  Leaving as is, waiting (im)patiently for decorators 
     #name!: string;
     get name(){
         return this.#name;
@@ -94,7 +96,7 @@ export class MiniMal extends XtalElement{
                 this.#name = newVal;
                 break;
         }
-        this.onPropsChange();
+        this.onPropsChange(name);
     }
     
 }
@@ -119,7 +121,7 @@ export class Foo extends XtalElement{
     prop1 = 'a';
     prop2 = 'b';
     prop3 = 'c';
-    selectiveUpdatesTransform = [
+    selectiveUpdateTransforms = [
         ({prop1}) =>{
             section:{
                 h1: prop1
@@ -135,7 +137,7 @@ export class Foo extends XtalElement{
                 h3: prop1 + prop3
             }
         }
-        ({prop1, prop2, prop3}){
+        ({prop1, prop2, prop3}) => {
             footer:{
                 h4: prop1 + prop2 + prop3
             }
@@ -144,17 +146,17 @@ export class Foo extends XtalElement{
 }
 ```
 
-When prop1 changes, all 4 transformations are performed on , when prop2 changes, only the second and last, and when prop3 changes, do the third and last transformations.
+When prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
 
-## Inheritance -- tentative, rambling, TODO
+## Inheritance -- tentative, rambling, TBD
 
-By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever one pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
+By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever it pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
 
 But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, tries to make it easy to tweak the rendered output, compared with more traditional rendering methods.  
 
 XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
-To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost.
+To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
 
 In particular, a subclass can add the following method:
 
@@ -162,11 +164,25 @@ In particular, a subclass can add the following method:
 initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 ```
 
-**NB**  This kind of css-based inheritance chain that XtalElement provides probably shouldn't go too many levels deep.  I.e. a Vendor provides a default UI, which a consumer can tweak, essentially.  But having a chain of independent, loosely coupled third party developers inheriting in this manner seems like it could lend itself to some significant fragility.
+**NB**  This kind of css-based inheritance chain that XtalElement provides probably shouldn't go too many levels deep.  I.e. a vendor provides a default UI, which a consumer can tweak, essentially.  But having a chain of independent, loosely coupled third party developers inheriting in this manner seems like it could lend itself to some significant fragility.
 
-## Minimal XtalViewElement Setup
+## XtalViewElement 
+
+I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalViewElement provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
+
+I'm not 100% satisfied with the name "XtalViewElement" -- the View here refers to the retrieved business domain object that we want to display (and possibly edit or manipulate).  But the other properties defined within the extending element can certainly also be "viewed".
+
+XtalViewElement keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/).
+
+XtalViewElement is hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which would allow for styling adjustments to be made during different transaction periods.  XtalViewElement also conveys state changes via events.   
+
+XtalViewElement also supports something that may only be applicable 33.7% of the time -- just as XtalElement sees a strong case that it is a good idea to separate initialization from updating, as far as rendering, likewise sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
+
+For example, a component might want to retrieve the data required for subsequent dropdown filters, along with the data required for the main view - which may be a chart or a grid, for example.  Performance / maintainability considerations might make it prudent to combine the data retrieval for both the filters together in one call, especially if the filters share the same data. But as the filters change via user interaction, we only want to retrieve the data needed for the grid or chart, but not for the filters.  It is for this reason that a separate update protocol is provided. 
 
 The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
+
+## Minimal XtalViewElement Setup
 
 ```TypeScript
 import {XtalViewElement} from '../xtal-view-element.js';
@@ -174,7 +190,7 @@ import {createTemplate} from 'trans-render/createTemplate.js';
 import {PESettings} from 'trans-render/init.d.js';
 
 const template = createTemplate(
-    /* html */`<div></div>`
+        `<div></div>`
 );
 
 export class MinimalView extends XtalViewElement<string>{
@@ -206,7 +222,6 @@ export class MinimalView extends XtalViewElement<string>{
     updateTransform = () => ({
         div: this.viewModel,
     })
-    //#endregion
 
     clickHandler(e: Event){
         this.inc();
@@ -230,13 +245,7 @@ export class MinimalView extends XtalViewElement<string>{
 customElements.define('mini-mal-view', MinimalView);
 ```
 
-## Boilerplate Busting
 
 
-
-## Progressive Enhancement Support
-
-Quite often, a web component, after initializing, needs to retrieve some entity before it can really render anything meaningful.  In the meantime, perhaps we want to display something, like a loading mask and or a summary of what the component is showing.  That means using light children, that, only when we have something better to show, should display. 
-
-## Build-in decorator Transformers
+## Built-in decorator Transformers
 
