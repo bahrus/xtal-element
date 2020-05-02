@@ -17,11 +17,11 @@ Web components typically upgrade in two steps -- starting with the light childre
 
 Anyway, xtal-element's target audience is those who are looking for a base class that:
 
-1.  Will benefit from the implementation of HTML Modules -- The rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
+1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).  The base class is an abstract class.  Typescript then highlights what you need to implement.  No need to memorize or look things up.
-5.  Adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic / flexibility can pay off in some cases.
+5.  Adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
 
 As we'll see, satisfying these requirements suggests creating a starting point that is a bit more complex than the primitive custom element definition.  This base library doesn't claim to be the best fit for all types of web components, but focuses on some common needs.
 
@@ -168,17 +168,17 @@ initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
 ## A room with a view 
 
-I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalViewElement provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
+I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalRoomWithView provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
 
-I'm not 100% satisfied with the name "XtalViewElement" -- the View here refers to the retrieved business domain object that we want to display (and possibly edit or manipulate).  But the other properties defined within the extending element can certainly also be "viewed".
+XtalRoomWithView keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/).
 
-XtalViewElement keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/).
+I am hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which would allow for styling adjustments to be made during different transaction periods.  If it does, XtalRoomWithView will certainly take advantage of that promising sounding feature. 
 
-XtalViewElement is hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which would allow for styling adjustments to be made during different transaction periods.  XtalViewElement also conveys state changes via events.   
+Regardless, XtalRoomWithView also conveys state changes via events.   
 
-XtalViewElement also supports something that may only be applicable 33.7% of the time -- just as XtalElement sees a strong case that it is a good idea to separate initialization from updating, as far as rendering, likewise sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
+XtalRoomWithView also supports something that may only be applicable 33.7% of the time.  Recall that XtalElement sees a strong case separating initialization from updating, as far as rendering. Likewise, sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
 
-For example, a component might want to retrieve the data required for subsequent dropdown filters, along with the data required for the main view - which may be a chart or a grid, for example.  Performance / maintainability considerations might make it prudent to combine the data retrieval for both the filters together in one call, especially if the filters share the same data. But as the filters change via user interaction, we only want to retrieve the data needed for the grid or chart, but not for the filters.  It is for this reason that a separate update protocol is provided. 
+For example, a component might want retrieve the data required for the main view, which may be a chart or a grid.  But also, with the same data call retrieve the data required for dropdown filters that allow for updating the main view.  Performance / maintainability considerations might make it prudent to combine the data retrieval for both the filters together in one call, especially if the filters share some of the same data as the filters. But once the original view is rendered, now as the filters change via user interaction, we only want to retrieve the data needed for the grid or chart, but not for the filters.  It is for this reason that a separate update protocol is provided. 
 
 The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
