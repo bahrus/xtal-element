@@ -1,4 +1,4 @@
-import {XtalViewElement} from './xtal-view-element.js';
+import {XtalViewElement} from './xtal-room-with-view.js';
 import {lispToCamel} from './xtal-latx.js'
 
 export const href = 'href';

@@ -1,4 +1,4 @@
-import {XtalViewElement} from '../xtal-view-element.js';
+import {XtalViewElement} from '../xtal-room-with-view.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {PESettings} from 'trans-render/types.d.js';
 

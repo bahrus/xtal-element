@@ -1,15 +1,21 @@
 import {XtalElement} from './xtal-element.js';
 
-export interface IPromiseAView{
-    host
+export interface IViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel>{
+    room?: XtalRoomWithView<InitViewModel, UpdateViewModel>,
+    signal?: AbortSignal
 }
 
-export abstract class XtalViewElement<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
+export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> = (va: IViewAngle<InitViewModel, UpdateViewModel>) => InitViewModel;
+export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = InitViewModel> =  [(va: IViewAngle<InitViewModel, UpdateViewModel>) => InitViewModel];
+
+export abstract class XtalRoomWithView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
-    abstract initViewModel(signal: AbortSignal) : Promise<InitViewModel>;
+    //abstract initViewModel(signal: AbortSignal) : Promise<InitViewModel>;
+    initView: undefined | PromisedInitViewAngle<InitViewModel, UpdateViewModel>;
+    viewUpdates: undefined | PromisedUpdateViewAngles<InitViewModel , UpdateViewModel>;
 
     // abstract async update(signal: AbortSignal) : Promise<ViewModel>;
-    updateViewModel
+    //updateViewModel
 
     constructor(){
         super();
