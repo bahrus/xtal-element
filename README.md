@@ -148,19 +148,21 @@ When prop1 changes, all 4 transformations are performed on , when prop2 changes,
 
 ## Inheritance -- tentative, rambling, TODO
 
-By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever one pleases.  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
+By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever one pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
 
-But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI, as it is, by design, much easier to do than with more traditional rendering method.  
+But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, much easier to do tweak the rendered output, than with more traditional rendering methods.  
 
 XtalElement's template processing can benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way amend any part of the document.
 
-To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).
+To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).  The benefits of this are much strong with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost.
 
 In particular, a subclass can add the following method:
 
 ```TypeScript
 initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 ```
+
+**NB**  This kind of css-based inheritance chain that XtalElement provides probably shouldn't go too many levels deep.  I.e. a Vendor provides a default UI, which a consumer can tweak, essentially.  But having a chain of independent, loosely coupled third party developers inheriting in this manner seems like it could lend itself to some significant fragility.
 
 ## Minimal XtalViewElement Setup
 
