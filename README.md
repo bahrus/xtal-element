@@ -150,11 +150,11 @@ When prop1 changes, all 4 transformations are performed on , when prop2 changes,
 
 By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever one pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
 
-But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, much easier to do tweak the rendered output, than with more traditional rendering methods.  
+But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, tries to make it easy to tweak the rendered output, compared with more traditional rendering methods.  
 
-XtalElement's template processing can benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way amend any part of the document.
+XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
-To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).  The benefits of this are much strong with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost.
+To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost.
 
 In particular, a subclass can add the following method:
 
