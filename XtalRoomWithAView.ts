@@ -1,6 +1,8 @@
 import {XtalElement} from './XtalElement.js';
 
-export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
+export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> 
+    = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
+    
 export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = InitViewModel> 
     =  (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
 

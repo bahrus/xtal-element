@@ -1,32 +1,37 @@
-import {XtalRoomWithAView} from './XtalRoomWithAView.js';
+import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
 import {lispToCamel} from './xtal-latx.js'
 
 export const href = 'href';
 export const req_init = 'req-init';
 export const req_init_required = 'req-init-required';
 
-export abstract class XtalFetchViewElement<TViewModel> extends XtalRoomWithAView<TViewModel>{
+export abstract class XtalFetchViewElement<TInitViewModel, TUpdateViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel>{
 
 
-    filterData(data: any){
-        return data as TViewModel;
+    filterInitData(data: any){
+        return data as TInitViewModel;
+    }
+
+    filterUpdateData(data: any){
+        return data as TUpdateViewModel;
     }
 
     //#region required members
     get readyToInit(){return this._href !== undefined && (!this._reqInitRequired || this._reqInit !== undefined)}
 
-    init(signal: AbortSignal){
-        return new Promise<TViewModel>(resolve =>{
-            fetch(this._href, this._reqInit).then(resp => resp.json().then(data =>{
-                resolve(this.filterData(data));
-            }))
-            
-        })
-    }
+    initView : PromisedInitViewAngle<TInitViewModel, TUpdateViewModel> = ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
+        fetch(href!, reqInit).then(resp => resp.json().then(data =>{
+            resolve(this.filterInitData(data));
+        }))
+    });
+    // init(signal: AbortSignal){
+    //     return 
+    //     })
+    // }
 
-    update(signal: AbortSignal){
-        return this.init(signal);
-    }
+    // update(signal: AbortSignal){
+    //     return this.init(signal);
+    // }
 
     //
 

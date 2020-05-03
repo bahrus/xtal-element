@@ -4,21 +4,23 @@ export const href = 'href';
 export const req_init = 'req-init';
 export const req_init_required = 'req-init-required';
 export class XtalFetchViewElement extends XtalRoomWithAView {
-    filterData(data) {
+    constructor() {
+        super(...arguments);
+        this.initView = ({ href, reqInit }) => new Promise(resolve => {
+            fetch(href, reqInit).then(resp => resp.json().then(data => {
+                resolve(this.filterInitData(data));
+            }));
+        });
+        //#endregion
+    }
+    filterInitData(data) {
+        return data;
+    }
+    filterUpdateData(data) {
         return data;
     }
     //#region required members
     get readyToInit() { return this._href !== undefined && (!this._reqInitRequired || this._reqInit !== undefined); }
-    init(signal) {
-        return new Promise(resolve => {
-            fetch(this._href, this._reqInit).then(resp => resp.json().then(data => {
-                resolve(this.filterData(data));
-            }));
-        });
-    }
-    update(signal) {
-        return this.init(signal);
-    }
     get href() {
         return this._href;
     }
