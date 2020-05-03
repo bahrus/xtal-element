@@ -47,7 +47,7 @@ export class XtalFetchViewElement extends XtalRoomWithAView {
     set reqInit(val) {
         this._reqInit = val;
         //this.__loadNewUrlDebouncer();
-        this.onPropsChange();
+        this.onPropsChange('reqInit');
     }
     /**
      * Indicates that no fetch request should proceed until reqInit property / attribute is set.
