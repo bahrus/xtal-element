@@ -5,7 +5,7 @@ export const href = 'href';
 export const req_init = 'req-init';
 export const req_init_required = 'req-init-required';
 
-export abstract class XtalFetchViewElement<TInitViewModel, TUpdateViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel>{
+export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel>{
 
 
     filterInitData(data: any){

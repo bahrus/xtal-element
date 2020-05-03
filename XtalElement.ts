@@ -42,7 +42,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         return this.#renderOptions;
     }
 
-    abstract mainTemplate(): HTMLTemplateElement;
+    abstract mainTemplate: HTMLTemplateElement;
 
     abstract initTransform: TransformRules | TransformGetter ;
 
