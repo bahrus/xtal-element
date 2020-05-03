@@ -1,7 +1,6 @@
 import {XtalRoomWithAView} from '../XtalRoomWithAView.js';
-import {TransformRules} from 'trans-render/types.d.js';
+import {TransformRules, PESettings} from 'trans-render/types.d.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {PESettings} from 'trans-render/types.d.js';
 import {SelectiveUpdate} from '../XtalElement.js';
 
 const template = createTemplate(
@@ -10,7 +9,6 @@ const template = createTemplate(
 
 export class MinimalView extends XtalRoomWithAView<[string, number]>{
 
-    //#region Required Members
     readyToInit = true
 
     initView = ({}) => new Promise<[string, number]>(resolve =>{
@@ -34,7 +32,6 @@ export class MinimalView extends XtalRoomWithAView<[string, number]>{
     updateTransform = () => ({
         div: `${this.viewModel[0]}  ${this.viewModel[1]}`,
     })
-    //#endregion
 
     clickHandler(e: Event){
         this.viewModel[1]++;

@@ -126,10 +126,13 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     }
 
     _propChangeQueue: Set<string> = new Set();
-    onPropsChange(name: string) {
-        //if(this._renderContext){
+    onPropsChange(name: string | string[]) {
+        if(Array.isArray(name)){
+            name.forEach(subName => this._propChangeQueue.add(subName));
+        }else{
             this._propChangeQueue.add(name);
-        //}
+        }
+        
         if(this._disabled || !this._connected || !this.readyToInit){
             return;
         };

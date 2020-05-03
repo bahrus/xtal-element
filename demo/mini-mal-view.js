@@ -5,7 +5,6 @@ const template = createTemplate(
 export class MinimalView extends XtalRoomWithAView {
     constructor() {
         super(...arguments);
-        //#region Required Members
         this.readyToInit = true;
         this.initView = ({}) => new Promise(resolve => {
             resolve(['Greetings, Earthling.', 0]);
@@ -24,7 +23,6 @@ export class MinimalView extends XtalRoomWithAView {
             div: `${this.viewModel[0]}  ${this.viewModel[1]}`,
         });
     }
-    //#endregion
     clickHandler(e) {
         this.viewModel[1]++;
         this.viewModel[0] = "Live long and prosper.";

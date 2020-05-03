@@ -101,9 +101,12 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         }
     }
     onPropsChange(name) {
-        //if(this._renderContext){
-        this._propChangeQueue.add(name);
-        //}
+        if (Array.isArray(name)) {
+            name.forEach(subName => this._propChangeQueue.add(subName));
+        }
+        else {
+            this._propChangeQueue.add(name);
+        }
         if (this._disabled || !this._connected || !this.readyToInit) {
             return;
         }
