@@ -6,7 +6,7 @@ import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 
 type TransformGetter = () => TransformValueOptions;
-type SelectiveUpdate = (propName: string) => TransformRules;
+export type SelectiveUpdate = (el: XtalElement) => TransformRules;
 
 export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
 
@@ -21,7 +21,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract mainTemplate(): HTMLTemplateElement;
 
-    abstract initTransform(): TransformRules | TransformGetter ;
+    abstract initTransform: TransformRules | TransformGetter ;
 
     abstract readyToInit: boolean;
 
@@ -29,7 +29,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     updateTransform: TransformRules | TransformGetter | undefined;
 
-    selectiveUpdateTransforms: TransformRules[] | undefined;
+    selectiveUpdateTransforms: SelectiveUpdate[] | undefined;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 

@@ -1,7 +1,7 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {TransformRules, TransformValueOptions, } from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
-import {XtalElement} from '../xtal-element.js';
+import {XtalElement, SelectiveUpdate} from '../XtalElement.js';
 
 const main = Symbol();
 const name = 'name';
@@ -19,6 +19,7 @@ export class MiniMal extends XtalElement{
         }
         </style>
         <button class="btn">Hello |.name ?? World|</slot></button>
+        <div></div>
     `, MiniMal, main);
 
     initTransform = {
@@ -30,6 +31,10 @@ export class MiniMal extends XtalElement{
     updateTransform = {
         button: ({target}) => interpolate(target, 'textContent', this, false),
     } as TransformRules;
+
+    selectiveUpdateTransforms = [
+        ({name} : MiniMal) => {div: name}
+    ] as SelectiveUpdate[];
     
     //#endregion
     //#endregion

@@ -1,12 +1,13 @@
-import {XtalElement} from './xtal-element.js';
+import {XtalElement} from './XtalElement.js';
 
-export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> = (room: XtalRoomWithView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
-export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = InitViewModel> =  [(room: XtalRoomWithView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>];
+export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
+export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = InitViewModel> 
+    =  (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
 
-export abstract class XtalRoomWithView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
+export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
     abstract initView: PromisedInitViewAngle<InitViewModel, UpdateViewModel>;
-    viewUpdates: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>;
+    updateView: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>;
 
 
     constructor(){
