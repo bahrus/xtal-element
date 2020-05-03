@@ -27,6 +27,60 @@ As we'll see, satisfying these requirements suggests creating a starting point t
 
 </details>
 
+## What makes XtalElement different
+
+1.  XtalElement uses the [trans-render](https://github.com/bahrus/trans-render) library for updating the UI as properties change.
+2.  The separation of concerns that trans-render provides makes it possible to separate out the initial render from update renders.
+3.  Even the update renders can be easily partitioned based on which properties changes.   Consider the following example:
+
+```JavaScript
+mainTemplate = createTemplate(/* html */`
+    <section>
+        <h1></h1>
+        <h2></h2>
+    </section>
+    <footer>
+        <h3></h3>
+        <h4></h4>
+    </footer>
+`);
+
+export class Foo extends XtalElement{
+    prop1 = 'a';
+    prop2 = 'b';
+    prop3 = 'c';
+    selectiveUpdateTransforms = [
+        ({prop1}) =>{
+            section:{
+                h1: prop1
+            }
+        }
+        ({prop1, prop2}) =>{
+            section:{
+                h2: prop1 + prop2
+            }
+        }
+        ({prop1, prop3}) =>{
+            footer: {
+                h3: prop1 + prop3
+            }
+        }
+        ({prop1, prop2, prop3}) => {
+            footer:{
+                h4: prop1 + prop2 + prop3
+            }
+        }
+    }]
+    onPropsChange(propName){
+        ...//code that makes this happen properly
+        this.transform()
+    }
+}
+```
+
+As long as all property changes also notify the onPropsChange method, specifying the name, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
+
+
 ## Minimal XtalElement Setup
 
 XtalElement is the base class, and doesn't provide support for asynchronous retrieval of a view model property.
@@ -68,7 +122,9 @@ export class MiniMal extends XtalElement{
         button: [{},{click: () => {this.name = 'me'}}]
     } as TransformRules;
 
-    // selectiveUpdateTransforms is called anytime property name changes
+    // selectiveUpdateTransforms is called anytime property "name" changes.
+    // Any other property changes won't trigger an update, as there is no
+    // arrow function in array with any other property name.
     selectiveUpdateTransforms = [
         ({name} : MiniMal) => ({
             button: ({target}) => interpolate(target, 'textContent', this, false),
