@@ -156,12 +156,13 @@ But what XtalElement is guilty of, perhaps, is making it more tempting to take g
 
 XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
-To make this even easier, XtalElement allows a chain to be set up during initialization of the component (but not updates for now).  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
+To make this even easier, XtalElement allows a chain to be set up during initialization of the component.  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
 
 In particular, a subclass can add the following method:
 
 ```TypeScript
 initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
+afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined){}
 ```
 
 **NB**  This kind of css-based inheritance chain that XtalElement provides probably shouldn't go too many levels deep.  I.e. a vendor provides a default UI, which a consumer can tweak, essentially.  But having a chain of independent, loosely coupled third party developers inheriting in this manner seems like it could lend itself to some significant fragility.
@@ -182,13 +183,11 @@ For example, a component might want to retrieve the data required for the main v
 
 In addition, the kind of component we are discussing generally always needs to display an initial view once enough parameters are set.
 
-Whereas the update should only occur when a subset of the parameters in the "room" change.  XtalRoomWithAView
+Whereas the update should only occur when a subset of the parameters in the "room" change.
 
- It is for this reason that a separate update protocol is provided. 
+It is for this reason that a separate update protocol is provided. 
 
-In addition, 
-
-The code below shows the minimal amount of code needed to define a custom element using this library, without any non optimal corner cutting.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
+The code below shows the minimal amount of code needed to define a custom element using this library.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
 ## Minimal XtalViewElement Setup
 

@@ -4,9 +4,32 @@ import {RenderContext, RenderOptions, TransformRules, TransformValueOptions} fro
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
+import {lispToCamel} from './xtal-latx.js';
+import { destruct } from './destruct.js';
 
 type TransformGetter = () => TransformValueOptions;
 export type SelectiveUpdate = (el: XtalElement) => TransformRules;
+const deconstructed = Symbol();
+
+export function deconstruct(fn: Function){
+    const fnString = fn.toString().trim();
+    if(fnString.startsWith('({')){
+        const iPos = fnString.indexOf('})', 2);
+        return fnString.substring(2, iPos).split(',').map(s => s.trim());
+    }
+    return [];
+}
+
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+export function intersection<T = string>(setA: Set<T>, setB: Set<T>) {
+    let _intersection = new Set()
+    for (let elem of setB) {
+        if (setA.has(elem)) {
+            _intersection.add(elem)
+        }
+    }
+    return _intersection
+}
 
 export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
 
@@ -27,7 +50,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     abstract readyToRender: boolean | string | symbol;
 
-    updateTransform: TransformRules | TransformGetter | undefined;
+    //updateTransform: TransformRules | TransformGetter | undefined;
 
     selectiveUpdateTransforms: SelectiveUpdate[] | undefined;
 
@@ -35,7 +58,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     attributeChangedCallback(n: string, ov: string, nv: string) {
         super.attributeChangedCallback(n, ov, nv);
-        this.onPropsChange(n);
+        this.onPropsChange(lispToCamel(n));
     }
 
 
@@ -75,7 +98,9 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
                 this._renderContext = undefined;
             }
         }
-        if(this.updateTransform === undefined){
+        if(this.selectiveUpdateTransforms === undefined){
+            //Since there's no delicate update transform,
+            //assumption is that if data changes, just redraw based on init
             this.root.innerHTML = '';
         }
         if(this._renderContext === undefined){
@@ -83,16 +108,33 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
             this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
             this._renderContext.init!((<any>this)[this._mainTemplateProp] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
         }
-        if(this.updateTransform !== undefined){
+        // if(this.updateTransform !== undefined){
+        //     this._renderContext!.update = update;
+        //     this._renderContext.Transform = (typeof this.updateTransform === 'function') ? (<any>this).updateTransform() as TransformRules : this.updateTransform;
+        //     this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
+        //     this._renderContext?.update!(this._renderContext!, this.root);
+        // }
+        if(this.selectiveUpdateTransforms !== undefined){
+            //TODO: Optimize
             this._renderContext!.update = update;
-            this._renderContext.Transform = (typeof this.updateTransform === 'function') ? (<any>this).updateTransform() as TransformRules : this.updateTransform;
-            this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
-            this._renderContext?.update!(this._renderContext!, this.root);
+            this.selectiveUpdateTransforms.forEach(selectiveUpdateTransform =>{
+                const dependencies = deconstruct(selectiveUpdateTransform as Function);
+                const dependencySet = new Set<string>(dependencies);
+                if(intersection(this._propChangeQueue, dependencySet).size > 0){
+                    this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
+                    this._renderContext!.Transform = selectiveUpdateTransform(this);
+                    this._renderContext?.update!(this._renderContext!, this.root);
+                }
+            });
+            this._propChangeQueue = new Set();
         }
     }
+
     _propChangeQueue: Set<string> = new Set();
     onPropsChange(name: string) {
-        this._propChangeQueue.add(name);
+        //if(this._renderContext){
+            this._propChangeQueue.add(name);
+        //}
         if(this._disabled || !this._connected || !this.readyToInit){
             return;
         };

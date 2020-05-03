@@ -1,20 +1,6 @@
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-};
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-};
-var _name;
 import { createTemplate } from 'trans-render/createTemplate.js';
 import { interpolate } from 'trans-render/interpolate.js';
-import { XtalElement } from '../xtal-element.js';
+import { XtalElement } from '../XtalElement.js';
 const main = Symbol();
 const name = 'name';
 export class MiniMal extends XtalElement {
@@ -31,23 +17,29 @@ export class MiniMal extends XtalElement {
         }
         </style>
         <button class="btn">Hello |.name ?? World|</slot></button>
+        <div></div>
     `, MiniMal, main);
         this.initTransform = {
             button: [{}, { click: () => { this.name = 'me'; } }]
         };
         //#endregion
         //#region implemented members
-        this.updateTransform = {
-            button: ({ target }) => interpolate(target, 'textContent', this, false),
-        };
-        //#endregion
-        //#endregion
-        //#region boilerplate code
-        _name.set(this, void 0);
+        // updateTransform = {
+        //     button: ({target}) => interpolate(target, 'textContent', this, false),
+        // } as TransformRules;
+        this.selectiveUpdateTransforms = [
+            ({ name }) => ({
+                button: ({ target }) => interpolate(target, 'textContent', this, false),
+            })
+        ];
         //#endregion
     }
+    //#endregion
+    //#endregion
+    //#region boilerplate code
+    #name;
     get name() {
-        return __classPrivateFieldGet(this, _name);
+        return this.#name;
     }
     set name(nv) {
         this.attr(name, nv);
@@ -62,11 +54,10 @@ export class MiniMal extends XtalElement {
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case name:
-                __classPrivateFieldSet(this, _name, newVal);
+                this.#name = newVal;
                 break;
         }
-        this.onPropsChange();
+        this.onPropsChange(name);
     }
 }
-_name = new WeakMap();
 customElements.define('mini-mal', MiniMal);

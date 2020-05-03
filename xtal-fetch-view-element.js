@@ -1,4 +1,4 @@
-import { XtalViewElement } from './xtal-view-element.js';
+import { XtalViewElement } from './XtalRoomWithAView.js';
 import { lispToCamel } from './xtal-latx.js';
 export const href = 'href';
 export const req_init = 'req-init';

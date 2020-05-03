@@ -28,12 +28,14 @@ export class MiniMal extends XtalElement{
     //#endregion
 
     //#region implemented members
-    updateTransform = {
-        button: ({target}) => interpolate(target, 'textContent', this, false),
-    } as TransformRules;
+    // updateTransform = {
+    //     button: ({target}) => interpolate(target, 'textContent', this, false),
+    // } as TransformRules;
 
     selectiveUpdateTransforms = [
-        ({name} : MiniMal) => {div: name}
+        ({name} : MiniMal) => ({
+            button: ({target}) => interpolate(target, 'textContent', this, false),
+        }) as TransformRules
     ] as SelectiveUpdate[];
     
     //#endregion
@@ -60,7 +62,7 @@ export class MiniMal extends XtalElement{
                 this.#name = newVal;
                 break;
         }
-        this.onPropsChange();
+        this.onPropsChange(name);
     }
     //#endregion
 }

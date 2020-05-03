@@ -63,11 +63,11 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
          */
-        de(name: string, detail: any, asIs: boolean = false) {
+        de(name: string, detail: any, asIs: boolean = false, noBubble: boolean = false) {
             const eventName = name + (asIs ? '' : '-changed');
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
-                bubbles: true,
+                bubbles: noBubble,
                 composed: false,
                 cancelable: true, //https://dev.to/open-wc/composed-true-considered-harmful-5g59
             } as CustomEventInit);

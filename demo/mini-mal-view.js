@@ -1,4 +1,4 @@
-import { XtalViewElement } from '../xtal-view-element.js';
+import { XtalViewElement } from '../XtalRoomWithAView.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
 const template = createTemplate(
 /* html */ `<div></div>`);
