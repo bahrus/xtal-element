@@ -19,7 +19,6 @@ export class XtalFetchViewElement extends XtalRoomWithAView {
     filterUpdateData(data) {
         return data;
     }
-    //#region required members
     get readyToInit() { return this._href !== undefined && (!this._reqInitRequired || this._reqInit !== undefined); }
     get href() {
         return this._href;

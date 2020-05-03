@@ -16,24 +16,16 @@ export abstract class XtalFetchViewElement<TInitViewModel, TUpdateViewModel> ext
         return data as TUpdateViewModel;
     }
 
-    //#region required members
     get readyToInit(){return this._href !== undefined && (!this._reqInitRequired || this._reqInit !== undefined)}
 
-    initView : PromisedInitViewAngle<TInitViewModel, TUpdateViewModel> = ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
+    initView : PromisedInitViewAngle<TInitViewModel, TUpdateViewModel> = 
+    ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
         fetch(href!, reqInit).then(resp => resp.json().then(data =>{
             resolve(this.filterInitData(data));
         }))
     });
-    // init(signal: AbortSignal){
-    //     return 
-    //     })
-    // }
+    
 
-    // update(signal: AbortSignal){
-    //     return this.init(signal);
-    // }
-
-    //
 
     //#region boilerplate
 
