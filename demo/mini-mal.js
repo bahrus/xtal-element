@@ -24,9 +24,6 @@ export class MiniMal extends XtalElement {
         };
         //#endregion
         //#region implemented members
-        // updateTransform = {
-        //     button: ({target}) => interpolate(target, 'textContent', this, false),
-        // } as TransformRules;
         this.selectiveUpdateTransforms = [
             ({ name }) => ({
                 button: ({ target }) => interpolate(target, 'textContent', this, false),

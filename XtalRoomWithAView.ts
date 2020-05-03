@@ -26,34 +26,29 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
         this.de('view-model', {
             value: nv
         });
-        this.transform();
+        this.onPropsChange('viewModel')
     }
 
     #state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
     #controller: AbortController;
     signal: AbortSignal;
 
-    onPropsChange(): boolean {
+    onPropsChange(name: string) {
         if(super._disabled || !this._connected || !this.readyToInit) return false;
         switch(this.#state){
             case 'constructed':
+                this.#state = 'initializing';
                 this.initView(this).then(model =>{
-                    this.viewModel = model;
                     this.#state = 'initialized';
+                    this.viewModel = model;
                 });
                 this.#state = 'initializing';
-            //case 'updating':
+                return;
             case 'initializing':
-                //todo: abort
                 break; 
-            //case 'updated':
-            // case 'initialized':
-            //     this.update(this.#signal).then(model =>{
-            //         this.viewModel = model;
-            //         this.#state = 'updated';
-            //     })   
+            
         }
-        return true;
+        super.onPropsChange(name);
 
 
     }

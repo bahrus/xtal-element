@@ -1,21 +1,21 @@
-import {XtalViewElement} from '../XtalRoomWithAView.js';
+import {XtalRoomWithAView} from '../XtalRoomWithAView.js';
+import {TransformRules} from 'trans-render/types.d.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {PESettings} from 'trans-render/types.d.js';
+import {SelectiveUpdate} from '../XtalElement.js';
 
 const template = createTemplate(
     /* html */`<div></div>`
 );
 
-export class MinimalView extends XtalViewElement<[string, number]>{
+export class MinimalView extends XtalRoomWithAView<[string, number]>{
 
     //#region Required Members
     readyToInit = true
 
-    init(){
-        return new Promise<[string, number]>(resolve =>{
-            resolve(['Greetings, Earthling.', 0]);
-        })
-    }
+    initView = ({}) => new Promise<[string, number]>(resolve =>{
+        resolve(['Greetings, Earthling.', 0]);
+    })
 
     readyToRender = true;
 
@@ -25,11 +25,11 @@ export class MinimalView extends XtalViewElement<[string, number]>{
         div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
     };
 
-    // update(){
-    //     return new Promise<string>(resolve =>{
-    //         resolve('That tickles, number ' + this.count);
-    //     })
-    // }
+    selectiveUpdateTransforms = [
+        ({viewModel} : MinimalView) => ({
+            div: `${this.viewModel[0]}  ${this.viewModel[1]}`
+        })  as TransformRules
+    ]  as SelectiveUpdate[];
     
     updateTransform = () => ({
         div: `${this.viewModel[0]}  ${this.viewModel[1]}`,
@@ -39,7 +39,7 @@ export class MinimalView extends XtalViewElement<[string, number]>{
     clickHandler(e: Event){
         this.viewModel[1]++;
         this.viewModel[0] = "Live long and prosper.";
-        this.transform();
+        this.onPropsChange('viewModel');
     }
         
 

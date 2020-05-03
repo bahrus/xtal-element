@@ -68,11 +68,12 @@ export class MiniMal extends XtalElement{
         button: [{},{click: () => {this.name = 'me'}}]
     } as TransformRules;
 
-    // updateTransform is called anytime 
-    // this.attr(name, value) or this.onPropsChange(name)
-    updateTransform = {
-        button: ({target}) => interpolate(target, 'textContent', this, false),
-    } as TransformRules;
+    // selectiveUpdateTransforms is called anytime property name changes
+    selectiveUpdateTransforms = [
+        ({name} : MiniMal) => ({
+            button: ({target}) => interpolate(target, 'textContent', this, false),
+        }) as TransformRules
+    ] as SelectiveUpdate[];
     
     //Close to the metal boilerplate.  Leaving as is, waiting (im)patiently for decorators 
     #name!: string;
@@ -103,52 +104,7 @@ export class MiniMal extends XtalElement{
 customElements.define('mini-mal', MiniMal);
 ```
 
-## TODO:  Updates based on property name change:
-
-```JavaScript
-mainTemplate = createTemplate(/* html */`
-    <section>
-        <h1></h1>
-        <h2></h2>
-    </section>
-    <footer>
-        <h3></h3>
-        <h4></h4>
-    </footer>
-`);
-
-export class Foo extends XtalElement{
-    prop1 = 'a';
-    prop2 = 'b';
-    prop3 = 'c';
-    selectiveUpdateTransforms = [
-        ({prop1}) =>{
-            section:{
-                h1: prop1
-            }
-        }
-        ({prop1, prop2}) =>{
-            section:{
-                h2: prop1 + prop2
-            }
-        }
-        ({prop1, prop3}) =>{
-            footer: {
-                h3: prop1 + prop3
-            }
-        }
-        ({prop1, prop2, prop3}) => {
-            footer:{
-                h4: prop1 + prop2 + prop3
-            }
-        }
-    }]
-}
-```
-
-When prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
-
-## Inheritance -- tentative, rambling, TBD
+## Inheritance overindulgence?
 
 By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever it pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
 
