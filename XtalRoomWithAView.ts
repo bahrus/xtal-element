@@ -1,4 +1,4 @@
-import {XtalElement} from './XtalElement.js';
+import {XtalElement, deconstruct, intersection} from './XtalElement.js';
 
 export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> 
     = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
@@ -9,7 +9,7 @@ export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = Init
 export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
     abstract initView: PromisedInitViewAngle<InitViewModel, UpdateViewModel>;
-    updateView: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>;
+    updateView: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>[];
 
 
     constructor(){
@@ -48,10 +48,29 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
                 return;
             case 'initializing':
                 break; 
+            case 'initialized':
+                this.doViewUpdate();
+                break;
+
             
         }
         super.onPropsChange(name);
+    }
 
-
+    doViewUpdate(){
+        //untested
+        if(this.updateView !== undefined){
+            //TODO: Optimize
+            this.updateView.forEach(angle =>{
+                const dependencies = deconstruct(angle as Function);
+                const dependencySet = new Set<string>(dependencies);
+                if(intersection(this._propChangeQueue, dependencySet).size > 0){
+                    angle(this).then(model =>{
+                        this.#state = 'updated';
+                        this.viewModel = model;
+                    })
+                }
+            })
+        }
     }
 }
