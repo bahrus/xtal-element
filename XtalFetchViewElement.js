@@ -6,7 +6,7 @@ export const req_init_required = 'req-init-required';
 export class XtalFetchViewElement extends XtalRoomWithAView {
     constructor() {
         super(...arguments);
-        this.initView = ({ href, reqInit }) => new Promise(resolve => {
+        this.initViewModel = ({ href, reqInit }) => new Promise(resolve => {
             fetch(href, reqInit).then(resp => resp.json().then(data => {
                 resolve(this.filterInitData(data));
             }));

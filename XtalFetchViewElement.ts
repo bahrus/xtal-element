@@ -18,7 +18,7 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
 
     get readyToInit(){return this._href !== undefined && (!this._reqInitRequired || this._reqInit !== undefined)}
 
-    initView : PromisedInitViewAngle<TInitViewModel, TUpdateViewModel> = 
+    initViewModel : PromisedInitViewAngle<TInitViewModel, TUpdateViewModel> = 
     ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
         fetch(href!, reqInit).then(resp => resp.json().then(data =>{
             resolve(this.filterInitData(data));

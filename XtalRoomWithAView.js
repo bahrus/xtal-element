@@ -1,4 +1,4 @@
-import { XtalElement } from './XtalElement.js';
+import { XtalElement, deconstruct, intersection } from './XtalElement.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
@@ -24,7 +24,7 @@ export class XtalRoomWithAView extends XtalElement {
         switch (this.#state) {
             case 'constructed':
                 this.#state = 'initializing';
-                this.initView(this).then(model => {
+                this.initViewModel(this).then(model => {
                     this.#state = 'initialized';
                     this.viewModel = model;
                 });
@@ -32,7 +32,26 @@ export class XtalRoomWithAView extends XtalElement {
                 return;
             case 'initializing':
                 break;
+            case 'initialized':
+                this.doViewUpdate();
+                break;
         }
         super.onPropsChange(name);
+    }
+    doViewUpdate() {
+        //untested
+        if (this.updateViewModel !== undefined) {
+            //TODO: Optimize
+            this.updateViewModel.forEach(angle => {
+                const dependencies = deconstruct(angle);
+                const dependencySet = new Set(dependencies);
+                if (intersection(this._propChangeQueue, dependencySet).size > 0) {
+                    angle(this).then(model => {
+                        this.#state = 'updated';
+                        this.viewModel = model;
+                    });
+                }
+            });
+        }
     }
 }

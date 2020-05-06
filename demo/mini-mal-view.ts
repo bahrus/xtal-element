@@ -11,7 +11,7 @@ export class MinimalView extends XtalRoomWithAView<[string, number]>{
 
     readyToInit = true
 
-    initView = ({}) => new Promise<[string, number]>(resolve =>{
+    initViewModel = ({}) => new Promise<[string, number]>(resolve =>{
         resolve(['Greetings, Earthling.', 0]);
     })
 
@@ -23,7 +23,7 @@ export class MinimalView extends XtalRoomWithAView<[string, number]>{
         div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
     };
 
-    selectiveUpdateTransforms = [
+    updateTransforms = [
         ({viewModel} : MinimalView) => ({
             div: `${this.viewModel[0]}  ${this.viewModel[1]}`
         })  as TransformRules

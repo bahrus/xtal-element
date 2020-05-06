@@ -8,8 +8,8 @@ export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = Init
 
 export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
-    abstract initView: PromisedInitViewAngle<InitViewModel, UpdateViewModel>;
-    updateView: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>[];
+    abstract initViewModel: PromisedInitViewAngle<InitViewModel, UpdateViewModel>;
+    updateViewModel: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>[];
 
 
     constructor(){
@@ -40,7 +40,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
         switch(this.#state){
             case 'constructed':
                 this.#state = 'initializing';
-                this.initView(this).then(model =>{
+                this.initViewModel(this).then(model =>{
                     this.#state = 'initialized';
                     this.viewModel = model;
                 });
@@ -59,9 +59,9 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
 
     doViewUpdate(){
         //untested
-        if(this.updateView !== undefined){
+        if(this.updateViewModel !== undefined){
             //TODO: Optimize
-            this.updateView.forEach(angle =>{
+            this.updateViewModel.forEach(angle =>{
                 const dependencies = deconstruct(angle as Function);
                 const dependencySet = new Set<string>(dependencies);
                 if(intersection(this._propChangeQueue, dependencySet).size > 0){

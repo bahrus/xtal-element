@@ -75,7 +75,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
                 this._renderContext = undefined;
             }
         }
-        if (this.selectiveUpdateTransforms === undefined) {
+        if (this.updateTransforms === undefined) {
             //Since there's no delicate update transform,
             //assumption is that if data changes, just redraw based on init
             this.root.innerHTML = '';
@@ -85,10 +85,10 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
             this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
             this._renderContext.init(this[this._mainTemplateProp], this._renderContext, this.root, this.renderOptions);
         }
-        if (this.selectiveUpdateTransforms !== undefined) {
+        if (this.updateTransforms !== undefined) {
             //TODO: Optimize
             this._renderContext.update = update;
-            this.selectiveUpdateTransforms.forEach(selectiveUpdateTransform => {
+            this.updateTransforms.forEach(selectiveUpdateTransform => {
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
                 if (intersection(this._propChangeQueue, dependencySet).size > 0) {

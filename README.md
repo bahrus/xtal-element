@@ -125,7 +125,7 @@ export class MiniMal extends XtalElement{
     // selectiveUpdateTransforms is called anytime property "name" changes.
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
-    selectiveUpdateTransforms = [
+    updateTransforms = [
         ({name} : MiniMal) => ({
             button: ({target}) => interpolate(target, 'textContent', this, false),
         }) as TransformRules
@@ -217,7 +217,7 @@ export class MinimalView extends XtalViewElement<string>{
     //#region Required Members
     readyToInit = true
 
-    init(){
+    initViewModel(){
         return new Promise<string>(resolve =>{
             resolve('Greetings, Earthling.');
         })
@@ -225,7 +225,7 @@ export class MinimalView extends XtalViewElement<string>{
 
     readyToRender = true;
 
-    update(){
+    updateViewModel(){
         return new Promise<string>(resolve =>{
             resolve('That tickles, number ' + this.count);
         })

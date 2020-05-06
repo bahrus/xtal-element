@@ -6,7 +6,7 @@ export class MinimalView extends XtalRoomWithAView {
     constructor() {
         super(...arguments);
         this.readyToInit = true;
-        this.initView = ({}) => new Promise(resolve => {
+        this.initViewModel = ({}) => new Promise(resolve => {
             resolve(['Greetings, Earthling.', 0]);
         });
         this.readyToRender = true;
@@ -14,7 +14,7 @@ export class MinimalView extends XtalRoomWithAView {
         this.initTransform = {
             div: [{}, { click: this.clickHandler }],
         };
-        this.selectiveUpdateTransforms = [
+        this.updateTransforms = [
             ({ viewModel }) => ({
                 div: `${this.viewModel[0]}  ${this.viewModel[1]}`
             })
