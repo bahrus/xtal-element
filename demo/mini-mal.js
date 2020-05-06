@@ -1,3 +1,17 @@
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+};
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
+};
+var _name;
 import { createTemplate } from 'trans-render/createTemplate.js';
 import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement } from '../XtalElement.js';
@@ -30,13 +44,13 @@ export class MiniMal extends XtalElement {
             })
         ];
         //#endregion
+        //#endregion
+        //#region boilerplate code
+        _name.set(this, void 0);
+        //#endregion
     }
-    //#endregion
-    //#endregion
-    //#region boilerplate code
-    #name;
     get name() {
-        return this.#name;
+        return __classPrivateFieldGet(this, _name);
     }
     set name(nv) {
         this.attr(name, nv);
@@ -51,10 +65,11 @@ export class MiniMal extends XtalElement {
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case name:
-                this.#name = newVal;
+                __classPrivateFieldSet(this, _name, newVal);
                 break;
         }
         this.onPropsChange(name);
     }
 }
+_name = new WeakMap();
 customElements.define('mini-mal', MiniMal);
