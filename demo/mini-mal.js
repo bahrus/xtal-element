@@ -17,11 +17,10 @@ import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement } from '../XtalElement.js';
 const main = Symbol();
 const name = 'name';
+const buttonSym = Symbol();
 export class MiniMal extends XtalElement {
     constructor() {
         super(...arguments);
-        //#region XtalElement Members
-        //#region required
         this.readyToInit = true;
         this.readyToRender = true;
         this.mainTemplate = createTemplate(/* html */ `
@@ -33,23 +32,15 @@ export class MiniMal extends XtalElement {
         <button class="btn">Hello |.name ?? World|</slot></button>
         <div></div>
     `, MiniMal, main);
-        this.buttonSym = Symbol();
         this.initTransform = {
-            button: [{}, { click: () => { this.name = 'me'; } }],
-            '"': this.buttonSym,
+            button: [, { click: () => { this.name = 'me'; } }, , , buttonSym],
         };
-        //#endregion
-        //#region implemented members
         this.updateTransforms = [
             ({ name }) => ({
-                [this.buttonSym]: ({ target }) => interpolate(target, 'textContent', this, false),
+                [buttonSym]: ({ target }) => interpolate(target, 'textContent', this, false),
             })
         ];
-        //#endregion
-        //#endregion
-        //#region boilerplate code
         _name.set(this, void 0);
-        //#endregion
     }
     get name() {
         return __classPrivateFieldGet(this, _name);

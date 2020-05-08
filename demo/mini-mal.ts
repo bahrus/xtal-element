@@ -5,10 +5,10 @@ import {XtalElement, SelectiveUpdate} from '../XtalElement.js';
 
 const main = Symbol();
 const name = 'name';
+const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
 
-    //#region XtalElement Members
-    //#region required
+
     readyToInit = true;
     readyToRender = true;
 
@@ -22,25 +22,19 @@ export class MiniMal extends XtalElement{
         <div></div>
     `, MiniMal, main);
 
-    buttonSym = Symbol();
+    
+    [buttonSym]: HTMLButtonElement;
     initTransform = {
-        button: [{},{click: () => {this.name = 'me'}}],
-        '"': this.buttonSym,
+        button: [,{click: () => {this.name = 'me'}},,,buttonSym],
     } as TransformRules;
-    //#endregion
 
-    //#region implemented members
 
     updateTransforms = [
         ({name} : MiniMal) => ({
-            [this.buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
+            [buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
         }) as TransformRules
     ] as SelectiveUpdate[];
     
-    //#endregion
-    //#endregion
-
-    //#region boilerplate code
     #name!: string;
     get name(){
         return this.#name;
@@ -63,6 +57,6 @@ export class MiniMal extends XtalElement{
         }
         this.onPropsChange(name);
     }
-    //#endregion
+
 }
 customElements.define('mini-mal', MiniMal);
