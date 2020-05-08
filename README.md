@@ -102,6 +102,7 @@ const mainTemplate createTemplate(/* html */`
     <button class="btn">Hello |.name ?? World|</slot></button>
 `;
 const name = 'name';
+const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
 
     //This property / field allows the developer to wait for some required properties to be set before doing anything.
@@ -116,10 +117,11 @@ export class MiniMal extends XtalElement{
     //optimal performance
     mainTemplate = mainTemplate;
 
+    [buttonSym]: HTMLButtonElement;
     //uses trans-render syntax: https://github.com/bahrus/trans-render
     //initTransform is only done once.
     initTransform = {
-        button: [{},{click: () => {this.name = 'me'}}]
+        button: [,{click: () => {this.name = 'me'}},,,buttonSym]
     } as TransformRules;
 
     // selectiveUpdateTransforms is called anytime property "name" changes.
@@ -127,7 +129,7 @@ export class MiniMal extends XtalElement{
     // arrow function in array with any other property name.
     updateTransforms = [
         ({name} : MiniMal) => ({
-            button: ({target}) => interpolate(target, 'textContent', this, false),
+            [buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
         }) as TransformRules
     ] as SelectiveUpdate[];
     
