@@ -33,14 +33,16 @@ export class MiniMal extends XtalElement {
         <button class="btn">Hello |.name ?? World|</slot></button>
         <div></div>
     `, MiniMal, main);
+        this.buttonSym = Symbol();
         this.initTransform = {
-            button: [{}, { click: () => { this.name = 'me'; } }]
+            button: [{}, { click: () => { this.name = 'me'; } }],
+            '"': this.buttonSym,
         };
         //#endregion
         //#region implemented members
         this.updateTransforms = [
             ({ name }) => ({
-                button: ({ target }) => interpolate(target, 'textContent', this, false),
+                [this.buttonSym]: ({ target }) => interpolate(target, 'textContent', this, false),
             })
         ];
         //#endregion

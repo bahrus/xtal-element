@@ -22,8 +22,10 @@ export class MiniMal extends XtalElement{
         <div></div>
     `, MiniMal, main);
 
+    buttonSym = Symbol();
     initTransform = {
-        button: [{},{click: () => {this.name = 'me'}}]
+        button: [{},{click: () => {this.name = 'me'}}],
+        '"': this.buttonSym,
     } as TransformRules;
     //#endregion
 
@@ -31,7 +33,7 @@ export class MiniMal extends XtalElement{
 
     updateTransforms = [
         ({name} : MiniMal) => ({
-            button: ({target}) => interpolate(target, 'textContent', this, false),
+            [this.buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
         }) as TransformRules
     ] as SelectiveUpdate[];
     
