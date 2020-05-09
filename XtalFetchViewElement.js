@@ -1,5 +1,5 @@
 import { XtalRoomWithAView } from './XtalRoomWithAView.js';
-import { lispToCamel } from './xtal-latx.js';
+import { lispToCamel } from 'trans-render/init.js';
 export const href = 'href';
 export const req_init = 'req-init';
 export const req_init_required = 'req-init-required';

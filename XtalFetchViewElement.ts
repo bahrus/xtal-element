@@ -1,5 +1,5 @@
 import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
-import {lispToCamel} from './xtal-latx.js'
+import {lispToCamel} from 'trans-render/init.js'
 
 export const href = 'href';
 export const req_init = 'req-init';

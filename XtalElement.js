@@ -8,9 +8,8 @@ var _renderOptions;
 import { XtallatX } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
-import { init } from 'trans-render/init.js';
+import { init, lispToCamel } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
-import { lispToCamel } from './xtal-latx.js';
 const deconstructed = Symbol();
 export function deconstruct(fn) {
     const fnString = fn.toString().trim();
