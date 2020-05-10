@@ -54,17 +54,17 @@ export class Foo extends XtalElement{
             section:{
                 h1: prop1
             }
-        }
+        },
         ({prop1, prop2}) =>{
             section:{
                 h2: prop1 + prop2
             }
-        }
+        },
         ({prop1, prop3}) =>{
             footer: {
                 h3: prop1 + prop3
             }
-        }
+        },
         ({prop1, prop2, prop3}) => {
             footer:{
                 h4: prop1 + prop2 + prop3
