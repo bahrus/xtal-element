@@ -49,7 +49,7 @@ export class Foo extends XtalElement{
     prop1 = 'a';
     prop2 = 'b';
     prop3 = 'c';
-    selectiveUpdateTransforms = [
+    updateTransforms = [
         ({prop1}) =>{
             section:{
                 h1: prop1
