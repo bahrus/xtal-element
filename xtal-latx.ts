@@ -1,6 +1,10 @@
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {IHydrate} from 'trans-render/types.d.js';
 
+const stcRe = /(\-\w)/g;
+export function lispToCamel(s: string){
+    return s.replace(stcRe, function(m){return m[1].toUpperCase();});
+}
 
 export interface IXtallatXI extends IHydrate {
 
