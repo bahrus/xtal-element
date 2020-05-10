@@ -9,7 +9,7 @@
     "serve": "node node_modules/xtal-test/serve.js"
   },
   "dependencies": {
-    "trans-render": "0.0.174"
+    "trans-render": "0.0.175"
   },
   "devDependencies": {
     "es-module-shims": "0.4.6",
