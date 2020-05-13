@@ -62,7 +62,9 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase) {
     return class extends superClass implements IXtallatXI {
 
-        
+        static get evalPath(){
+            return '__evaluatedProps' + this.toString;
+        }
         static get observedAttributes(){
             const props = this.evaluatedProps;
             return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject]
@@ -72,16 +74,16 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             boolean: [disabled],
         } as AttributeProps);
 
-        static __evaluatedProps: EvaluatedAttributeProps;
+        //static __evaluatedProps: EvaluatedAttributeProps;
         static get evaluatedProps(){
-            if(this.__evaluatedProps === undefined){
+            if((<any>this)[this.evalPath] === undefined){
                 const args = deconstruct(this.attributeProps);
                 const arg: {[key: string]: string} = {};
                 args.forEach(token => {
                     arg[token] = token;
                 });
-                this.__evaluatedProps = (<any>this.attributeProps)(arg);
-                const ep = this.__evaluatedProps;
+                (<any>this)[this.evalPath] = (<any>this.attributeProps)(arg);
+                const ep = (<any>this)[this.evalPath];
                 ep.boolean = ep.boolean || [];
                 ep.numeric = ep.numeric || [];
                 ep.parsedObject = ep.parsedObject || [];
@@ -90,7 +92,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 ep.object = ep.object || [];
                 ep.string = ep.string || [];
             }
-            return this.__evaluatedProps;
+            return (<any>this)[this.evalPath] as EvaluatedAttributeProps;
         }
         /**
          * Tracks how many times each event type was called.

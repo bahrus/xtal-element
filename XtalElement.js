@@ -1,3 +1,10 @@
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+};
+var _renderOptions;
 import { XtallatX, deconstruct } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
 import { hydrate } from 'trans-render/hydrate.js';
@@ -18,16 +25,15 @@ export function intersection(setA, setB) {
 export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
     constructor() {
         super(...arguments);
-        this.#renderOptions = {};
+        _renderOptions.set(this, {});
         this._mainTemplateProp = 'mainTemplate';
         this._propChangeQueue = new Set();
     }
     get noShadow() {
         return false;
     }
-    #renderOptions;
     get renderOptions() {
-        return this.#renderOptions;
+        return __classPrivateFieldGet(this, _renderOptions);
     }
     initRenderCallback(ctx, target) { }
     get root() {
@@ -65,19 +71,20 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         }
         if (this._renderContext === undefined) {
             this._renderContext = this.initRenderContext();
-            this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
+            __classPrivateFieldGet(this, _renderOptions).initializedCallback = this.afterInitRenderCallback.bind(this);
             this._renderContext.init(this[this._mainTemplateProp], this._renderContext, this.root, this.renderOptions);
         }
         if (this.updateTransforms !== undefined) {
             //TODO: Optimize
             this._renderContext.update = update;
             this.updateTransforms.forEach(selectiveUpdateTransform => {
+                var _a;
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
                 if (intersection(this._propChangeQueue, dependencySet).size > 0) {
-                    this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
+                    __classPrivateFieldGet(this, _renderOptions).updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     this._renderContext.Transform = selectiveUpdateTransform(this);
-                    this._renderContext?.update(this._renderContext, this.root);
+                    ((_a = this._renderContext) === null || _a === void 0 ? void 0 : _a.update)(this._renderContext, this.root);
                 }
             });
             this._propChangeQueue = new Set();
@@ -97,3 +104,4 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         this.transform();
     }
 }
+_renderOptions = new WeakMap();

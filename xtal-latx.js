@@ -47,19 +47,23 @@ export function XtallatX(superClass) {
                  */
                 this.evCount = {};
             }
+            static get evalPath() {
+                return '__evaluatedProps' + this.toString;
+            }
             static get observedAttributes() {
                 const props = this.evaluatedProps;
                 return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject];
             }
+            //static __evaluatedProps: EvaluatedAttributeProps;
             static get evaluatedProps() {
-                if (this.__evaluatedProps === undefined) {
+                if (this[this.evalPath] === undefined) {
                     const args = deconstruct(this.attributeProps);
                     const arg = {};
                     args.forEach(token => {
                         arg[token] = token;
                     });
-                    this.__evaluatedProps = this.attributeProps(arg);
-                    const ep = this.__evaluatedProps;
+                    this[this.evalPath] = this.attributeProps(arg);
+                    const ep = this[this.evalPath];
                     ep.boolean = ep.boolean || [];
                     ep.numeric = ep.numeric || [];
                     ep.parsedObject = ep.parsedObject || [];
@@ -68,7 +72,7 @@ export function XtallatX(superClass) {
                     ep.object = ep.object || [];
                     ep.string = ep.string || [];
                 }
-                return this.__evaluatedProps;
+                return this[this.evalPath];
             }
             /**
              * Turn number into string with even and odd values easy to query via css.
