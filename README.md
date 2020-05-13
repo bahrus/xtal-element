@@ -87,7 +87,6 @@ XtalElement is the base class, and doesn't provide support for asynchronous retr
 
 Here is a minimal example of a web component that extends XtalElement:
 
-https://github.com/bahrus/xtal-element/blob/3fdd3872ff1e9fcde983fc618f5b6ce962391126/demo/mini-mal.ts#L1-L52
 
 ```TypeScript
 import {createTemplate} from 'trans-render/createTemplate.js';
