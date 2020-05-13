@@ -132,30 +132,19 @@ export class MiniMal extends XtalElement{
             [buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
         }) as TransformRules
     ] as SelectiveUpdate[];
+
+    static attributeProps : PropDefGet = (({disabled, name} : MiniMal) => ({
+        boolean: [disabled],
+        string: [name]
+    })) as PropDefGet<XtalElement>;
     
-    //Close to the metal boilerplate.  Leaving as is, waiting (im)patiently for decorators 
     #name!: string;
     get name(){
         return this.#name;
     }
     set name(nv){
-        this.attr(name, nv);
-    }
-    connectedCallback(){
-
-        this.propUp([name]);
-        super.connectedCallback();
-    }
-    static get observedAttributes(){
-        return super.observedAttributes.concat([name]);
-    }
-    attributeChangedCallback(name: string, oldVal: string, newVal: string){
-        switch(name){
-            case name:
-                this.#name = newVal;
-                break;
-        }
-        this.onPropsChange(name);
+        this.#name = nv;
+        this.onPropsChange('name');
     }
     
 }
