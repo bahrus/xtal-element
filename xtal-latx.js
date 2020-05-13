@@ -1,3 +1,4 @@
+import { define as cdef } from 'trans-render/define.js';
 const stcRe = /(\-\w)/g;
 export function lispToCamel(s) {
     return s.replace(stcRe, function (m) { return m[1].toUpperCase(); });
@@ -9,6 +10,27 @@ export function deconstruct(fn) {
         return fnString.substring(2, iPos).split(',').map(s => s.trim());
     }
     return [];
+}
+export function define(MyElementClass) {
+    const props = MyElementClass['evaluatedProps'];
+    const proto = MyElementClass.prototype;
+    const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
+    const existingProps = Object.getOwnPropertyNames(proto);
+    flatProps.forEach(prop => {
+        if (existingProps.includes(prop))
+            return;
+        const sym = Symbol();
+        Object.defineProperty(proto, prop, {
+            get() {
+                return this[sym];
+            },
+            set(nv) {
+                this[sym] = nv;
+                this.onPropsChange(prop);
+            },
+        });
+    });
+    cdef(MyElementClass);
 }
 /**
  * Base class for many xtal- components

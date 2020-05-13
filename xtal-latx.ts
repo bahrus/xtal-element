@@ -17,9 +17,26 @@ export function deconstruct(fn: Function){
     return [];
 }
 
-// export function define(MyElementClass: any){
-//     const x = MyElementClass[]
-// }
+export function define(MyElementClass: any){
+    const props = MyElementClass['evaluatedProps'] as EvaluatedAttributeProps;
+    const proto = MyElementClass.prototype;
+    const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
+    const existingProps = Object.getOwnPropertyNames(proto);
+    flatProps.forEach(prop =>{
+        if(existingProps.includes(prop)) return;
+        const sym = Symbol();
+        Object.defineProperty(proto, prop, {
+            get(){
+                return this[sym];
+            },
+            set(nv){
+                this[sym] = nv;
+                this.onPropsChange(prop);
+            },
+        });
+    })
+    cdef(MyElementClass);
+}
 
 export interface IXtallatXI extends IHydrate {
 

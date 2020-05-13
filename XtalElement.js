@@ -10,6 +10,7 @@ import { DataDecorators } from './data-decorators.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
 import { init } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
+export { define } from './xtal-latx.js';
 const deconstructed = Symbol();
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 export function intersection(setA, setB) {

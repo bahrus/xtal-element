@@ -6,6 +6,7 @@ import {init, lispToCamel} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 import { destruct } from './destruct.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate} from './types.d.js';
+export {define} from './xtal-latx.js';
 
 type TransformGetter = () => TransformValueOptions;
 

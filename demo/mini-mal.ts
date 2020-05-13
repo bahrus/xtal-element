@@ -1,7 +1,8 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {interpolate} from 'trans-render/interpolate.js';
-import {XtalElement} from '../XtalElement.js';
+import {XtalElement, define} from '../XtalElement.js';
 import {AttributeProps, TransformRules, SelectiveUpdate} from '../types.d.js';
+import { MinimalView } from './mini-mal-view.js';
 const mainTemplate = createTemplate(/* html */`
 <style>
 .btn {
@@ -13,7 +14,7 @@ const mainTemplate = createTemplate(/* html */`
 `);
 const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
-
+    static is = 'mini-mal';
     static attributeProps = ({disabled, name} : MiniMal) => ({
         boolean: [disabled],
         string: [name],
@@ -48,16 +49,9 @@ export class MiniMal extends XtalElement{
         }) as TransformRules
     ] as SelectiveUpdate[];
     
-    #name!: string;
-    get name(){
-        return this.#name;
-    }
-    set name(nv){
-        this.#name = nv;
-        this.onPropsChange('name');
-    }
+
 
 
 
 }
-customElements.define('mini-mal', MiniMal);
+define(MiniMal);

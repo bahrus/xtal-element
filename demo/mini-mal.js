@@ -1,20 +1,6 @@
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-};
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-};
-var _name;
 import { createTemplate } from 'trans-render/createTemplate.js';
 import { interpolate } from 'trans-render/interpolate.js';
-import { XtalElement } from '../XtalElement.js';
+import { XtalElement, define } from '../XtalElement.js';
 const mainTemplate = createTemplate(/* html */ `
 <style>
 .btn {
@@ -51,19 +37,11 @@ export class MiniMal extends XtalElement {
                 [buttonSym]: ({ target }) => interpolate(target, 'textContent', this, false),
             })
         ];
-        _name.set(this, void 0);
-    }
-    get name() {
-        return __classPrivateFieldGet(this, _name);
-    }
-    set name(nv) {
-        __classPrivateFieldSet(this, _name, nv);
-        this.onPropsChange('name');
     }
 }
-_name = new WeakMap();
+MiniMal.is = 'mini-mal';
 MiniMal.attributeProps = ({ disabled, name }) => ({
     boolean: [disabled],
     string: [name],
 });
-customElements.define('mini-mal', MiniMal);
+define(MiniMal);
