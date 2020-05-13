@@ -12,7 +12,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return privateMap.get(receiver);
 };
 var _state, _controller;
-import { XtalElement, deconstruct, intersection } from './XtalElement.js';
+import { XtalElement, intersection } from './XtalElement.js';
+import { deconstruct } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();

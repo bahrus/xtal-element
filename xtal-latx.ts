@@ -1,6 +1,7 @@
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps} from './types.d.js';
+import {define as cdef} from 'trans-render/define.js';
 
 const stcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
@@ -15,6 +16,10 @@ export function deconstruct(fn: Function){
     }
     return [];
 }
+
+// export function define(MyElementClass: any){
+//     const x = MyElementClass[]
+// }
 
 export interface IXtallatXI extends IHydrate {
 
@@ -40,7 +45,11 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase) {
     return class extends superClass implements IXtallatXI {
 
-        static get observedAttributes(){return [disabled];}
+        
+        static get observedAttributes(){
+            const props = this.evaluatedProps;
+            return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject]
+        }
 
         static attributeProps : any = ({disabled} : IXtallatXI) => ({
             boolean: [disabled],
@@ -90,6 +99,22 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 ec[name] = 0;
             }
             this.attr('data-' + name, this.to$(ec[name]));
+        }
+        onPropsChange(name: string){}
+        attributeChangedCallback(n: string, ov: string, nv: string) {
+            const propName = lispToCamel(n);
+            const anyT = this as any;
+            const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
+            if(ep.string.includes(propName)){
+                anyT[propName] = nv;
+            }else if(ep.boolean.includes(propName)){
+                anyT[propName] = nv !== null;
+            }else if(ep.numeric.includes(propName)){
+                anyT[propName] = parseFloat(nv);
+            }else if(ep.parsedObject.includes(propName)){
+                anyT[propName] = JSON.parse(nv);
+            }
+            this.onPropsChange(propName);
         }
 
 

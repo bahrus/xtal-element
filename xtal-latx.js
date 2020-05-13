@@ -1,4 +1,3 @@
-import { disabled } from 'trans-render/hydrate.js';
 const stcRe = /(\-\w)/g;
 export function lispToCamel(s) {
     return s.replace(stcRe, function (m) { return m[1].toUpperCase(); });
@@ -25,7 +24,10 @@ export function XtallatX(superClass) {
                  */
                 this.evCount = {};
             }
-            static get observedAttributes() { return [disabled]; }
+            static get observedAttributes() {
+                const props = this.evaluatedProps;
+                return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject];
+            }
             static get evaluatedProps() {
                 if (this.__evaluatedProps === undefined) {
                     const args = deconstruct(this.attributeProps);
@@ -66,6 +68,25 @@ export function XtallatX(superClass) {
                     ec[name] = 0;
                 }
                 this.attr('data-' + name, this.to$(ec[name]));
+            }
+            onPropsChange(name) { }
+            attributeChangedCallback(n, ov, nv) {
+                const propName = lispToCamel(n);
+                const anyT = this;
+                const ep = this.constructor.evaluatedProps;
+                if (ep.string.includes(propName)) {
+                    anyT[propName] = nv;
+                }
+                else if (ep.boolean.includes(propName)) {
+                    anyT[propName] = nv !== null;
+                }
+                else if (ep.numeric.includes(propName)) {
+                    anyT[propName] = parseFloat(nv);
+                }
+                else if (ep.parsedObject.includes(propName)) {
+                    anyT[propName] = JSON.parse(nv);
+                }
+                this.onPropsChange(propName);
             }
             /**
              * Dispatch Custom Event

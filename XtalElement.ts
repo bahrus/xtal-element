@@ -38,10 +38,6 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
 
 
-    static get observedAttributes(){
-        const props = this.evaluatedProps;
-        return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject]
-    }
 
 
     abstract mainTemplate: HTMLTemplateElement;
@@ -58,21 +54,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
-    attributeChangedCallback(n: string, ov: string, nv: string) {
-        const propName = lispToCamel(n);
-        const anyT = this as any;
-        const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
-        if(ep.string.includes(propName)){
-            anyT[propName] = nv;
-        }else if(ep.boolean.includes(propName)){
-            anyT[propName] = nv !== null;
-        }else if(ep.numeric.includes(propName)){
-            anyT[propName] = parseFloat(nv);
-        }else if(ep.parsedObject.includes(propName)){
-            anyT[propName] = JSON.parse(nv);
-        }
-        this.onPropsChange(propName);
-    }
+
 
 
     _connected!: boolean;

@@ -1,7 +1,6 @@
 import {XtalRoomWithAView} from '../XtalRoomWithAView.js';
-import {TransformRules, PESettings} from 'trans-render/types.d.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {SelectiveUpdate} from '../XtalElement.js';
+import {SelectiveUpdate, TransformRules, PESettings} from '../types.d.js';
 
 const template = createTemplate(
     /* html */`<div></div>`

@@ -8,7 +8,7 @@ var _renderOptions;
 import { XtallatX, deconstruct } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
-import { init, lispToCamel } from 'trans-render/init.js';
+import { init } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
 const deconstructed = Symbol();
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
@@ -34,29 +34,7 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return __classPrivateFieldGet(this, _renderOptions);
     }
-    static get observedAttributes() {
-        const props = this.evaluatedProps;
-        return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject];
-    }
     initRenderCallback(ctx, target) { }
-    attributeChangedCallback(n, ov, nv) {
-        const propName = lispToCamel(n);
-        const anyT = this;
-        const ep = this.constructor.evaluatedProps;
-        if (ep.string.includes(propName)) {
-            anyT[propName] = nv;
-        }
-        else if (ep.boolean.includes(propName)) {
-            anyT[propName] = nv !== null;
-        }
-        else if (ep.numeric.includes(propName)) {
-            anyT[propName] = parseFloat(nv);
-        }
-        else if (ep.parsedObject.includes(propName)) {
-            anyT[propName] = JSON.parse(nv);
-        }
-        this.onPropsChange(propName);
-    }
     connectedCallback() {
         const ep = this.constructor.evaluatedProps;
         this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);

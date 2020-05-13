@@ -1,5 +1,5 @@
 import { XtalElement } from "./XtalElement";
-export {TransformRules} from 'trans-render/types.d.js';
+export {TransformRules, PESettings} from 'trans-render/types.d.js';
 import {TransformRules} from 'trans-render/types.d.js';
 
 export type SelectiveUpdate = (el: XtalElement) => TransformRules;
