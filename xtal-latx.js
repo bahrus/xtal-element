@@ -13,7 +13,7 @@ export function deconstruct(fn) {
     return [];
 }
 export function define(MyElementClass) {
-    const props = MyElementClass[MyElementClass['evalPath']];
+    const props = MyElementClass['evaluatedProps'];
     const proto = MyElementClass.prototype;
     const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
     const existingProps = Object.getOwnPropertyNames(proto);
