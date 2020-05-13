@@ -48,7 +48,7 @@ export function XtallatX(superClass) {
                 this.evCount = {};
             }
             static get evalPath() {
-                return '__evaluatedProps' + this.toString;
+                return '__evaluatedProps' + this.is;
             }
             static get observedAttributes() {
                 const props = this.evaluatedProps;

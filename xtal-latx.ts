@@ -63,7 +63,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
     return class extends superClass implements IXtallatXI {
 
         static get evalPath(){
-            return '__evaluatedProps' + this.toString;
+            return '__evaluatedProps' + (<any>this).is;
         }
         static get observedAttributes(){
             const props = this.evaluatedProps;
