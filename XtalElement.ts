@@ -58,13 +58,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
 
 
-    _connected!: boolean;
-    connectedCallback(){
-        const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
-        this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
-        this._connected = true;
-        this.onPropsChange(disabled);
-    }
+
 
     get root() : HTMLElement | ShadowRoot{
         if(this.noShadow) return this;

@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _renderOptions;
 import { XtallatX, deconstruct } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
-import { hydrate, disabled } from 'trans-render/hydrate.js';
+import { hydrate } from 'trans-render/hydrate.js';
 import { init } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
 export { define } from './xtal-latx.js';
@@ -36,12 +36,6 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
         return __classPrivateFieldGet(this, _renderOptions);
     }
     initRenderCallback(ctx, target) { }
-    connectedCallback() {
-        const ep = this.constructor.evaluatedProps;
-        this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
-        this._connected = true;
-        this.onPropsChange(disabled);
-    }
     get root() {
         if (this.noShadow)
             return this;

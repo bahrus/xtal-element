@@ -1,3 +1,4 @@
+import { disabled } from 'trans-render/hydrate.js';
 import { define as cdef } from 'trans-render/define.js';
 const stcRe = /(\-\w)/g;
 export function lispToCamel(s) {
@@ -109,6 +110,12 @@ export function XtallatX(superClass) {
                     anyT[propName] = JSON.parse(nv);
                 }
                 this.onPropsChange(propName);
+            }
+            connectedCallback() {
+                const ep = this.constructor.evaluatedProps;
+                this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
+                this._connected = true;
+                this.onPropsChange(disabled);
             }
             /**
              * Dispatch Custom Event
