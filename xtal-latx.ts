@@ -1,9 +1,19 @@
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {IHydrate} from 'trans-render/types.d.js';
+import {EvaluatedAttributeProps, AttributeProps} from './types.d.js';
 
 const stcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
     return s.replace(stcRe, function(m){return m[1].toUpperCase();});
+}
+
+export function deconstruct(fn: Function){
+    const fnString = fn.toString().trim();
+    if(fnString.startsWith('({')){
+        const iPos = fnString.indexOf('})', 2);
+        return fnString.substring(2, iPos).split(',').map(s => s.trim());
+    }
+    return [];
 }
 
 export interface IXtallatXI extends IHydrate {
@@ -31,6 +41,31 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
     return class extends superClass implements IXtallatXI {
 
         static get observedAttributes(){return [disabled];}
+
+        static attributeProps : any = ({disabled} : IXtallatXI) => ({
+            boolean: [disabled],
+        } as AttributeProps);
+
+        static __evaluatedProps: EvaluatedAttributeProps;
+        static get evaluatedProps(){
+            if(this.__evaluatedProps === undefined){
+                const args = deconstruct(this.attributeProps);
+                const arg: {[key: string]: string} = {};
+                args.forEach(token => {
+                    arg[token] = token;
+                });
+                this.__evaluatedProps = (<any>this.attributeProps)(arg);
+                const ep = this.__evaluatedProps;
+                ep.boolean = ep.boolean || [];
+                ep.numeric = ep.numeric || [];
+                ep.parsedObject = ep.parsedObject || [];
+                ep.noReflect = ep.noReflect || [];
+                ep.notify = ep.notify || [];
+                ep.object = ep.object || [];
+                ep.string = ep.string || [];
+            }
+            return this.__evaluatedProps;
+        }
         /**
          * Tracks how many times each event type was called.
          */

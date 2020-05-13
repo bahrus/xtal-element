@@ -1,4 +1,4 @@
-import {XtallatX} from './xtal-latx.js';
+import {XtallatX, deconstruct} from './xtal-latx.js';
 import {DataDecorators} from './data-decorators.js';
 import {RenderContext, RenderOptions, TransformValueOptions} from 'trans-render/types.d.js';
 import {hydrate, disabled} from 'trans-render/hydrate.js';
@@ -11,14 +11,7 @@ type TransformGetter = () => TransformValueOptions;
 
 const deconstructed = Symbol();
 
-export function deconstruct(fn: Function){
-    const fnString = fn.toString().trim();
-    if(fnString.startsWith('({')){
-        const iPos = fnString.indexOf('})', 2);
-        return fnString.substring(2, iPos).split(',').map(s => s.trim());
-    }
-    return [];
-}
+
 
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 export function intersection<T = string>(setA: Set<T>, setB: Set<T>) {
@@ -42,29 +35,8 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
         return this.#renderOptions;
     }
 
-    static __evaluatedProps: EvaluatedAttributeProps;
-    static get evaluatedProps(){
-        if(this.__evaluatedProps === undefined){
-            const args = deconstruct(this.attributeProps);
-            const arg: {[key: string]: string} = {};
-            args.forEach(token => {
-                arg[token] = token;
-            });
-            this.__evaluatedProps = (<any>this.attributeProps)(arg);
-            const ep = this.__evaluatedProps;
-            ep.boolean = ep.boolean || [];
-            ep.numeric = ep.numeric || [];
-            ep.parsedObject = ep.parsedObject || [];
-            ep.noReflect = ep.noReflect || [];
-            ep.notify = ep.notify || [];
-            ep.object = ep.object || [];
-            ep.string = ep.string || [];
-        }
-        return this.__evaluatedProps;
-    }
-    static attributeProps : any = ({disabled} : XtalElement) => ({
-        boolean: [disabled],
-    } as AttributeProps);
+
+
 
     static get observedAttributes(){
         const props = this.evaluatedProps;

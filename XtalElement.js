@@ -5,20 +5,12 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return privateMap.get(receiver);
 };
 var _renderOptions;
-import { XtallatX } from './xtal-latx.js';
+import { XtallatX, deconstruct } from './xtal-latx.js';
 import { DataDecorators } from './data-decorators.js';
 import { hydrate, disabled } from 'trans-render/hydrate.js';
 import { init, lispToCamel } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
 const deconstructed = Symbol();
-export function deconstruct(fn) {
-    const fnString = fn.toString().trim();
-    if (fnString.startsWith('({')) {
-        const iPos = fnString.indexOf('})', 2);
-        return fnString.substring(2, iPos).split(',').map(s => s.trim());
-    }
-    return [];
-}
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 export function intersection(setA, setB) {
     let _intersection = new Set();
@@ -41,25 +33,6 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     }
     get renderOptions() {
         return __classPrivateFieldGet(this, _renderOptions);
-    }
-    static get evaluatedProps() {
-        if (this.__evaluatedProps === undefined) {
-            const args = deconstruct(this.attributeProps);
-            const arg = {};
-            args.forEach(token => {
-                arg[token] = token;
-            });
-            this.__evaluatedProps = this.attributeProps(arg);
-            const ep = this.__evaluatedProps;
-            ep.boolean = ep.boolean || [];
-            ep.numeric = ep.numeric || [];
-            ep.parsedObject = ep.parsedObject || [];
-            ep.noReflect = ep.noReflect || [];
-            ep.notify = ep.notify || [];
-            ep.object = ep.object || [];
-            ep.string = ep.string || [];
-        }
-        return this.__evaluatedProps;
     }
     static get observedAttributes() {
         const props = this.evaluatedProps;
@@ -159,6 +132,3 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     }
 }
 _renderOptions = new WeakMap();
-XtalElement.attributeProps = ({ disabled }) => ({
-    boolean: [disabled],
-});
