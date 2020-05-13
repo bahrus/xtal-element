@@ -2,12 +2,16 @@ import {createTemplate} from 'trans-render/createTemplate.js';
 import {TransformRules} from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement, SelectiveUpdate} from '../XtalElement.js';
-
+import {PropDefGet} from '../types.d.js';
 const main = Symbol();
 const name = 'name';
 const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
 
+    static attributeProps : PropDefGet = (({disabled, name} : MiniMal) => ({
+        boolean: [disabled],
+        string: [name]
+    })) as PropDefGet<XtalElement>
 
     readyToInit = true;
     readyToRender = true;
@@ -46,9 +50,9 @@ export class MiniMal extends XtalElement{
         this.propUp([name]);
         super.connectedCallback();
     }
-    static get observedAttributes(){
-        return super.observedAttributes.concat([name]);
-    }
+    // static get observedAttributes(){
+    //     return super.observedAttributes.concat([name]);
+    // }
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         switch(name){
             case name:

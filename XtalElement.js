@@ -42,6 +42,26 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     get renderOptions() {
         return __classPrivateFieldGet(this, _renderOptions);
     }
+    static get evaluatedProps() {
+        if (this.__evaluatedProps === undefined) {
+            const args = deconstruct(this.attributeProps);
+            const arg = {};
+            args.forEach(token => {
+                arg[token] = token;
+            });
+            this.__evaluatedProps = this.attributeProps(arg);
+        }
+        return this.__evaluatedProps;
+    }
+    static get observedAttributes() {
+        const props = this.evaluatedProps;
+        return [
+            props.boolean !== undefined ? props.boolean : [],
+            props.numeric !== undefined ? props.numeric : [],
+            props.string !== undefined ? props.string : [],
+            props.parsedObject !== undefined ? props.parsedObject : []
+        ].flat();
+    }
     initRenderCallback(ctx, target) { }
     attributeChangedCallback(n, ov, nv) {
         super.attributeChangedCallback(n, ov, nv);
@@ -121,3 +141,6 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
     }
 }
 _renderOptions = new WeakMap();
+XtalElement.attributeProps = ({ disabled }) => ({
+    boolean: [disabled]
+});

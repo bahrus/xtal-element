@@ -52,9 +52,9 @@ export class MiniMal extends XtalElement {
         this.propUp([name]);
         super.connectedCallback();
     }
-    static get observedAttributes() {
-        return super.observedAttributes.concat([name]);
-    }
+    // static get observedAttributes(){
+    //     return super.observedAttributes.concat([name]);
+    // }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case name:
@@ -65,4 +65,8 @@ export class MiniMal extends XtalElement {
     }
 }
 _name = new WeakMap();
+MiniMal.attributeProps = (({ disabled, name }) => ({
+    boolean: [disabled],
+    string: [name]
+}));
 customElements.define('mini-mal', MiniMal);

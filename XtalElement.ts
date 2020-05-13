@@ -5,6 +5,7 @@ import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {init, lispToCamel} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 import { destruct } from './destruct.js';
+import {PropDefGet, EvaluatedAttributeProps} from './types.d.js';
 
 type TransformGetter = () => TransformValueOptions;
 export type SelectiveUpdate = (el: XtalElement) => TransformRules;
@@ -40,6 +41,34 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     get renderOptions() : RenderOptions{
         return this.#renderOptions;
     }
+
+    static __evaluatedProps: EvaluatedAttributeProps;
+    static get evaluatedProps(){
+        if(this.__evaluatedProps === undefined){
+            const args = deconstruct(this.attributeProps);
+            const arg: {[key: string]: string} = {};
+            args.forEach(token => {
+                arg[token] = token;
+            });
+            this.__evaluatedProps = (<any>this.attributeProps)(arg);
+        }
+        return this.__evaluatedProps;
+    }
+    static attributeProps : PropDefGet = ({disabled} : XtalElement) => ({
+        boolean: [disabled]
+    })
+
+    static get observedAttributes(){
+        const props = this.evaluatedProps;
+        return (<any>[
+            props.boolean !== undefined ? props.boolean : [],
+            props.numeric !== undefined ? props.numeric : [],
+            props.string !== undefined ? props.string : [],
+            props.parsedObject !== undefined ? props.parsedObject : []
+        ]).flat();
+        
+    }
+
 
     abstract mainTemplate: HTMLTemplateElement;
 
