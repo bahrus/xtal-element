@@ -125,7 +125,7 @@ export class MiniMal extends XtalElement{
         button: [,{click: () => {this.name = 'me'}},,,buttonSym]
     } as TransformRules;
 
-    // selectiveUpdateTransforms is called anytime property "name" changes.
+    // updateTransforms is called anytime property "name" changes.
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
     updateTransforms = [
