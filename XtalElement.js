@@ -160,5 +160,5 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
 }
 _renderOptions = new WeakMap();
 XtalElement.attributeProps = ({ disabled }) => ({
-    boolean: [disabled]
+    boolean: [disabled],
 });

@@ -2,16 +2,16 @@ import {createTemplate} from 'trans-render/createTemplate.js';
 import {TransformRules} from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement, SelectiveUpdate} from '../XtalElement.js';
-import {PropDefGet} from '../types.d.js';
+import {AttributeProps} from '../types.d.js';
 const main = Symbol();
 const name = 'name';
 const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
 
-    static attributeProps : PropDefGet = (({disabled, name} : MiniMal) => ({
+    static attributeProps = ({disabled, name} : MiniMal) => ({
         boolean: [disabled],
-        string: [name]
-    })) as PropDefGet<XtalElement>;
+        string: [name],
+    }  as AttributeProps);
 
     readyToInit = true;
     readyToRender = true;

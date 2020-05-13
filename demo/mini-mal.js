@@ -51,8 +51,8 @@ export class MiniMal extends XtalElement {
     }
 }
 _name = new WeakMap();
-MiniMal.attributeProps = (({ disabled, name }) => ({
+MiniMal.attributeProps = ({ disabled, name }) => ({
     boolean: [disabled],
-    string: [name]
-}));
+    string: [name],
+});
 customElements.define('mini-mal', MiniMal);
