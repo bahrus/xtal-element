@@ -19,6 +19,7 @@ export interface AttributeProps{
     string?: any[];
     object?: any[];
     noReflect?: any[];
+    parsedObject?: any[];
     notify?: any[];
 }
 
