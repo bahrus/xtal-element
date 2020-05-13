@@ -90,23 +90,28 @@ Here is a minimal example of a web component that extends XtalElement:
 
 ```TypeScript
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {TransformRules, TransformValueOptions, } from 'trans-render/types.d.js';
 import {interpolate} from 'trans-render/interpolate.js';
-import {XtalElement} from 'XtalElement/XtalElement.js';
+import {XtalElement, define} from '../XtalElement.js';
+import {AttributeProps, TransformRules, SelectiveUpdate} from '../types.d.js';
 
-const mainTemplate createTemplate(/* html */`
-    <style>
-    .btn {
-        font-size: 200%;
-    }
-    </style>
-    <button class="btn">Hello |.name ?? World|</slot></button>
-`;
-const name = 'name';
+const mainTemplate = createTemplate(/* html */`
+<style>
+.btn {
+    font-size: 200%;
+}
+</style>
+<button class="btn">Hello |.name ?? World|</slot></button>
+<div></div>
+`);
 const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
-
-    //This property / field allows the developer to wait for some required properties to be set before doing anything.
+    static is = 'mini-mal';
+    static attributeProps = ({disabled, name} : MiniMal) => ({
+        boolean: [disabled],
+        string: [name],
+    }  as AttributeProps);
+    //This property / field allows the developer to wait for some required 
+    //properties to be set before doing anything.
     readyToInit = true;
 
     //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
@@ -118,11 +123,12 @@ export class MiniMal extends XtalElement{
     //optimal performance
     mainTemplate = mainTemplate;
 
+    
     [buttonSym]: HTMLButtonElement;
     //uses trans-render syntax: https://github.com/bahrus/trans-render
     //initTransform is only done once.
     initTransform = {
-        button: [,{click: () => {this.name = 'me'}},,,buttonSym]
+        button: [,{click: () => {this.name = 'me'}},,,buttonSym],
     } as TransformRules;
 
     // updateTransforms is called anytime property "name" changes.
@@ -134,22 +140,10 @@ export class MiniMal extends XtalElement{
         }) as TransformRules
     ] as SelectiveUpdate[];
 
-    static attributeProps : PropDefGet = (({disabled, name} : MiniMal) => ({
-        boolean: [disabled],
-        string: [name]
-    })) as PropDefGet<XtalElement>;
-    
-    #name!: string;
-    get name(){
-        return this.#name;
-    }
-    set name(nv){
-        this.#name = nv;
-        this.onPropsChange('name');
-    }
-    
+    name: string | undefined;
 }
-customElements.define('mini-mal', MiniMal);
+define(MiniMal);
+
 ```
 
 ## Inheritance overindulgence?

@@ -2,7 +2,7 @@ import {createTemplate} from 'trans-render/createTemplate.js';
 import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement, define} from '../XtalElement.js';
 import {AttributeProps, TransformRules, SelectiveUpdate} from '../types.d.js';
-import { MinimalView } from './mini-mal-view.js';
+
 const mainTemplate = createTemplate(/* html */`
 <style>
 .btn {
@@ -48,10 +48,7 @@ export class MiniMal extends XtalElement{
             [buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
         }) as TransformRules
     ] as SelectiveUpdate[];
-    
 
-
-
-
+    name: string | undefined;
 }
 define(MiniMal);
