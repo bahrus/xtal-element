@@ -18,7 +18,7 @@ export function deconstruct(fn: Function){
 }
 
 export function define(MyElementClass: any){
-    const props = MyElementClass['evaluatedProps'] as EvaluatedAttributeProps;
+    const props = MyElementClass[MyElementClass['evalPath']] as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
     const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
     const existingProps = Object.getOwnPropertyNames(proto);
