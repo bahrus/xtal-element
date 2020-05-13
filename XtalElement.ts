@@ -51,6 +51,14 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
                 arg[token] = token;
             });
             this.__evaluatedProps = (<any>this.attributeProps)(arg);
+            const ep = this.__evaluatedProps;
+            ep.boolean = ep.boolean || [];
+            ep.numeric = ep.numeric || [];
+            ep.parsedObject = ep.parsedObject || [];
+            ep.noReflect = ep.noReflect || [];
+            ep.notify = ep.notify || [];
+            ep.object = ep.object || [];
+            ep.string = ep.string || [];
         }
         return this.__evaluatedProps;
     }
@@ -60,13 +68,7 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
 
     static get observedAttributes(){
         const props = this.evaluatedProps;
-        return (<any>[
-            props.boolean !== undefined ? props.boolean : [],
-            props.numeric !== undefined ? props.numeric : [],
-            props.string !== undefined ? props.string : [],
-            props.parsedObject !== undefined ? props.parsedObject : []
-        ]).flat();
-        
+        return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject]
     }
 
 
@@ -85,14 +87,26 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
     attributeChangedCallback(n: string, ov: string, nv: string) {
-        super.attributeChangedCallback(n, ov, nv);
-        this.onPropsChange(lispToCamel(n));
+        const propName = lispToCamel(n);
+        const anyT = this as any;
+        const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
+        if(ep.string.includes(propName)){
+            anyT[propName] = nv;
+        }else if(ep.boolean.includes(propName)){
+            anyT[propName] = nv !== null;
+        }else if(ep.numeric.includes(propName)){
+            anyT[propName] = parseFloat(nv);
+        }else if(ep.parsedObject.includes(propName)){
+            anyT[propName] = JSON.parse(nv);
+        }
+        this.onPropsChange(propName);
     }
 
 
     _connected!: boolean;
     connectedCallback(){
-        this.propUp([disabled]);
+        const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
+        this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
         this._connected = true;
         this.onPropsChange(disabled);
     }

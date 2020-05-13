@@ -50,25 +50,43 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
                 arg[token] = token;
             });
             this.__evaluatedProps = this.attributeProps(arg);
+            const ep = this.__evaluatedProps;
+            ep.boolean = ep.boolean || [];
+            ep.numeric = ep.numeric || [];
+            ep.parsedObject = ep.parsedObject || [];
+            ep.noReflect = ep.noReflect || [];
+            ep.notify = ep.notify || [];
+            ep.object = ep.object || [];
+            ep.string = ep.string || [];
         }
         return this.__evaluatedProps;
     }
     static get observedAttributes() {
         const props = this.evaluatedProps;
-        return [
-            props.boolean !== undefined ? props.boolean : [],
-            props.numeric !== undefined ? props.numeric : [],
-            props.string !== undefined ? props.string : [],
-            props.parsedObject !== undefined ? props.parsedObject : []
-        ].flat();
+        return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject];
     }
     initRenderCallback(ctx, target) { }
     attributeChangedCallback(n, ov, nv) {
-        super.attributeChangedCallback(n, ov, nv);
-        this.onPropsChange(lispToCamel(n));
+        const propName = lispToCamel(n);
+        const anyT = this;
+        const ep = this.constructor.evaluatedProps;
+        if (ep.string.includes(propName)) {
+            anyT[propName] = nv;
+        }
+        else if (ep.boolean.includes(propName)) {
+            anyT[propName] = nv !== null;
+        }
+        else if (ep.numeric.includes(propName)) {
+            anyT[propName] = parseFloat(nv);
+        }
+        else if (ep.parsedObject.includes(propName)) {
+            anyT[propName] = JSON.parse(nv);
+        }
+        this.onPropsChange(propName);
     }
     connectedCallback() {
-        this.propUp([disabled]);
+        const ep = this.constructor.evaluatedProps;
+        this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
         this._connected = true;
         this.onPropsChange(disabled);
     }

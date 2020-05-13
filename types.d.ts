@@ -20,13 +20,13 @@ export interface AttributeProps{
 }
 
 export interface EvaluatedAttributeProps{
-    numeric?: string[];
-    boolean?: string[];
-    string?: string[];
-    object?: string[];
-    noReflect?: string[];
-    parsedObject?: string[];
-    notify?: string[];
+    numeric: string[];
+    boolean: string[];
+    string: string[];
+    object: string[];
+    noReflect: string[];
+    parsedObject: string[];
+    notify: string[];
 }
 
 

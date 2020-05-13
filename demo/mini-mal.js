@@ -46,22 +46,8 @@ export class MiniMal extends XtalElement {
         return __classPrivateFieldGet(this, _name);
     }
     set name(nv) {
-        this.attr(name, nv);
-    }
-    connectedCallback() {
-        this.propUp([name]);
-        super.connectedCallback();
-    }
-    // static get observedAttributes(){
-    //     return super.observedAttributes.concat([name]);
-    // }
-    attributeChangedCallback(name, oldVal, newVal) {
-        switch (name) {
-            case name:
-                __classPrivateFieldSet(this, _name, newVal);
-                break;
-        }
-        this.onPropsChange(name);
+        __classPrivateFieldSet(this, _name, nv);
+        this.onPropsChange('name');
     }
 }
 _name = new WeakMap();

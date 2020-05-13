@@ -11,7 +11,7 @@ export class MiniMal extends XtalElement{
     static attributeProps : PropDefGet = (({disabled, name} : MiniMal) => ({
         boolean: [disabled],
         string: [name]
-    })) as PropDefGet<XtalElement>
+    })) as PropDefGet<XtalElement>;
 
     readyToInit = true;
     readyToRender = true;
@@ -44,23 +44,11 @@ export class MiniMal extends XtalElement{
         return this.#name;
     }
     set name(nv){
-        this.attr(name, nv);
+        this.#name = nv;
+        this.onPropsChange('name');
     }
-    connectedCallback(){
-        this.propUp([name]);
-        super.connectedCallback();
-    }
-    // static get observedAttributes(){
-    //     return super.observedAttributes.concat([name]);
-    // }
-    attributeChangedCallback(name: string, oldVal: string, newVal: string){
-        switch(name){
-            case name:
-                this.#name = newVal;
-                break;
-        }
-        this.onPropsChange(name);
-    }
+
+
 
 }
 customElements.define('mini-mal', MiniMal);
