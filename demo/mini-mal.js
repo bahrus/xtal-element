@@ -16,7 +16,6 @@ import { createTemplate } from 'trans-render/createTemplate.js';
 import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement } from '../XtalElement.js';
 const main = Symbol();
-const name = 'name';
 const buttonSym = Symbol();
 export class MiniMal extends XtalElement {
     constructor() {
