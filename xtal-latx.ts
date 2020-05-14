@@ -3,10 +3,18 @@ import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps} from './types.d.js';
 import {define as cdef} from 'trans-render/define.js';
 
-const stcRe = /(\-\w)/g;
+const ltcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
-    return s.replace(stcRe, function(m){return m[1].toUpperCase();});
+    return s.replace(ltcRe, function(m){return m[1].toUpperCase();});
 }
+
+const ctlRe = /[\w]([A-Z])/g;
+function camelToLisp(s: string) {
+       return s.replace(ctlRe, function(m) {
+           return m[0] + "-" + m[1];
+       }).toLowerCase();
+   }
+
 
 export function deconstruct(fn: Function){
     const fnString = fn.toString().trim();
@@ -67,7 +75,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         static get observedAttributes(){
             const props = this.evaluatedProps;
-            return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject]
+            return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
         }
 
         static attributeProps : any = ({disabled} : IXtallatXI) => ({

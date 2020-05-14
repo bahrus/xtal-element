@@ -1,8 +1,14 @@
 import { disabled } from 'trans-render/hydrate.js';
 import { define as cdef } from 'trans-render/define.js';
-const stcRe = /(\-\w)/g;
+const ltcRe = /(\-\w)/g;
 export function lispToCamel(s) {
-    return s.replace(stcRe, function (m) { return m[1].toUpperCase(); });
+    return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
+}
+const ctlRe = /[\w]([A-Z])/g;
+function camelToLisp(s) {
+    return s.replace(ctlRe, function (m) {
+        return m[0] + "-" + m[1];
+    }).toLowerCase();
 }
 export function deconstruct(fn) {
     const fnString = fn.toString().trim();
@@ -52,7 +58,7 @@ export function XtallatX(superClass) {
             }
             static get observedAttributes() {
                 const props = this.evaluatedProps;
-                return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject];
+                return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
             }
             //static __evaluatedProps: EvaluatedAttributeProps;
             static get evaluatedProps() {
