@@ -1,10 +1,8 @@
 import {XtallatX, deconstruct} from './xtal-latx.js';
-import {DataDecorators} from './data-decorators.js';
 import {RenderContext, RenderOptions, TransformValueOptions} from 'trans-render/types.d.js';
-import {hydrate, disabled} from 'trans-render/hydrate.js';
-import {init, lispToCamel} from 'trans-render/init.js';
+import {hydrate} from 'trans-render/hydrate.js';
+import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
-import { destruct } from './destruct.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate} from './types.d.js';
 export {define} from './xtal-latx.js';
 
@@ -25,7 +23,7 @@ export function intersection<T = string>(setA: Set<T>, setB: Set<T>) {
     return _intersection
 }
 
-export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))){
+export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     get noShadow(){
         return false;
@@ -35,10 +33,6 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     get renderOptions() : RenderOptions{
         return this.#renderOptions;
     }
-
-
-
-
 
 
     abstract mainTemplate: HTMLTemplateElement;
@@ -54,10 +48,6 @@ export abstract class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLEl
     updateTransforms: SelectiveUpdate[] | undefined;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
-
-
-
-
 
 
     get root() : HTMLElement | ShadowRoot{

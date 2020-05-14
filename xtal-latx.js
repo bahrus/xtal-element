@@ -1,5 +1,4 @@
 import { disabled } from 'trans-render/hydrate.js';
-import { define as cdef } from 'trans-render/define.js';
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s) {
     return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
@@ -37,7 +36,12 @@ export function define(MyElementClass) {
             },
         });
     });
-    cdef(MyElementClass);
+    const tagName = MyElementClass.is;
+    if (customElements.get(tagName)) {
+        console.warn('Already registered ' + tagName);
+        return;
+    }
+    customElements.define(tagName, MyElementClass);
 }
 /**
  * Base class for many xtal- components
@@ -60,7 +64,6 @@ export function XtallatX(superClass) {
                 const props = this.evaluatedProps;
                 return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
             }
-            //static __evaluatedProps: EvaluatedAttributeProps;
             static get evaluatedProps() {
                 if (this[this.evalPath] === undefined) {
                     const args = deconstruct(this.attributeProps);

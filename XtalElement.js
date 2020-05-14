@@ -6,7 +6,6 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _renderOptions;
 import { XtallatX, deconstruct } from './xtal-latx.js';
-import { DataDecorators } from './data-decorators.js';
 import { hydrate } from 'trans-render/hydrate.js';
 import { init } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
@@ -22,7 +21,7 @@ export function intersection(setA, setB) {
     }
     return _intersection;
 }
-export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) {
+export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super(...arguments);
         _renderOptions.set(this, {});
@@ -78,12 +77,13 @@ export class XtalElement extends XtallatX(hydrate(DataDecorators(HTMLElement))) 
             //TODO: Optimize
             this._renderContext.update = update;
             this.updateTransforms.forEach(selectiveUpdateTransform => {
+                var _a;
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
                 if (intersection(this._propChangeQueue, dependencySet).size > 0) {
                     __classPrivateFieldGet(this, _renderOptions).updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     this._renderContext.Transform = selectiveUpdateTransform(this);
-                    this._renderContext?.update(this._renderContext, this.root);
+                    ((_a = this._renderContext) === null || _a === void 0 ? void 0 : _a.update)(this._renderContext, this.root);
                 }
             });
             this._propChangeQueue = new Set();
