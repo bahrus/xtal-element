@@ -115,7 +115,8 @@ export class MiniMal extends XtalElement{
     readyToInit = true;
 
     //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
-    //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
+    //You can return true/false.  You can also indicate the name of an alternate template to clone 
+    //(mainTemplate is the default property for the main template)
     readyToRender = true;
 
     //XtalElement is intended for visual elements only.
@@ -170,14 +171,19 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalRoomWithAView provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
 
 XtalRoomWithAView extends XtalElement, but in addition it keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/) requests when the parameters change while in mid-flight[TODO].
+ 
 
 I am hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which empowers developers with some of the same machinery available to browser vendors when they implement internal components.  If it does, XtalRoomWithAView will certainly take advantage of that promising sounding feature. 
 
 For now, XtalRoomWithAView also conveys state changes via data-* attributes. The attribute changes will likely be removed once (if?) the proposal above lands[TODO].
 
-XtalRoomWithAView also supports something that may only be applicable 33.7% of the time.  Recall that XtalElement sees a strong case separating initialization from updating, as far as rendering. Likewise, sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
+XtalRoomWithAView also supports something that may only be applicable 33.7% of the time.  Recall that XtalElement sees a strong case for separating initialization from updating, as far as rendering. Likewise, sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
+
+By "update" I don't mean literally making CRUD-like updates to the system of record.  That could be handled by individual methods within the component class.  But after making such an CRUD-like update, we need to "update the view" that the user sees, to reflect the changes.  Often, that is controlled by the server, as it provides an extra sense of security that what the user sees is true to what's in the system of record.  "Refreshing" the data may be a better way of describing it.
 
 For example, a component might want to retrieve the data required for the main view, which may be a chart or a grid.  But also, with the same data call, retrieve the data required for dropdown filters that allow for updating the main view.  Performance / maintainability considerations might make it prudent to combine the data retrieval for both the filters and the main view together in one call, especially if the filters share some of the same data as the filters. But once the original view is rendered, now as the filters change via user interaction, we only want to retrieve the data needed for the grid or chart, but not for the filters. 
+
+Another possibility:  In a more radical departure from prevailing norms, the original asynchronous request for the "View Model" could be made for a data format easiest for the browser to digest:  HTML (and perhaps a reverse HTML 2 JS Object transform could then take place to be ready for update binding as needed).  But subsequent refreshes of the latest data may differ only slightly (think of the covid death tables, for example).  So for updates to the table, the changes may be more efficiently sent down in JSON format (a declarative subset of trans-render syntax, perhaps?).  So once again, it would probably help with the reasoning process to officially separate the initial data request from subsequent updates.   
 
 In addition, the kind of component we are discussing generally always needs to display an initial view once enough parameters are set.
 
@@ -187,61 +193,47 @@ It is for this reason that a separate update protocol is provided.
 
 The code below shows the minimal amount of code needed to define a custom element using this library.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
-## Minimal XtalViewElement Setup
+## Minimal XtalRoomWithAView Setup
 
 ```TypeScript
-import {XtalViewElement} from '../xtal-view-element.js';
+import {XtalRoomWithAView} from '../XtalRoomWithAView.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {PESettings} from 'trans-render/init.d.js';
+import {SelectiveUpdate, TransformRules, PESettings} from '../types.d.js';
 
 const template = createTemplate(
-        `<div></div>`
+    /* html */`<div></div>`
 );
 
-export class MinimalView extends XtalViewElement<string>{
+export class MinimalView extends XtalRoomWithAView<[string, number]>{
 
-    //#region Required Members
     readyToInit = true
 
-    initViewModel(){
-        return new Promise<string>(resolve =>{
-            resolve('Greetings, Earthling.');
-        })
-    }
+    initViewModel = ({}) => new Promise<[string, number]>(resolve =>{
+        resolve(['Greetings, Earthling.', 0]);
+    })
 
     readyToRender = true;
-
-    updateViewModel(){
-        return new Promise<string>(resolve =>{
-            resolve('That tickles, number ' + this.count);
-        })
-    }
 
     mainTemplate = template;
     
     initTransform = {
         div: [{}, {click: this.clickHandler}] as PESettings<HTMLDivElement>,
     };
-    
 
+    updateTransforms = [
+        ({viewModel} : MinimalView) => ({
+            div: `${this.viewModel[0]}  ${this.viewModel[1]}`
+        })  as TransformRules
+    ]  as SelectiveUpdate[];
+    
     updateTransform = () => ({
-        div: this.viewModel,
+        div: `${this.viewModel[0]}  ${this.viewModel[1]}`,
     })
 
     clickHandler(e: Event){
-        this.inc();
-    }
-
-    #count = 0;
-    get count(){
-        return this.#count;
-    }
-    set count(nv){
-        this.#count = nv;
-        this.onPropsChange();
-    }
-    inc(){
-        this.count++;
+        this.viewModel[1]++;
+        this.viewModel[0] = "Live long and prosper.";
+        this.onPropsChange('viewModel');
     }
         
 
@@ -250,7 +242,4 @@ export class MinimalView extends XtalViewElement<string>{
 customElements.define('mini-mal-view', MinimalView);
 ```
 
-
-
-## Built-in decorator Transformers
 

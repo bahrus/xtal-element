@@ -77,13 +77,12 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             //TODO: Optimize
             this._renderContext.update = update;
             this.updateTransforms.forEach(selectiveUpdateTransform => {
-                var _a;
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
                 if (intersection(this._propChangeQueue, dependencySet).size > 0) {
                     __classPrivateFieldGet(this, _renderOptions).updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     this._renderContext.Transform = selectiveUpdateTransform(this);
-                    ((_a = this._renderContext) === null || _a === void 0 ? void 0 : _a.update)(this._renderContext, this.root);
+                    this._renderContext?.update(this._renderContext, this.root);
                 }
             });
             this._propChangeQueue = new Set();
