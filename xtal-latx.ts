@@ -78,7 +78,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return '__evaluatedProps' + (<any>this).is;
         }
         static get observedAttributes(){
-            const props = this.evaluatedProps;
+            const props = this.props;
             return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
         }
 
@@ -86,7 +86,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             boolean: [disabled],
         } as AttributeProps);
 
-        static get evaluatedProps(){
+        static get props(){
             if((<any>this)[this.evalPath] === undefined){
                 const args = deconstruct(this.attributeProps);
                 const arg: {[key: string]: string} = {};

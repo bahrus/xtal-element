@@ -61,10 +61,10 @@ export function XtallatX(superClass) {
                 return '__evaluatedProps' + this.is;
             }
             static get observedAttributes() {
-                const props = this.evaluatedProps;
+                const props = this.props;
                 return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
             }
-            static get evaluatedProps() {
+            static get props() {
                 if (this[this.evalPath] === undefined) {
                     const args = deconstruct(this.attributeProps);
                     const arg = {};
