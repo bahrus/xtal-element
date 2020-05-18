@@ -20,12 +20,8 @@ Anyway, XtalElement's target audience is those who are looking for a base class 
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
-4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).  The base class is an abstract class.  Typescript then highlights what you need to implement.  No need to memorize or look things up.
+4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up. 
 5.  Adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
-
-As we'll see, satisfying these requirements suggests creating a starting point that is a bit more complex than the primitive custom element definition.  This base library doesn't claim to be the best fit for all types of web components, but focuses on some common needs.
-
-</details>
 
 ## What makes XtalElement different
 
@@ -146,6 +142,59 @@ export class MiniMal extends XtalElement{
 define(MiniMal);
 
 ```
+
+## "AttributeProps" vs "internal props"
+
+Most web component libraries provide an "ergonomic layer" to help manage defining properties and observed attributes of the web component.
+
+XtalElement provides two ways to do this:
+
+### Defining properties / attributes in a non type safe way:
+
+```JavaScript
+import {XtalElement, define} from '../XtalElement.js';
+class MyCustomElement extends XtalElement{
+    static is = 'my-custom-element';
+    static myCustomElementProps = {
+        boolean: ['prop1', 'prop2'],
+        numeric: ['prop3'],
+        object: ['prop4']
+    }
+    prop1;
+    prop2;
+    prop3;
+    prop4;
+}
+define(MyCustomElement);
+```
+
+### Defining properties / attributes in a type safe way using TypeScript:
+
+```TypeScript
+import {XtalElement, define} from '../XtalElement.js';
+class MyCustomElement extends XtalElement{
+    static is = 'my-custom-element';
+    static attributeProps = ({prop1, prop2, prop3, prop4}: MyCustomElement) => (
+        boolean: [prop1, prop2],
+        numeric: [prop3],
+        object: [prop4]
+    )
+    prop1;
+    prop2;
+    prop3;
+    prop4;
+}
+define(MyCustomElement);
+```
+
+
+The function "define" does the following:
+
+1.  Turns prop1, prop2, prop3, prop4 into public getters and setters of the class instance with the same name, without losing the value set by default. 
+2.  The setter has a call to this.onPropsChange([name of prop]) baked in.
+3.  Adopts some recommendeddefaults.  All boolean / string / numeric properties are two-way reflected as attributes.  Objects are opt-in.
+4.  Some logic to support asynchronous loading is also added to connectionCallback.
+
 
 ## Inheritance overindulgence?
 

@@ -66,6 +66,9 @@ export interface IXtallatXI extends IHydrate {
  
     // static observedAttributes: string[]; 
 }
+
+const propCategories : [keyof EvaluatedAttributeProps] = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
+
 type Constructor<T = {}> = new (...args: any[]) => T;
 /**
  * Base class for many xtal- components
@@ -75,7 +78,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
     return class extends superClass implements IXtallatXI {
 
         static get evalPath(){
-            return '__evaluatedProps' + (<any>this).is;
+            return lispToCamel((<any>this).is);
         }
         static get observedAttributes(){
             const props = this.props;
@@ -86,6 +89,14 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             boolean: [disabled],
         } as AttributeProps);
 
+        static mergeProps(props1: EvaluatedAttributeProps, props2: EvaluatedAttributeProps): EvaluatedAttributeProps{
+            const returnObj: Partial<EvaluatedAttributeProps> = {};
+            propCategories.forEach(propCat =>{
+                returnObj[propCat] = [...props1[propCat], ...props2[propCat]] as string[];
+            })
+            return returnObj as EvaluatedAttributeProps;
+        }
+
         static get props(){
             if((<any>this)[this.evalPath] === undefined){
                 const args = deconstruct(this.attributeProps);
@@ -95,13 +106,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 });
                 (<any>this)[this.evalPath] = (<any>this.attributeProps)(arg);
                 const ep = (<any>this)[this.evalPath];
-                ep.boolean = ep.boolean || [];
-                ep.numeric = ep.numeric || [];
-                ep.parsedObject = ep.parsedObject || [];
-                ep.noReflect = ep.noReflect || [];
-                ep.notify = ep.notify || [];
-                ep.object = ep.object || [];
-                ep.string = ep.string || [];
+                propCategories.forEach(propCat =>{
+                    ep[propCat] = ep[propCat] || [];
+                })
             }
             return (<any>this)[this.evalPath] as EvaluatedAttributeProps;
         }

@@ -43,6 +43,7 @@ export function define(MyElementClass) {
     }
     customElements.define(tagName, MyElementClass);
 }
+const propCategories = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
 /**
  * Base class for many xtal- components
  * @param superClass
@@ -58,11 +59,18 @@ export function XtallatX(superClass) {
                 this.evCount = {};
             }
             static get evalPath() {
-                return '__evaluatedProps' + this.is;
+                return lispToCamel(this.is);
             }
             static get observedAttributes() {
                 const props = this.props;
                 return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
+            }
+            static mergeProps(props1, props2) {
+                const returnObj = {};
+                propCategories.forEach(propCat => {
+                    returnObj[propCat] = [...props1[propCat], ...props2[propCat]];
+                });
+                return returnObj;
             }
             static get props() {
                 if (this[this.evalPath] === undefined) {
@@ -73,13 +81,9 @@ export function XtallatX(superClass) {
                     });
                     this[this.evalPath] = this.attributeProps(arg);
                     const ep = this[this.evalPath];
-                    ep.boolean = ep.boolean || [];
-                    ep.numeric = ep.numeric || [];
-                    ep.parsedObject = ep.parsedObject || [];
-                    ep.noReflect = ep.noReflect || [];
-                    ep.notify = ep.notify || [];
-                    ep.object = ep.object || [];
-                    ep.string = ep.string || [];
+                    propCategories.forEach(propCat => {
+                        ep[propCat] = ep[propCat] || [];
+                    });
                 }
                 return this[this.evalPath];
             }
