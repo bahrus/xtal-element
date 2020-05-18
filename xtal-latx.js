@@ -47,7 +47,7 @@ const propCategories = ['boolean', 'string', 'numeric', 'noReflect', 'notify', '
 export function mergeProps(props1, props2) {
     const returnObj = {};
     propCategories.forEach(propCat => {
-        returnObj[propCat] = [...props1[propCat], ...props2[propCat]];
+        returnObj[propCat] = (props1[propCat] || []).concat(props2[propCat] || []);
     });
     return returnObj;
 }

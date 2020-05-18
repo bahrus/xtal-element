@@ -72,7 +72,7 @@ const propCategories : keys[] = ['boolean', 'string', 'numeric', 'noReflect', 'n
 export function mergeProps(props1: EvaluatedAttributeProps, props2: EvaluatedAttributeProps): EvaluatedAttributeProps{
     const returnObj: Partial<EvaluatedAttributeProps> = {};
     propCategories.forEach(propCat =>{
-        returnObj[propCat] = [...props1[propCat], ...props2[propCat]] as string[];
+        returnObj[propCat] = (props1[propCat] || []).concat(props2[propCat] || []);
     })
     return returnObj as EvaluatedAttributeProps;
 }
