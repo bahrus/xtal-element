@@ -194,8 +194,9 @@ The function "define" does the following:
 
 1.  Turns prop1, prop2, prop3, prop4 into public getters and setters of the class instance with the same name, without losing the value set by default. 
 2.  The setter has a call to this.onPropsChange([name of prop]) baked in.
-3.  Adopts some recommendeddefaults.  All boolean / string / numeric properties are two-way reflected as attributes.  Objects are opt-in.
+3.  Adopts some recommended defaults.  All boolean / string / numeric properties are two-way reflected as attributes.  Objects are opt-in.
 4.  Some logic to support asynchronous loading is also added to connectionCallback.
+5.  Registers the custom element based on the static 'is' property.
 
 ### Defining properties / attributes with Inheritance
 
