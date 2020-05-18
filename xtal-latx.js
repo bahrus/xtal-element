@@ -44,6 +44,13 @@ export function define(MyElementClass) {
     customElements.define(tagName, MyElementClass);
 }
 const propCategories = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
+export function mergeProps(props1, props2) {
+    const returnObj = {};
+    propCategories.forEach(propCat => {
+        returnObj[propCat] = [...props1[propCat], ...props2[propCat]];
+    });
+    return returnObj;
+}
 /**
  * Base class for many xtal- components
  * @param superClass
@@ -64,13 +71,6 @@ export function XtallatX(superClass) {
             static get observedAttributes() {
                 const props = this.props;
                 return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
-            }
-            static mergeProps(props1, props2) {
-                const returnObj = {};
-                propCategories.forEach(propCat => {
-                    returnObj[propCat] = [...props1[propCat], ...props2[propCat]];
-                });
-                return returnObj;
             }
             static get props() {
                 if (this[this.evalPath] === undefined) {

@@ -66,8 +66,16 @@ export interface IXtallatXI extends IHydrate {
  
     // static observedAttributes: string[]; 
 }
+type keys = keyof EvaluatedAttributeProps;
+const propCategories : keys[] = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
 
-const propCategories : [keyof EvaluatedAttributeProps] = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
+export function mergeProps(props1: EvaluatedAttributeProps, props2: EvaluatedAttributeProps): EvaluatedAttributeProps{
+    const returnObj: Partial<EvaluatedAttributeProps> = {};
+    propCategories.forEach(propCat =>{
+        returnObj[propCat] = [...props1[propCat], ...props2[propCat]] as string[];
+    })
+    return returnObj as EvaluatedAttributeProps;
+}
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 /**
@@ -89,13 +97,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             boolean: [disabled],
         } as AttributeProps);
 
-        static mergeProps(props1: EvaluatedAttributeProps, props2: EvaluatedAttributeProps): EvaluatedAttributeProps{
-            const returnObj: Partial<EvaluatedAttributeProps> = {};
-            propCategories.forEach(propCat =>{
-                returnObj[propCat] = [...props1[propCat], ...props2[propCat]] as string[];
-            })
-            return returnObj as EvaluatedAttributeProps;
-        }
+
 
         static get props(){
             if((<any>this)[this.evalPath] === undefined){
