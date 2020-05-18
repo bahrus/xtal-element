@@ -25,7 +25,7 @@ export function deconstruct(fn: Function){
 }
 
 export function define(MyElementClass: any){
-    const props = MyElementClass['evaluatedProps'] as EvaluatedAttributeProps;
+    const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
     const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
     const existingProps = Object.getOwnPropertyNames(proto);
@@ -143,7 +143,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         attributeChangedCallback(n: string, ov: string, nv: string) {
             const propName = lispToCamel(n);
             const anyT = this as any;
-            const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
+            const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
             if(ep.string.includes(propName)){
                 anyT[propName] = nv;
             }else if(ep.boolean.includes(propName)){
@@ -158,7 +158,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
 
         _connected!: boolean;
         connectedCallback(){
-            const ep = (<any>this.constructor).evaluatedProps as EvaluatedAttributeProps;
+            const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
             this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
             this._connected = true;
             this.onPropsChange(disabled);

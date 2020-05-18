@@ -18,7 +18,7 @@ export function deconstruct(fn) {
     return [];
 }
 export function define(MyElementClass) {
-    const props = MyElementClass['evaluatedProps'];
+    const props = MyElementClass.props;
     const proto = MyElementClass.prototype;
     const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
     const existingProps = Object.getOwnPropertyNames(proto);
@@ -113,7 +113,7 @@ export function XtallatX(superClass) {
             attributeChangedCallback(n, ov, nv) {
                 const propName = lispToCamel(n);
                 const anyT = this;
-                const ep = this.constructor.evaluatedProps;
+                const ep = this.constructor.props;
                 if (ep.string.includes(propName)) {
                     anyT[propName] = nv;
                 }
@@ -129,7 +129,7 @@ export function XtallatX(superClass) {
                 this.onPropsChange(propName);
             }
             connectedCallback() {
-                const ep = this.constructor.evaluatedProps;
+                const ep = this.constructor.props;
                 this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
                 this._connected = true;
                 this.onPropsChange(disabled);
