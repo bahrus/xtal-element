@@ -213,7 +213,7 @@ export class MyBar extends MyFoo{
             object: [reqInit],
             parsedObject: [reqInit]
         }  as AttributeProps;
-        return mergeProps(ap as EvaluatedAttributeProps, (<any>MyFoo).props);
+        return mergeProps(ap, (<any>MyFoo).props);
     };
 }
 ```
