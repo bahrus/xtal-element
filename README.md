@@ -23,6 +23,8 @@ Anyway, XtalElement's target audience is those who are looking for a base class 
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up. 
 5.  Adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
 
+</details>
+
 ## What makes XtalElement different
 
 1.  XtalElement uses the [trans-render](https://github.com/bahrus/trans-render) library for updating the UI as properties change.
