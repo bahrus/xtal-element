@@ -195,6 +195,28 @@ The function "define" does the following:
 3.  Adopts some recommendeddefaults.  All boolean / string / numeric properties are two-way reflected as attributes.  Objects are opt-in.
 4.  Some logic to support asynchronous loading is also added to connectionCallback.
 
+### Defining properties / attributes with Inheritance
+
+In order for one custom element to merge its additional properties with the properties from subclasses do the following:
+
+```TypeScript
+import {define, mergeProps} from 'xtal-element/xtal-latx.js';
+import {AttributeProps, EvaluatedAttributeProps} from 'xtal-element/types.d.js';
+...
+export class MyBar extends MyFoo{
+    ...
+    static attributeProps = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : XtalFetchReq) => {
+        const ap = {
+            boolean: [reqInitRequired, insertResults],
+            string: [cacheResults],
+            number: [debounceDuration],
+            object: [reqInit],
+            parsedObject: [reqInit]
+        }  as AttributeProps;
+        return mergeProps(ap as EvaluatedAttributeProps, (<any>MyFoo).props);
+    };
+}
+```
 
 ## Inheritance overindulgence?
 
