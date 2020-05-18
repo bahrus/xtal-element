@@ -145,7 +145,7 @@ define(MiniMal);
 
 ```
 
-## "AttributeProps" vs "internal props"
+## "AttributeProps"
 
 Most web component libraries provide an "ergonomic layer" to help manage defining properties and observed attributes of the web component.
 
