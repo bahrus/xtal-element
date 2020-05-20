@@ -142,7 +142,7 @@ export function XtallatX(superClass) {
                     return;
                 }
                 const propName = lispToCamel(n);
-                if (this[ignorePropKey])
+                if (this[ignorePropKey] === undefined)
                     this[ignorePropKey] = {};
                 this[ignorePropKey][propName] = true;
                 const anyT = this;

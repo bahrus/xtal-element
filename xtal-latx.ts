@@ -170,7 +170,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 return;
             }
             const propName = lispToCamel(n);
-            if((<any>this)[ignorePropKey]) (<any>this)[ignorePropKey] = {};
+            if((<any>this)[ignorePropKey] === undefined) (<any>this)[ignorePropKey] = {};
             (<any>this)[ignorePropKey][propName] = true;
             const anyT = this as any;
             const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
