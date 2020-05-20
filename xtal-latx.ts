@@ -42,6 +42,7 @@ export function define(MyElementClass: any){
                 const ik = this[ignorePropKey];
                 if(ik !== undefined && ik[prop] === true){
                     delete ik[prop];
+                    this[sym] = nv;
                     return;
                 }
                 if(props.reflect.includes(prop)){
