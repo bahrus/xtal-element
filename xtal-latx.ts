@@ -38,14 +38,15 @@ export function define(MyElementClass: any){
             },
             set(nv){
                 if(props.reflect.includes(prop)){
+                    const c2l = camelToLisp(prop);
                     if(props.boolean.includes(prop)){
-                        this.attr(prop, nv, '');
+                        this.attr(c2l, nv, '');
                     }else if(props.string.includes(prop)){
-                        this.attr(prop, nv);
+                        this.attr(c2l, nv);
                     }else if(props.numeric.includes(prop)){
-                        this.attr(prop, nv.toString());
+                        this.attr(c2l, nv.toString());
                     }else if(props.object.includes(prop)){
-                        this.attr(prop, JSON.stringify(nv));
+                        this.attr(c2l, JSON.stringify(nv));
                     }
                 }else{
                     this[sym] = nv;
