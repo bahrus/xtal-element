@@ -24,6 +24,7 @@ export function deconstruct(fn: Function){
     return [];
 }
 
+const ignoreKey = Symbol();
 export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
@@ -39,6 +40,8 @@ export function define(MyElementClass: any){
             set(nv){
                 if(props.reflect.includes(prop)){
                     const c2l = camelToLisp(prop);
+                    if(this[ignoreKey] === undefined) this[ignoreKey] = {};
+                    this[ignoreKey] = true;
                     if(props.boolean.includes(prop)){
                         this.attr(c2l, nv, '');
                     }else if(props.string.includes(prop)){
@@ -48,10 +51,9 @@ export function define(MyElementClass: any){
                     }else if(props.object.includes(prop)){
                         this.attr(c2l, JSON.stringify(nv));
                     }
-                }else{
-                    this[sym] = nv;
-                    this.onPropsChange(prop);
                 }
+                this[sym] = nv;
+                this.onPropsChange(prop);
 
             },
         });
@@ -155,6 +157,11 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         onPropsChange(name: string){}
         attributeChangedCallback(n: string, ov: string, nv: string) {
+            const ik = (<any>this)[ignoreKey];
+            if(ik !== undefined && ik[n] === true){
+                delete ik[n];
+                return;
+            }
             const propName = lispToCamel(n);
             const anyT = this as any;
             const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
@@ -167,6 +174,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }else if(ep.parsedObject.includes(propName)){
                 anyT[propName] = JSON.parse(nv);
             }
+        
             this.onPropsChange(propName);
         }
 

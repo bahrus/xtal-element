@@ -17,6 +17,7 @@ export function deconstruct(fn) {
     }
     return [];
 }
+const ignoreKey = Symbol();
 export function define(MyElementClass) {
     const props = MyElementClass.props;
     const proto = MyElementClass.prototype;
@@ -33,6 +34,9 @@ export function define(MyElementClass) {
             set(nv) {
                 if (props.reflect.includes(prop)) {
                     const c2l = camelToLisp(prop);
+                    if (this[ignoreKey] === undefined)
+                        this[ignoreKey] = {};
+                    this[ignoreKey] = true;
                     if (props.boolean.includes(prop)) {
                         this.attr(c2l, nv, '');
                     }
@@ -46,10 +50,8 @@ export function define(MyElementClass) {
                         this.attr(c2l, JSON.stringify(nv));
                     }
                 }
-                else {
-                    this[sym] = nv;
-                    this.onPropsChange(prop);
-                }
+                this[sym] = nv;
+                this.onPropsChange(prop);
             },
         });
     });
@@ -128,6 +130,11 @@ export function XtallatX(superClass) {
             }
             onPropsChange(name) { }
             attributeChangedCallback(n, ov, nv) {
+                const ik = this[ignoreKey];
+                if (ik !== undefined && ik[n] === true) {
+                    delete ik[n];
+                    return;
+                }
                 const propName = lispToCamel(n);
                 const anyT = this;
                 const ep = this.constructor.props;
