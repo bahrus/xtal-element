@@ -31,8 +31,24 @@ export function define(MyElementClass) {
                 return this[sym];
             },
             set(nv) {
-                this[sym] = nv;
-                this.onPropsChange(prop);
+                if (props.reflect.includes(prop)) {
+                    if (props.boolean.includes(prop)) {
+                        this.attr(prop, nv, '');
+                    }
+                    else if (props.string.includes(prop)) {
+                        this.attr(prop, nv);
+                    }
+                    else if (props.numeric.includes(prop)) {
+                        this.attr(prop, nv.toString());
+                    }
+                    else if (props.object.includes(prop)) {
+                        this.attr(prop, JSON.stringify(nv));
+                    }
+                }
+                else {
+                    this[sym] = nv;
+                    this.onPropsChange(prop);
+                }
             },
         });
     });
@@ -43,7 +59,7 @@ export function define(MyElementClass) {
     }
     customElements.define(tagName, MyElementClass);
 }
-const propCategories = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
+const propCategories = ['boolean', 'string', 'numeric', 'reflect', 'notify', 'object', 'parsedObject'];
 export function mergeProps(props1, props2) {
     const returnObj = {};
     propCategories.forEach(propCat => {

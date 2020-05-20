@@ -37,8 +37,21 @@ export function define(MyElementClass: any){
                 return this[sym];
             },
             set(nv){
-                this[sym] = nv;
-                this.onPropsChange(prop);
+                if(props.reflect.includes(prop)){
+                    if(props.boolean.includes(prop)){
+                        this.attr(prop, nv, '');
+                    }else if(props.string.includes(prop)){
+                        this.attr(prop, nv);
+                    }else if(props.numeric.includes(prop)){
+                        this.attr(prop, nv.toString());
+                    }else if(props.object.includes(prop)){
+                        this.attr(prop, JSON.stringify(nv));
+                    }
+                }else{
+                    this[sym] = nv;
+                    this.onPropsChange(prop);
+                }
+
             },
         });
     })
@@ -67,7 +80,7 @@ export interface IXtallatXI extends IHydrate {
     // static observedAttributes: string[]; 
 }
 type keys = keyof EvaluatedAttributeProps;
-const propCategories : keys[] = ['boolean', 'string', 'numeric', 'noReflect', 'notify', 'object', 'parsedObject'];
+const propCategories : keys[] = ['boolean', 'string', 'numeric', 'reflect', 'notify', 'object', 'parsedObject'];
 
 export function mergeProps(props1: EvaluatedAttributeProps | AttributeProps, props2: EvaluatedAttributeProps | AttributeProps): EvaluatedAttributeProps{
     const returnObj: Partial<EvaluatedAttributeProps> = {};
