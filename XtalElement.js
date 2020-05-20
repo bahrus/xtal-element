@@ -69,6 +69,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             this.root.innerHTML = '';
         }
         if (this._renderContext === undefined) {
+            this.dataset.upgraded = 'true';
             this._renderContext = this.initRenderContext();
             __classPrivateFieldGet(this, _renderOptions).initializedCallback = this.afterInitRenderCallback.bind(this);
             this._renderContext.init(this[this._mainTemplateProp], this._renderContext, this.root, this.renderOptions);

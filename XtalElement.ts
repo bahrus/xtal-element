@@ -85,6 +85,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             this.root.innerHTML = '';
         }
         if(this._renderContext === undefined){
+            this.dataset.upgraded = 'true';
             this._renderContext = this.initRenderContext();
             this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
             this._renderContext.init!((<any>this)[this._mainTemplateProp] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
