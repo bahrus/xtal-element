@@ -36,7 +36,7 @@ export function define(MyElementClass) {
                     const c2l = camelToLisp(prop);
                     if (this[ignoreKey] === undefined)
                         this[ignoreKey] = {};
-                    this[ignoreKey] = true;
+                    this[ignoreKey][c2l] = true;
                     if (props.boolean.includes(prop)) {
                         this.attr(c2l, nv, '');
                     }
