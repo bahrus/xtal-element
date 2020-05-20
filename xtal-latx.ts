@@ -24,7 +24,8 @@ export function deconstruct(fn: Function){
     return [];
 }
 
-const ignoreKey = Symbol();
+const ignorePropKey = Symbol();
+const ignoreAttrKey = Symbol();
 export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
@@ -38,10 +39,16 @@ export function define(MyElementClass: any){
                 return this[sym];
             },
             set(nv){
+                const ik = this[ignorePropKey];
+                if(ik !== undefined && ik[prop] === true){
+                    delete ik[prop];
+                    return;
+                }
                 if(props.reflect.includes(prop)){
                     const c2l = camelToLisp(prop);
-                    if(this[ignoreKey] === undefined) this[ignoreKey] = {};
-                    this[ignoreKey][c2l] = true;
+                    
+                    if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
+                    this[ignoreAttrKey][c2l] = true;
                     if(props.boolean.includes(prop)){
                         this.attr(c2l, nv, '');
                     }else if(props.string.includes(prop)){
@@ -157,12 +164,14 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         onPropsChange(name: string){}
         attributeChangedCallback(n: string, ov: string, nv: string) {
-            const ik = (<any>this)[ignoreKey];
+            const ik = (<any>this)[ignoreAttrKey];
             if(ik !== undefined && ik[n] === true){
                 delete ik[n];
                 return;
             }
             const propName = lispToCamel(n);
+            if((<any>this)[ignorePropKey]) (<any>this)[ignorePropKey] = {};
+            (<any>this)[ignorePropKey][propName] = true;
             const anyT = this as any;
             const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
             if(ep.string.includes(propName)){
