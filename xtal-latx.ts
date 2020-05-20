@@ -182,7 +182,12 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }else if(ep.numeric.includes(propName)){
                 anyT[propName] = parseFloat(nv);
             }else if(ep.parsedObject.includes(propName)){
-                anyT[propName] = JSON.parse(nv);
+                try{
+                    anyT[propName] = JSON.parse(nv);
+                }catch(e){
+                    anyT[propName] = nv;
+                }
+                
             }
         
             this.onPropsChange(propName);

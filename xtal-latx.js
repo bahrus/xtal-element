@@ -158,7 +158,12 @@ export function XtallatX(superClass) {
                     anyT[propName] = parseFloat(nv);
                 }
                 else if (ep.parsedObject.includes(propName)) {
-                    anyT[propName] = JSON.parse(nv);
+                    try {
+                        anyT[propName] = JSON.parse(nv);
+                    }
+                    catch (e) {
+                        anyT[propName] = nv;
+                    }
                 }
                 this.onPropsChange(propName);
             }
