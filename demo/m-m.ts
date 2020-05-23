@@ -44,11 +44,5 @@ X.tend<MM>({
         button:[,{click:[changeCount, 'dataset.d', parseInt]}] as any as PESettings<MM>, //TODO remove any
         span: span$,
     }) as TransformRules,
-    updateTransforms:[
-      ({count}: MM) => ({
-        [span$]: ({target}: {target:HTMLElement}) =>{
-          target.textContent = count.toString();
-        }
-      })
-    ]
+    updateTransforms:[ ({count}: MM) => ({[span$]: count.toString()})]
 })

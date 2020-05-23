@@ -1,33 +1,33 @@
-# XtalElement
+# xtal-element
 
 <details>
 <summary>Target Audience</summary>
 
-XtalElement is yet another base element to use for creating web components.  The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
+xtal-element provides a handful of opinionated base classes for creating web components.  The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
-XtalElement adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not everything.  
+xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not everything.  
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-XtalElement, though, sticks with classes, because of the way it makes it easy to extend code.  Much of what XtalElement is striving to do is in fact focused squarely on getting the most out of inheritance.
+xtal-element, though, mostly sticks with classes, because of the way it makes it easy to extend code.  Much of what XtalElement is striving to do is in fact focused squarely on getting the most out of inheritance.
 
 For example, it is often useful to build a base component that only uses primitive html elements built into the browser, as much as possible.  Then allow for extending classes to substitute the primitive html elements with the rapidly growing list of robust design libraries, in a kind of "lift and shift" approach.
 
 Web components typically upgrade in two steps -- starting with the light children, and then blossoming into the rich interface once the dependencies are downloaded.  With the approach mentioned above, maybe it would be possible to add a third stage?  Just an unproven thought.
 
-Anyway, XtalElement's target audience is those who are looking for a base class that:
+Anyway, xtal-element's target audience is those who are looking for a base class that:
 
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up. 
-5.  Adopts the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
+5.  Some of xtal-element's base classes adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
 
 </details>
 
-## What makes XtalElement different
+## What makes xtal-element different
 
-1.  XtalElement uses the [trans-render](https://github.com/bahrus/trans-render) library for updating the UI as properties change.
+1.  xtal-element uses the [trans-render](https://github.com/bahrus/trans-render) library for updating the UI as properties change.
 2.  The separation of concerns that trans-render provides makes it possible to separate out the initial render from update renders.
 3.  Even the update renders can be easily partitioned based on which properties changes.   Consider the following example:
 
@@ -78,7 +78,9 @@ export class Foo extends XtalElement{
 
 As long as all property changes also notify the onPropsChange method, specifying the name, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
 
-## X
+## X -- the simplest xtal-element base class
+
+class X, part of the xtal-element family of base web component classes, provides our first use case.  It likes things to be as simple as possible.
 
 ```JavaScript
 import {X} from 'xtal-element/X.js'
@@ -105,7 +107,7 @@ const template = /* html */`
       color: white;
     }
 </style>
-`;
+`; // Where art thou, HTML Modules?
 
 const [span$] = [Symbol()];
 export class MM extends X{
@@ -124,18 +126,37 @@ X.tend({
     attributeProps: ({count}) => ({num:[count]}),
     main: template,
     initTransform:({changeCount}) => {
-        button:[,{click:[changeCount, 'dataset.d']}], 
+        button:[,{click:[changeCount, 'dataset.d', parseInt]}], 
         span: span$,
     },
-    updateTransforms: [({count}) =>({[span$]: count})]
+    updateTransforms: [({count}) =>({[span$]: count.toString()})]
 });
 ```
 
-No this, shareable business logic, separation of concerns.
+Usage:
 
-## Minimal XtalElement Setup
+```html
+<m-m></m-m>
+```
 
-XtalElement is the base class, and doesn't provide support for asynchronous retrieval of a view model property.
+Notable features of web components defined using base class X:
+
+1.  Fairly minimal typing required.
+2.  Use of "this" is quite limited -- it is only found within the small class, and doesn't seem like it would throw newcomers - as it follows
+familiar patterns to Java / C## developers.
+3.  Granted, there may be a bit of a learning curve, when it comes to use of "trans-rendering".  However, maybe trans-rendering is more natural to 
+CSS focused developers?
+4.  The class -- "MM" -- is quite pristine -- in this example, it only contains the core business logic.
+5.  The same class could be paired up with different HTML templates, event handlers, etc.  I.e. this is kind of the 
+classic "separation of concerns" where the model is separate from the view.
+6.  The class is as "library" neutral as possible.  It could be easily ported to some other library helper.
+7.  First class support for Typescript is provided, as with the other base classes.  But Typescript wasn't used, in keeping with the spirit X
+promotes - less typing.
+
+
+## More power with XtalElement
+
+XtalElement is the base class, and provides additional support for progressive enhancement.
 
 Here is a minimal example of a web component that extends XtalElement:
 
@@ -199,7 +220,15 @@ define(MiniMal);
 
 ```
 
-## "AttributeProps"
+Comparisons between XtalElement and X:
+
+1.  Less "magic", more typing.
+2.  Ability to specify when the component is ready to replace the light children with something better.
+3.  Ability to choose a different main template depending on dynamic scenarios.
+4.  Less separation of concerns, more use of "this."
+5.  Overhead of helper library slightly smaller.
+
+## A note on "AttributeProps"
 
 Most web component libraries provide an "ergonomic layer" to help manage defining properties and observed attributes of the web component.
 
@@ -297,7 +326,7 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 
 I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalRoomWithAView provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
 
-XtalRoomWithAView extends XtalElement, but in addition it keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/) requests when the parameters change while in mid-flight[TODO].
+XtalRoomWithAView extends XtalElement, but adds a pattern for retrieving a dependent View. In addition, it keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/) requests when the parameters change while in mid-flight[TODO].
  
 
 I am hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which empowers developers with some of the same machinery available to browser vendors when they implement internal components.  If it does, XtalRoomWithAView will certainly take advantage of that promising sounding feature. 

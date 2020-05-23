@@ -41,11 +41,5 @@ X.tend({
         button: [, { click: [changeCount, 'dataset.d', parseInt] }],
         span: span$,
     }),
-    updateTransforms: [
-        ({ count }) => ({
-            [span$]: ({ target }) => {
-                target.textContent = count.toString();
-            }
-        })
-    ]
+    updateTransforms: [({ count }) => ({ [span$]: count.toString() })]
 });
