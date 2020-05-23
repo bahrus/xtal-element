@@ -108,7 +108,7 @@ const template = /* html */`
 `;
 
 const [span$] = [Symbol()];
-export class MiniMal extends X{
+export class MM extends X{
 
     count = 0;
 
@@ -119,15 +119,15 @@ export class MiniMal extends X{
 }
 
 X.tend({
-    class: MiniMal,
-    name: 'mini-mal',
-    propsInfo: ({count}) => ({num:[count]}),
+    class: MM,
+    name: 'm-m',
+    attributeProps: ({count}) => ({num:[count]}),
     main: template,
     initTransform:({changeCount}) => {
         button:[,{click:[changeCount, 'dataset.d']}], 
         span: span$,
     },
-    updateTransforms: [({count}) =>({span$: count})]
+    updateTransforms: [({count}) =>({[span$]: count})]
 });
 ```
 

@@ -6,11 +6,7 @@ import {update} from 'trans-render/update.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate, TransformGetter} from './types.d.js';
 export {define} from './xtal-latx.js';
 
-
-
 const deconstructed = Symbol();
-
-
 
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 export function intersection<T = string>(setA: Set<T>, setB: Set<T>) {
@@ -63,7 +59,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     initRenderContext() : RenderContext{
         return {
             init: init,
-            Transform: (typeof this.initTransform === 'function') ? (<any>this).initTransform() as TransformRules : this.initTransform as unknown as TransformRules,
+            Transform: (typeof this.initTransform === 'function') ? (<any>this).initTransform(this) as TransformRules : this.initTransform as unknown as TransformRules,
             host: this,
             cache: this.constructor,
         };

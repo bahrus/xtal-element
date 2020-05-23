@@ -1,4 +1,5 @@
 import { XtalElement } from "./XtalElement";
+import { X } from './X.js';
 export {TransformRules, PESettings} from 'trans-render/types.d.js';
 import {TransformRules, TransformValueOptions} from 'trans-render/types.d.js';
 
@@ -24,6 +25,15 @@ export interface EvaluatedAttributeProps{
     reflect: string[];
     jsonProp: string[];
     notify: string[];
+}
+
+export interface tendArgs<T extends X = X>{
+    name: string,
+    class: any,
+    attributeProps: PropDefGet<T>,
+    main: string,
+    initTransform: TransformGetter<T>,
+    updateTransforms?: SelectiveUpdate<T>[]
 }
 
 

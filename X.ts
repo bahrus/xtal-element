@@ -1,20 +1,20 @@
-import { XtalElement } from './XtalElement.js';
-import { PropDefGet, TransformGetter, SelectiveUpdate } from './types.d.js';
+import { XtalElement, define } from './XtalElement.js';
+import { createTemplate } from 'trans-render/createTemplate.js';
+import { tendArgs, SelectiveUpdate, TransformGetter, } from './types.d.js';
 
-export interface tendArgs<T extends X = X>{
-    name: string,
-    class: Function,
-    propsInfo?: PropDefGet<T>,
-    main: string,
-    initTransform?: TransformGetter<T>,
-    updateTransforms?: SelectiveUpdate<T>[]
-}
-
+export { TransformGetter, TransformRules } from './types.d.js';
 export abstract class X extends XtalElement{
-    readyToInit = true;
-    readyToRender = true;
-
-    static tend<T extends X = X>(args: tendArgs){
-
+    static tend<T extends X = X>(args: tendArgs<T>){
+        abstract class newClass extends args.class {
+            static is = args.name;
+            static attributeProps = args.attributeProps;
+            readyToInit = true;
+            readyToRender = true;
+        }
+        const p = newClass.prototype;
+        p.initTransform = args.initTransform as TransformGetter<XtalElement>;
+        p.updateTransforms = args.updateTransforms as SelectiveUpdate<XtalElement>[];
+        p.mainTemplate = createTemplate(args.main);
+        define(newClass);
     }
 }

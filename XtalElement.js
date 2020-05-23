@@ -48,7 +48,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     initRenderContext() {
         return {
             init: init,
-            Transform: (typeof this.initTransform === 'function') ? this.initTransform() : this.initTransform,
+            Transform: (typeof this.initTransform === 'function') ? this.initTransform(this) : this.initTransform,
             host: this,
             cache: this.constructor,
         };
