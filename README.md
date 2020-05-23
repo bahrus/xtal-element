@@ -121,7 +121,7 @@ export class MiniMal extends X{
 X.tend({
     class: MiniMal,
     name: 'mini-mal',
-    innerProps: ({count}) => true,
+    propsInfo: ({count}) => ({num:[count]}),
     main: template,
     initTransform:({changeCount}) => {
         button:[,{click:[changeCount, 'dataset.d']}], 

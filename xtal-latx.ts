@@ -91,7 +91,7 @@ export interface IXtallatXI extends IHydrate {
     // static observedAttributes: string[]; 
 }
 type keys = keyof EvaluatedAttributeProps;
-const propCategories : keys[] = ['boolean', 'string', 'numeric', 'reflect', 'notify', 'object', 'parsedObject'];
+const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp'];
 
 export function mergeProps(props1: EvaluatedAttributeProps | AttributeProps, props2: EvaluatedAttributeProps | AttributeProps): EvaluatedAttributeProps{
     const returnObj: Partial<EvaluatedAttributeProps> = {};

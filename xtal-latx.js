@@ -22,7 +22,7 @@ const ignoreAttrKey = Symbol();
 export function define(MyElementClass) {
     const props = MyElementClass.props;
     const proto = MyElementClass.prototype;
-    const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
+    const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
     const existingProps = Object.getOwnPropertyNames(proto);
     flatProps.forEach(prop => {
         if (existingProps.includes(prop))
@@ -44,16 +44,16 @@ export function define(MyElementClass) {
                     if (this[ignoreAttrKey] === undefined)
                         this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
-                    if (props.boolean.includes(prop)) {
+                    if (props.bool.includes(prop)) {
                         this.attr(c2l, nv, '');
                     }
-                    else if (props.string.includes(prop)) {
+                    else if (props.str.includes(prop)) {
                         this.attr(c2l, nv);
                     }
-                    else if (props.numeric.includes(prop)) {
+                    else if (props.num.includes(prop)) {
                         this.attr(c2l, nv.toString());
                     }
-                    else if (props.object.includes(prop)) {
+                    else if (props.obj.includes(prop)) {
                         this.attr(c2l, JSON.stringify(nv));
                     }
                 }
@@ -69,7 +69,7 @@ export function define(MyElementClass) {
     }
     customElements.define(tagName, MyElementClass);
 }
-const propCategories = ['boolean', 'string', 'numeric', 'reflect', 'notify', 'object', 'parsedObject'];
+const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp'];
 export function mergeProps(props1, props2) {
     const returnObj = {};
     propCategories.forEach(propCat => {
@@ -96,7 +96,7 @@ export function XtallatX(superClass) {
             }
             static get observedAttributes() {
                 const props = this.props;
-                return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
+                return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
             }
             static get props() {
                 if (this[this.evalPath] === undefined) {
@@ -148,16 +148,16 @@ export function XtallatX(superClass) {
                 this[ignorePropKey][propName] = true;
                 const anyT = this;
                 const ep = this.constructor.props;
-                if (ep.string.includes(propName)) {
+                if (ep.str.includes(propName)) {
                     anyT[propName] = nv;
                 }
-                else if (ep.boolean.includes(propName)) {
+                else if (ep.bool.includes(propName)) {
                     anyT[propName] = nv !== null;
                 }
-                else if (ep.numeric.includes(propName)) {
+                else if (ep.num.includes(propName)) {
                     anyT[propName] = parseFloat(nv);
                 }
-                else if (ep.parsedObject.includes(propName)) {
+                else if (ep.jsonProp.includes(propName)) {
                     try {
                         anyT[propName] = JSON.parse(nv);
                     }
@@ -169,7 +169,7 @@ export function XtallatX(superClass) {
             }
             connectedCallback() {
                 const ep = this.constructor.props;
-                this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
+                this.propUp([...ep.bool, ...ep.str, ...ep.num, ...ep.obj]);
                 this._connected = true;
                 this.onPropsChange(disabled);
             }
@@ -193,7 +193,7 @@ export function XtallatX(superClass) {
             }
         },
         _a.attributeProps = ({ disabled }) => ({
-            boolean: [disabled],
+            bool: [disabled],
         }),
         _a;
 }

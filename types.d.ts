@@ -1,10 +1,10 @@
 import { XtalElement } from "./XtalElement";
 export {TransformRules, PESettings} from 'trans-render/types.d.js';
-import {TransformRules} from 'trans-render/types.d.js';
+import {TransformRules, TransformValueOptions} from 'trans-render/types.d.js';
 
-export type SelectiveUpdate = (el: XtalElement) => TransformRules;
-export type PropDefGet<T = XtalElement> = (t: T) => AttributeProps;
-
+export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformRules;
+export type PropDefGet<T extends XtalElement = XtalElement> = (t: T) => AttributeProps;
+export type TransformGetter<T extends XtalElement = XtalElement> = (t : T) => TransformValueOptions;
 
 export interface AttributeProps{
     num?: any[];

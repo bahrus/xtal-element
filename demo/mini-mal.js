@@ -41,7 +41,7 @@ export class MiniMal extends XtalElement {
 }
 MiniMal.is = 'mini-mal';
 MiniMal.attributeProps = ({ disabled, name }) => ({
-    boolean: [disabled],
-    string: [name],
+    bool: [disabled],
+    str: [name],
 });
 define(MiniMal);
