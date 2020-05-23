@@ -78,6 +78,62 @@ export class Foo extends XtalElement{
 
 As long as all property changes also notify the onPropsChange method, specifying the name, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
 
+## X
+
+```JavaScript
+import {X} from 'xtal-element/X.js'
+
+const template = /* html */`
+<button data-d=-1>-</button><span/><button data-d=1>+</button>
+<style>
+    * {
+      font-size: 200%;
+    }
+
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
+</style>
+`;
+
+const [span$] = [Symbol()];
+export class MiniMal extends X{
+    attributeProps: ({count}) => ({ 
+        num: [count]
+    }),
+
+    count = 0;
+
+    change(delta){
+        this.count += delta;
+    }
+
+    initTransform:({}) => {
+        button:[,{click:[this.change, 'dataset.d']}], 
+        span: span$,
+    },
+}
+
+X.tend({
+    class: MiniMal,
+    name: 'mini-mal', 
+    main: template,
+    updateTransforms: [({count}) =>({span$: count})]
+});
+```
+
+
 
 ## Minimal XtalElement Setup
 

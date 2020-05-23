@@ -16,8 +16,8 @@ const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
     static is = 'mini-mal';
     static attributeProps = ({disabled, name} : MiniMal) => ({
-        boolean: [disabled],
-        string: [name],
+        bool: [disabled],
+        str: [name],
     }  as AttributeProps);
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.

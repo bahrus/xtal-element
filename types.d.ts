@@ -7,22 +7,22 @@ export type PropDefGet<T = XtalElement> = (t: T) => AttributeProps;
 
 
 export interface AttributeProps{
-    numeric?: any[];
-    boolean?: any[];
-    string?: any[];
-    object?: any[];
+    num?: any[];
+    bool?: any[];
+    str?: any[];
+    obj?: any[];
     reflect?: any[];
-    parsedObject?: any[];
+    jsonProp?: any[];
     notify?: any[];
 }
 
 export interface EvaluatedAttributeProps{
-    numeric: string[];
-    boolean: string[];
-    string: string[];
-    object: string[];
+    num: string[];
+    bool: string[];
+    str: string[];
+    obj: string[];
     reflect: string[];
-    parsedObject: string[];
+    jsonProp: string[];
     notify: string[];
 }
 

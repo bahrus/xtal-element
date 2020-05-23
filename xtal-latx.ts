@@ -29,7 +29,7 @@ const ignoreAttrKey = Symbol();
 export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
-    const flatProps = [...props.boolean, ...props.numeric, ...props.string, ...props.object];
+    const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
     const existingProps = Object.getOwnPropertyNames(proto);
     flatProps.forEach(prop =>{
         if(existingProps.includes(prop)) return;
@@ -50,13 +50,13 @@ export function define(MyElementClass: any){
                     
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
-                    if(props.boolean.includes(prop)){
+                    if(props.bool.includes(prop)){
                         this.attr(c2l, nv, '');
-                    }else if(props.string.includes(prop)){
+                    }else if(props.str.includes(prop)){
                         this.attr(c2l, nv);
-                    }else if(props.numeric.includes(prop)){
+                    }else if(props.num.includes(prop)){
                         this.attr(c2l, nv.toString());
-                    }else if(props.object.includes(prop)){
+                    }else if(props.obj.includes(prop)){
                         this.attr(c2l, JSON.stringify(nv));
                     }
                 }
@@ -114,11 +114,11 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         static get observedAttributes(){
             const props = this.props;
-            return [...props.boolean, ...props.numeric, ...props.string, ...props.parsedObject].map(s => camelToLisp(s));
+            return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
         }
 
         static attributeProps : any = ({disabled} : IXtallatXI) => ({
-            boolean: [disabled],
+            bool: [disabled],
         } as AttributeProps);
 
 
@@ -175,13 +175,13 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             (<any>this)[ignorePropKey][propName] = true;
             const anyT = this as any;
             const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
-            if(ep.string.includes(propName)){
+            if(ep.str.includes(propName)){
                 anyT[propName] = nv;
-            }else if(ep.boolean.includes(propName)){
+            }else if(ep.bool.includes(propName)){
                 anyT[propName] = nv !== null;
-            }else if(ep.numeric.includes(propName)){
+            }else if(ep.num.includes(propName)){
                 anyT[propName] = parseFloat(nv);
-            }else if(ep.parsedObject.includes(propName)){
+            }else if(ep.jsonProp.includes(propName)){
                 try{
                     anyT[propName] = JSON.parse(nv);
                 }catch(e){
@@ -196,7 +196,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         _connected!: boolean;
         connectedCallback(){
             const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
-            this.propUp([...ep.boolean, ...ep.string, ...ep.numeric, ...ep.object]);
+            this.propUp([...ep.bool, ...ep.str, ...ep.num, ...ep.obj]);
             this._connected = true;
             this.onPropsChange(disabled);
         }
