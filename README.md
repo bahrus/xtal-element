@@ -109,31 +109,29 @@ const template = /* html */`
 
 const [span$] = [Symbol()];
 export class MiniMal extends X{
-    attributeProps: ({count}) => ({ 
-        num: [count]
-    }),
 
     count = 0;
 
-    change(delta){
+    changeCount(delta){
         this.count += delta;
     }
 
-    initTransform:({}) => {
-        button:[,{click:[this.change, 'dataset.d']}], 
-        span: span$,
-    },
 }
 
 X.tend({
     class: MiniMal,
-    name: 'mini-mal', 
+    name: 'mini-mal',
+    innerProps: ({count}) => true,
     main: template,
+    initTransform:({changeCount}) => {
+        button:[,{click:[changeCount, 'dataset.d']}], 
+        span: span$,
+    },
     updateTransforms: [({count}) =>({span$: count})]
 });
 ```
 
-
+No this, shareable business logic, separation of concerns.
 
 ## Minimal XtalElement Setup
 
