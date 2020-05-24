@@ -27,20 +27,25 @@ export function define(MyElementClass) {
     flatProps.forEach(prop => {
         if (existingProps.includes(prop))
             return;
-        const sym = Symbol();
+        const sym = Symbol(prop);
         Object.defineProperty(proto, prop, {
             get() {
                 return this[sym];
             },
             set(nv) {
+                //TODO:  Optimize -- https://stackoverflow.com/questions/53423914/performance-of-array-includes-vs-mapping-to-an-object-and-accessing-it-in-javasc
                 const ik = this[ignorePropKey];
                 if (ik !== undefined && ik[prop] === true) {
                     delete ik[prop];
                     this[sym] = nv;
                     return;
                 }
+                if (props.dry.includes(prop)) {
+                    if (nv === this[sym])
+                        return;
+                }
+                const c2l = camelToLisp(prop);
                 if (props.reflect.includes(prop)) {
-                    const c2l = camelToLisp(prop);
                     if (this[ignoreAttrKey] === undefined)
                         this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
@@ -59,6 +64,9 @@ export function define(MyElementClass) {
                 }
                 this[sym] = nv;
                 this.onPropsChange(prop);
+                if (props.notify.includes(prop)) {
+                    this.de(c2l, { value: nv });
+                }
             },
         });
     });
@@ -69,7 +77,7 @@ export function define(MyElementClass) {
     }
     customElements.define(tagName, MyElementClass);
 }
-const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp'];
+const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry'];
 export function mergeProps(props1, props2) {
     const returnObj = {};
     propCategories.forEach(propCat => {

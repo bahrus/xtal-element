@@ -15,6 +15,7 @@ export interface AttributeProps{
     reflect?: any[];
     jsonProp?: any[];
     notify?: any[];
+    dry?: any[];
 }
 
 export interface EvaluatedAttributeProps{
@@ -25,6 +26,7 @@ export interface EvaluatedAttributeProps{
     reflect: string[];
     jsonProp: string[];
     notify: string[];
+    dry: string[];
 }
 
 export interface tendArgs<T extends X = X>{
