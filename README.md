@@ -110,7 +110,7 @@ const template = /* html */`
 `; // Where art thou, HTML Modules?
 
 const [span$] = [Symbol()];
-export class MM extends X{
+export class MyCounter extends X{
 
     count = 0;
 
@@ -121,8 +121,8 @@ export class MM extends X{
 }
 
 X.tend({
-    class: MM,
-    name: 'm-m',
+    class: MyCounter,
+    name: 'my-counter',
     attributeProps: ({count}) => ({num:[count]}),
     main: template,
     initTransform:({changeCount}) => {
@@ -136,27 +136,29 @@ X.tend({
 Usage:
 
 ```html
-<m-m></m-m>
+<my-counter></my-counter>
 ```
 
 Notable features of web components defined using base class X:
 
 1.  Fairly minimal typing required.
 2.  Use of "this" is quite limited -- it is only found within the small class, and doesn't seem like it would throw newcomers - as it follows
-familiar patterns to Java / C## developers.
+familiar patterns to Java / C# developers.
 3.  Granted, there may be a bit of a learning curve, when it comes to use of "trans-rendering".  However, maybe trans-rendering is more natural to 
 CSS focused developers?
-4.  The class -- "MM" -- is quite pristine -- in this example, it only contains the core business logic.
+4.  The class -- "MyCounter" -- is quite pristine -- in this example, it only contains the core business logic.
 5.  The same class could be paired up with different HTML templates, event handlers, etc.  I.e. this is kind of the 
 classic "separation of concerns" where the model is separate from the view.
 6.  The class is as "library" neutral as possible.  It could be easily ported to some other library helper.
-7.  First class support for Typescript is provided, as with the other base classes.  But Typescript wasn't used, in keeping with the spirit X
-promotes - less typing.
+7.  First class support for Typescript is provided, as with the other base classes.  But Typescript wasn't used, in keeping with X's desire to 
+promote less typing.
 
 
 ## More power with XtalElement
 
-XtalElement is the base class, and provides additional support for progressive enhancement.
+X is actually a subclass of abstract class XtalElement, with a few features removed.  
+
+XtalElement provides additional support for progressive enhancement.
 
 Here is a minimal example of a web component that extends XtalElement:
 
@@ -224,7 +226,7 @@ Comparisons between XtalElement and X:
 
 1.  Less "magic", more typing.
 2.  Ability to specify when the component is ready to replace the light children with something better.
-3.  Ability to choose a different main template depending on dynamic scenarios.
+3.  Ability to choose a different main template depending on dynamic scenarios (not shown above).
 4.  Less separation of concerns, more use of "this."
 5.  Overhead of helper library slightly smaller.
 
