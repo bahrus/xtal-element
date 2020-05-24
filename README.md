@@ -86,7 +86,7 @@ class X, part of the xtal-element family of base web component classes, provides
 import {X} from 'xtal-element/X.js'
 
 const template = /* html */`
-<button data-d=-1>-</button><span/><button data-d=1>+</button>
+<button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>
     * {
       font-size: 200%;
@@ -182,8 +182,8 @@ const buttonSym = Symbol();
 export class MiniMal extends XtalElement{
     static is = 'mini-mal';
     static attributeProps = ({disabled, name} : MiniMal) => ({
-        boolean: [disabled],
-        string: [name],
+        bool: [disabled],
+        str: [name],
     }  as AttributeProps);
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
@@ -244,9 +244,9 @@ import {XtalElement, define} from '../XtalElement.js';
 class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
     static myCustomElementProps = {
-        boolean: ['prop1', 'prop2'],
-        numeric: ['prop3'],
-        object: ['prop4']
+        bool: ['prop1', 'prop2'],
+        num: ['prop3'],
+        obj: ['prop4']
     }
     prop1;
     prop2;
@@ -263,9 +263,9 @@ import {XtalElement, define} from '../XtalElement.js';
 class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
     static attributeProps = ({prop1, prop2, prop3, prop4}: MyCustomElement) => (
-        boolean: [prop1, prop2],
-        numeric: [prop3],
-        object: [prop4]
+        bool: [prop1, prop2],
+        num: [prop3],
+        obj: [prop4]
     )
     prop1;
     prop2;
