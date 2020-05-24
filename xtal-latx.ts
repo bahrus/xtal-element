@@ -14,6 +14,8 @@ function camelToLisp(s: string) {
        }).toLowerCase();
    }
 
+type keys = keyof EvaluatedAttributeProps;
+const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry'];
 
 export function deconstruct(fn: Function){
     const fnString = fn.toString().trim();
@@ -26,46 +28,64 @@ export function deconstruct(fn: Function){
 
 const ignorePropKey = Symbol();
 const ignoreAttrKey = Symbol();
+interface PropInfo{
+    bool: boolean;
+    str: boolean;
+    num: boolean;
+    reflect: boolean;
+    notify: boolean;
+    obj: boolean;
+    jsonProp: boolean;
+    dry: boolean;
+}
+const propInfoSym = Symbol('propInfo');
 export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
     const existingProps = Object.getOwnPropertyNames(proto);
+    
+    proto[propInfoSym] = {};
     flatProps.forEach(prop =>{
         if(existingProps.includes(prop)) return;
         const sym = Symbol(prop);
+        const propInfo = {} as any;
+        propCategories.forEach(cat =>{
+            propInfo[cat] = props[cat].includes(prop);
+        })
+        proto[propInfoSym][prop] = propInfo;
         Object.defineProperty(proto, prop, {
             get(){
                 return this[sym];
             },
             set(nv){
-                //TODO:  Optimize -- https://stackoverflow.com/questions/53423914/performance-of-array-includes-vs-mapping-to-an-object-and-accessing-it-in-javasc
                 const ik = this[ignorePropKey];
                 if(ik !== undefined && ik[prop] === true){
                     delete ik[prop];
                     this[sym] = nv;
                     return;
                 }
-                if(props.dry.includes(prop)){
+                const propInfo = proto[propInfoSym][prop] as PropInfo;
+                if(propInfo.dry){
                     if(nv === this[sym]) return;
                 }
                 const c2l = camelToLisp(prop);
-                if(props.reflect.includes(prop)){
+                if(propInfo.reflect){
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
-                    if(props.bool.includes(prop)){
+                    if(propInfo.bool){
                         this.attr(c2l, nv, '');
-                    }else if(props.str.includes(prop)){
+                    }else if(propInfo.str){
                         this.attr(c2l, nv);
-                    }else if(props.num.includes(prop)){
+                    }else if(propInfo.num){
                         this.attr(c2l, nv.toString());
-                    }else if(props.obj.includes(prop)){
+                    }else if(propInfo.obj){
                         this.attr(c2l, JSON.stringify(nv));
                     }
                 }
                 this[sym] = nv;
                 this.onPropsChange(prop);
-                if(props.notify.includes(prop)){
+                if(propInfo.notify){
                     this.de(c2l, {value: nv})
                 }
             },
@@ -95,8 +115,7 @@ export interface IXtallatXI extends IHydrate {
  
     // static observedAttributes: string[]; 
 }
-type keys = keyof EvaluatedAttributeProps;
-const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry'];
+
 
 export function mergeProps(props1: EvaluatedAttributeProps | AttributeProps, props2: EvaluatedAttributeProps | AttributeProps): EvaluatedAttributeProps{
     const returnObj: Partial<EvaluatedAttributeProps> = {};
