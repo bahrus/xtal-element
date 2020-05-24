@@ -222,13 +222,14 @@ define(MiniMal);
 
 ```
 
-Comparisons between XtalElement and X:
+Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 
 1.  Less "magic", more typing.
 2.  Ability to specify when the component is ready to replace the light children with something better.
 3.  Ability to choose a different main template depending on dynamic scenarios (not shown above).
-4.  Less separation of concerns, more use of "this."
-5.  Overhead of helper library slightly smaller.
+4.  Ability to opt out of Shadow DOM (not shown above).
+5.  Less separation of concerns, more use of "this."
+6.  Overhead of helper library slightly smaller.
 
 ## A note on "AttributeProps"
 
