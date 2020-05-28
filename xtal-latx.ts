@@ -1,6 +1,6 @@
 import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {IHydrate} from 'trans-render/types.d.js';
-import {EvaluatedAttributeProps, AttributeProps} from './types.d.js';
+import {EvaluatedAttributeProps, AttributeProps, PropAction} from './types.d.js';
 
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
@@ -15,15 +15,32 @@ function camelToLisp(s: string) {
    }
 
 type keys = keyof EvaluatedAttributeProps;
-const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry'];
-
+const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug'];
+const argList = Symbol('argList');
 export function deconstruct(fn: Function){
-    const fnString = fn.toString().trim();
-    if(fnString.startsWith('({')){
-        const iPos = fnString.indexOf('})', 2);
-        return fnString.substring(2, iPos).split(',').map(s => s.trim());
+    if((<any>fn)[argList] === undefined){
+        const fnString = fn.toString().trim();
+        if(fnString.startsWith('({')){
+            const iPos = fnString.indexOf('})', 2);
+            (<any>fn)[argList] = fnString.substring(2, iPos).split(',').map(s => s.trim());
+        }else{
+            (<any>fn)[argList] = []
+        }
+        
     }
-    return [];
+    return (<any>fn)[argList]! as string[];
+
+}
+
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+export function intersection<T = string>(setA: Set<T>, setB: Set<T>) {
+    let _intersection = new Set()
+    for (let elem of setB) {
+        if (setA.has(elem)) {
+            _intersection.add(elem)
+        }
+    }
+    return _intersection
 }
 
 const ignorePropKey = Symbol();
@@ -37,6 +54,8 @@ interface PropInfo{
     obj: boolean;
     jsonProp: boolean;
     dry: boolean;
+    log: boolean;
+    debug: boolean;
 }
 const propInfoSym = Symbol('propInfo');
 export function define(MyElementClass: any){
@@ -51,7 +70,7 @@ export function define(MyElementClass: any){
         const sym = Symbol(prop);
         const propInfo = {} as any;
         propCategories.forEach(cat =>{
-            propInfo[cat] = props[cat].includes(prop);
+            propInfo[cat] = props[cat]!.includes(prop);
         })
         proto[propInfoSym][prop] = propInfo;
         Object.defineProperty(proto, prop, {
@@ -84,6 +103,10 @@ export function define(MyElementClass: any){
                     }
                 }
                 this[sym] = nv;
+                if(propInfo.log){
+                    console.log(propInfo, nv);
+                }
+                if(propInfo.debug) debugger;
                 this.onPropsChange(prop);
                 if(propInfo.notify){
                     this.de(c2l, {value: nv})
@@ -187,7 +210,17 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }
             this.attr('data-' + name, this.to$(ec[name]));
         }
-        onPropsChange(name: string){}
+        onPropsChange(name: string | string[]) {
+            if(Array.isArray(name)){
+                name.forEach(subName => this._propActionQueue.add(subName));
+            }else{
+                this._propActionQueue.add(name);
+            }
+            if(this._disabled || !this._connected){
+                return;
+            };
+            this.processActionQueue();
+        }
         attributeChangedCallback(n: string, ov: string, nv: string) {
             const ik = (<any>this)[ignoreAttrKey];
             if(ik !== undefined && ik[n] === true){
@@ -231,11 +264,11 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
          */
-        de(name: string, detail: any, asIs: boolean = false, noBubble: boolean = false) {
+        de(name: string, detail: any, asIs: boolean = false, bubbles: boolean = false) {
             const eventName = name + (asIs ? '' : '-changed');
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
-                bubbles: noBubble,
+                bubbles: bubbles,
                 composed: false,
                 cancelable: true, //https://dev.to/open-wc/composed-true-considered-harmful-5g59
             } as CustomEventInit);
@@ -243,7 +276,19 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             this.incAttr(eventName);
             return newEvent;
         }
+        processActionQueue(){
+            if(this.propActions === undefined) return;
+            this.propActions.forEach(propAction =>{
+                const dependencies = deconstruct(propAction as Function);
+                const dependencySet = new Set<string>(dependencies);
+                if(intersection(this._propActionQueue, dependencySet).size > 0){
+                    propAction(this);
+                }
+            });
+            this._propActionQueue = new Set();
+        }
+        _propActionQueue: Set<string> = new Set();
 
-
+        propActions: PropAction[] | undefined;
     }
 }

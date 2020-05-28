@@ -6,6 +6,7 @@ import {TransformRules, TransformValueOptions} from 'trans-render/types.d.js';
 export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformRules;
 export type PropDefGet<T extends XtalElement = XtalElement> = (t: T) => AttributeProps;
 export type TransformGetter<T extends XtalElement = XtalElement> = (t : T) => TransformValueOptions;
+export type PropAction<T extends HTMLElement = HTMLElement> = (t: T) => void;
 
 export interface AttributeProps{
     num?: any[];
@@ -16,6 +17,8 @@ export interface AttributeProps{
     jsonProp?: any[];
     notify?: any[];
     dry?: any[];
+    log?: any[];
+    debug?: any[];
 }
 
 export interface EvaluatedAttributeProps{
@@ -27,6 +30,8 @@ export interface EvaluatedAttributeProps{
     jsonProp: string[];
     notify: string[];
     dry: string[];
+    log?: string[];
+    debug?: string[];
 }
 
 export interface tendArgs<T extends X = X>{

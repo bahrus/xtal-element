@@ -9,14 +9,30 @@ function camelToLisp(s) {
         return m[0] + "-" + m[1];
     }).toLowerCase();
 }
-const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry'];
+const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug'];
+const argList = Symbol('argList');
 export function deconstruct(fn) {
-    const fnString = fn.toString().trim();
-    if (fnString.startsWith('({')) {
-        const iPos = fnString.indexOf('})', 2);
-        return fnString.substring(2, iPos).split(',').map(s => s.trim());
+    if (fn[argList] === undefined) {
+        const fnString = fn.toString().trim();
+        if (fnString.startsWith('({')) {
+            const iPos = fnString.indexOf('})', 2);
+            fn[argList] = fnString.substring(2, iPos).split(',').map(s => s.trim());
+        }
+        else {
+            fn[argList] = [];
+        }
     }
-    return [];
+    return fn[argList];
+}
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+export function intersection(setA, setB) {
+    let _intersection = new Set();
+    for (let elem of setB) {
+        if (setA.has(elem)) {
+            _intersection.add(elem);
+        }
+    }
+    return _intersection;
 }
 const ignorePropKey = Symbol();
 const ignoreAttrKey = Symbol();
@@ -71,6 +87,11 @@ export function define(MyElementClass) {
                     }
                 }
                 this[sym] = nv;
+                if (propInfo.log) {
+                    console.log(propInfo, nv);
+                }
+                if (propInfo.debug)
+                    debugger;
                 this.onPropsChange(prop);
                 if (propInfo.notify) {
                     this.de(c2l, { value: nv });
@@ -105,6 +126,7 @@ export function XtallatX(superClass) {
                  * Tracks how many times each event type was called.
                  */
                 this.evCount = {};
+                this._propActionQueue = new Set();
             }
             static get evalPath() {
                 return lispToCamel(this.is);
@@ -150,7 +172,19 @@ export function XtallatX(superClass) {
                 }
                 this.attr('data-' + name, this.to$(ec[name]));
             }
-            onPropsChange(name) { }
+            onPropsChange(name) {
+                if (Array.isArray(name)) {
+                    name.forEach(subName => this._propActionQueue.add(subName));
+                }
+                else {
+                    this._propActionQueue.add(name);
+                }
+                if (this._disabled || !this._connected) {
+                    return;
+                }
+                ;
+                this.processActionQueue();
+            }
             attributeChangedCallback(n, ov, nv) {
                 const ik = this[ignoreAttrKey];
                 if (ik !== undefined && ik[n] === true) {
@@ -194,17 +228,29 @@ export function XtallatX(superClass) {
              * @param detail Information to be passed with the event
              * @param asIs If true, don't append event name with '-changed'
              */
-            de(name, detail, asIs = false, noBubble = false) {
+            de(name, detail, asIs = false, bubbles = false) {
                 const eventName = name + (asIs ? '' : '-changed');
                 const newEvent = new CustomEvent(eventName, {
                     detail: detail,
-                    bubbles: noBubble,
+                    bubbles: bubbles,
                     composed: false,
                     cancelable: true,
                 });
                 this.dispatchEvent(newEvent);
                 this.incAttr(eventName);
                 return newEvent;
+            }
+            processActionQueue() {
+                if (this.propActions === undefined)
+                    return;
+                this.propActions.forEach(propAction => {
+                    const dependencies = deconstruct(propAction);
+                    const dependencySet = new Set(dependencies);
+                    if (intersection(this._propActionQueue, dependencySet).size > 0) {
+                        propAction(this);
+                    }
+                });
+                this._propActionQueue = new Set();
             }
         },
         _a.attributeProps = ({ disabled }) => ({

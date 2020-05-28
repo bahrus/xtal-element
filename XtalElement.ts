@@ -1,4 +1,4 @@
-import {XtallatX, deconstruct} from './xtal-latx.js';
+import {XtallatX, deconstruct, intersection} from './xtal-latx.js';
 import {RenderContext, RenderOptions, TransformValueOptions} from 'trans-render/types.d.js';
 import {hydrate} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
@@ -8,26 +8,15 @@ export {define} from './xtal-latx.js';
 
 const deconstructed = Symbol();
 
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
-export function intersection<T = string>(setA: Set<T>, setB: Set<T>) {
-    let _intersection = new Set()
-    for (let elem of setB) {
-        if (setA.has(elem)) {
-            _intersection.add(elem)
-        }
-    }
-    return _intersection
-}
-
 export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     get noShadow(){
         return false;
     }
 
-    #renderOptions = {} as RenderOptions;
+    _renderOptions = {} as RenderOptions;
     get renderOptions() : RenderOptions{
-        return this.#renderOptions;
+        return this._renderOptions;
     }
 
 
@@ -83,7 +72,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         if(this._renderContext === undefined){
             this.dataset.upgraded = 'true';
             this._renderContext = this.initRenderContext();
-            this.#renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
+            this._renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
             this._renderContext.init!((<any>this)[this._mainTemplateProp] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
         }
 
@@ -94,7 +83,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 const dependencies = deconstruct(selectiveUpdateTransform as Function);
                 const dependencySet = new Set<string>(dependencies);
                 if(intersection(this._propChangeQueue, dependencySet).size > 0){
-                    this.#renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
+                    this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     this._renderContext!.Transform = selectiveUpdateTransform(this);
                     this._renderContext?.update!(this._renderContext!, this.root);
                 }
@@ -105,6 +94,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     _propChangeQueue: Set<string> = new Set();
     onPropsChange(name: string | string[]) {
+        super.onPropsChange()
         if(Array.isArray(name)){
             name.forEach(subName => this._propChangeQueue.add(subName));
         }else{
