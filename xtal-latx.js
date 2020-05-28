@@ -126,6 +126,7 @@ export function XtallatX(superClass) {
                  * Tracks how many times each event type was called.
                  */
                 this.evCount = {};
+                this.self = this;
                 this._propActionQueue = new Set();
             }
             static get evalPath() {

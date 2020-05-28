@@ -249,7 +249,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         
             this.onPropsChange(propName);
         }
-
+        self = this;
         _connected!: boolean;
         connectedCallback(){
             const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
