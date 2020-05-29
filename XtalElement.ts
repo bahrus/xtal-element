@@ -69,23 +69,24 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             //assumption is that if data changes, just redraw based on init
             this.root.innerHTML = '';
         }
-        if(this._renderContext === undefined){
+        let rc = this._renderContext;
+        if(rc === undefined){
             this.dataset.upgraded = 'true';
-            this._renderContext = this.initRenderContext();
+            rc = this._renderContext = this.initRenderContext();
             this._renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
-            this._renderContext.init!((<any>this)[this._mainTemplateProp] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
+            rc.init!((<any>this)[this._mainTemplateProp] as HTMLTemplateElement, this._renderContext, this.root, this.renderOptions);
         }
 
         if(this.updateTransforms !== undefined){
             //TODO: Optimize
-            this._renderContext!.update = update;
+            rc!.update = update;
             this.updateTransforms.forEach(selectiveUpdateTransform =>{
                 const dependencies = deconstruct(selectiveUpdateTransform as Function);
                 const dependencySet = new Set<string>(dependencies);
                 if(intersection(this._propChangeQueue, dependencySet).size > 0){
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
-                    this._renderContext!.Transform = selectiveUpdateTransform(this);
-                    this._renderContext?.update!(this._renderContext!, this.root);
+                    rc!.Transform = selectiveUpdateTransform(this);
+                    rc!.update!(rc!, this.root);
                 }
             });
             this._propChangeQueue = new Set();
@@ -94,7 +95,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     _propChangeQueue: Set<string> = new Set();
     onPropsChange(name: string | string[]) {
-        super.onPropsChange()
+        super.onPropsChange(name)
         if(Array.isArray(name)){
             name.forEach(subName => this._propChangeQueue.add(subName));
         }else{

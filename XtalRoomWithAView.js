@@ -1,5 +1,5 @@
-import { XtalElement, intersection } from './XtalElement.js';
-import { deconstruct } from './xtal-latx.js';
+import { XtalElement } from './XtalElement.js';
+import { deconstruct, intersection } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();

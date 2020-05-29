@@ -1,5 +1,5 @@
-import {XtalElement, intersection} from './XtalElement.js';
-import {deconstruct} from './xtal-latx.js';
+import {XtalElement} from './XtalElement.js';
+import {deconstruct, intersection} from './xtal-latx.js';
 
 export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> 
     = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
