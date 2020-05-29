@@ -89,7 +89,7 @@ export function define(MyElementClass: any){
                     if(nv === this[sym]) return;
                 }
                 const c2l = camelToLisp(prop);
-                if(propInfo.reflect){
+                if(this._connected && propInfo.reflect){
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
                     if(propInfo.bool){
