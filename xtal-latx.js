@@ -122,12 +122,12 @@ export function XtallatX(superClass) {
     return _a = class extends superClass {
             constructor() {
                 super(...arguments);
-                this._propActionQueue = new Set();
                 /**
                  * Tracks how many times each event type was called.
                  */
                 this.evCount = {};
                 this.self = this;
+                this._propActionQueue = new Set();
             }
             static get evalPath() {
                 return lispToCamel(this.is);

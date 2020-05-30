@@ -168,9 +168,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             bool: [disabled],
         } as AttributeProps);
 
-        _propActionQueue: Set<string> = new Set();
 
-        static propActions: PropAction[] | undefined;
 
         static get props(){
             if((<any>this)[this.evalPath] === undefined){
@@ -278,6 +276,10 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             this.incAttr(eventName);
             return newEvent;
         }
+
+        _propActionQueue: Set<string> = new Set();
+
+        propActions: PropAction<this>[] | undefined;
         processActionQueue(){
             if(this.propActions === undefined) return;
             this.propActions.forEach(propAction =>{

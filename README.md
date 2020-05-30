@@ -391,7 +391,7 @@ which is kind of a pain.  Furthermore sometimes you need to add logic that is ti
 ```js
 export class MyCustomElement extends XtalElement{
     ...
-    _myProp1 = 'myValue';
+    _myProp1 = 'myValue1';
     get myProp1(){
         return this._myProp;
     }
@@ -401,7 +401,7 @@ export class MyCustomElement extends XtalElement{
         this.onPropsChange('myProp1');
     }
 
-    _myProp2 = 'myValue';
+    _myProp2 = 'myValue2';
     get myProp2(){
         return this._myProp;
     }
@@ -411,7 +411,7 @@ export class MyCustomElement extends XtalElement{
         this.onPropsChange('myProp2');
     }
 
-    _myProp3 = 'myValue';
+    _myProp3 = 'myValue3';
     get myProp3(){
         return this._myProp3;
     }
@@ -435,11 +435,17 @@ To make the code above easier to manage, you can stick with simple fields for al
 
 ```js
 export class MyCustomElement extends XtalElement{
+    ...
+    prop1 = 'myValue1';
+    prop2 = 'myValue2';
+    prop3 = 'myValue3';
+    prop4;
     propActions = [
         ({myProp1, myProp2, myprop3, self}) => {
             self.prop4 = self.prop1 + self.prop2 + self.prop3;
         }
     ]
+    ...
 }
 ```
 
