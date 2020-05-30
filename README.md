@@ -176,33 +176,53 @@ Here is a minimal example of a web component that extends XtalElement:
 
 ```TypeScript
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement, define} from '../XtalElement.js';
-import {AttributeProps, TransformRules, SelectiveUpdate} from '../types.d.js';
+import {AttributeProps} from '../types.js';
+import {PESettings} from 'trans-render/types.d.js';
 
 const mainTemplate = createTemplate(/* html */`
+<button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>
-.btn {
-    font-size: 200%;
-}
+    * {
+      font-size: 200%;
+    }
+
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
 </style>
-<button class="btn">Hello |.name ?? World|</slot></button>
-<div></div>
 `);
-const buttonSym = Symbol();
-export class MiniMal extends XtalElement{
-    static is = 'mini-mal';
-    static attributeProps = ({disabled, name} : MiniMal) => ({
-        bool: [disabled],
-        str: [name],
+const span$ = Symbol('spanSym');
+/**
+ * @element counter-xtal-element
+ */
+export class CounterXtalElement extends XtalElement{
+    //Name of custom element
+    static is = 'counter-xtal-element';
+
+    //Properties / attributes spelled out so reflection can auto generate
+    //needed code
+    static attributeProps = ({count} : CounterXtalElement) => ({
+        num: [count]
     }  as AttributeProps);
+
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
     readyToInit = true;
 
     //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
-    //You can return true/false.  You can also indicate the name of an alternate template to clone 
-    //(mainTemplate is the default property for the main template)
+    //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
     readyToRender = true;
 
     //XtalElement is intended for visual elements only.
@@ -211,25 +231,29 @@ export class MiniMal extends XtalElement{
     mainTemplate = mainTemplate;
 
     
-    [buttonSym]: HTMLButtonElement;
+    [span$]: HTMLSpanElement;
     //uses trans-render syntax: https://github.com/bahrus/trans-render
     //initTransform is only done once.
     initTransform = {
-        button: [,{click: () => {this.name = 'me'}},,,buttonSym],
-    } as TransformRules;
+        button:[,{click:[this.changeCount, 'dataset.d', parseInt]}] as PESettings<CounterXtalElement>,
+        span: span$,
+    };
 
     // updateTransforms is called anytime property "name" changes.
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
-    updateTransforms = [
-        ({name} : MiniMal) => ({
-            [buttonSym]: ({target}) => interpolate(target, 'textContent', this, false),
-        }) as TransformRules
-    ] as SelectiveUpdate[];
+    updateTransforms = [ 
+        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
+    ];
 
-    name: string | undefined;
+    count = 0;
+
+    changeCount(delta: number){
+        this.count += delta;
+    }
+    
 }
-define(MiniMal);
+define(CounterXtalElement);
 
 ```
 
@@ -241,6 +265,7 @@ Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 4.  Ability to opt out of Shadow DOM (not shown above).
 5.  Less separation of concerns, more use of "this."
 6.  Overhead of helper library slightly smaller.
+7.  Full power of inheritance allows for extending the class, and overriding templates, transforms, etc.
 
 ## A note on "AttributeProps"
 

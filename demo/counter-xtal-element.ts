@@ -1,7 +1,6 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {interpolate} from 'trans-render/interpolate.js';
 import {XtalElement, define} from '../XtalElement.js';
-import {AttributeProps, TransformRules, SelectiveUpdate} from '../types.js';
+import {AttributeProps} from '../types.js';
 import {PESettings} from 'trans-render/types.d.js';
 
 const mainTemplate = createTemplate(/* html */`
@@ -59,7 +58,7 @@ export class CounterXtalElement extends XtalElement{
     //uses trans-render syntax: https://github.com/bahrus/trans-render
     //initTransform is only done once.
     initTransform = {
-        button:[,{click:[this.changeCount, 'dataset.d', parseInt]}] as any as PESettings<CounterXtalElement>, //TODO remove any
+        button:[,{click:[this.changeCount, 'dataset.d', parseInt]}] as PESettings<CounterXtalElement>,
         span: span$,
     };
 
