@@ -1,17 +1,33 @@
 import { createTemplate } from 'trans-render/createTemplate.js';
-import { interpolate } from 'trans-render/interpolate.js';
 import { XtalElement, define } from '../XtalElement.js';
 const mainTemplate = createTemplate(/* html */ `
+<button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>
-.btn {
-    font-size: 200%;
-}
+    * {
+      font-size: 200%;
+    }
+
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
 </style>
-<button class="btn">Hello |.name ?? World|</slot></button>
-<div></div>
 `);
-const buttonSym = Symbol();
-export class MiniMal extends XtalElement {
+const span$ = Symbol('spanSym');
+/**
+ * @element counter-xtal-element
+ */
+export class CounterXtalElement extends XtalElement {
     constructor() {
         super(...arguments);
         //This property / field allows the developer to wait for some required 
@@ -27,21 +43,26 @@ export class MiniMal extends XtalElement {
         //uses trans-render syntax: https://github.com/bahrus/trans-render
         //initTransform is only done once.
         this.initTransform = {
-            button: [, { click: () => { this.name = 'me'; } }, , , buttonSym],
+            button: [, { click: [this.changeCount, 'dataset.d', parseInt] }],
+            span: span$,
         };
         // updateTransforms is called anytime property "name" changes.
         // Any other property changes won't trigger an update, as there is no
         // arrow function in array with any other property name.
         this.updateTransforms = [
-            ({ name }) => ({
-                [buttonSym]: ({ target }) => interpolate(target, 'textContent', this, false),
-            })
+            ({ count }) => ({ [span$]: count.toString() })
         ];
+        this.count = 0;
+    }
+    changeCount(delta) {
+        this.count += delta;
     }
 }
-MiniMal.is = 'mini-mal';
-MiniMal.attributeProps = ({ disabled, name }) => ({
-    bool: [disabled],
-    str: [name],
+//Name of custom element
+CounterXtalElement.is = 'counter-xtal-element';
+//Properties / attributes spelled out so reflection can auto generate
+//needed code
+CounterXtalElement.attributeProps = ({ count }) => ({
+    num: [count]
 });
-define(MiniMal);
+define(CounterXtalElement);

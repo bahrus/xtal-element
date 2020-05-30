@@ -30,7 +30,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     //updateTransform: TransformRules | TransformGetter | undefined;
 
-    updateTransforms: SelectiveUpdate[] | undefined;
+    updateTransforms: SelectiveUpdate<this>[] | undefined;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
