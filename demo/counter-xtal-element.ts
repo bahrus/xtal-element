@@ -40,6 +40,10 @@ export class CounterXtalElement extends XtalElement{
         num: [count]
     }  as AttributeProps);
 
+    static updateTransforms = [ 
+        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
+    ];
+
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
     readyToInit = true;
@@ -65,9 +69,7 @@ export class CounterXtalElement extends XtalElement{
     // updateTransforms is called anytime property "name" changes.
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
-    updateTransforms = [ 
-        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
-    ];
+    updateTransforms = CounterXtalElement.updateTransforms;
 
     count = 0;
 

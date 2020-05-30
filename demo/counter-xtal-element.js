@@ -49,9 +49,7 @@ export class CounterXtalElement extends XtalElement {
         // updateTransforms is called anytime property "name" changes.
         // Any other property changes won't trigger an update, as there is no
         // arrow function in array with any other property name.
-        this.updateTransforms = [
-            ({ count }) => ({ [span$]: count.toString() })
-        ];
+        this.updateTransforms = CounterXtalElement.updateTransforms;
         this.count = 0;
     }
     changeCount(delta) {
@@ -65,4 +63,7 @@ CounterXtalElement.is = 'counter-xtal-element';
 CounterXtalElement.attributeProps = ({ count }) => ({
     num: [count]
 });
+CounterXtalElement.updateTransforms = [
+    ({ count }) => ({ [span$]: count.toString() })
+];
 define(CounterXtalElement);

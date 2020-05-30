@@ -217,6 +217,10 @@ export class CounterXtalElement extends XtalElement{
         num: [count]
     }  as AttributeProps);
 
+    static updateTransforms = [ 
+        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
+    ];
+
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
     readyToInit = true;
@@ -242,9 +246,8 @@ export class CounterXtalElement extends XtalElement{
     // updateTransforms is called anytime property "name" changes.
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
-    updateTransforms = [ 
-        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
-    ];
+    // Save a little bit of class instantiation time by referencing a static updateTransforms array.
+    updateTransforms = CounterXtalElement.updateTransforms;
 
     count = 0;
 
@@ -256,6 +259,7 @@ export class CounterXtalElement extends XtalElement{
 define(CounterXtalElement);
 
 ```
+
 
 Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 
@@ -292,6 +296,8 @@ class MyCustomElement extends XtalElement{
 define(MyCustomElement);
 ```
 
+
+
 ### Defining properties / attributes in a type safe way using TypeScript:
 
 ```TypeScript
@@ -311,13 +317,13 @@ class MyCustomElement extends XtalElement{
 define(MyCustomElement);
 ```
 
-
 The function "define" does the following:
 
 1.  Turns prop1, prop2, prop3, prop4 into public getters and setters of the class instance with the same name, without losing the value set by default. 
 2.  The setter has a call to this.onPropsChange([name of prop]) baked in.
 3.  Some logic to support asynchronous loading is also added to connectionCallback.
 4.  Registers the custom element based on the static 'is' property.
+
 
 ### Defining properties / attributes with Inheritance
 
@@ -331,16 +337,126 @@ export class MyBar extends MyFoo{
     ...
     static attributeProps = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : XtalFetchReq) => {
         const ap = {
-            boolean: [reqInitRequired, insertResults],
-            string: [cacheResults],
-            number: [debounceDuration],
-            object: [reqInit],
-            parsedObject: [reqInit]
+            bool: [reqInitRequired, insertResults],
+            str: [cacheResults],
+            num: [debounceDuration],
+            obj: [reqInit],
+            jsonProp: [reqInit]
         }  as AttributeProps;
         return mergeProps(ap, (<any>MyFoo).props);
     };
 }
 ```
+
+
+The categories properties can be put into are:
+
+```JavaScript
+['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug']
+```
+
+
+## Setter logic
+
+Defining a new property is, by design, meant to be as easy as possible:
+
+```js
+export class MyCustomElement extends XtalElement{
+    myProp = 'myValue';
+}
+```
+
+The problem arises when something special needs to happen when myProp's value is set.  
+
+If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you.
+
+Anything fancier, and you have to add logic like this:
+
+```js
+export class MyCustomElement extends XtalElement{
+    _myProp = 'myValue';
+    get myProp(){
+        return this._myProp;
+    }
+    set myProp(nv){
+        this._myProp;
+        //do my special logic
+        this.onPropsChange('myProp');
+    }
+}
+```
+
+which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no debouncing / microtasking support out of the box etc [**NB** Adding debouncing / microtasking support into XtalElement is a TODO item]:
+
+```js
+export class MyCustomElement extends XtalElement{
+    ...
+    _myProp1 = 'myValue';
+    get myProp1(){
+        return this._myProp;
+    }
+    set myProp1(nv){
+        this._myProp1;
+        this.handleChanges();
+        this.onPropsChange('myProp1');
+    }
+
+    _myProp2 = 'myValue';
+    get myProp2(){
+        return this._myProp;
+    }
+    set myProp2(nv){
+        this._myProp2;
+        this.handleChanges();
+        this.onPropsChange('myProp2');
+    }
+
+    _myProp3 = 'myValue';
+    get myProp3(){
+        return this._myProp3;
+    }
+    set myProp3(nv){
+        this._myProp3;
+        this.handleChanges();
+        this.onPropsChange('myProp3');
+    }
+
+    prop4;
+
+    handleChanges(){
+        this.prop4 = this.prop1 + this.prop2 + this.prop3;
+    }
+}
+```
+
+### propActions
+
+To make the code above easier to manage, you can stick with simple fields for all the properties, and implement the property "propActions":
+
+```js
+export class MyCustomElement extends XtalElement{
+    propActions = [
+        ({myProp1, myProp2, myprop3, self}) => {
+            self.prop4 = self.prop1 + self.prop2 + self.prop3;
+        }
+    ]
+}
+```
+
+Here, "self" is another name for "this" -- inspired by Python.  But because it doesn't use the keyword "this," we can reference a static array of arrow functions, which is a little better, performance wise (even if a bit more verbose):
+
+```js
+export class MyCustomElement extends XtalElement{
+    static propActions = [
+        ({myProp1, myProp2, myprop3, self}) => {
+            self.prop4 = self.prop1 + self.prop2 + self.prop3;
+        }
+    ]
+    propActions = MyCustomElement.propActions;
+}
+```
+
+Note that, like 
 
 ## Inheritance overindulgence?
 
