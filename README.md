@@ -18,7 +18,7 @@ Web components typically upgrade in two steps -- starting with the light childre
 Anyway, xtal-element's target audience is those who are looking for a base class that:
 
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
-2.  Takes extensibility to a whole other level.
+2.  Takes extensibility and separation of concerns to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up. 
 5.  Some of xtal-element's base classes adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
@@ -47,6 +47,7 @@ export class Foo extends XtalElement{
     prop1 = 'a';
     prop2 = 'b';
     prop3 = 'c';
+    ...
     updateTransforms = [
         ({prop1}) =>{
             section:{
@@ -78,9 +79,11 @@ export class Foo extends XtalElement{
 
 As long as all property changes also notify the onPropsChange method, specifying the name, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
 
+As we will see, if you define properties via xtal-element's declarative support, all property changes will notify the onPropsChange method automatically.
+
 ## X -- the simplest xtal-element base class
 
-class X, part of the xtal-element family of base web component classes, provides our first use case.  It likes things to be as simple as possible.
+class X, part of the xtal-element family of base web component classes, provides our first use case.  It likes things to be as simple and clean as possible.
 
 ```JavaScript
 import {X} from 'xtal-element/X.js'
@@ -153,6 +156,14 @@ classic "separation of concerns" where the model is separate from the view.
 7.  First class support for Typescript is provided, as with the other base classes.  But Typescript wasn't used, in keeping with X's desire to 
 promote less typing.
 
+<details>
+    <summary>NBs</summary>
+
+On point 6 above, the fact that class MyCounter extends class X does make it somewhat awkward to switch the logic to a different helper in the future.  The point I'm trying to make is it would not be very awkward, because as you can see, none of the logic is directly accessing any methods or properties of the base class.
+
+To achieve point 6 more thoroughly, you could write the counter logic as a [mixin](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins), which is a little more challenging and more of a brain twister.
+
+</details>
 
 ## More power with XtalElement
 

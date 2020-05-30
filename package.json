@@ -1,19 +1,21 @@
 {
   "name": "xtal-element",
   "version": "0.0.165",
-  "description": "An opinionated web component base class.",
+  "description": "Some opinionated web component base classes.",
   "main": "XtalElement.js",
   "module": "XtalElement.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node node_modules/xtal-test/serve.js"
+    "serve": "node node_modules/xtal-test/serve.js",
+    "start": "es-dev-server --app-index demo/counter-x.html --node-resolve --watch --open"
   },
   "dependencies": {
     "trans-render": "0.0.182"
   },
   "devDependencies": {
     "es-module-shims": "0.4.6",
-    "xtal-test": "0.0.44"
+    "xtal-test": "0.0.44",
+    "es-dev-server": "1.50.6"
   },
   "repository": {
     "type": "git",

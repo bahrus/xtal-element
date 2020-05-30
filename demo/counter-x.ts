@@ -27,7 +27,7 @@ const template = /* html */`
 `;
 
 const [span$] = [Symbol('span')];
-export abstract class MM extends X{
+export abstract class CounterX extends X{
     count = 0;
 
     changeCount(delta: number){
@@ -35,14 +35,14 @@ export abstract class MM extends X{
     }
 }
 
-X.tend<MM>({
-    name: 'm-m',
-    class: MM,
+X.tend<CounterX>({
+    name: 'counter-x',
+    class: CounterX,
     main: template,
     attributeProps: ({count}) => ({num:[count]}),
-    initTransform: ({changeCount} : MM) => ({
-        button:[,{click:[changeCount, 'dataset.d', parseInt]}] as any as PESettings<MM>, //TODO remove any
+    initTransform: ({changeCount} : CounterX) => ({
+        button:[,{click:[changeCount, 'dataset.d', parseInt]}] as any as PESettings<CounterX>, //TODO remove any
         span: span$,
     }) as TransformRules,
-    updateTransforms:[ ({count}: MM) => ({[span$]: count.toString()})]
+    updateTransforms:[ ({count}: CounterX) => ({[span$]: count.toString()})]
 })

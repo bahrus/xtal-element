@@ -23,7 +23,7 @@ const template = /* html */ `
 </style>
 `;
 const [span$] = [Symbol('span')];
-export class MM extends X {
+export class CounterX extends X {
     constructor() {
         super(...arguments);
         this.count = 0;
@@ -33,8 +33,8 @@ export class MM extends X {
     }
 }
 X.tend({
-    name: 'm-m',
-    class: MM,
+    name: 'counter-x',
+    class: CounterX,
     main: template,
     attributeProps: ({ count }) => ({ num: [count] }),
     initTransform: ({ changeCount }) => ({
