@@ -8,11 +8,11 @@ export function lispToCamel(s: string){
 }
 
 const ctlRe = /[\w]([A-Z])/g;
-function camelToLisp(s: string) {
-       return s.replace(ctlRe, function(m) {
-           return m[0] + "-" + m[1];
-       }).toLowerCase();
-   }
+export function camelToLisp(s: string) {
+    return s.replace(ctlRe, function(m) {
+        return m[0] + "-" + m[1];
+    }).toLowerCase();
+}
 
 type keys = keyof EvaluatedAttributeProps;
 const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug'];

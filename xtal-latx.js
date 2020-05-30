@@ -4,7 +4,7 @@ export function lispToCamel(s) {
     return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
 }
 const ctlRe = /[\w]([A-Z])/g;
-function camelToLisp(s) {
+export function camelToLisp(s) {
     return s.replace(ctlRe, function (m) {
         return m[0] + "-" + m[1];
     }).toLowerCase();
