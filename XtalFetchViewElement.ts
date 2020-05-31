@@ -1,7 +1,8 @@
 import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
 import {AttributeProps} from './types.d.js';
 import { disabled } from '../trans-render/hydrate.js';
-export {define} from './xtal-latx.js';
+export {define, mergeProps} from './xtal-latx.js';
+export {AttributeProps} from './types.d.js';
 
 export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel>{
 

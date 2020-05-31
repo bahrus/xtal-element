@@ -4,6 +4,7 @@ import {hydrate} from 'trans-render/hydrate.js';
 import {init} from 'trans-render/init.js';
 import {update} from 'trans-render/update.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate, TransformGetter} from './types.d.js';
+export {AttributeProps} from './types.d.js';
 export {define} from './xtal-latx.js';
 
 const deconstructed = Symbol();

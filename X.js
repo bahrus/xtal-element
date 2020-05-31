@@ -2,15 +2,18 @@ import { XtalElement, define } from './XtalElement.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
 export class X extends XtalElement {
     static tend(args) {
-        class newClass extends args.class {
-            constructor() {
-                super(...arguments);
-                this.readyToInit = true;
-                this.readyToRender = true;
+        let newClass = /** @class */ (() => {
+            class newClass extends args.class {
+                constructor() {
+                    super(...arguments);
+                    this.readyToInit = true;
+                    this.readyToRender = true;
+                }
             }
-        }
-        newClass.is = args.name;
-        newClass.attributeProps = args.attributeProps;
+            newClass.is = args.name;
+            newClass.attributeProps = args.attributeProps;
+            return newClass;
+        })();
         const p = newClass.prototype;
         p.initTransform = args.initTransform;
         p.updateTransforms = args.updateTransforms;

@@ -1,6 +1,6 @@
 import { XtalElement } from './XtalElement.js';
 import { deconstruct, intersection } from './xtal-latx.js';
-export { define } from './xtal-latx.js';
+export { define, mergeProps } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
@@ -20,6 +20,7 @@ export class XtalRoomWithAView extends XtalElement {
     }
     #controller;
     onPropsChange(name) {
+        super.onPropsChange(name);
         if (super._disabled || !this._connected || !this.readyToInit)
             return false;
         switch (this._state) {
@@ -37,7 +38,6 @@ export class XtalRoomWithAView extends XtalElement {
                 this.doViewUpdate();
                 break;
         }
-        super.onPropsChange(name);
     }
     doViewUpdate() {
         //untested

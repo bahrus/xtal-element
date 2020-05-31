@@ -1,6 +1,7 @@
 import {XtalElement} from './XtalElement.js';
 import {deconstruct, intersection} from './xtal-latx.js';
-export {define} from './xtal-latx.js';
+export {define, mergeProps} from './xtal-latx.js';
+export {AttributeProps} from './types.d.js';
 
 
 export type PromisedInitViewAngle<TBase, InitViewModel = any, UpdateViewModel = InitViewModel> 
@@ -39,6 +40,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
     signal: AbortSignal;
 
     onPropsChange(name: string) {
+        super.onPropsChange(name);
         if(super._disabled || !this._connected || !this.readyToInit) return false;
         switch(this._state){
             case 'constructed':
@@ -54,10 +56,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
             case 'initialized':
                 this.doViewUpdate();
                 break;
-
-            
         }
-        super.onPropsChange(name);
     }
 
     doViewUpdate(){
