@@ -1,6 +1,5 @@
 import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
 import {AttributeProps} from './types.d.js';
-import { disabled } from '../trans-render/hydrate.js';
 export {define, mergeProps} from './xtal-latx.js';
 export {AttributeProps} from './types.d.js';
 

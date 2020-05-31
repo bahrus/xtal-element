@@ -1,4 +1,3 @@
-import {hydrate, disabled} from 'trans-render/hydrate.js';
 import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps, PropAction} from './types.d.js';
 
@@ -216,7 +215,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }else{
                 this._propActionQueue.add(name);
             }
-            if(this._disabled || !this.isConnected){
+            if(this.disabled || !this.isConnected){
                 return;
             };
             this.processActionQueue();

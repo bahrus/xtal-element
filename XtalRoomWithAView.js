@@ -21,7 +21,7 @@ export class XtalRoomWithAView extends XtalElement {
     #controller;
     onPropsChange(name) {
         super.onPropsChange(name);
-        if (super._disabled || !this._connected || !this.readyToInit)
+        if (super.disabled || !this.isConnected || !this.readyToInit)
             return false;
         switch (this._state) {
             case 'constructed':

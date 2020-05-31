@@ -179,7 +179,7 @@ export function XtallatX(superClass) {
                 else {
                     this._propActionQueue.add(name);
                 }
-                if (this._disabled || !this.isConnected) {
+                if (this.disabled || !this.isConnected) {
                     return;
                 }
                 ;
