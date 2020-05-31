@@ -19,7 +19,6 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         return this._renderOptions;
     }
 
-
     abstract mainTemplate: HTMLTemplateElement;
 
     abstract initTransform: TransformRules | TransformGetter ;

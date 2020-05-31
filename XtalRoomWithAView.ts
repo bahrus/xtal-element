@@ -1,5 +1,6 @@
 import {XtalElement} from './XtalElement.js';
 import {deconstruct, intersection} from './xtal-latx.js';
+export {define} from './xtal-latx.js';
 
 export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> 
     = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
@@ -15,7 +16,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
 
     constructor(){
         super();
-        this.#state = 'constructed';
+        this._state = 'constructed';
         this.#controller = new AbortController();
         this.signal = this.#controller.signal;
     }
@@ -32,20 +33,20 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
         this.onPropsChange('viewModel')
     }
 
-    #state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
+    _state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
     #controller: AbortController;
     signal: AbortSignal;
 
     onPropsChange(name: string) {
         if(super._disabled || !this._connected || !this.readyToInit) return false;
-        switch(this.#state){
+        switch(this._state){
             case 'constructed':
-                this.#state = 'initializing';
+                this._state = 'initializing';
                 this.initViewModel(this).then(model =>{
-                    this.#state = 'initialized';
+                    this._state = 'initialized';
                     this.viewModel = model;
                 });
-                this.#state = 'initializing';
+                this._state = 'initializing';
                 return;
             case 'initializing':
                 break; 
@@ -67,7 +68,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
                 const dependencySet = new Set<string>(dependencies);
                 if(intersection(this._propChangeQueue, dependencySet).size > 0){
                     angle(this).then(model =>{
-                        this.#state = 'updated';
+                        this._state = 'updated';
                         this.viewModel = model;
                     })
                 }

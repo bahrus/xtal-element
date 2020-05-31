@@ -1,8 +1,8 @@
-import { XtalRoomWithAView } from '../XtalRoomWithAView.js';
+import { XtalRoomWithAView, define } from '../XtalRoomWithAView.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
 const template = createTemplate(
 /* html */ `<div></div>`);
-export class MinimalView extends XtalRoomWithAView {
+export class CounterXtalRoomWithAView extends XtalRoomWithAView {
     constructor() {
         super(...arguments);
         this.readyToInit = true;
@@ -29,4 +29,5 @@ export class MinimalView extends XtalRoomWithAView {
         this.onPropsChange('viewModel');
     }
 }
-customElements.define('mini-mal-view', MinimalView);
+CounterXtalRoomWithAView.is = 'counter-xtal-room-with-a-view';
+define(CounterXtalRoomWithAView);

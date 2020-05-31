@@ -1,9 +1,10 @@
 import { XtalElement } from './XtalElement.js';
 import { deconstruct, intersection } from './xtal-latx.js';
+export { define } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
-        this.#state = 'constructed';
+        this._state = 'constructed';
         this.#controller = new AbortController();
         this.signal = this.#controller.signal;
     }
@@ -17,19 +18,18 @@ export class XtalRoomWithAView extends XtalElement {
         });
         this.onPropsChange('viewModel');
     }
-    #state;
     #controller;
     onPropsChange(name) {
         if (super._disabled || !this._connected || !this.readyToInit)
             return false;
-        switch (this.#state) {
+        switch (this._state) {
             case 'constructed':
-                this.#state = 'initializing';
+                this._state = 'initializing';
                 this.initViewModel(this).then(model => {
-                    this.#state = 'initialized';
+                    this._state = 'initialized';
                     this.viewModel = model;
                 });
-                this.#state = 'initializing';
+                this._state = 'initializing';
                 return;
             case 'initializing':
                 break;
@@ -48,7 +48,7 @@ export class XtalRoomWithAView extends XtalElement {
                 const dependencySet = new Set(dependencies);
                 if (intersection(this._propChangeQueue, dependencySet).size > 0) {
                     angle(this).then(model => {
-                        this.#state = 'updated';
+                        this._state = 'updated';
                         this.viewModel = model;
                     });
                 }

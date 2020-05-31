@@ -1,12 +1,14 @@
-import {XtalRoomWithAView} from '../XtalRoomWithAView.js';
+import {XtalRoomWithAView, define} from '../XtalRoomWithAView.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {SelectiveUpdate, TransformRules, PESettings} from '../types.d.js';
+import {TransformRules, PESettings} from '../types.js';
 
 const template = createTemplate(
     /* html */`<div></div>`
 );
 
-export class MinimalView extends XtalRoomWithAView<[string, number]>{
+export class CounterXtalRoomWithAView extends XtalRoomWithAView<[string, number]>{
+
+    static is = 'counter-xtal-room-with-a-view';
 
     readyToInit = true
 
@@ -23,10 +25,10 @@ export class MinimalView extends XtalRoomWithAView<[string, number]>{
     };
 
     updateTransforms = [
-        ({viewModel} : MinimalView) => ({
+        ({viewModel} : CounterXtalRoomWithAView) => ({
             div: `${this.viewModel[0]}  ${this.viewModel[1]}`
         })  as TransformRules
-    ]  as SelectiveUpdate[];
+    ];
     
     updateTransform = () => ({
         div: `${this.viewModel[0]}  ${this.viewModel[1]}`,
@@ -37,8 +39,6 @@ export class MinimalView extends XtalRoomWithAView<[string, number]>{
         this.viewModel[0] = "Live long and prosper.";
         this.onPropsChange('viewModel');
     }
-        
-
 
 }
-customElements.define('mini-mal-view', MinimalView);
+define(CounterXtalRoomWithAView);

@@ -1,7 +1,6 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
 import {XtalElement, define} from '../XtalElement.js';
-import {AttributeProps} from '../types.js';
-import {PESettings} from 'trans-render/types.d.js';
+import {AttributeProps, PESettings} from '../types.js';
 
 const mainTemplate = createTemplate(/* html */`
 <button data-d=-1>-</button><span></span><button data-d=1>+</button>
@@ -46,10 +45,12 @@ export class CounterXtalElement extends XtalElement{
 
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
+    //A check is made to this field / getter property anytime a declared property changes.
     readyToInit = true;
 
     //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
     //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
+    //A check is made to this field / getter property anytime a declared property changes.
     readyToRender = true;
 
     //XtalElement is intended for visual elements only.
