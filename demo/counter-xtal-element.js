@@ -32,9 +32,11 @@ export class CounterXtalElement extends XtalElement {
         super(...arguments);
         //This property / field allows the developer to wait for some required 
         //properties to be set before doing anything.
+        //A check is made to this field / getter property anytime a declared property changes.
         this.readyToInit = true;
         //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
         //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
+        //A check is made to this field / getter property anytime a declared property changes.
         this.readyToRender = true;
         //XtalElement is intended for visual elements only.
         //Templates need to be stored outside instances of web components for 

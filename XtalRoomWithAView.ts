@@ -2,16 +2,17 @@ import {XtalElement} from './XtalElement.js';
 import {deconstruct, intersection} from './xtal-latx.js';
 export {define} from './xtal-latx.js';
 
-export type PromisedInitViewAngle<InitViewModel = any, UpdateViewModel = InitViewModel> 
-    = (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
+
+export type PromisedInitViewAngle<TBase, InitViewModel = any, UpdateViewModel = InitViewModel> 
+    = (room: TBase) => Promise<InitViewModel>;
     
-export type PromisedUpdateViewAngles<InitViewModel = any, UpdateViewModel = InitViewModel> 
-    =  (room: XtalRoomWithAView<InitViewModel, UpdateViewModel>) => Promise<InitViewModel>;
+export type PromisedUpdateViewAngles<TBase, InitViewModel = any, UpdateViewModel = InitViewModel> 
+    =  (room: TBase) => Promise<UpdateViewModel>;
 
 export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
     
-    abstract initViewModel: PromisedInitViewAngle<InitViewModel, UpdateViewModel>;
-    updateViewModel: undefined | PromisedUpdateViewAngles<InitViewModel, UpdateViewModel>[];
+    abstract initViewModel: PromisedInitViewAngle<this, InitViewModel, UpdateViewModel>;
+    updateViewModel: undefined | PromisedUpdateViewAngles<this, InitViewModel, UpdateViewModel>[];
 
 
     constructor(){
