@@ -7,12 +7,10 @@ const deconstructed = Symbol();
 export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super(...arguments);
+        this.noShadow = false;
         this._renderOptions = {};
         this._mainTemplateProp = 'mainTemplate';
         this._propChangeQueue = new Set();
-    }
-    get noShadow() {
-        return false;
     }
     get renderOptions() {
         return this._renderOptions;

@@ -11,9 +11,7 @@ const deconstructed = Symbol();
 
 export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
-    get noShadow(){
-        return false;
-    }
+    noShadow = false;
 
     _renderOptions = {} as RenderOptions;
     get renderOptions() : RenderOptions{
