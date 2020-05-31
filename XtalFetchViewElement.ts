@@ -6,6 +6,8 @@ export {AttributeProps} from './types.d.js';
 
 export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel>{
 
+    static is = 'xtal-fetch-view-element';
+
     static propAttributes = ({href, reqInit, reqInitRequired} : XtalFetchViewElement) => ({
         str: [href],
         obj: [reqInit],

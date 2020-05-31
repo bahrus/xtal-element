@@ -22,6 +22,7 @@ let XtalFetchViewElement = /** @class */ (() => {
         }
         get readyToInit() { return !this.disabled && this.href !== undefined && (!this.reqInitRequired || this.reqInit !== undefined); }
     }
+    XtalFetchViewElement.is = 'xtal-fetch-view-element';
     XtalFetchViewElement.propAttributes = ({ href, reqInit, reqInitRequired }) => ({
         str: [href],
         obj: [reqInit],
