@@ -1,4 +1,3 @@
-import { disabled } from 'trans-render/hydrate.js';
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s) {
     return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
@@ -180,7 +179,7 @@ export function XtallatX(superClass) {
                 else {
                     this._propActionQueue.add(name);
                 }
-                if (this._disabled || !this._connected) {
+                if (this._disabled || !this.isConnected) {
                     return;
                 }
                 ;
@@ -218,10 +217,7 @@ export function XtallatX(superClass) {
                 this.onPropsChange(propName);
             }
             connectedCallback() {
-                this._connected = true;
-                const ep = this.constructor.props;
-                this.propUp([...ep.bool, ...ep.str, ...ep.num, ...ep.obj]);
-                this.onPropsChange(disabled);
+                super.connectedCallback();
             }
             /**
              * Dispatch Custom Event
@@ -230,6 +226,8 @@ export function XtallatX(superClass) {
              * @param asIs If true, don't append event name with '-changed'
              */
             de(name, detail, asIs = false, bubbles = false) {
+                if (this.disabled)
+                    return;
                 const eventName = name + (asIs ? '' : '-changed');
                 const newEvent = new CustomEvent(eventName, {
                     detail: detail,

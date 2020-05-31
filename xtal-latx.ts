@@ -130,7 +130,7 @@ export interface IXtallatXI extends IHydrate {
      * @param detail Information to be passed with the event
      * @param asIs If true, don't append event name with '-changed'
      */
-    de(name: string, detail: any, asIs?: boolean): CustomEvent;
+    de(name: string, detail: any, asIs?: boolean): CustomEvent | void;
     /**
      * Needed for asynchronous loading
      * @param props Array of property names to "upgrade", without losing value set while element was Unknown
@@ -216,7 +216,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }else{
                 this._propActionQueue.add(name);
             }
-            if(this._disabled || !this._connected){
+            if(this._disabled || !this.isConnected){
                 return;
             };
             this.processActionQueue();
@@ -250,12 +250,10 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             this.onPropsChange(propName);
         }
         self = this;
-        _connected!: boolean;
+        
         connectedCallback(){
-            this._connected = true;
-            const ep = (<any>this.constructor).props as EvaluatedAttributeProps;
-            this.propUp([...ep.bool, ...ep.str, ...ep.num, ...ep.obj]);
-            this.onPropsChange(disabled);
+            super.connectedCallback();
+
         }
 
         /**
@@ -265,6 +263,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param asIs If true, don't append event name with '-changed'
          */
         de(name: string, detail: any, asIs: boolean = false, bubbles: boolean = false) {
+            if(this.disabled) return;
             const eventName = name + (asIs ? '' : '-changed');
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
