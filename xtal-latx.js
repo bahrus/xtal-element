@@ -68,7 +68,7 @@ export function define(MyElementClass) {
                         return;
                 }
                 const c2l = camelToLisp(prop);
-                if (this.isConnected && propInfo.reflect) {
+                if (propInfo.reflect) {
                     if (this[ignoreAttrKey] === undefined)
                         this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
