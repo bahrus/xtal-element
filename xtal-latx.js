@@ -218,9 +218,9 @@ export function XtallatX(superClass) {
                 this.onPropsChange(propName);
             }
             connectedCallback() {
+                this._connected = true;
                 const ep = this.constructor.props;
                 this.propUp([...ep.bool, ...ep.str, ...ep.num, ...ep.obj]);
-                this._connected = true;
                 this.onPropsChange(disabled);
             }
             /**
