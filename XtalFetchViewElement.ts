@@ -8,7 +8,7 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
 
     static is = 'xtal-fetch-view-element';
 
-    static propAttributes = ({href, reqInit, reqInitRequired} : XtalFetchViewElement) => ({
+    static attributeProps = ({href, reqInit, reqInitRequired} : XtalFetchViewElement) => ({
         str: [href],
         obj: [reqInit],
         jsonProp: [reqInit],
