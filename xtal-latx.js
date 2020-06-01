@@ -217,7 +217,8 @@ export function XtallatX(superClass) {
                 this.onPropsChange(propName);
             }
             connectedCallback() {
-                super.connectedCallback();
+                if (super.connectedCallback)
+                    super.connectedCallback();
             }
             /**
              * Dispatch Custom Event
