@@ -40,15 +40,17 @@ export function observeCssSelector(superClass) {
                 container.addEventListener(name, this._boundInsertListener, false);
             });
         }
-        disconnectedCallback() {
+        disconnect() {
             if (this._boundInsertListener) {
-                //const host = <any>getShadowContainer((<any>this as HTMLElement));
                 const hostIsShadow = this._host.localName !== 'html';
                 const container = hostIsShadow ? this._host : document;
                 eventNames.forEach(name => {
                     container.removeEventListener(name, this._boundInsertListener);
                 });
             }
+        }
+        disconnectedCallback() {
+            this.disconnect();
             if (super.disconnectedCallback !== undefined)
                 super.disconnectedCallback();
         }
