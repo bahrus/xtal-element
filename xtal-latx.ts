@@ -252,6 +252,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         
         connectedCallback(){
             if(super.connectedCallback) super.connectedCallback();
+            this.processActionQueue();
         }
 
         /**

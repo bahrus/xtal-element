@@ -219,6 +219,7 @@ export function XtallatX(superClass) {
             connectedCallback() {
                 if (super.connectedCallback)
                     super.connectedCallback();
+                this.processActionQueue();
             }
             /**
              * Dispatch Custom Event
