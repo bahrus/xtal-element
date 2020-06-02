@@ -40,7 +40,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
     signal: AbortSignal;
 
     onPropsChange(name: string) {
-        super.onPropsChange(name);
+        super.onPropsChange(name, this.viewModel === undefined);
         if(super.disabled || !this.isConnected || !this.readyToInit) return false;
         switch(this._state){
             case 'constructed':

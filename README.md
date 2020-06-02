@@ -335,7 +335,7 @@ import {AttributeProps, EvaluatedAttributeProps} from 'xtal-element/types.d.js';
 ...
 export class MyBar extends MyFoo{
     ...
-    static attributeProps = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : XtalFetchReq) => {
+    static attributeProps: any = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : XtalFetchReq) => {
         const ap = {
             bool: [reqInitRequired, insertResults],
             str: [cacheResults],

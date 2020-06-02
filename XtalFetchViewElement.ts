@@ -7,13 +7,13 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
 
     static is = 'xtal-fetch-view-element';
 
-    static attributeProps = ({href, reqInit, reqInitRequired} : XtalFetchViewElement) => ({
+    static attributeProps : any = ({href, reqInit, reqInitRequired} : XtalFetchViewElement) => ({
         str: [href],
         obj: [reqInit],
         jsonProp: [reqInit],
         bool: [reqInitRequired],
         reflect:[href, reqInitRequired]
-    } as AttributeProps)
+    } as AttributeProps);
 
     filterInitData(data: any){
         return data as TInitViewModel;

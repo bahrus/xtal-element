@@ -71,7 +71,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             this._propChangeQueue = new Set();
         }
     }
-    onPropsChange(name) {
+    onPropsChange(name, skipTransform = false) {
         super.onPropsChange(name);
         if (Array.isArray(name)) {
             name.forEach(subName => this._propChangeQueue.add(subName));
@@ -83,6 +83,8 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             return;
         }
         ;
-        this.transform();
+        if (!skipTransform) {
+            this.transform();
+        }
     }
 }

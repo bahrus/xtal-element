@@ -92,8 +92,8 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     }
 
     _propChangeQueue: Set<string> = new Set();
-    onPropsChange(name: string | string[]) {
-        super.onPropsChange(name)
+    onPropsChange(name: string | string[], skipTransform = false) {
+        super.onPropsChange(name);
         if(Array.isArray(name)){
             name.forEach(subName => this._propChangeQueue.add(subName));
         }else{
@@ -103,7 +103,10 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         if(this.disabled || !this.isConnected || !this.readyToInit){
             return;
         };
-        this.transform();
+        if(!skipTransform){
+            this.transform();
+        }
+        
     }
 
 }
