@@ -100,7 +100,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             this._propChangeQueue.add(name);
         }
         
-        if(this.disabled || !this.isConnected || !this.readyToInit){
+        if(this.disabled || !this._xlConnected || !this.readyToInit){
             return;
         };
         if(!skipTransform){

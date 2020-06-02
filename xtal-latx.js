@@ -126,6 +126,7 @@ export function XtallatX(superClass) {
                  */
                 this.evCount = {};
                 this.self = this;
+                this._xlConnected = false;
                 this._propActionQueue = new Set();
             }
             static get evalPath() {
@@ -179,7 +180,7 @@ export function XtallatX(superClass) {
                 else {
                     this._propActionQueue.add(name);
                 }
-                if (this.disabled || !this.isConnected) {
+                if (this.disabled || !this._xlConnected) {
                     return;
                 }
                 ;
@@ -220,6 +221,7 @@ export function XtallatX(superClass) {
                 if (super.connectedCallback)
                     super.connectedCallback();
                 this.processActionQueue();
+                this._xlConnected = true;
             }
             /**
              * Dispatch Custom Event

@@ -41,7 +41,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
 
     onPropsChange(name: string) {
         super.onPropsChange(name, this.viewModel === undefined);
-        if(super.disabled || !this.isConnected || !this.readyToInit) return false;
+        if(super.disabled || !this._xlConnected || !this.readyToInit) return false;
         switch(this._state){
             case 'constructed':
                 this._state = 'initializing';

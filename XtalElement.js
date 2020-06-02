@@ -79,7 +79,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         else {
             this._propChangeQueue.add(name);
         }
-        if (this.disabled || !this.isConnected || !this.readyToInit) {
+        if (this.disabled || !this._xlConnected || !this.readyToInit) {
             return;
         }
         ;

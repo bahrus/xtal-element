@@ -215,7 +215,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }else{
                 this._propActionQueue.add(name);
             }
-            if(this.disabled || !this.isConnected){
+            if(this.disabled || !this._xlConnected){
                 return;
             };
             this.processActionQueue();
@@ -250,9 +250,11 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         self = this;
         
+        _xlConnected = false;
         connectedCallback(){
             if(super.connectedCallback) super.connectedCallback();
             this.processActionQueue();
+            this._xlConnected = true;
         }
 
         /**
