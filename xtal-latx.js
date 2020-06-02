@@ -220,8 +220,8 @@ export function XtallatX(superClass) {
             connectedCallback() {
                 if (super.connectedCallback)
                     super.connectedCallback();
-                this.processActionQueue();
                 this._xlConnected = true;
+                this.processActionQueue();
             }
             /**
              * Dispatch Custom Event
