@@ -222,6 +222,7 @@ export function XtallatX(superClass) {
                     super.connectedCallback();
                 this._xlConnected = true;
                 this.processActionQueue();
+                this.onPropsChange('');
             }
             /**
              * Dispatch Custom Event

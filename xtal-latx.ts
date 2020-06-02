@@ -255,7 +255,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             if(super.connectedCallback) super.connectedCallback();
             this._xlConnected = true;
             this.processActionQueue();
-            
+            this.onPropsChange('');
         }
 
         /**
