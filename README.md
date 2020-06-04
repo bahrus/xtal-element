@@ -457,11 +457,12 @@ export class MyCustomElement extends XtalElement{
         ({prop1, prop2, prop3, self}) => {
             self.prop4 = prop1 + prop2 + prop3;
         }
-    ]
+    ];
     propActions = MyCustomElement.propActions;
 }
 ```
 
+Another benefit of "bunching together" property change actions is that if there is an asynchronous workflow added (TODO), then rather than evaluating this action 3 times, it will only be evaluated once, with the same result.
 
 ## Inheritance overindulgence?
 
