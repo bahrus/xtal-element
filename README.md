@@ -441,8 +441,8 @@ export class MyCustomElement extends XtalElement{
     prop3 = 'myValue3';
     prop4;
     propActions = [
-        ({myProp1, myProp2, myprop3, self}) => {
-            self.prop4 = self.prop1 + self.prop2 + self.prop3;
+        ({prop1, prop2, prop3, self}) => {
+            self.prop4 = prop1 + prop2 + prop3;
         }
     ]
     ...
@@ -454,15 +454,14 @@ Here, "self" is another name for "this" -- inspired by Python.  But because it d
 ```js
 export class MyCustomElement extends XtalElement{
     static propActions = [
-        ({myProp1, myProp2, myprop3, self}) => {
-            self.prop4 = self.prop1 + self.prop2 + self.prop3;
+        ({prop1, prop2, prop3, self}) => {
+            self.prop4 = prop1 + prop2 + prop3;
         }
     ]
     propActions = MyCustomElement.propActions;
 }
 ```
 
-Note that, like 
 
 ## Inheritance overindulgence?
 
