@@ -36,6 +36,7 @@ export function intersection(setA, setB) {
 const ignorePropKey = Symbol();
 const ignoreAttrKey = Symbol();
 const propInfoSym = Symbol('propInfo');
+const atrInit = Symbol('atrInit');
 export function define(MyElementClass) {
     const props = MyElementClass.props;
     const proto = MyElementClass.prototype;
@@ -69,6 +70,9 @@ export function define(MyElementClass) {
                 }
                 const c2l = camelToLisp(prop);
                 if (propInfo.reflect) {
+                    //experimental line -- we want the attribute to take precedence over default value.
+                    if (this[atrInit] === undefined && this.hasAttribute(c2l))
+                        return;
                     if (this[ignoreAttrKey] === undefined)
                         this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
@@ -187,6 +191,7 @@ export function XtallatX(superClass) {
                 this.processActionQueue();
             }
             attributeChangedCallback(n, ov, nv) {
+                this[atrInit] = true; // track each attribute?
                 const ik = this[ignoreAttrKey];
                 if (ik !== undefined && ik[n] === true) {
                     delete ik[n];

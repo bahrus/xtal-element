@@ -57,6 +57,7 @@ interface PropInfo{
     debug: boolean;
 }
 const propInfoSym = Symbol('propInfo');
+const atrInit = Symbol('atrInit');
 export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
@@ -89,6 +90,8 @@ export function define(MyElementClass: any){
                 }
                 const c2l = camelToLisp(prop);
                 if(propInfo.reflect){
+                    //experimental line -- we want the attribute to take precedence over default value.
+                    if(this[atrInit] === undefined && this.hasAttribute(c2l)) return;
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
                     if(propInfo.bool){
@@ -221,6 +224,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             this.processActionQueue();
         }
         attributeChangedCallback(n: string, ov: string, nv: string) {
+            (<any>this)[atrInit] = true; // track each attribute?
             const ik = (<any>this)[ignoreAttrKey];
             if(ik !== undefined && ik[n] === true){
                 delete ik[n];
