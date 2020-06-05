@@ -9,7 +9,7 @@ export function camelToLisp(s) {
         return m[0] + "-" + m[1];
     }).toLowerCase();
 }
-const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug'];
+const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async'];
 const argList = Symbol('argList');
 export function deconstruct(fn) {
     if (fn[argList] === undefined) {
@@ -181,17 +181,32 @@ export function XtallatX(superClass) {
                 this.attr('data-' + name, this.to$(ec[name]));
             }
             onPropsChange(name) {
+                let isAsync = false;
+                const propInfoLookup = this.constructor[propInfoSym];
                 if (Array.isArray(name)) {
-                    name.forEach(subName => this._propActionQueue.add(subName));
+                    name.forEach(subName => {
+                        this._propActionQueue.add(subName);
+                        const propInfo = propInfoLookup[subName];
+                        if (propInfo !== undefined && propInfo.async)
+                            isAsync = true;
+                    });
                 }
                 else {
                     this._propActionQueue.add(name);
+                    const propInfo = propInfoLookup[name];
+                    if (propInfo !== undefined && propInfo.async)
+                        isAsync = true;
                 }
                 if (this.disabled || !this._xlConnected) {
                     return;
                 }
                 ;
-                this[propActionsDebouncer]();
+                if (isAsync) {
+                    this[propActionsDebouncer]();
+                }
+                else {
+                    this.processActionQueue();
+                }
             }
             attributeChangedCallback(n, ov, nv) {
                 this[atrInit] = true; // track each attribute?

@@ -15,7 +15,7 @@ export function camelToLisp(s: string) {
 }
 
 type keys = keyof EvaluatedAttributeProps;
-const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug'];
+const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async'];
 const argList = Symbol('argList');
 export function deconstruct(fn: Function){
     if((<any>fn)[argList] === undefined){
@@ -56,6 +56,7 @@ interface PropInfo{
     dry: boolean;
     log: boolean;
     debug: boolean;
+    async: boolean;
 }
 const propInfoSym = Symbol('propInfo');
 const atrInit = Symbol('atrInit');
@@ -216,15 +217,28 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             this.attr('data-' + name, this.to$(ec[name]));
         }
         onPropsChange(name: string | string[]) {
+            let isAsync = false;
+            const propInfoLookup = (<any>this.constructor)[propInfoSym] as {[key: string]: PropInfo};
             if(Array.isArray(name)){
-                name.forEach(subName => this._propActionQueue.add(subName));
+                name.forEach(subName => {
+                    this._propActionQueue.add(subName);
+                    const propInfo = propInfoLookup[subName];
+                    if(propInfo !== undefined && propInfo.async) isAsync = true;
+                });
             }else{
                 this._propActionQueue.add(name);
+                const propInfo = propInfoLookup[name];
+                if(propInfo !== undefined && propInfo.async) isAsync = true;
             }
             if(this.disabled || !this._xlConnected){
                 return;
             };
-            this[propActionsDebouncer]();
+            if(isAsync){
+                this[propActionsDebouncer]();
+            }else{
+                this.processActionQueue();
+            }
+            
         }
         attributeChangedCallback(n: string, ov: string, nv: string) {
             (<any>this)[atrInit] = true; // track each attribute?

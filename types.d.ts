@@ -18,6 +18,7 @@ export interface AttributeProps{
     dry?: any[];
     log?: any[];
     debug?: any[];
+    async?: any[];
 }
 
 
