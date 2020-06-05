@@ -368,9 +368,9 @@ export class MyCustomElement extends XtalElement{
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
-If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you.
+If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by XtalElement's trans-rendering approach.
 
-Anything fancier, and you have to add logic like this:
+But the need to do different types of things when properties changed isn't limited to these two common requirements.  So typically, you then have to add logic like this:
 
 ```js
 export class MyCustomElement extends XtalElement{
@@ -381,49 +381,53 @@ export class MyCustomElement extends XtalElement{
     set myProp(nv){
         this._myProp;
         //do my special logic
+
+        //Don't forget to make the call below, so everything is in sync:
         this.onPropsChange('myProp');
     }
 }
 ```
 
-which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no debouncing / microtasking support out of the box etc [**NB** Adding debouncing / microtasking support into XtalElement is a TODO item]:
+which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no debouncing support out of the box etc.:
 
 ```js
 export class MyCustomElement extends XtalElement{
+    
     ...
-    _myProp1 = 'myValue1';
-    get myProp1(){
+    _prop1 = 'myValue1';
+    get prop1(){
         return this._myProp;
     }
-    set myProp1(nv){
-        this._myProp1;
+    set prop1(nv){
+        this._prop1 = nv;
         this.handleChanges();
-        this.onPropsChange('myProp1');
+        this.onPropsChange('prop1');
     }
 
-    _myProp2 = 'myValue2';
-    get myProp2(){
-        return this._myProp;
+    _prop2 = 'myValue2';
+    get prop2(){
+        return this._prop2;
     }
-    set myProp2(nv){
-        this._myProp2;
+    set prop2(nv){
+        this.prop2 = nv;
         this.handleChanges();
-        this.onPropsChange('myProp2');
+        this.onPropsChange('prop2');
     }
 
-    _myProp3 = 'myValue3';
-    get myProp3(){
-        return this._myProp3;
+    _prop3 = 'myValue3';
+    get prop3(){
+        return this._prop3;
     }
-    set myProp3(nv){
-        this._myProp3;
+    set prop3(nv){
+        this._prop3 = nv;
         this.handleChanges();
-        this.onPropsChange('myProp3');
+        this.onPropsChange('prop3');
     }
 
     prop4;
 
     handleChanges(){
+        //TODO:  debouncing
         this.prop4 = this.prop1 + this.prop2 + this.prop3;
     }
 }
@@ -435,6 +439,9 @@ To make the code above easier to manage, you can stick with simple fields for al
 
 ```js
 export class MyCustomElement extends XtalElement{
+    static attributeProps ({prop1, prop2, prop3} : XtalFetchReq) => ({
+        str: [prop1, prop2, prop3]
+    });
     ...
     prop1 = 'myValue1';
     prop2 = 'myValue2';
@@ -453,6 +460,12 @@ Here, "self" is another name for "this" -- inspired by Python.  But because it d
 
 ```js
 export class MyCustomElement extends XtalElement{
+    ...
+    prop1 = 'myValue1';
+    prop2 = 'myValue2';
+    prop3 = 'myValue3';
+    prop4;
+
     static propActions = [
         ({prop1, prop2, prop3, self}) => {
             self.prop4 = prop1 + prop2 + prop3;
@@ -462,13 +475,13 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Another benefit of "bunching together" property change actions is that if there is an asynchronous workflow added (TODO), then rather than evaluating this action 3 times, it will only be evaluated once, with the same result.
+Another benefit of "bunching together" property change actions is because XtalElement uses an asynchronous workflow, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.
 
 ## Inheritance overindulgence?
 
 By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever it pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
 
-But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, tries to make it easy to tweak the rendered output, compared with more traditional rendering methods.  
+But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, tries to make it easy for inheriting subclasses to tweak the rendered output, compared with more traditional rendering methods.  
 
 XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
@@ -492,7 +505,7 @@ XtalRoomWithAView extends XtalElement, but adds a pattern for retrieving a depen
 
 I am hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which empowers developers with some of the same machinery available to browser vendors when they implement internal components.  If it does, XtalRoomWithAView will certainly take advantage of that promising sounding feature. 
 
-For now, XtalRoomWithAView also conveys state changes via data-* attributes. The attribute changes will likely be removed once (if?) the proposal above lands[TODO].
+For now, XtalRoomWithAView also conveys state changes via data-* attributes, so that styling effects can be put into place. The attribute changes will likely be removed once (if?) the proposal above lands[TODO].
 
 XtalRoomWithAView also supports something that may only be applicable 33.7% of the time.  Recall that XtalElement sees a strong case for separating initialization from updating, as far as rendering. Likewise, sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
 

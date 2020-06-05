@@ -1,5 +1,6 @@
 import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps, PropAction} from './types.d.js';
+import {debounce} from './debounce.js';
 
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
@@ -150,6 +151,8 @@ export function mergeProps(props1: EvaluatedAttributeProps | AttributeProps, pro
     return returnObj as EvaluatedAttributeProps;
 }
 
+const _propActionsDebouncer = Symbol();
+const propActionsDebouncer = Symbol();
 type Constructor<T = {}> = new (...args: any[]) => T;
 /**
  * Base class for many xtal- components
@@ -221,7 +224,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             if(this.disabled || !this._xlConnected){
                 return;
             };
-            this.processActionQueue();
+            this[propActionsDebouncer]();
         }
         attributeChangedCallback(n: string, ov: string, nv: string) {
             (<any>this)[atrInit] = true; // track each attribute?
@@ -258,7 +261,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         connectedCallback(){
             if(super.connectedCallback) super.connectedCallback();
             this._xlConnected = true;
-            this.processActionQueue();
+            this[propActionsDebouncer]();
             this.onPropsChange('');
         }
 
@@ -282,19 +285,31 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return newEvent;
         }
 
+        [_propActionsDebouncer]!: any;
+        get [propActionsDebouncer](){
+            if(this[_propActionsDebouncer] === undefined){
+                this[_propActionsDebouncer] = debounce((getNew: boolean = false) => {
+                    this.processActionQueue();
+                }, 16);
+            }
+            return this[_propActionsDebouncer];
+        }
+
         _propActionQueue: Set<string> = new Set();
 
         propActions: PropAction<this>[] | undefined;
         processActionQueue(){
             if(this.propActions === undefined) return;
+            const queue = this._propActionQueue;
+            this._propActionQueue = new Set();
             this.propActions.forEach(propAction =>{
                 const dependencies = deconstruct(propAction as Function);
                 const dependencySet = new Set<string>(dependencies);
-                if(intersection(this._propActionQueue, dependencySet).size > 0){
+                if(intersection(queue, dependencySet).size > 0){
                     propAction(this);
                 }
             });
-            this._propActionQueue = new Set();
+            
         }
 
     }

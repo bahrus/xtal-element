@@ -1,3 +1,4 @@
+import { debounce } from './debounce.js';
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s) {
     return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
@@ -116,6 +117,8 @@ export function mergeProps(props1, props2) {
     });
     return returnObj;
 }
+const _propActionsDebouncer = Symbol();
+const propActionsDebouncer = Symbol();
 /**
  * Base class for many xtal- components
  * @param superClass
@@ -188,7 +191,7 @@ export function XtallatX(superClass) {
                     return;
                 }
                 ;
-                this.processActionQueue();
+                this[propActionsDebouncer]();
             }
             attributeChangedCallback(n, ov, nv) {
                 this[atrInit] = true; // track each attribute?
@@ -226,7 +229,7 @@ export function XtallatX(superClass) {
                 if (super.connectedCallback)
                     super.connectedCallback();
                 this._xlConnected = true;
-                this.processActionQueue();
+                this[propActionsDebouncer]();
                 this.onPropsChange('');
             }
             /**
@@ -249,17 +252,26 @@ export function XtallatX(superClass) {
                 this.incAttr(eventName);
                 return newEvent;
             }
+            get [propActionsDebouncer]() {
+                if (this[_propActionsDebouncer] === undefined) {
+                    this[_propActionsDebouncer] = debounce((getNew = false) => {
+                        this.processActionQueue();
+                    }, 16);
+                }
+                return this[_propActionsDebouncer];
+            }
             processActionQueue() {
                 if (this.propActions === undefined)
                     return;
+                const queue = this._propActionQueue;
+                this._propActionQueue = new Set();
                 this.propActions.forEach(propAction => {
                     const dependencies = deconstruct(propAction);
                     const dependencySet = new Set(dependencies);
-                    if (intersection(this._propActionQueue, dependencySet).size > 0) {
+                    if (intersection(queue, dependencySet).size > 0) {
                         propAction(this);
                     }
                 });
-                this._propActionQueue = new Set();
             }
         },
         _a.attributeProps = ({ disabled }) => ({

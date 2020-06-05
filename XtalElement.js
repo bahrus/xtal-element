@@ -3,7 +3,10 @@ import { hydrate } from 'trans-render/hydrate.js';
 import { init } from 'trans-render/init.js';
 import { update } from 'trans-render/update.js';
 export { define } from './xtal-latx.js';
+import { debounce } from './debounce.js';
 const deconstructed = Symbol();
+const _transformDebouncer = Symbol();
+const transformDebouncer = Symbol();
 export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super(...arguments);
@@ -34,6 +37,14 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             cache: this.constructor,
         };
     }
+    get [transformDebouncer]() {
+        if (this[_transformDebouncer] === undefined) {
+            this[_transformDebouncer] = debounce((getNew = false) => {
+                this.transform();
+            }, 16);
+        }
+        return this[_transformDebouncer];
+    }
     transform() {
         const readyToRender = this.readyToRender;
         if (readyToRender === false)
@@ -57,18 +68,18 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             rc.init(this[this._mainTemplateProp], this._renderContext, this.root, this.renderOptions);
         }
         if (this.updateTransforms !== undefined) {
-            //TODO: Optimize
+            const propChangeQueue = this._propChangeQueue;
+            this._propChangeQueue = new Set();
             rc.update = update;
             this.updateTransforms.forEach(selectiveUpdateTransform => {
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
-                if (intersection(this._propChangeQueue, dependencySet).size > 0) {
+                if (intersection(propChangeQueue, dependencySet).size > 0) {
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc.Transform = selectiveUpdateTransform(this);
                     rc.update(rc, this.root);
                 }
             });
-            this._propChangeQueue = new Set();
         }
     }
     onPropsChange(name, skipTransform = false) {
