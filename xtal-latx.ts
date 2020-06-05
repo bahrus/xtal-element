@@ -62,7 +62,7 @@ const propInfoSym = Symbol('propInfo');
 const atrInit = Symbol('atrInit');
 export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
-    //const proto = MyElementClass.prototype;
+    const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
     const existingProps = Object.getOwnPropertyNames(MyElementClass);
     
@@ -75,7 +75,7 @@ export function define(MyElementClass: any){
             propInfo[cat] = props[cat]!.includes(prop);
         })
         MyElementClass[propInfoSym][prop] = propInfo;
-        Object.defineProperty(MyElementClass, prop, {
+        Object.defineProperty(proto, prop, {
             get(){
                 return this[sym];
             },

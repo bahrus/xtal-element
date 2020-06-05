@@ -40,7 +40,7 @@ const propInfoSym = Symbol('propInfo');
 const atrInit = Symbol('atrInit');
 export function define(MyElementClass) {
     const props = MyElementClass.props;
-    //const proto = MyElementClass.prototype;
+    const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
     const existingProps = Object.getOwnPropertyNames(MyElementClass);
     MyElementClass[propInfoSym] = {};
@@ -53,7 +53,7 @@ export function define(MyElementClass) {
             propInfo[cat] = props[cat].includes(prop);
         });
         MyElementClass[propInfoSym][prop] = propInfo;
-        Object.defineProperty(MyElementClass, prop, {
+        Object.defineProperty(proto, prop, {
             get() {
                 return this[sym];
             },
