@@ -64,7 +64,7 @@ export function define(MyElementClass: any){
     const props = MyElementClass.props as EvaluatedAttributeProps;
     //const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
-    const existingProps = Object.getOwnPropertyNames(proto);
+    const existingProps = Object.getOwnPropertyNames(MyElementClass);
     
     MyElementClass[propInfoSym] = {};
     flatProps.forEach(prop =>{

@@ -42,7 +42,7 @@ export function define(MyElementClass) {
     const props = MyElementClass.props;
     //const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
-    const existingProps = Object.getOwnPropertyNames(proto);
+    const existingProps = Object.getOwnPropertyNames(MyElementClass);
     MyElementClass[propInfoSym] = {};
     flatProps.forEach(prop => {
         if (existingProps.includes(prop))
