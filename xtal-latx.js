@@ -1,3 +1,16 @@
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+};
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
+};
 import { debounce } from './debounce.js';
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s) {
@@ -110,6 +123,7 @@ export function define(MyElementClass) {
     }
     customElements.define(tagName, MyElementClass);
 }
+export const de = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
 export function mergeProps(props1, props2) {
     const returnObj = {};
     propCategories.forEach(propCat => {
@@ -117,24 +131,23 @@ export function mergeProps(props1, props2) {
     });
     return returnObj;
 }
-const _propActionsDebouncer = Symbol();
-const propActionsDebouncer = Symbol();
 /**
  * Base class for many xtal- components
  * @param superClass
  */
 export function XtallatX(superClass) {
-    var _a;
+    var _evCount, __processActionDebouncer_1, _propActionQueue, _a;
     return _a = class extends superClass {
             constructor() {
                 super(...arguments);
                 /**
                  * Tracks how many times each event type was called.
                  */
-                this.evCount = {};
+                _evCount.set(this, {});
                 this.self = this;
                 this._xlConnected = false;
-                this._propActionQueue = new Set();
+                __processActionDebouncer_1.set(this, void 0);
+                _propActionQueue.set(this, new Set());
             }
             static get evalPath() {
                 return lispToCamel(this.is);
@@ -162,7 +175,7 @@ export function XtallatX(superClass) {
              * Turn number into string with even and odd values easy to query via css.
              * @param n
              */
-            to$(n) {
+            __to$(n) {
                 const mod = n % 2;
                 return (n - mod) / 2 + '-' + mod;
             }
@@ -170,29 +183,29 @@ export function XtallatX(superClass) {
              * Increment event count
              * @param name
              */
-            incAttr(name) {
-                const ec = this.evCount;
+            __incAttr(name) {
+                const ec = __classPrivateFieldGet(this, _evCount);
                 if (name in ec) {
                     ec[name]++;
                 }
                 else {
                     ec[name] = 0;
                 }
-                this.attr('data-' + name, this.to$(ec[name]));
+                this.attr('data-' + name, this.__to$(ec[name]));
             }
             onPropsChange(name) {
                 let isAsync = false;
                 const propInfoLookup = this.constructor[propInfoSym];
                 if (Array.isArray(name)) {
                     name.forEach(subName => {
-                        this._propActionQueue.add(subName);
+                        __classPrivateFieldGet(this, _propActionQueue).add(subName);
                         const propInfo = propInfoLookup[subName];
                         if (propInfo !== undefined && propInfo.async)
                             isAsync = true;
                     });
                 }
                 else {
-                    this._propActionQueue.add(name);
+                    __classPrivateFieldGet(this, _propActionQueue).add(name);
                     const propInfo = propInfoLookup[name];
                     if (propInfo !== undefined && propInfo.async)
                         isAsync = true;
@@ -202,10 +215,10 @@ export function XtallatX(superClass) {
                 }
                 ;
                 if (isAsync) {
-                    this[propActionsDebouncer]();
+                    this.__processActionDebouncer();
                 }
                 else {
-                    this.processActionQueue();
+                    this.__processActionQueue();
                 }
             }
             attributeChangedCallback(n, ov, nv) {
@@ -244,7 +257,7 @@ export function XtallatX(superClass) {
                 if (super.connectedCallback)
                     super.connectedCallback();
                 this._xlConnected = true;
-                this[propActionsDebouncer]();
+                this.__processActionDebouncer();
                 this.onPropsChange('');
             }
             /**
@@ -253,7 +266,7 @@ export function XtallatX(superClass) {
              * @param detail Information to be passed with the event
              * @param asIs If true, don't append event name with '-changed'
              */
-            de(name, detail, asIs = false, bubbles = false) {
+            [(_evCount = new WeakMap(), __processActionDebouncer_1 = new WeakMap(), _propActionQueue = new WeakMap(), de)](name, detail, asIs = false, bubbles = false) {
                 if (this.disabled)
                     return;
                 const eventName = name + (asIs ? '' : '-changed');
@@ -264,22 +277,22 @@ export function XtallatX(superClass) {
                     cancelable: true,
                 });
                 this.dispatchEvent(newEvent);
-                this.incAttr(eventName);
+                this.__incAttr(eventName);
                 return newEvent;
             }
-            get [propActionsDebouncer]() {
-                if (this[_propActionsDebouncer] === undefined) {
-                    this[_propActionsDebouncer] = debounce((getNew = false) => {
-                        this.processActionQueue();
-                    }, 16);
+            get __processActionDebouncer() {
+                if (__classPrivateFieldGet(this, __processActionDebouncer_1) === undefined) {
+                    __classPrivateFieldSet(this, __processActionDebouncer_1, debounce((getNew = false) => {
+                        this.__processActionQueue();
+                    }, 16));
                 }
-                return this[_propActionsDebouncer];
+                return __classPrivateFieldGet(this, __processActionDebouncer_1);
             }
-            processActionQueue() {
+            __processActionQueue() {
                 if (this.propActions === undefined)
                     return;
-                const queue = this._propActionQueue;
-                this._propActionQueue = new Set();
+                const queue = __classPrivateFieldGet(this, _propActionQueue);
+                __classPrivateFieldSet(this, _propActionQueue, new Set());
                 this.propActions.forEach(propAction => {
                     const dependencies = deconstruct(propAction);
                     const dependencySet = new Set(dependencies);

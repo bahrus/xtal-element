@@ -159,7 +159,7 @@ promote less typing.
 <details>
     <summary>NBs</summary>
 
-On point 6 above, the fact that class MyCounter extends class X does make it somewhat awkward to switch the logic to a different helper in the future.  The point I'm trying to make is it would not be very awkward, because as you can see, none of the logic is directly accessing any methods or properties of the base class.
+On point 6 above, the fact that class MyCounter extends class X does weaken the argument that the class is truly library neutral. The point I'm trying to make is it would not be very awkward, because as you can see, none of the logic is directly accessing any methods or properties of the base class.
 
 To achieve point 6 more thoroughly, you could write the counter logic as a [mixin](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins), which is a little more challenging and more of a brain twister.
 

@@ -21,16 +21,17 @@ export interface AttributeProps{
     async?: any[];
 }
 
-
-
 export interface tendArgs<T extends X = X>{
     name: string,
-    class: any,
+    class?: any,
+    mixins?: any[],
     attributeProps: PropDefGet<T>,
     main: string,
     initTransform: TransformGetter<T>,
     updateTransforms?: SelectiveUpdate<T>[]
 }
+
+
 
 
 

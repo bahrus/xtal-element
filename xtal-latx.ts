@@ -126,6 +126,9 @@ export function define(MyElementClass: any){
     customElements.define(tagName, MyElementClass);
 }
 
+export const de: unique symbol = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
+
+
 export interface IXtallatXI extends IHydrate {
 
     /**
@@ -134,7 +137,7 @@ export interface IXtallatXI extends IHydrate {
      * @param detail Information to be passed with the event
      * @param asIs If true, don't append event name with '-changed'
      */
-    de(name: string, detail: any, asIs?: boolean): CustomEvent | void;
+    [de](name: string, detail: any, asIs?: boolean): CustomEvent | void;
     /**
      * Needed for asynchronous loading
      * @param props Array of property names to "upgrade", without losing value set while element was Unknown
@@ -152,8 +155,6 @@ export function mergeProps(props1: EvaluatedAttributeProps | AttributeProps, pro
     return returnObj as EvaluatedAttributeProps;
 }
 
-const _propActionsDebouncer = Symbol();
-const propActionsDebouncer = Symbol();
 type Constructor<T = {}> = new (...args: any[]) => T;
 /**
  * Base class for many xtal- components
@@ -165,6 +166,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         static get evalPath(){
             return lispToCamel((<any>this).is);
         }
+        
         static get observedAttributes(){
             const props = this.props;
             return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
@@ -173,7 +175,6 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         static attributeProps : any = ({disabled} : IXtallatXI) => ({
             bool: [disabled],
         } as AttributeProps);
-
 
 
         static get props(){
@@ -194,12 +195,12 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         /**
          * Tracks how many times each event type was called.
          */
-        evCount: { [key: string]: number } = {};
+        #evCount: { [key: string]: number } = {}; 
         /**
          * Turn number into string with even and odd values easy to query via css.
          * @param n 
          */
-        to$(n: number) {
+        __to$(n: number) { //TODO:  https://github.com/denoland/deno/issues/5258
             const mod = n % 2;
             return (n - mod) / 2 + '-' + mod;
         }
@@ -207,26 +208,26 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * Increment event count
          * @param name
          */
-        incAttr(name: string) {
-            const ec = this.evCount;
+        __incAttr(name: string) { //TODO:  https://github.com/denoland/deno/issues/5258
+            const ec = this.#evCount;
             if (name in ec) {
                 ec[name]++;
             } else {
                 ec[name] = 0;
             }
-            this.attr('data-' + name, this.to$(ec[name]));
+            this.attr('data-' + name, this.__to$(ec[name]));
         }
         onPropsChange(name: string | string[]) {
             let isAsync = false;
             const propInfoLookup = (<any>this.constructor)[propInfoSym] as {[key: string]: PropInfo};
             if(Array.isArray(name)){
                 name.forEach(subName => {
-                    this._propActionQueue.add(subName);
+                    this.#propActionQueue.add(subName);
                     const propInfo = propInfoLookup[subName];
                     if(propInfo !== undefined && propInfo.async) isAsync = true;
                 });
             }else{
-                this._propActionQueue.add(name);
+                this.#propActionQueue.add(name);
                 const propInfo = propInfoLookup[name];
                 if(propInfo !== undefined && propInfo.async) isAsync = true;
             }
@@ -234,9 +235,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 return;
             };
             if(isAsync){
-                this[propActionsDebouncer]();
+                this.__processActionDebouncer();
             }else{
-                this.processActionQueue();
+                this.__processActionQueue();
             }
             
         }
@@ -275,7 +276,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         connectedCallback(){
             if(super.connectedCallback) super.connectedCallback();
             this._xlConnected = true;
-            this[propActionsDebouncer]();
+            this.__processActionDebouncer();
             this.onPropsChange('');
         }
 
@@ -285,7 +286,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
          */
-        de(name: string, detail: any, asIs: boolean = false, bubbles: boolean = false) {
+        [de](name: string, detail: any, asIs: boolean = false, bubbles: boolean = false) {
             if(this.disabled) return;
             const eventName = name + (asIs ? '' : '-changed');
             const newEvent = new CustomEvent(eventName, {
@@ -295,27 +296,28 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 cancelable: true, //https://dev.to/open-wc/composed-true-considered-harmful-5g59
             } as CustomEventInit);
             this.dispatchEvent(newEvent);
-            this.incAttr(eventName);
+            this.__incAttr(eventName);
             return newEvent;
         }
 
-        [_propActionsDebouncer]!: any;
-        get [propActionsDebouncer](){
-            if(this[_propActionsDebouncer] === undefined){
-                this[_propActionsDebouncer] = debounce((getNew: boolean = false) => {
-                    this.processActionQueue();
+        #_processActionDebouncer!: any;
+        get __processActionDebouncer(){ //TODO:  https://github.com/denoland/deno/issues/5258
+            if(this.#_processActionDebouncer === undefined){
+                this.#_processActionDebouncer = debounce((getNew: boolean = false) => {
+                    this.__processActionQueue();
                 }, 16);
             }
-            return this[_propActionsDebouncer];
+            return this.#_processActionDebouncer;
         }
 
-        _propActionQueue: Set<string> = new Set();
+        #propActionQueue: Set<string> = new Set(); 
 
         propActions: PropAction<this>[] | undefined;
-        processActionQueue(){
+
+        __processActionQueue(){ //TODO:  https://github.com/denoland/deno/issues/5258
             if(this.propActions === undefined) return;
-            const queue = this._propActionQueue;
-            this._propActionQueue = new Set();
+            const queue = this.#propActionQueue;
+            this.#propActionQueue = new Set();
             this.propActions.forEach(propAction =>{
                 const dependencies = deconstruct(propAction as Function);
                 const dependencySet = new Set<string>(dependencies);

@@ -26,8 +26,17 @@ const template = /* html */`
 </style>
 `;
 
-const [span$] = [Symbol('span')];
-export abstract class CounterX extends X{
+
+
+
+interface ICounterMixin{
+    count: number;
+    changeCount(delta: number): void;
+}
+
+type CounterExtension = X & ICounterMixin;
+
+export const CounterXMixin = (Base: any) => class extends Base{
     count = 0;
 
     changeCount(delta: number){
@@ -35,14 +44,15 @@ export abstract class CounterX extends X{
     }
 }
 
-X.tend<CounterX>({
-    name: 'counter-x',
-    class: CounterX,
+const [span$] = [Symbol('span')];
+X.cessorize<CounterExtension>({
+    name: 'counter-xs',
+    mixins: [CounterXMixin],
     main: template,
-    attributeProps: ({count}) => ({num:[count]}),
-    initTransform: ({changeCount} : CounterX) => ({
-        button:[,{click:[changeCount, 'dataset.d', parseInt]}] as  PESettings<CounterX>, 
+    attributeProps: ({count}: ICounterMixin) => ({num:[count]}),
+    initTransform: ({changeCount} : ICounterMixin) => ({
+        button:[,{click:[changeCount, 'dataset.d', parseInt]}] as any as PESettings<CounterExtension>, 
         span: span$,
     }) as TransformRules,
-    updateTransforms:[ ({count}: CounterX) => ({[span$]: count.toString()})]
+    updateTransforms:[ ({count}: ICounterMixin) => ({[span$]: count.toString()})]
 })
