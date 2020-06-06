@@ -29,7 +29,7 @@ Anyway, xtal-element's target audience is those who are looking for a base class
 
 1.  xtal-element uses the [trans-render](https://github.com/bahrus/trans-render) library for updating the UI as properties change.
 2.  The separation of concerns that trans-render provides makes it possible to separate out the initial render from update renders.
-3.  Even the update renders can be easily partitioned based on which properties changes.   Consider the following example:
+3.  Even the update renders can be easily partitioned based on which properties change.   Consider the following example:
 
 ```JavaScript
 mainTemplate = createTemplate(/* html */`
@@ -77,7 +77,7 @@ export class Foo extends XtalElement{
 }
 ```
 
-As long as all property changes also notify the onPropsChange method, specifying the name, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
+As long as all property changes also notify the onPropsChange method, specifying the name in the argument, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
 
 As we will see, if you define properties via xtal-element's declarative support, all property changes will notify the onPropsChange method automatically.
 
@@ -352,7 +352,7 @@ export class MyBar extends MyFoo{
 The categories properties can be put into are:
 
 ```JavaScript
-['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug']
+['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async']
 ```
 
 
@@ -475,7 +475,7 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Another benefit of "bunching together" property change actions is because XtalElement uses an asynchronous workflow, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.
+Another benefit of "bunching together" property change actions is because XtalElement optionally supports responding to property changes asynchronously, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this feature is opt in (but putting the properties in the "async" category).
 
 ## Inheritance overindulgence?
 
