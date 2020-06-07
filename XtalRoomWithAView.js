@@ -13,8 +13,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _controller;
 import { XtalElement } from './XtalElement.js';
-import { deconstruct, intersection } from './xtal-latx.js';
-export { define, mergeProps, de } from './xtal-latx.js';
+import { deconstruct, intersection, de } from './xtal-latx.js';
+export { define, mergeProps } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
