@@ -111,7 +111,7 @@ export function define(MyElementClass) {
                     debugger;
                 this.onPropsChange(prop);
                 if (propInfo.notify) {
-                    this.de(c2l, { value: nv });
+                    this[de](c2l, { value: nv });
                 }
             },
         });
