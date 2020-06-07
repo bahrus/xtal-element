@@ -25,7 +25,7 @@ export abstract class X extends XtalElement{
 
     static cessorize<T extends X = X>(args: tendArgs<T>){
         let base = X;
-        args.mixins.forEach(mixin => {
+        args.mixins!.forEach(mixin => {
             base = mixin(base);
         })
         abstract class newClass extends base{

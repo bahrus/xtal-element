@@ -1,5 +1,5 @@
 import {XtalElement} from './XtalElement.js';
-import {deconstruct, intersection} from './xtal-latx.js';
+import {deconstruct, intersection, de} from './xtal-latx.js';
 export {define, mergeProps} from './xtal-latx.js';
 export {AttributeProps} from './types.d.js';
 
@@ -29,7 +29,7 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
     }
     set viewModel(nv){
         this._viewModel = nv;
-        this.de('view-model', {
+        this[de]('view-model', {
             value: nv
         });
         this.onPropsChange('viewModel')

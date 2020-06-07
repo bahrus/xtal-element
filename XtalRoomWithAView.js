@@ -14,7 +14,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _controller;
 import { XtalElement } from './XtalElement.js';
 import { deconstruct, intersection } from './xtal-latx.js';
-export { define, mergeProps } from './xtal-latx.js';
+export { define, mergeProps, de } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
@@ -28,7 +28,7 @@ export class XtalRoomWithAView extends XtalElement {
     }
     set viewModel(nv) {
         this._viewModel = nv;
-        this.de('view-model', {
+        this[de]('view-model', {
             value: nv
         });
         this.onPropsChange('viewModel');
