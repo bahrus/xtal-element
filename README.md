@@ -525,9 +525,18 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Here, "self" is another name for "this" -- inspired by Python.  But because it doesn't use the keyword "this," we can reference a static array of arrow functions, which is a little better, performance wise (even if a bit more verbose):
+Here, "self" is another name for "this" -- inspired by Python / Rust.  
+
+But because it doesn't use the keyword "this," we can place the "trait implementation" in a separate constant, which is a little better, performance wise:
 
 ```js
+
+const PropActions = {
+    calculateProp4: ({prop1, prop2, prop3, self}) => ({
+        self.prop4 = prop1 + prop2 + prop3;
+    }),
+}
+
 export class MyCustomElement extends XtalElement{
     ...
     prop1 = 'myValue1';
@@ -535,16 +544,15 @@ export class MyCustomElement extends XtalElement{
     prop3 = 'myValue3';
     prop4;
 
-    static propActions = [
-        ({prop1, prop2, prop3, self}) => {
-            self.prop4 = prop1 + prop2 + prop3;
-        }
-    ];
-    propActions = MyCustomElement.propActions;
+    propActions = [PropActions.calculateProp4];
+
 }
 ```
 
+
 Another benefit of "bunching together" property change actions is because XtalElement optionally supports responding to property changes asynchronously, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this feature is opt in (but putting the properties in the "async" category).
+
+And another benefit -- by separating the actions from the actual class, the actions, where the bulk of the heavy lifting for the class will often go, can be dynamically loaded, and only activated after the download is complete.  In the meantime, an initial view can be presented.
 
 ## Inheritance overindulgence?
 
