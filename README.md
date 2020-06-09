@@ -550,9 +550,11 @@ export class MyCustomElement extends XtalElement{
 ```
 
 
-Another benefit of "bunching together" property change actions is because XtalElement optionally supports responding to property changes asynchronously, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this feature is opt in (but putting the properties in the "async" category).
+Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
 
-And another benefit -- by separating the actions from the actual class, the actions, where the bulk of the heavy lifting for the class will often go, can be dynamically loaded, and only activated after the download is complete.  In the meantime, an initial view can be presented.
+And another benefit -- by separating the actions from the actual class, the actions can be dynamically loaded, and only activated after the download is complete.  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.
+
+**Limitations**:  PropActions provides a "reactive(?)" way of handling property changes, but there are some limitations in when it is appropriate to use them -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.
 
 ## Inheritance overindulgence?
 
