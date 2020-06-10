@@ -172,10 +172,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
         }
 
-        static attributeProps : any = ({disabled} : IXtallatXI) => ({
-            bool: [disabled],
-        } as AttributeProps);
-
+        static attributeProps : any;
 
         static get props(){
             if((<any>this)[this.evalPath] === undefined){
@@ -192,6 +189,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             }
             return (<any>this)[this.evalPath] as EvaluatedAttributeProps;
         }
+
+        
+
         /**
          * Tracks how many times each event type was called.
          */

@@ -6,11 +6,7 @@
 		"experimentalDecorators": false,
 		"strict": true,
 		"newLine": "LF",
-		"watch": true,
-		"baseUrl": ".",
-		"paths": {
-			"trans-render/*": ["node_modules/trans-render/*"]
-		}
+		"watch": true
 	},
 	"exclude":[
 		"node_modules"

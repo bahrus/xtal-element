@@ -53,7 +53,6 @@ let CounterXtalElement = /** @class */ (() => {
             // Any other property changes won't trigger an update, as there is no
             // arrow function in array with any other property name.
             this.updateTransforms = CounterXtalElement.updateTransforms;
-            this.count = 0;
         }
         changeCount(delta) {
             this.count += delta;
@@ -69,6 +68,9 @@ let CounterXtalElement = /** @class */ (() => {
     CounterXtalElement.updateTransforms = [
         ({ count }) => ({ [span$]: count.toString() })
     ];
+    CounterXtalElement.defaultValues = {
+        count: 30
+    };
     return CounterXtalElement;
 })();
 export { CounterXtalElement };

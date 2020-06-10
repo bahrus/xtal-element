@@ -43,6 +43,10 @@ export class CounterXtalElement extends XtalElement{
         ({count}: CounterXtalElement) => ({[span$]: count.toString()})
     ];
 
+    static defaultValues: any = {
+      count: 30
+    } as CounterXtalElement;
+
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
     //A check is made to this field / getter property anytime a declared property changes.
@@ -72,7 +76,7 @@ export class CounterXtalElement extends XtalElement{
     // arrow function in array with any other property name.
     updateTransforms = CounterXtalElement.updateTransforms;
 
-    count = 0;
+    count!: number;
 
     changeCount(delta: number){
         this.count += delta;
