@@ -172,7 +172,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
         }
 
-        static attributeProps : any;
+        static attributeProps : any = ({disabled} : IXtallatXI) => ({
+            bool: [disabled],
+        } as AttributeProps);
 
         static get props(){
             if((<any>this)[this.evalPath] === undefined){
@@ -274,7 +276,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         
         _xlConnected = false;
         connectedCallback(){
-            if(super.connectedCallback) super.connectedCallback();
+            super.connectedCallback();
             this._xlConnected = true;
             this.__processActionDebouncer();
             this.onPropsChange('');

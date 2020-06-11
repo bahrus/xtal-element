@@ -136,170 +136,173 @@ export function mergeProps(props1, props2) {
  * @param superClass
  */
 export function XtallatX(superClass) {
-    var _evCount, __processActionDebouncer_1, _propActionQueue;
-    return class extends superClass {
-        constructor() {
-            super(...arguments);
+    var _evCount, __processActionDebouncer_1, _propActionQueue, _a;
+    return _a = class extends superClass {
+            constructor() {
+                super(...arguments);
+                /**
+                 * Tracks how many times each event type was called.
+                 */
+                _evCount.set(this, {});
+                this.self = this;
+                this._xlConnected = false;
+                __processActionDebouncer_1.set(this, void 0);
+                _propActionQueue.set(this, new Set());
+            }
+            static get evalPath() {
+                return lispToCamel(this.is);
+            }
+            static get observedAttributes() {
+                const props = this.props;
+                return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
+            }
+            static get props() {
+                if (this[this.evalPath] === undefined) {
+                    const args = deconstruct(this.attributeProps);
+                    const arg = {};
+                    args.forEach(token => {
+                        arg[token] = token;
+                    });
+                    this[this.evalPath] = this.attributeProps(arg);
+                    const ep = this[this.evalPath];
+                    propCategories.forEach(propCat => {
+                        ep[propCat] = ep[propCat] || [];
+                    });
+                }
+                return this[this.evalPath];
+            }
             /**
-             * Tracks how many times each event type was called.
+             * Turn number into string with even and odd values easy to query via css.
+             * @param n
              */
-            _evCount.set(this, {});
-            this.self = this;
-            this._xlConnected = false;
-            __processActionDebouncer_1.set(this, void 0);
-            _propActionQueue.set(this, new Set());
-        }
-        static get evalPath() {
-            return lispToCamel(this.is);
-        }
-        static get observedAttributes() {
-            const props = this.props;
-            return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
-        }
-        static get props() {
-            if (this[this.evalPath] === undefined) {
-                const args = deconstruct(this.attributeProps);
-                const arg = {};
-                args.forEach(token => {
-                    arg[token] = token;
-                });
-                this[this.evalPath] = this.attributeProps(arg);
-                const ep = this[this.evalPath];
-                propCategories.forEach(propCat => {
-                    ep[propCat] = ep[propCat] || [];
-                });
+            __to$(n) {
+                const mod = n % 2;
+                return (n - mod) / 2 + '-' + mod;
             }
-            return this[this.evalPath];
-        }
-        /**
-         * Turn number into string with even and odd values easy to query via css.
-         * @param n
-         */
-        __to$(n) {
-            const mod = n % 2;
-            return (n - mod) / 2 + '-' + mod;
-        }
-        /**
-         * Increment event count
-         * @param name
-         */
-        __incAttr(name) {
-            const ec = __classPrivateFieldGet(this, _evCount);
-            if (name in ec) {
-                ec[name]++;
+            /**
+             * Increment event count
+             * @param name
+             */
+            __incAttr(name) {
+                const ec = __classPrivateFieldGet(this, _evCount);
+                if (name in ec) {
+                    ec[name]++;
+                }
+                else {
+                    ec[name] = 0;
+                }
+                this.attr('data-' + name, this.__to$(ec[name]));
             }
-            else {
-                ec[name] = 0;
-            }
-            this.attr('data-' + name, this.__to$(ec[name]));
-        }
-        onPropsChange(name) {
-            let isAsync = false;
-            const propInfoLookup = this.constructor[propInfoSym];
-            if (Array.isArray(name)) {
-                name.forEach(subName => {
-                    __classPrivateFieldGet(this, _propActionQueue).add(subName);
-                    const propInfo = propInfoLookup[subName];
+            onPropsChange(name) {
+                let isAsync = false;
+                const propInfoLookup = this.constructor[propInfoSym];
+                if (Array.isArray(name)) {
+                    name.forEach(subName => {
+                        __classPrivateFieldGet(this, _propActionQueue).add(subName);
+                        const propInfo = propInfoLookup[subName];
+                        if (propInfo !== undefined && propInfo.async)
+                            isAsync = true;
+                    });
+                }
+                else {
+                    __classPrivateFieldGet(this, _propActionQueue).add(name);
+                    const propInfo = propInfoLookup[name];
                     if (propInfo !== undefined && propInfo.async)
                         isAsync = true;
-                });
-            }
-            else {
-                __classPrivateFieldGet(this, _propActionQueue).add(name);
-                const propInfo = propInfoLookup[name];
-                if (propInfo !== undefined && propInfo.async)
-                    isAsync = true;
-            }
-            if (this.disabled || !this._xlConnected) {
-                return;
-            }
-            ;
-            if (isAsync) {
-                this.__processActionDebouncer();
-            }
-            else {
-                this.__processActionQueue();
-            }
-        }
-        attributeChangedCallback(n, ov, nv) {
-            this[atrInit] = true; // track each attribute?
-            const ik = this[ignoreAttrKey];
-            if (ik !== undefined && ik[n] === true) {
-                delete ik[n];
-                return;
-            }
-            const propName = lispToCamel(n);
-            if (this[ignorePropKey] === undefined)
-                this[ignorePropKey] = {};
-            this[ignorePropKey][propName] = true;
-            const anyT = this;
-            const ep = this.constructor.props;
-            if (ep.str.includes(propName)) {
-                anyT[propName] = nv;
-            }
-            else if (ep.bool.includes(propName)) {
-                anyT[propName] = nv !== null;
-            }
-            else if (ep.num.includes(propName)) {
-                anyT[propName] = parseFloat(nv);
-            }
-            else if (ep.jsonProp.includes(propName)) {
-                try {
-                    anyT[propName] = JSON.parse(nv);
                 }
-                catch (e) {
+                if (this.disabled || !this._xlConnected) {
+                    return;
+                }
+                ;
+                if (isAsync) {
+                    this.__processActionDebouncer();
+                }
+                else {
+                    this.__processActionQueue();
+                }
+            }
+            attributeChangedCallback(n, ov, nv) {
+                this[atrInit] = true; // track each attribute?
+                const ik = this[ignoreAttrKey];
+                if (ik !== undefined && ik[n] === true) {
+                    delete ik[n];
+                    return;
+                }
+                const propName = lispToCamel(n);
+                if (this[ignorePropKey] === undefined)
+                    this[ignorePropKey] = {};
+                this[ignorePropKey][propName] = true;
+                const anyT = this;
+                const ep = this.constructor.props;
+                if (ep.str.includes(propName)) {
                     anyT[propName] = nv;
                 }
-            }
-            this.onPropsChange(propName);
-        }
-        connectedCallback() {
-            if (super.connectedCallback)
-                super.connectedCallback();
-            this._xlConnected = true;
-            this.__processActionDebouncer();
-            this.onPropsChange('');
-        }
-        /**
-         * Dispatch Custom Event
-         * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
-         * @param detail Information to be passed with the event
-         * @param asIs If true, don't append event name with '-changed'
-         */
-        [(_evCount = new WeakMap(), __processActionDebouncer_1 = new WeakMap(), _propActionQueue = new WeakMap(), de)](name, detail, asIs = false, bubbles = false) {
-            if (this.disabled)
-                return;
-            const eventName = name + (asIs ? '' : '-changed');
-            const newEvent = new CustomEvent(eventName, {
-                detail: detail,
-                bubbles: bubbles,
-                composed: false,
-                cancelable: true,
-            });
-            this.dispatchEvent(newEvent);
-            this.__incAttr(eventName);
-            return newEvent;
-        }
-        get __processActionDebouncer() {
-            if (__classPrivateFieldGet(this, __processActionDebouncer_1) === undefined) {
-                __classPrivateFieldSet(this, __processActionDebouncer_1, debounce((getNew = false) => {
-                    this.__processActionQueue();
-                }, 16));
-            }
-            return __classPrivateFieldGet(this, __processActionDebouncer_1);
-        }
-        __processActionQueue() {
-            if (this.propActions === undefined)
-                return;
-            const queue = __classPrivateFieldGet(this, _propActionQueue);
-            __classPrivateFieldSet(this, _propActionQueue, new Set());
-            this.propActions.forEach(propAction => {
-                const dependencies = deconstruct(propAction);
-                const dependencySet = new Set(dependencies);
-                if (intersection(queue, dependencySet).size > 0) {
-                    propAction(this);
+                else if (ep.bool.includes(propName)) {
+                    anyT[propName] = nv !== null;
                 }
-            });
-        }
-    };
+                else if (ep.num.includes(propName)) {
+                    anyT[propName] = parseFloat(nv);
+                }
+                else if (ep.jsonProp.includes(propName)) {
+                    try {
+                        anyT[propName] = JSON.parse(nv);
+                    }
+                    catch (e) {
+                        anyT[propName] = nv;
+                    }
+                }
+                this.onPropsChange(propName);
+            }
+            connectedCallback() {
+                super.connectedCallback();
+                this._xlConnected = true;
+                this.__processActionDebouncer();
+                this.onPropsChange('');
+            }
+            /**
+             * Dispatch Custom Event
+             * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
+             * @param detail Information to be passed with the event
+             * @param asIs If true, don't append event name with '-changed'
+             */
+            [(_evCount = new WeakMap(), __processActionDebouncer_1 = new WeakMap(), _propActionQueue = new WeakMap(), de)](name, detail, asIs = false, bubbles = false) {
+                if (this.disabled)
+                    return;
+                const eventName = name + (asIs ? '' : '-changed');
+                const newEvent = new CustomEvent(eventName, {
+                    detail: detail,
+                    bubbles: bubbles,
+                    composed: false,
+                    cancelable: true,
+                });
+                this.dispatchEvent(newEvent);
+                this.__incAttr(eventName);
+                return newEvent;
+            }
+            get __processActionDebouncer() {
+                if (__classPrivateFieldGet(this, __processActionDebouncer_1) === undefined) {
+                    __classPrivateFieldSet(this, __processActionDebouncer_1, debounce((getNew = false) => {
+                        this.__processActionQueue();
+                    }, 16));
+                }
+                return __classPrivateFieldGet(this, __processActionDebouncer_1);
+            }
+            __processActionQueue() {
+                if (this.propActions === undefined)
+                    return;
+                const queue = __classPrivateFieldGet(this, _propActionQueue);
+                __classPrivateFieldSet(this, _propActionQueue, new Set());
+                this.propActions.forEach(propAction => {
+                    const dependencies = deconstruct(propAction);
+                    const dependencySet = new Set(dependencies);
+                    if (intersection(queue, dependencySet).size > 0) {
+                        propAction(this);
+                    }
+                });
+            }
+        },
+        _a.attributeProps = ({ disabled }) => ({
+            bool: [disabled],
+        }),
+        _a;
 }
