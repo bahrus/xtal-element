@@ -1,7 +1,6 @@
 import { XtallatX, deconstruct, intersection } from './xtal-latx.js';
 import { hydrate } from 'trans-render/hydrate.js';
-import { init } from 'trans-render/init.js';
-import { update } from 'trans-render/update.js';
+import { transform } from 'trans-render/transform.js';
 export { define } from './xtal-latx.js';
 import { debounce } from './debounce.js';
 const deconstructed = Symbol();
@@ -30,22 +29,24 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     afterInitRenderCallback(ctx, target, renderOptions) { }
     afterUpdateRenderCallback(ctx, target, renderOptions) { }
     initRenderContext() {
-        return {
-            init: init,
+        const ctx = {
             Transform: (typeof this.initTransform === 'function') ? this.initTransform(this) : this.initTransform,
             host: this,
             cache: this.constructor,
+            mode: 'init',
         };
+        ctx.ctx = ctx;
+        return ctx;
     }
     get [transformDebouncer]() {
         if (this[_transformDebouncer] === undefined) {
-            this[_transformDebouncer] = debounce((getNew = false) => {
-                this.transform();
+            this[_transformDebouncer] = debounce(async (getNew = false) => {
+                await this.transform();
             }, 16);
         }
         return this[_transformDebouncer];
     }
-    transform() {
+    async transform() {
         const readyToRender = this.readyToRender;
         if (readyToRender === false)
             return;
@@ -64,25 +65,27 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         if (rc === undefined) {
             this.dataset.upgraded = 'true';
             rc = this._renderContext = this.initRenderContext();
-            this._renderOptions.initializedCallback = this.afterInitRenderCallback.bind(this);
-            rc.init(this[this._mainTemplateProp], this._renderContext, this.root, this.renderOptions);
+            rc.options = {
+                initializedCallback: this.afterInitRenderCallback.bind(this),
+            };
+            await transform(this[this._mainTemplateProp], rc, this.root);
         }
         if (this.updateTransforms !== undefined) {
             const propChangeQueue = this._propChangeQueue;
             this._propChangeQueue = new Set();
-            rc.update = update;
-            this.updateTransforms.forEach(selectiveUpdateTransform => {
+            this.updateTransforms.forEach(async (selectiveUpdateTransform) => {
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
                 if (intersection(propChangeQueue, dependencySet).size > 0) {
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc.Transform = selectiveUpdateTransform(this);
-                    rc.update(rc, this.root);
+                    await transform(this.root, rc);
+                    //rc!.update!(rc!, this.root);
                 }
             });
         }
     }
-    onPropsChange(name, skipTransform = false) {
+    async onPropsChange(name, skipTransform = false) {
         super.onPropsChange(name);
         if (Array.isArray(name)) {
             name.forEach(subName => this._propChangeQueue.add(subName));
@@ -95,7 +98,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         ;
         if (!skipTransform) {
-            this.transform();
+            await this.transform();
         }
     }
 }
