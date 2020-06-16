@@ -159,7 +159,7 @@ promote less typing.
 <details>
     <summary>NBs</summary>
 
-On point 6 above, the fact that class MyCounter extends class X does weaken the argument that the class is truly library neutral. The point I'm trying to make is it would not be very awkward, because as you can see, none of the logic is directly accessing any methods or properties of the base class.
+On point 6 above, the fact that class MyCounter extends class X does weaken the argument that the class is truly library neutral. The point I'm trying to make is it would not be very awkward to migrate to some other library, because as you can see, none of the logic is directly accessing any methods or properties of the base class.
 
 To achieve point 6 more thoroughly, you could write the counter logic as a [mixin](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins), which is a little more challenging and more of a brain twister.
 
@@ -273,6 +273,10 @@ const mainTemplate = createTemplate(/* html */`
 </style>
 `);
 const span$ = Symbol('spanSym');
+const updateTransforms =  [ 
+    ({count}: CounterXtalElement) => ({[span$]: count.toString()})
+];
+
 /**
  * @element counter-xtal-element
  */
@@ -285,10 +289,6 @@ export class CounterXtalElement extends XtalElement{
     static attributeProps = ({count} : CounterXtalElement) => ({
         num: [count]
     }  as AttributeProps);
-
-    static updateTransforms = [ 
-        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
-    ];
 
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
@@ -316,7 +316,7 @@ export class CounterXtalElement extends XtalElement{
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
     // Save a little bit of class instantiation time by referencing a static updateTransforms array.
-    updateTransforms = CounterXtalElement.updateTransforms;
+    updateTransforms = updateTransforms;
 
     count = 0;
 
@@ -365,8 +365,6 @@ class MyCustomElement extends XtalElement{
 define(MyCustomElement);
 ```
 
-
-
 ### Defining properties / attributes in a type safe way using TypeScript:
 
 ```TypeScript
@@ -394,7 +392,7 @@ The function "define" does the following:
 4.  Registers the custom element based on the static 'is' property.
 
 
-### Defining properties / attributes with Inheritance
+### Defining properties / attributes with inheritance
 
 In order for one custom element to merge its additional properties with the properties from subclasses do the following:
 
@@ -554,7 +552,7 @@ Another benefit of "bunching together" property change actions: XtalElement opti
 
 And another benefit -- by separating the actions from the actual class, the actions can be dynamically loaded, and only activated after the download is complete.  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.
 
-**Limitations**:  PropActions provides a "reactive(?)" way of handling property changes, but there are some limitations in when it is appropriate to use them -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.
+**Limitations**:  Separating PropActions out of the class as an (imported) constant imposes some limitations.  Limitations which aren't applicable when the actions are defined inside the class -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.  For these scenarios, if the code is inside the class, it should have access to private members, and behave more like methods (I think).
 
 ## Inheritance overindulgence?
 
