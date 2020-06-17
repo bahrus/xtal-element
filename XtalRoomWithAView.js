@@ -33,10 +33,10 @@ export class XtalRoomWithAView extends XtalElement {
         });
         this.onPropsChange('viewModel');
     }
-    onPropsChange(name) {
-        super.onPropsChange(name, this.viewModel === undefined);
+    async onPropsChange(name, skipTransform = false) {
+        await super.onPropsChange(name, this.viewModel === undefined);
         if (super.disabled || !this._xlConnected || !this.readyToInit)
-            return false;
+            return;
         switch (this._state) {
             case 'constructed':
                 this._state = 'initializing';

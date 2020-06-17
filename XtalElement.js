@@ -87,12 +87,12 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     }
     async onPropsChange(name, skipTransform = false) {
         super.onPropsChange(name);
-        if (Array.isArray(name)) {
-            name.forEach(subName => this._propChangeQueue.add(subName));
-        }
-        else {
-            this._propChangeQueue.add(name);
-        }
+        this._propChangeQueue.add(name);
+        // if(Array.isArray(name)){
+        //     name.forEach(subName => this._propChangeQueue.add(subName));
+        // }else{
+        //     this._propChangeQueue.add(name);
+        // }
         if (this.disabled || !this._xlConnected || !this.readyToInit) {
             return;
         }
