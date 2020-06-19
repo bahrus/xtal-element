@@ -197,7 +197,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         /**
          * Tracks how many times each event type was called.
          */
-        #evCount: { [key: string]: number } = {}; 
+        __evCount: { [key: string]: number } = {}; 
         /**
          * Turn number into string with even and odd values easy to query via css.
          * @param n 
@@ -211,7 +211,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param name
          */
         __incAttr(name: string) { //TODO:  https://github.com/denoland/deno/issues/5258
-            const ec = this.#evCount;
+            const ec = this.__evCount;
             if (name in ec) {
                 ec[name]++;
             } else {
@@ -224,12 +224,12 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             const propInfoLookup = (<any>this.constructor)[propInfoSym] as {[key: string]: PropInfo};
             if(Array.isArray(name)){
                 name.forEach(subName => {
-                    this.#propActionQueue.add(subName);
+                    this.__propActionQueue.add(subName);
                     const propInfo = propInfoLookup[subName];
                     if(propInfo !== undefined && propInfo.async) isAsync = true;
                 });
             }else{
-                this.#propActionQueue.add(name);
+                this.__propActionQueue.add(name);
                 const propInfo = propInfoLookup[name];
                 if(propInfo !== undefined && propInfo.async) isAsync = true;
             }
@@ -302,24 +302,24 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return newEvent;
         }
 
-        #_processActionDebouncer!: any;
+        ___processActionDebouncer!: any;
         get __processActionDebouncer(){ //TODO:  https://github.com/denoland/deno/issues/5258
-            if(this.#_processActionDebouncer === undefined){
-                this.#_processActionDebouncer = debounce((getNew: boolean = false) => {
+            if(this.___processActionDebouncer === undefined){
+                this.___processActionDebouncer = debounce((getNew: boolean = false) => {
                     this.__processActionQueue();
                 }, 16);
             }
-            return this.#_processActionDebouncer;
+            return this.___processActionDebouncer;
         }
 
-        #propActionQueue: Set<string> = new Set(); 
+        __propActionQueue: Set<string> = new Set(); 
 
         propActions: PropAction<this>[] | undefined;
 
         __processActionQueue(){ //TODO:  https://github.com/denoland/deno/issues/5258
             if(this.propActions === undefined) return;
-            const queue = this.#propActionQueue;
-            this.#propActionQueue = new Set();
+            const queue = this.__propActionQueue;
+            this.__propActionQueue = new Set();
             this.propActions.forEach(propAction =>{
                 const dependencies = deconstruct(propAction as Function);
                 const dependencySet = new Set<string>(dependencies);

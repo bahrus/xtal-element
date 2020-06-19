@@ -84,17 +84,22 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             this.root.innerHTML = '';
         }
         let rc = this._renderContext;
+        let target: Node;
+        let isFirst = true;
         if(rc === undefined){
             this.dataset.upgraded = 'true';
             rc = this._renderContext = this.initRenderContext();
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this) as (ctx: RenderContext, target: HTMLElement | DocumentFragment, options?: RenderOptions) => RenderContext | void,
             };
+            target =  ((<any>this)[this._mainTemplateProp] as HTMLTemplateElement).content.cloneNode(true);
             transform(
-                (<any>this)[this._mainTemplateProp] as HTMLTemplateElement,
-                rc,
-                this.root
+                target as HTMLElement,
+                rc
             );
+        }else{
+            target = this.root;
+            isFirst = false;
         }
 
 
@@ -112,6 +117,9 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 }
             });
             
+        }
+        if(isFirst){
+            this.root.appendChild(target);
         }
     }
 
