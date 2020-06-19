@@ -63,13 +63,13 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     [_transformDebouncer]!: any;
     get [transformDebouncer](){
         if(this[_transformDebouncer] === undefined){
-            this[_transformDebouncer] = debounce(async (getNew: boolean = false) => {
-                await this.transform();
+            this[_transformDebouncer] = debounce((getNew: boolean = false) => {
+                this.transform();
             }, 16);
         }
         return this[_transformDebouncer];
     }
-    async transform(){
+    transform(){
         const readyToRender = this.readyToRender;
         if(readyToRender === false) return;
         if(typeof(readyToRender) === 'string'){
@@ -90,7 +90,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this) as (ctx: RenderContext, target: HTMLElement | DocumentFragment, options?: RenderOptions) => RenderContext | void,
             };
-            rc = await transform(
+            transform(
                 (<any>this)[this._mainTemplateProp] as HTMLTemplateElement,
                 rc,
                 this.root
@@ -98,7 +98,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         }
 
 
-        if(this.updateTransforms !== undefined && rc){
+        if(this.updateTransforms !== undefined){
             const propChangeQueue = this._propChangeQueue;
             this._propChangeQueue = new Set();
             this.updateTransforms.forEach(async selectiveUpdateTransform =>{
@@ -107,7 +107,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 if(intersection(propChangeQueue, dependencySet).size > 0){
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc!.Transform = selectiveUpdateTransform(this);
-                    await transform(this.root, rc!);
+                    transform(this.root, rc!);
                     //rc!.update!(rc!, this.root);
                 }
             });
@@ -131,7 +131,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             return;
         };
         if(!skipTransform){
-            await this.transform();
+            this.transform();
         }
         
     }

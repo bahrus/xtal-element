@@ -40,13 +40,13 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     }
     get [transformDebouncer]() {
         if (this[_transformDebouncer] === undefined) {
-            this[_transformDebouncer] = debounce(async (getNew = false) => {
-                await this.transform();
+            this[_transformDebouncer] = debounce((getNew = false) => {
+                this.transform();
             }, 16);
         }
         return this[_transformDebouncer];
     }
-    async transform() {
+    transform() {
         const readyToRender = this.readyToRender;
         if (readyToRender === false)
             return;
@@ -68,9 +68,9 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this),
             };
-            rc = await transform(this[this._mainTemplateProp], rc, this.root);
+            transform(this[this._mainTemplateProp], rc, this.root);
         }
-        if (this.updateTransforms !== undefined && rc) {
+        if (this.updateTransforms !== undefined) {
             const propChangeQueue = this._propChangeQueue;
             this._propChangeQueue = new Set();
             this.updateTransforms.forEach(async (selectiveUpdateTransform) => {
@@ -79,7 +79,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
                 if (intersection(propChangeQueue, dependencySet).size > 0) {
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc.Transform = selectiveUpdateTransform(this);
-                    await transform(this.root, rc);
+                    transform(this.root, rc);
                     //rc!.update!(rc!, this.root);
                 }
             });
@@ -98,7 +98,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         ;
         if (!skipTransform) {
-            await this.transform();
+            this.transform();
         }
     }
 }
