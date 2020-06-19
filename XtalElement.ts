@@ -112,7 +112,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 if(intersection(propChangeQueue, dependencySet).size > 0){
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc!.Transform = selectiveUpdateTransform(this);
-                    transform(this.root, rc!);
+                    transform(target as DocumentFragment, rc!);
                     //rc!.update!(rc!, this.root);
                 }
             });
