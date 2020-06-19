@@ -90,14 +90,15 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this) as (ctx: RenderContext, target: HTMLElement | DocumentFragment, options?: RenderOptions) => RenderContext | void,
             };
-            await transform(
-                (<any>this)[this._mainTemplateProp] as HTMLTemplateElement,
-                rc,
-                this.root
-            );
-        }
 
-        if(this.updateTransforms !== undefined){
+        }
+        const ret = await transform(
+            (<any>this)[this._mainTemplateProp] as HTMLTemplateElement,
+            rc,
+            this.root
+        );
+
+        if(this.updateTransforms !== undefined && ret){
             const propChangeQueue = this._propChangeQueue;
             this._propChangeQueue = new Set();
             this.updateTransforms.forEach(async selectiveUpdateTransform =>{

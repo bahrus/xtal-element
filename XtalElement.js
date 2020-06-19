@@ -68,9 +68,9 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this),
             };
-            await transform(this[this._mainTemplateProp], rc, this.root);
         }
-        if (this.updateTransforms !== undefined) {
+        const ret = await transform(this[this._mainTemplateProp], rc, this.root);
+        if (this.updateTransforms !== undefined && ret) {
             const propChangeQueue = this._propChangeQueue;
             this._propChangeQueue = new Set();
             this.updateTransforms.forEach(async (selectiveUpdateTransform) => {
