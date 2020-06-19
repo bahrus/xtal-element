@@ -10,7 +10,7 @@
     "start": "es-dev-server --app-index demo/counter-x.html --node-resolve --watch --open"
   },
   "dependencies": {
-    "trans-render": "0.0.200"
+    "trans-render": "0.0.201"
   },
   "devDependencies": {
     "es-module-shims": "0.4.6",
