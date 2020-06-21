@@ -1,9 +1,10 @@
 import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
 import {AttributeProps} from './types.d.js';
+import {getFullURL, IBaseLinkContainer} from './base-link-id.js';
 export {define, mergeProps} from './xtal-latx.js';
 export {AttributeProps} from './types.d.js';
 
-export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel>{
+export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel> implements IBaseLinkContainer{
 
     static is = 'xtal-fetch-view-element';
 
@@ -27,7 +28,7 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
 
     initViewModel : PromisedInitViewAngle<this, TInitViewModel, TUpdateViewModel> = 
     ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
-        fetch(href!, reqInit).then(resp => resp.json().then(data =>{
+        fetch(getFullURL(this, href!), reqInit).then(resp => resp.json().then(data =>{
             resolve(this.filterInitData(data));
         }))
     });
@@ -57,5 +58,7 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
      */
     reqInitRequired = false;
 
+
+    baseLinkId!: string;
 
 }

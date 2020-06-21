@@ -1,11 +1,12 @@
 import { XtalRoomWithAView } from './XtalRoomWithAView.js';
+import { getFullURL } from './base-link-id.js';
 export { define, mergeProps } from './xtal-latx.js';
 let XtalFetchViewElement = /** @class */ (() => {
     class XtalFetchViewElement extends XtalRoomWithAView {
         constructor() {
             super(...arguments);
             this.initViewModel = ({ href, reqInit }) => new Promise(resolve => {
-                fetch(href, reqInit).then(resp => resp.json().then(data => {
+                fetch(getFullURL(this, href), reqInit).then(resp => resp.json().then(data => {
                     resolve(this.filterInitData(data));
                 }));
             });
