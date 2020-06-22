@@ -8,8 +8,8 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
 
     static is = 'xtal-fetch-view-element';
 
-    static attributeProps : any = ({href, reqInit, reqInitRequired} : XtalFetchViewElement) => ({
-        str: [href],
+    static attributeProps : any = ({href, reqInit, reqInitRequired, baseLinkId} : XtalFetchViewElement) => ({
+        str: [href, baseLinkId],
         obj: [reqInit],
         jsonProp: [reqInit],
         bool: [reqInitRequired],
@@ -24,11 +24,13 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
         return data as TUpdateViewModel;
     }
 
+    as: 'json' | 'text' = 'json';
+
     get readyToInit(){return !this.disabled && this.href !== undefined && (!this.reqInitRequired || this.reqInit !== undefined)}
 
     initViewModel : PromisedInitViewAngle<this, TInitViewModel, TUpdateViewModel> = 
     ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
-        fetch(getFullURL(this, href!), reqInit).then(resp => resp.json().then(data =>{
+        fetch(getFullURL(this, href!), reqInit).then(resp => resp[this.as]().then(data =>{
             resolve(this.filterInitData(data));
         }))
     });
@@ -56,7 +58,7 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
     /**
      * Indicates that no fetch request should proceed until reqInit property / attribute is set.
      */
-    reqInitRequired = false;
+    reqInitRequired!: boolean;
 
 
     baseLinkId!: string;
