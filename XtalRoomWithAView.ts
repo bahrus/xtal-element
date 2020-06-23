@@ -56,13 +56,14 @@ export abstract class XtalRoomWithAView<InitViewModel = any, RefreshViewModel = 
             case 'initializing':
                 break; 
             case 'initialized':
-                this._state = 'refreshing';
                 if(this.refreshViewModel && deconstruct(this.refreshViewModel).includes(name)){
+                    this._state = 'refreshing';
                     this.refreshViewModel(this).then(model =>{
                         this._state = 'refreshed';
                         this.viewModel = model;
                     })
                 }else if(deconstruct(this.initViewModel).includes(name)){
+                    this._state = 'refreshing';
                     this.initViewModel(this).then(model =>{
                         this._state = 'refreshed';
                         this.viewModel = model;
