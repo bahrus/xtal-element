@@ -72,6 +72,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             };
             target = this[this._mainTemplateProp].content.cloneNode(true);
             transform(target, rc);
+            delete rc.options.initializedCallback;
         }
         else {
             target = this.root;

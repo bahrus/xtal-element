@@ -97,6 +97,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 target as HTMLElement,
                 rc
             );
+            delete rc.options.initializedCallback;
         }else{
             target = this.root;
             isFirst = false;
@@ -119,6 +120,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             
         }
         if(isFirst){
+
             this.root.appendChild(target);
         }
     }
