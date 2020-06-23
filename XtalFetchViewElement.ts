@@ -4,7 +4,7 @@ import {getFullURL, IBaseLinkContainer} from './base-link-id.js';
 export {define, mergeProps} from './xtal-latx.js';
 export {AttributeProps} from './types.d.js';
 
-export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TUpdateViewModel> implements IBaseLinkContainer{
+export abstract class XtalFetchViewElement<TInitViewModel = any, TRefreshViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TRefreshViewModel> implements IBaseLinkContainer{
 
     static is = 'xtal-fetch-view-element';
 
@@ -21,19 +21,21 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
     }
 
     filterUpdateData(data: any){
-        return data as TUpdateViewModel;
+        return data as TRefreshViewModel;
     }
 
     as: 'json' | 'text' = 'json';
 
     get readyToInit(){return !this.disabled && this.href !== undefined && (!this.reqInitRequired || this.reqInit !== undefined)}
 
-    initViewModel : PromisedInitViewAngle<this, TInitViewModel, TUpdateViewModel> = 
-    ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TUpdateViewModel>>) => new Promise<TInitViewModel>(resolve =>{
+    initViewModel : PromisedInitViewAngle<this, TInitViewModel, TRefreshViewModel> = 
+    ({href, reqInit} : Partial<XtalFetchViewElement<TInitViewModel, TRefreshViewModel>>) => new Promise<TInitViewModel>(resolve =>{
         fetch(getFullURL(this, href!), reqInit).then(resp => resp[this.as]().then(data =>{
             resolve(this.filterInitData(data));
         }))
     });
+
+
     
 
     /**
@@ -44,7 +46,6 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TUpdateViewMode
      * 
      */
     href: string | undefined;
-
 
 
     /**

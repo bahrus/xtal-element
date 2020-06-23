@@ -1,27 +1,12 @@
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-};
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-};
-var _controller;
 import { XtalElement } from './XtalElement.js';
-import { deconstruct, intersection, de } from './xtal-latx.js';
+import { deconstruct, de } from './xtal-latx.js';
 export { define, mergeProps } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
-        _controller.set(this, void 0);
         this._state = 'constructed';
-        __classPrivateFieldSet(this, _controller, new AbortController());
-        this.signal = __classPrivateFieldGet(this, _controller).signal;
+        this.__controller = new AbortController();
+        this.__signal = this.__controller.signal;
     }
     get viewModel() {
         return this._viewModel;
@@ -39,35 +24,31 @@ export class XtalRoomWithAView extends XtalElement {
             return;
         switch (this._state) {
             case 'constructed':
-                this._state = 'initializing';
-                this.initViewModel(this).then(model => {
-                    this._state = 'initialized';
-                    this.viewModel = model;
-                });
-                this._state = 'initializing';
+                if (deconstruct(this.initViewModel).includes(name)) {
+                    this._state = 'initializing';
+                    this.initViewModel(this).then(model => {
+                        this._state = 'initialized';
+                        this.viewModel = model;
+                    });
+                }
                 return;
             case 'initializing':
                 break;
             case 'initialized':
-                this.doViewUpdate();
-                break;
-        }
-    }
-    doViewUpdate() {
-        //untested
-        if (this.updateViewModel !== undefined) {
-            //TODO: Optimize
-            this.updateViewModel.forEach(angle => {
-                const dependencies = deconstruct(angle);
-                const dependencySet = new Set(dependencies);
-                if (intersection(this._propChangeQueue, dependencySet).size > 0) {
-                    angle(this).then(model => {
-                        this._state = 'updated';
+                this._state = 'refreshing';
+                if (this.refreshViewModel && deconstruct(this.refreshViewModel).includes(name)) {
+                    this.refreshViewModel(this).then(model => {
+                        this._state = 'refreshed';
                         this.viewModel = model;
                     });
                 }
-            });
+                else if (deconstruct(this.initViewModel).includes(name)) {
+                    this.initViewModel(this).then(model => {
+                        this._state = 'refreshed';
+                        this.viewModel = model;
+                    });
+                }
+                break;
         }
     }
 }
-_controller = new WeakMap();

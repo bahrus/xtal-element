@@ -4,26 +4,26 @@ export {define, mergeProps} from './xtal-latx.js';
 export {AttributeProps} from './types.d.js';
 
 
-export type PromisedInitViewAngle<TBase, InitViewModel = any, UpdateViewModel = InitViewModel> 
+export type PromisedInitViewAngle<TBase, InitViewModel = any, RefreshViewModel = InitViewModel> 
     = (room: TBase) => Promise<InitViewModel>;
     
-export type PromisedUpdateViewAngles<TBase, InitViewModel = any, UpdateViewModel = InitViewModel> 
-    =  (room: TBase) => Promise<UpdateViewModel>;
+export type PromisedRefreshViewAngles<TBase, InitViewModel = any, RefreshViewModel = InitViewModel> 
+    =  (room: TBase) => Promise<RefreshViewModel>;
 
-export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = InitViewModel> extends XtalElement{
+export abstract class XtalRoomWithAView<InitViewModel = any, RefreshViewModel = InitViewModel> extends XtalElement{
     
-    abstract initViewModel: PromisedInitViewAngle<this, InitViewModel, UpdateViewModel>;
-    updateViewModel: undefined | PromisedUpdateViewAngles<this, InitViewModel, UpdateViewModel>[];
+    abstract initViewModel: PromisedInitViewAngle<this, InitViewModel, RefreshViewModel>;
+    refreshViewModel: undefined | PromisedRefreshViewAngles<this, InitViewModel, RefreshViewModel>;
 
 
     constructor(){
         super();
         this._state = 'constructed';
-        this.#controller = new AbortController();
-        this.signal = this.#controller.signal;
+        this.__controller = new AbortController();
+        this.__signal = this.__controller.signal;
     }
 
-    _viewModel!: InitViewModel | UpdateViewModel;
+    _viewModel!: InitViewModel | RefreshViewModel;
     get viewModel(){
         return this._viewModel;
     }
@@ -35,44 +35,43 @@ export abstract class XtalRoomWithAView<InitViewModel = any, UpdateViewModel = I
         this.onPropsChange('viewModel')
     }
 
-    _state: 'constructed' | 'initializing' | 'initialized' | 'updating' | 'updated' | 'initializingAborted' | 'updatingAborted';
-    #controller: AbortController;
-    signal: AbortSignal;
+    _state: 'constructed' | 'initializing' | 'initialized' | 'refreshing' | 'refreshed' | 'initializingAborted' | 'refreshingAborted';
+    __controller: AbortController;
+    __signal: AbortSignal;
+
 
     async onPropsChange(name: string,  skipTransform = false) {
         await super.onPropsChange(name, this.viewModel === undefined);
         if(super.disabled || !this._xlConnected || !this.readyToInit) return;
         switch(this._state){
             case 'constructed':
-                this._state = 'initializing';
-                this.initViewModel(this).then(model =>{
-                    this._state = 'initialized';
-                    this.viewModel = model;
-                });
-                this._state = 'initializing';
+                if(deconstruct(this.initViewModel).includes(name)){
+                    this._state = 'initializing';
+                    this.initViewModel(this).then(model =>{
+                        this._state = 'initialized';
+                        this.viewModel = model;
+                    });
+                }
                 return;
             case 'initializing':
                 break; 
             case 'initialized':
-                this.doViewUpdate();
+                this._state = 'refreshing';
+                if(this.refreshViewModel && deconstruct(this.refreshViewModel).includes(name)){
+                    this.refreshViewModel(this).then(model =>{
+                        this._state = 'refreshed';
+                        this.viewModel = model;
+                    })
+                }else if(deconstruct(this.initViewModel).includes(name)){
+                    this.initViewModel(this).then(model =>{
+                        this._state = 'refreshed';
+                        this.viewModel = model;
+                    });
+                }
                 break;
         }
     }
 
-    doViewUpdate(){
-        //untested
-        if(this.updateViewModel !== undefined){
-            //TODO: Optimize
-            this.updateViewModel.forEach(angle =>{
-                const dependencies = deconstruct(angle as Function);
-                const dependencySet = new Set<string>(dependencies);
-                if(intersection(this._propChangeQueue, dependencySet).size > 0){
-                    angle(this).then(model =>{
-                        this._state = 'updated';
-                        this.viewModel = model;
-                    })
-                }
-            })
-        }
-    }
+
+
 }
