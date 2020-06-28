@@ -1,6 +1,7 @@
 import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps, PropAction} from './types.d.js';
 import {debounce} from './debounce.js';
+export {AttributeProps} from './types.d.js';
 
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
