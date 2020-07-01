@@ -1,6 +1,6 @@
 import { XtallatX, deconstruct, intersection } from './xtal-latx.js';
 import { hydrate } from 'trans-render/hydrate.js';
-import { transform } from 'trans-render/transform.js';
+import { transform, doImports } from 'trans-render/transform.js';
 export { define } from './xtal-latx.js';
 import { debounce } from './debounce.js';
 const deconstructed = Symbol();
@@ -46,10 +46,18 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         return this[_transformDebouncer];
     }
-    transform() {
+    doImports() {
+        return new Promise((resolve) => {
+            doImports(true).then(() => {
+                resolve();
+            });
+        });
+    }
+    async transform() {
         const readyToRender = this.readyToRender;
         if (readyToRender === false)
             return;
+        await doImports();
         if (typeof (readyToRender) === 'string') {
             if (readyToRender !== this._mainTemplateProp) {
                 this.root.innerHTML = '';
@@ -71,7 +79,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
                 initializedCallback: this.afterInitRenderCallback.bind(this),
             };
             target = this[this._mainTemplateProp].content.cloneNode(true);
-            transform(target, rc);
+            await transform(target, rc);
             delete rc.options.initializedCallback;
         }
         else {
@@ -87,7 +95,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
                 if (intersection(propChangeQueue, dependencySet).size > 0) {
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc.Transform = selectiveUpdateTransform(this);
-                    transform(target, rc);
+                    await transform(target, rc);
                     //rc!.update!(rc!, this.root);
                 }
             });
@@ -109,7 +117,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         ;
         if (!skipTransform) {
-            this.transform();
+            await this.transform();
         }
     }
 }

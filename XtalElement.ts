@@ -5,7 +5,7 @@ import {hydrate} from 'trans-render/hydrate.js';
 // import {update} from 'trans-render/update.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate, TransformGetter} from './types.d.js';
 import {RenderContext, RenderOptions} from 'trans-render/types2.d.js';
-import {transform} from 'trans-render/transform.js';
+import {transform, doImports} from 'trans-render/transform.js';
 export {AttributeProps} from './types.d.js';
 export {define} from './xtal-latx.js';
 import {debounce} from './debounce.js';
@@ -16,6 +16,7 @@ const transformDebouncer = Symbol();
 export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     noShadow = false;
+    
 
     _renderOptions = {} as RenderOptions;
     get renderOptions() : RenderOptions{
@@ -69,9 +70,17 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         }
         return this[_transformDebouncer];
     }
-    transform(){
+    doImports(){
+        return new Promise((resolve) =>{
+            doImports(true).then(() =>{
+                resolve();
+            })
+        })
+    }
+    async transform(){
         const readyToRender = this.readyToRender;
         if(readyToRender === false) return;
+        await doImports();
         if(typeof(readyToRender) === 'string'){
             if(readyToRender !== this._mainTemplateProp){
                 this.root.innerHTML = '';
@@ -93,7 +102,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 initializedCallback: this.afterInitRenderCallback.bind(this) as (ctx: RenderContext, target: HTMLElement | DocumentFragment, options?: RenderOptions) => RenderContext | void,
             };
             target =  ((<any>this)[this._mainTemplateProp] as HTMLTemplateElement).content.cloneNode(true);
-            transform(
+            await transform(
                 target as HTMLElement,
                 rc
             );
@@ -113,7 +122,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 if(intersection(propChangeQueue, dependencySet).size > 0){
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc!.Transform = selectiveUpdateTransform(this);
-                    transform(target as DocumentFragment, rc!);
+                    await transform(target as DocumentFragment, rc!);
                     //rc!.update!(rc!, this.root);
                 }
             });
@@ -141,7 +150,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             return;
         };
         if(!skipTransform){
-            this.transform();
+            await this.transform();
         }
         
     }

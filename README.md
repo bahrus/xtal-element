@@ -529,11 +529,9 @@ But because it doesn't use the keyword "this," we can place the "trait implement
 
 ```js
 
-const PropActions = {
-    calculateProp4: ({prop1, prop2, prop3, self}) => ({
-        self.prop4 = prop1 + prop2 + prop3;
-    }),
-}
+const linkProp4: ({prop1, prop2, prop3, self}) => ({
+    self.prop4 = prop1 + prop2 + prop3;
+});
 
 export class MyCustomElement extends XtalElement{
     ...
@@ -542,7 +540,7 @@ export class MyCustomElement extends XtalElement{
     prop3 = 'myValue3';
     prop4;
 
-    propActions = [PropActions.calculateProp4];
+    propActions = [linkProp4];
 
 }
 ```
