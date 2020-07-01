@@ -547,6 +547,9 @@ export class MyCustomElement extends XtalElement{
 
 Another theoretical benefit -- by separating the actions from the actual class, the actions could be dynamically loaded, and only activated after the download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
 
+**Limitations**:  Separating PropActions out of the class as an (imported) constant imposes some limitations.  Limitations which aren't applicable when the actions are defined inside the class -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.  For these scenarios, if the code is inside the class, it should have access to private members, and behave more like methods (I think).
+
+
 <details>
     <summary>PropAction pontifications</summary>
 
@@ -561,7 +564,6 @@ It's been my (biased) experience that putting as much "workflow" logic as possib
 
 </details>
 
-**Limitations**:  Separating PropActions out of the class as an (imported) constant imposes some limitations.  Limitations which aren't applicable when the actions are defined inside the class -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.  For these scenarios, if the code is inside the class, it should have access to private members, and behave more like methods (I think).
 
 ## Inheritance overindulgence?
 
