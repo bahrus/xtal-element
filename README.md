@@ -500,7 +500,7 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-### propActions
+### Observable Property Groups
 
 To make the code above easier to manage, you can stick with simple fields for all the properties, and implement the property "propActions":
 
@@ -523,7 +523,7 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Here, "self" is another name for "this" -- inspired by Python / Rust.  
+Here, "self" is another name for "this" -- inspired by Python / Rust's trait implementations.  
 
 But because it doesn't use the keyword "this," we can place the "trait implementation" in a separate constant, which is a little better, performance wise:
 
@@ -545,12 +545,21 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
+Another theoretical benefit -- by separating the actions from the actual class, the actions could be dynamically loaded, and only activated after the download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
+
+<details>
+    <summary>PropAction pontifications</summary>
+
+The resemblance of these "propActions" to traits is a bit superficial.  Typically, they're kind of like computed values / properties with one significant difference -- typically, they aggressively *push / notify* new values of properties, rather than passively calculating them when requested.  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  I hasten to add that [this doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
+
 
 Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
 
-It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions, makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data.  
+After experimenting with different name experiments, I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention -- often, but not always, these property group change observers / actions will result in modifying a single different property, so that property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose values depend on other property values, hence we stick with "propActions" rather than "propLinks" in order to accommodate more scenarios. 
 
-And another benefit -- by separating the actions from the actual class, the actions can be dynamically loaded, and only activated after the download is complete.  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.
+It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions, makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.   
+
+</details>
 
 **Limitations**:  Separating PropActions out of the class as an (imported) constant imposes some limitations.  Limitations which aren't applicable when the actions are defined inside the class -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.  For these scenarios, if the code is inside the class, it should have access to private members, and behave more like methods (I think).
 
