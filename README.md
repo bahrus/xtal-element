@@ -70,16 +70,12 @@ export class Foo extends XtalElement{
             }
         }
     }]
-    onPropsChange(propName){
-        ...//code that makes this happen properly
-        this.transform()
-    }
+
 }
 ```
 
-As long as all property changes also notify the onPropsChange method, specifying the name in the argument, then when prop1 changes, all 4 transformations are performed on the main template. When prop2 changes, only the second and last transforms need to be performed.  And when prop3 changes, only the third and fourth transformations are needed.
-
-As we will see, if you define properties via xtal-element's declarative support, all property changes will notify the onPropsChange method automatically.
+4.  A similar pattern is used for easily testable "propActions" - where property changes can be partitioned and turned into a logical workflow.
+5.  All these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library neutral class.
 
 ## X -- the simplest xtal-element base class
 

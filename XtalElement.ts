@@ -72,7 +72,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     }
     doImports(){
         return new Promise((resolve) =>{
-            doImports(true).then(() =>{
+            doImports(true, true).then(() =>{
                 resolve();
             })
         })
