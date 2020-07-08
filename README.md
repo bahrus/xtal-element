@@ -529,12 +529,12 @@ Another theoretical benefit -- by separating the actions from the actual class, 
 
 Separating PropAction lambda expressions out of the class as an (imported) constant imposes one known limitation.  A Limitation which isn't applicable when the actions are defined inside the class -- these constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  propActions, of course, allows a mixture of inline propActions, combined with external lambda expressions.
 
-Also, in general, PropActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.
+Also, in general, PropActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
 
 <details>
     <summary>PropAction pontifications</summary>
 
-The resemblance of these "propActions" to Rust trait implementations is a bit superficial.  They're kind of like computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which will trigger updates to the UI, rather than passively calculating them when requested.  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
+The resemblance of these "propActions" to Rust trait implementations is a bit superficial.  They're kind of like computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested.  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
 
 I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
 
