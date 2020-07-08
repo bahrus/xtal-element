@@ -20,7 +20,7 @@ Anyway, xtal-element's target audience is those who are looking for a base class
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility and separation of concerns to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
-4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up. 
+4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up.  (Unfortunately, Typescript doesn't support [abstract static properties / methods.](https://github.com/microsoft/TypeScript/issues/34516)).
 5.  Some of xtal-element's base classes adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
 
 </details>
@@ -75,7 +75,7 @@ export class Foo extends XtalElement{
 ```
 
 4.  A similar pattern is used for easily testable "propActions" - where property changes can be partitioned and turned into a logical workflow.
-5.  All these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library neutral class.
+5.  All these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library-neutral class.
 
 ## X -- the simplest xtal-element base class
 
@@ -269,9 +269,6 @@ const mainTemplate = createTemplate(/* html */`
 </style>
 `);
 const span$ = Symbol('spanSym');
-const updateTransforms =  [ 
-    ({count}: CounterXtalElement) => ({[span$]: count.toString()})
-];
 
 /**
  * @element counter-xtal-element
@@ -291,7 +288,8 @@ export class CounterXtalElement extends XtalElement{
     readyToInit = true;
 
     //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
-    //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template)
+    //You can return true/false.  You can also indicate the name of an alternate template to clone (mainTemplate is the default property for the main template), by setting the 
+    //value to the (string) name of an alternative property to "mainTemplate"
     readyToRender = true;
 
     //XtalElement is intended for visual elements only.
@@ -308,11 +306,13 @@ export class CounterXtalElement extends XtalElement{
         span: span$,
     };
 
-    // updateTransforms is called anytime property "name" changes.
+    // updateTransforms is called anytime property "name" changes (in this example).
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
     // Save a little bit of class instantiation time by referencing a static updateTransforms array.
-    updateTransforms = updateTransforms;
+    updateTransforms =  [ 
+        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
+    ];
 
     count = 0;
 
@@ -339,21 +339,21 @@ Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 
 Most web component libraries provide an "ergonomic layer" to help manage defining properties and observed attributes of the web component.
 
-XtalElement provides a slightly different approach:
-
-
+XtalElement does as well, but slices the categorization lightly differently differently than most libraries:
 
 ### Defining properties / attributes
 
 ```TypeScript
-import {XtalElement, define} from '../XtalElement.js';
+import {XtalElement, define, AttributeProps} from '../XtalElement.js';
 class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
-    static attributeProps = ({prop1, prop2, prop3, prop4}: MyCustomElement) => (
+
+    static attributeProps = ({prop1, prop2, prop3, prop4}: MyCustomElement) => ({
         bool: [prop1, prop2],
         num: [prop3],
         obj: [prop4]
-    )
+    } as AttributeProps);
+
     prop1;
     prop2;
     prop3;
