@@ -339,7 +339,7 @@ Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 
 Most web component libraries provide an "ergonomic layer" to help manage defining properties and observed attributes of the web component.
 
-XtalElement does as well, but slices the categorization lightly differently differently than most libraries:
+XtalElement does as well, but slices the categorization slightly differently from other web component libraries:
 
 ### Defining properties / attributes
 
@@ -368,7 +368,6 @@ The function "define" does the following:
 2.  The setter has a call to this.onPropsChange([name of prop]) baked in.
 3.  Some logic to support asynchronous loading is also added to connectionCallback.
 4.  Registers the custom element based on the static 'is' property.
-
 
 ### Defining properties / attributes with inheritance
 
@@ -403,7 +402,7 @@ The categories properties can be put into are:
 
 ## Setter logic
 
-Defining a new property is, by design, meant to be as easy as possible (see note below):
+Defining a new property is, by design, meant to be as easy as possible (but see [cautionary](#default-values-of-properties-in-depth) note below):
 
 ```js
 export class MyCustomElement extends XtalElement{
@@ -413,9 +412,9 @@ export class MyCustomElement extends XtalElement{
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
-If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you (basically all the properties listed in attributeProps discussed below).  Likewise, if the only impact of the changed property is in what is displayed, that is supported by XtalElement's trans-rendering approach.
+If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by XtalElement's init and update transforms.
 
-But the need to do different types of things when properties changed isn't limited to these two common requirements.  So typically, you then have to add logic like this:
+But the need to do different types of things when properties change isn't limited to these two common requirements.  So typically, you then have to add logic like this:
 
 ```js
 export class MyCustomElement extends XtalElement{
@@ -445,7 +444,7 @@ export class MyCustomElement extends XtalElement{
     }
     set prop1(nv){
         this._prop1 = nv;
-        this.handleChanges();
+        this.doSomeCommonLogic();
         this.onPropsChange('prop1');
     }
 
@@ -455,7 +454,7 @@ export class MyCustomElement extends XtalElement{
     }
     set prop2(nv){
         this.prop2 = nv;
-        this.handleChanges();
+        this.doSomeCommonLogic();
         this.onPropsChange('prop2');
     }
 
@@ -465,13 +464,13 @@ export class MyCustomElement extends XtalElement{
     }
     set prop3(nv){
         this._prop3 = nv;
-        this.handleChanges();
+        this.doSomeCommonLogic();
         this.onPropsChange('prop3');
     }
 
     prop4;
 
-    handleChanges(){
+    doSomeCommonLogic(){
         //TODO:  debouncing
         this.prop4 = this.prop1 + this.prop2 + this.prop3;
     }
@@ -480,7 +479,7 @@ export class MyCustomElement extends XtalElement{
 
 ### Observable Property Groups
 
-To make the code above easier to manage, you can stick with simple fields for all the properties (see cautionary note below), and implement the property "propActions":
+To make the code above easier to manage, you can stick with simple fields for all the properties (see [cautionary note](#default-values-of-properties-in-depth) below), and implement the property "propActions":
 
 ```js
 export class MyCustomElement extends XtalElement{
@@ -527,23 +526,25 @@ Another theoretical benefit -- by separating the actions from the actual class, 
 
 **Limitations**:  
 
-Separating PropAction lambda expressions out of the class as an (imported) constant imposes one known limitation.  A Limitation which isn't applicable when the actions are defined inside the class -- these constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  propActions, of course, allows a mixture of inline propActions, combined with external lambda expressions.
+Separating "propAction" lambda expressions out of the class as an (imported) constant imposes one known limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered to access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, it could remain inside the class.
 
-Also, in general, PropActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
+Also, in general, these propActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
 
 <details>
     <summary>PropAction pontifications</summary>
 
-The resemblance of these "propActions" to Rust trait implementations is a bit superficial.  They're kind of like computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested.  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
+The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're kind of like computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
+
+It's possible that libraries that don't support this kind of property change "diffraction", but rely on "template-optimized re-rendering" of the entire UI with every property change, end up also avoiding unnecessary updates, based on their clever diff-engine algorithms.  I can say as a user of a limited number of such libraries, that what is actually getting updated, when and why, has always a bit of a mystery for me, so that I end up "winging it" more often than I'd like.  This library puts the onus (and power) in the developer's hands to devise (and fully understand) their own strategy, not sparing the developer the details of the trade off. 
 
 I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
 
 
 Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
 
-After experimenting with different naming patterns, personally I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least one for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with "propActions" rather than "propLinks" in order to accommodate more scenarios. 
+After experimenting with different naming patterns, personally I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more such scenarios. 
 
-It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions, makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.   
+It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.   
 
 </details>
 
@@ -551,18 +552,18 @@ It's been my (biased) experience that putting as much "workflow" logic as possib
 
 This library follows the [best practices](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) approach to allow lazy loading of properties.  Meaning it should be fine to set the properties of a custom element tag, even when that tag has not yet been elevated from an unknown element into a custom element.
 
-This library also has a string desire to keep things as simple as possible.  In particular, as was mentioned earlier, this syntax is considered ideal:
+xtal-element also has a strong desire to keep things as simple as possible.  In particular, as was mentioned earlier, this syntax is considered ideal:
 
 ```JavaScript
 export class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
-    myProp = 'myValue';
+    myProp = 'myDefaultValue';
 }
 ```
 
-Unfortunately, these two goals appear to be at odds -- the default value myProp = 'myValue' could be executed *after* the value of myProp was already passed to the my-custom-element tag.
+Unfortunately, these two goals appear to be at odds -- the default value myProp = 'myDefaultValue' *could* be executed *after* the value of myProp was already passed to the my-custom-element tag, especially the first time.
 
-The only way I see how this could be avoided, sticking to standard class mechanisms, would be to have logic in the constructor such as:
+The only way I see how this could be safely avoided, sticking to standard class mechanisms, would be to have logic in the constructor such as:
 
 ```JavaScript
 export class MyCustomElement extends XtalElement{
@@ -585,11 +586,11 @@ export interface MyCustomElementProps {
 
 export class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
-    static defaultValues = ({myProp1, myProp2, myProp3} : MyCustomElement) => {
+    static defaultValues = ({myProp1, myProp2, myProp3} : MyCustomElement) => ({
         myProp1: 'myValue',
         myProp2: 42,
         myProp3: true
-    }
+    } as MyCustomElementProps);
 
 }
 ```
@@ -602,9 +603,9 @@ But what XtalElement is guilty of, perhaps, is making it more tempting to take g
 
 XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
-XtalElement's initTransform, with it's JSON like object literal transform, can fairly easily be (deep) merged with additional / alternative transform rules.  The updateTrasforms array could likewise be tweaked, though with a bit more difficult.
+XtalElement's initTransform, with it's JSON like object literal transform, can fairly easily be (deep) merged with additional / alternative transform rules.  The updateTrasforms array could likewise be tweaked, though with a bit more difficulty.
 
-As a final stop gap, XtalElement allows a chain to be set up during initialization (and updates) of the component.  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
+As a final stop gap, XtalElement allows a chain to be set up during initialization (and updates) of the component.  The benefits of this are much stronger with initialization and the first update, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
 
 In particular, a subclass can add the following methods:
 
@@ -619,7 +620,7 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 
 I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalRoomWithAView provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
 
-XtalRoomWithAView extends XtalElement, but adds a pattern for retrieving a dependent View. In addition, it keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/) requests when the parameters change while in mid-flight[TODO].
+XtalRoomWithAView extends XtalElement, but adds a pattern for retrieving a dependent view. In addition, it keeps track of the "state" the component is in -- i.e. initializing, updating, and also providing support for [aborting](https://cameronnokes.com/blog/cancelling-async-tasks-with-abortcontroller/) requests when the parameters change while in mid-flight[TODO].
  
 
 I am hoping that the [custom state pseudo class proposal](https://www.chromestatus.com/feature/6537562418053120) will continue to gain some momentum, which empowers developers with some of the same machinery available to browser vendors when they implement internal components.  If it does, XtalRoomWithAView will certainly take advantage of that promising sounding feature. 
@@ -628,17 +629,20 @@ For now, XtalRoomWithAView also conveys state changes via data-* attributes, so 
 
 XtalRoomWithAView also supports something that may only be applicable 33.7% of the time.  Recall that XtalElement sees a strong case for separating initialization from updating, as far as rendering. Likewise, sometimes what you need to retrieve originally may differ from what needs to be retrieved subsequently.
 
-By "update" I don't mean literally making CRUD-like updates to the system of record.  That could be handled by individual methods within the component class.  But after making such an CRUD-like update, we need to "update the view" that the user sees, to reflect the changes.  Often, that is controlled by the server, as it provides an extra sense of security that what the user sees is true to what's in the system of record.  "Refreshing" the data may be a better way of describing it.
+<details>
+<summary>Terminology</summary>
+The word "update" in this context seems too easily confused with making CRUD-like updates to the system of record.  That could be handled by individual methods within the component class.  But after making such an CRUD-like update, we need to "refresh the view" that the user sees, to reflect the changes.  Often, that refresh of data is generated by the server, as it provides an extra sense of security that what the user sees is true to what's in the system of record.  So whereas client-side rendering is roughly divided into "init" vs "update" transforms, server-side fetching is described with the verbs init and refresh.
+</summary>
 
-For example, a component might want to retrieve the data required for the main view, which may be a chart or a grid.  But also, with the same data call, retrieve the data required for dropdown filters that allow for updating the main view.  Performance / maintainability considerations might make it prudent to combine the data retrieval for both the filters and the main view together in one call, especially if the filters share some of the same data as the filters. But once the original view is rendered, now as the filters change via user interaction, we only want to retrieve the data needed for the grid or chart, but not for the filters. 
+For example, a component might want to retrieve the data required for the main view, which may be a chart or a grid.  But also, with the same data call, retrieve the data required for dropdown filters that allow for refreshing the main view.  Performance / maintainability considerations might make it prudent to combine the data retrieval for both the filters and the main view together in one call, especially if the filters share some of the same data as the filters. But once the original view is rendered, now as the filters change via user interaction, we only want to retrieve the data needed for the grid or chart, but not for the filters. 
 
-Another possibility:  In a more radical departure from prevailing norms, the original asynchronous request for the "View Model" could be made for a data format easiest for the browser to digest:  HTML (and perhaps a reverse HTML 2 JS Object transform could then take place to be ready for update binding as needed).  But subsequent refreshes of the latest data may differ only slightly (think of the covid death tables, for example).  So for updates to the table, the changes may be more efficiently sent down in JSON format (a declarative subset of trans-render syntax, perhaps?).  So once again, it would probably help with the reasoning process to officially separate the initial data request from subsequent updates.   
+Another possibility:  In a more radical departure from prevailing norms, the original asynchronous request for the "View Model" could be made for a data format easiest for the browser to digest:  HTML (and perhaps a reverse HTML 2 JS Object transform could then take place to be ready for update binding as needed).  But subsequent refreshes of the latest data may differ only slightly (think of the covid death tables, for example).  So for updates to the table, the changes may be more efficiently sent down in JSON format (a declarative subset of trans-render syntax, perhaps?).  So once again, it would probably help with the reasoning process to officially separate the initial data request from subsequent refreshes.   
 
 In addition, the kind of component we are discussing generally always needs to display an initial view once enough parameters are set.
 
-Whereas the update should only occur when a subset of the parameters in the "room" change.
+Whereas the refresh should only occur when a subset of the parameters in the "room" change.
 
-It is for this reason that a separate update protocol is provided. 
+It is for this reason that a separate refresh method is prescribed. 
 
 The code below shows the minimal amount of code needed to define a custom element using this library.  If you are using TypeScript, it won't compile until some code is placed in many of the properties / methods below.
 
