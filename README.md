@@ -401,8 +401,6 @@ The categories properties can be put into are:
 ```
 
 
-
-
 ## Setter logic
 
 Defining a new property is, by design, meant to be as easy as possible (see note below):
@@ -562,9 +560,9 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Unfortunately, these two goals appear to be odds -- the default value myProp = 'myValue' could be executed after the value of myProp was already passed to the my-custom-element tag.
+Unfortunately, these two goals appear to be at odds -- the default value myProp = 'myValue' could be executed *after* the value of myProp was already passed to the my-custom-element tag.
 
-The only way I see how this could be avoided, sticking to standard class definitions would be to have logic in the constructor such as:
+The only way I see how this could be avoided, sticking to standard class mechanisms, would be to have logic in the constructor such as:
 
 ```JavaScript
 export class MyCustomElement extends XtalElement{
@@ -598,15 +596,17 @@ export class MyCustomElement extends XtalElement{
 
 ## Inheritance overindulgence?
 
-By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class based components (which can override render and do whatever it pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
+By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class-based components (which can override render and do whatever it pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
 
 But what XtalElement is guilty of, perhaps, is making it more tempting to take great liberties with the original UI.  XtalElement, by design, tries to make it easy for inheriting subclasses to tweak the rendered output, compared with more traditional rendering methods.  
 
 XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
-To make this even easier, XtalElement allows a chain to be set up during initialization of the component.  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
+XtalElement's initTransform, with it's JSON like object literal transform, can fairly easily be (deep) merged with additional / alternative transform rules.  The updateTrasforms array could likewise be tweaked, though with a bit more difficult.
 
-In particular, a subclass can add the following method:
+As a final stop gap, XtalElement allows a chain to be set up during initialization (and updates) of the component.  The benefits of this are much stronger with initialization, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
+
+In particular, a subclass can add the following methods:
 
 ```TypeScript
 initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
