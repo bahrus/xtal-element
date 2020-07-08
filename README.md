@@ -569,12 +569,12 @@ The only way I see how this could be safely avoided, sticking to standard class 
 export class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
     constructor(){
-        if(this.myProp === undefined) this.myProp = 'myValue';
+        if(this.myProp === undefined) this.myProp = 'myDefaultValue';
     }
 }
 ```
 
-If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrated extra steps needed to provide type safety:
+If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrat the extra steps needed to provide some type safety:
 
 ```Typescript
 
