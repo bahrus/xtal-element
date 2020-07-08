@@ -574,7 +574,7 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrat the extra steps needed to provide some type safety:
+If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrate the extra steps needed to provide some type safety:
 
 ```Typescript
 
