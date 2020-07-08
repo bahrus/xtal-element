@@ -49,26 +49,26 @@ export class Foo extends XtalElement{
     prop3 = 'c';
     ...
     updateTransforms = [
-        ({prop1}) =>{
+        ({prop1}) => ({
             section:{
                 h1: prop1
             }
-        },
-        ({prop1, prop2}) =>{
+        }),
+        ({prop1, prop2}) => ({
             section:{
                 h2: prop1 + prop2
             }
-        },
-        ({prop1, prop3}) =>{
+        }),
+        ({prop1, prop3}) => ({
             footer: {
                 h3: prop1 + prop3
             }
-        },
-        ({prop1, prop2, prop3}) => {
+        }),
+        ({prop1, prop2, prop3}) => ({
             footer:{
                 h4: prop1 + prop2 + prop3
             }
-        }
+        })
     }]
 
 }
@@ -124,10 +124,10 @@ X.tend({
     name: 'my-counter',
     attributeProps: ({count}) => ({num:[count]}),
     main: template,
-    initTransform:({changeCount}) => {
+    initTransform:({changeCount}) => ({
         button:[,{click:[changeCount, 'dataset.d', parseInt]}], 
         span: span$,
-    },
+    }),
     updateTransforms: [({count}) =>({[span$]: count.toString()})]
 });
 ```
@@ -143,7 +143,7 @@ Notable features of web components defined using base class X:
 1.  Fairly minimal typing required.
 2.  Use of "this" is quite limited -- it is only found within the small class, and doesn't seem like it would throw newcomers - as it follows
 familiar patterns to Java / C# developers.
-3.  Granted, there may be a bit of a learning curve, when it comes to use of "trans-rendering".  However, maybe trans-rendering is more natural to 
+3.  Granted, there may be a bit of a learning curve when it comes to use of "trans-rendering".  However, maybe trans-rendering is more natural to 
 CSS focused developers?
 4.  The class -- "MyCounter" -- is quite pristine -- in this example, it only contains the core business logic.
 5.  The same class could be paired up with different HTML templates, event handlers, etc.  I.e. this is kind of the 
@@ -325,7 +325,6 @@ define(CounterXtalElement);
 
 ```
 
-
 Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 
 1.  Less "magic", more typing.
@@ -340,28 +339,11 @@ Comparisons between XtalElement and X.  Unlike X, XtalElement has:
 
 Most web component libraries provide an "ergonomic layer" to help manage defining properties and observed attributes of the web component.
 
-XtalElement provides two ways to do this:
+XtalElement provides a slightly different approach:
 
-### Defining properties / attributes in a non type safe way:
 
-```JavaScript
-import {XtalElement, define} from '../XtalElement.js';
-class MyCustomElement extends XtalElement{
-    static is = 'my-custom-element';
-    static myCustomElementProps = {
-        bool: ['prop1', 'prop2'],
-        num: ['prop3'],
-        obj: ['prop4']
-    }
-    prop1;
-    prop2;
-    prop3;
-    prop4;
-}
-define(MyCustomElement);
-```
 
-### Defining properties / attributes in a type safe way using TypeScript:
+### Defining properties / attributes
 
 ```TypeScript
 import {XtalElement, define} from '../XtalElement.js';
@@ -382,7 +364,7 @@ define(MyCustomElement);
 
 The function "define" does the following:
 
-1.  Turns prop1, prop2, prop3, prop4 into public getters and setters of the class instance with the same name, without losing the value set by default. 
+1.  Turns prop1, prop2, prop3, prop4 into public getters and setters of the class instance with the same name, without losing the value set by default (see note below). 
 2.  The setter has a call to this.onPropsChange([name of prop]) baked in.
 3.  Some logic to support asynchronous loading is also added to connectionCallback.
 4.  Registers the custom element based on the static 'is' property.
@@ -419,9 +401,11 @@ The categories properties can be put into are:
 ```
 
 
+
+
 ## Setter logic
 
-Defining a new property is, by design, meant to be as easy as possible:
+Defining a new property is, by design, meant to be as easy as possible (see note below):
 
 ```js
 export class MyCustomElement extends XtalElement{
@@ -431,7 +415,7 @@ export class MyCustomElement extends XtalElement{
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
-If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by XtalElement's trans-rendering approach.
+If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you (basically all the properties listed in attributeProps discussed below).  Likewise, if the only impact of the changed property is in what is displayed, that is supported by XtalElement's trans-rendering approach.
 
 But the need to do different types of things when properties changed isn't limited to these two common requirements.  So typically, you then have to add logic like this:
 
@@ -498,7 +482,7 @@ export class MyCustomElement extends XtalElement{
 
 ### Observable Property Groups
 
-To make the code above easier to manage, you can stick with simple fields for all the properties, and implement the property "propActions":
+To make the code above easier to manage, you can stick with simple fields for all the properties (see cautionary note below), and implement the property "propActions":
 
 ```js
 export class MyCustomElement extends XtalElement{
@@ -543,23 +527,74 @@ export class MyCustomElement extends XtalElement{
 
 Another theoretical benefit -- by separating the actions from the actual class, the actions could be dynamically loaded, and only activated after the download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
 
-**Limitations**:  Separating PropActions out of the class as an (imported) constant imposes some limitations.  Limitations which aren't applicable when the actions are defined inside the class -- PropActions don't support responding to, or modifying private members (something in the very early stages of browser adoption).  Also, PropActions is not an elegant place to add event handlers onto internal components.  For these scenarios, if the code is inside the class, it should have access to private members, and behave more like methods (I think).
+**Limitations**:  
 
+Separating PropAction lambda expressions out of the class as an (imported) constant imposes one known limitation.  A Limitation which isn't applicable when the actions are defined inside the class -- these constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  propActions, of course, allows a mixture of inline propActions, combined with external lambda expressions.
+
+Also, in general, PropActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.
 
 <details>
     <summary>PropAction pontifications</summary>
 
-The resemblance of these "propActions" to Rust trait implementations is a bit superficial.  Typically, they're kind of like computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, rather than passively calculating them when requested.  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  I hasten to add that [this doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
+The resemblance of these "propActions" to Rust trait implementations is a bit superficial.  They're kind of like computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which will trigger updates to the UI, rather than passively calculating them when requested.  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
+
+I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
 
 
 Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
 
-After experimenting with different name experiments, I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention -- often, but not always, these property group change observers / actions will result in modifying a single different property, so that property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose values depend on other property values, hence we stick with "propActions" rather than "propLinks" in order to accommodate more scenarios. 
+After experimenting with different naming patterns, personally I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least one for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with "propActions" rather than "propLinks" in order to accommodate more scenarios. 
 
 It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions, makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.   
 
 </details>
 
+### Default values of properties, in depth
+
+This library follows the [best practices](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) approach to allow lazy loading of properties.  Meaning it should be fine to set the properties of a custom element tag, even when that tag has not yet been elevated from an unknown element into a custom element.
+
+This library also has a string desire to keep things as simple as possible.  In particular, as was mentioned earlier, this syntax is considered ideal:
+
+```JavaScript
+export class MyCustomElement extends XtalElement{
+    static is = 'my-custom-element';
+    myProp = 'myValue';
+}
+```
+
+Unfortunately, these two goals appear to be odds -- the default value myProp = 'myValue' could be executed after the value of myProp was already passed to the my-custom-element tag.
+
+The only way I see how this could be avoided, sticking to standard class definitions would be to have logic in the constructor such as:
+
+```JavaScript
+export class MyCustomElement extends XtalElement{
+    static is = 'my-custom-element';
+    constructor(){
+        if(this.myProp === undefined) this.myProp = 'myValue';
+    }
+}
+```
+
+If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrated extra steps needed to provide type safety:
+
+```Typescript
+
+export interface MyCustomElementProps {
+    myProp1: string;
+    myProp2: number;
+    myProp3: boolean;
+}
+
+export class MyCustomElement extends XtalElement{
+    static is = 'my-custom-element';
+    static defaultValues = ({myProp1, myProp2, myProp3} : MyCustomElement) => {
+        myProp1: 'myValue',
+        myProp2: 42,
+        myProp3: true
+    }
+
+}
+```
 
 ## Inheritance overindulgence?
 
