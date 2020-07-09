@@ -40,8 +40,8 @@ export abstract class XtalRoomWithAView<InitViewModel = any, RefreshViewModel = 
     __signal: AbortSignal;
 
 
-    async onPropsChange(name: string,  skipTransform = false) {
-        await super.onPropsChange(name, this.viewModel === undefined);
+    onPropsChange(name: string,  skipTransform = false) {
+        super.onPropsChange(name, this.viewModel === undefined);
         if(super.disabled || !this._xlConnected || !this.readyToInit) return;
         switch(this._state){
             case 'constructed':

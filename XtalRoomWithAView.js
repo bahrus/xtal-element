@@ -18,8 +18,8 @@ export class XtalRoomWithAView extends XtalElement {
         });
         this.onPropsChange('viewModel');
     }
-    async onPropsChange(name, skipTransform = false) {
-        await super.onPropsChange(name, this.viewModel === undefined);
+    onPropsChange(name, skipTransform = false) {
+        super.onPropsChange(name, this.viewModel === undefined);
         if (super.disabled || !this._xlConnected || !this.readyToInit)
             return;
         switch (this._state) {
