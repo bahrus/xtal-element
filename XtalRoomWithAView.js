@@ -24,13 +24,13 @@ export class XtalRoomWithAView extends XtalElement {
             return;
         switch (this._state) {
             case 'constructed':
-                if (deconstruct(this.initViewModel).includes(name)) {
-                    this._state = 'initializing';
-                    this.initViewModel(this).then(model => {
-                        this._state = 'initialized';
-                        this.viewModel = model;
-                    });
-                }
+                //if(deconstruct(this.initViewModel).includes(name)){
+                this._state = 'initializing';
+                this.initViewModel(this).then(model => {
+                    this._state = 'initialized';
+                    this.viewModel = model;
+                });
+                //}
                 return;
             case 'initializing':
                 break;
