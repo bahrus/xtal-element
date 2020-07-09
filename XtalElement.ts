@@ -137,7 +137,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     
 
     _propChangeQueue: Set<string> = new Set();
-    onPropsChange(name: string, skipTransform = false) {
+    async onPropsChange(name: string, skipTransform = false) {
         super.onPropsChange(name);
         this._propChangeQueue.add(name);
         // if(Array.isArray(name)){
@@ -150,7 +150,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             return;
         };
         if(!skipTransform){
-            this.transform();
+            await this.transform();
         }
         
     }

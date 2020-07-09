@@ -45,13 +45,11 @@ export abstract class XtalRoomWithAView<InitViewModel = any, RefreshViewModel = 
         if(super.disabled || !this._xlConnected || !this.readyToInit) return;
         switch(this._state){
             case 'constructed':
-                //if(deconstruct(this.initViewModel).includes(name)){
-                    this._state = 'initializing';
-                    this.initViewModel(this).then(model =>{
-                        this._state = 'initialized';
-                        this.viewModel = model;
-                    });
-                //}
+                this._state = 'initializing';
+                this.initViewModel(this).then(model =>{
+                    this._state = 'initialized';
+                    this.viewModel = model;
+                });
                 return;
             case 'initializing':
                 break; 

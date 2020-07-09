@@ -104,7 +104,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             this.root.appendChild(target);
         }
     }
-    onPropsChange(name, skipTransform = false) {
+    async onPropsChange(name, skipTransform = false) {
         super.onPropsChange(name);
         this._propChangeQueue.add(name);
         // if(Array.isArray(name)){
@@ -117,7 +117,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         ;
         if (!skipTransform) {
-            this.transform();
+            await this.transform();
         }
     }
 }
