@@ -1,4 +1,5 @@
 import { debounce } from './debounce.js';
+export { hydrate } from 'trans-render/hydrate.js';
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s) {
     return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });

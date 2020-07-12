@@ -1,7 +1,8 @@
 import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps, PropAction, IXtallatXI, EventScopes} from './types.d.js';
 import {debounce} from './debounce.js';
-
+export {AttributeProps} from './types.d.js';
+export {hydrate} from 'trans-render/hydrate.js';
 
 
 const ltcRe = /(\-\w)/g;
