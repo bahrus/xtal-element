@@ -9,18 +9,15 @@ function defProto(newClass, args) {
 }
 export class X extends XtalElement {
     static tend(args) {
-        let newClass = /** @class */ (() => {
-            class newClass extends args.class {
-                constructor() {
-                    super(...arguments);
-                    this.readyToInit = true;
-                    this.readyToRender = true;
-                }
+        class newClass extends args.class {
+            constructor() {
+                super(...arguments);
+                this.readyToInit = true;
+                this.readyToRender = true;
             }
-            newClass.is = args.name;
-            newClass.attributeProps = args.attributeProps;
-            return newClass;
-        })();
+        }
+        newClass.is = args.name;
+        newClass.attributeProps = args.attributeProps;
         defProto(newClass, args);
     }
     static cessorize(args) {
@@ -28,18 +25,15 @@ export class X extends XtalElement {
         args.mixins.forEach(mixin => {
             base = mixin(base);
         });
-        let newClass = /** @class */ (() => {
-            class newClass extends base {
-                constructor() {
-                    super(...arguments);
-                    this.readyToInit = true;
-                    this.readyToRender = true;
-                }
+        class newClass extends base {
+            constructor() {
+                super(...arguments);
+                this.readyToInit = true;
+                this.readyToRender = true;
             }
-            newClass.is = args.name;
-            newClass.attributeProps = args.attributeProps;
-            return newClass;
-        })();
+        }
+        newClass.is = args.name;
+        newClass.attributeProps = args.attributeProps;
         defProto(newClass, args);
     }
 }

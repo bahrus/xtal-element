@@ -251,10 +251,21 @@ export function XtallatX(superClass) {
              * @param detail Information to be passed with the event
              * @param asIs If true, don't append event name with '-changed'
              */
-            [de](name, detail, asIs = false, bubbles = false) {
+            [de](name, detail, asIs = false) {
                 if (this.disabled)
                     return;
                 const eventName = name + (asIs ? '' : '-changed');
+                let bubbles = false;
+                let composed = false;
+                let cancelable = false;
+                if (this.eventScopes !== undefined) {
+                    const eventScope = this.eventScopes.find(x => x[0] === eventName);
+                    if (eventScope !== undefined) {
+                        bubbles = eventScope[1] === 'bubbles';
+                        cancelable = eventScope[2] === 'cancelable';
+                        composed = eventScope[3] === 'composed';
+                    }
+                }
                 const newEvent = new CustomEvent(eventName, {
                     detail: detail,
                     bubbles: bubbles,

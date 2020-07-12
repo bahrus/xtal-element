@@ -1,7 +1,8 @@
 import {IHydrate} from 'trans-render/types.d.js';
-import {EvaluatedAttributeProps, AttributeProps, PropAction} from './types.d.js';
+import {EvaluatedAttributeProps, AttributeProps, PropAction, IXtallatXI, EventScopes} from './types.d.js';
 import {debounce} from './debounce.js';
-export {AttributeProps} from './types.d.js';
+
+
 
 const ltcRe = /(\-\w)/g;
 export function lispToCamel(s: string){
@@ -130,22 +131,7 @@ export function define(MyElementClass: any){
 export const de: unique symbol = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
 
 
-export interface IXtallatXI extends IHydrate {
 
-    /**
-     * Dispatch Custom Event
-     * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
-     * @param detail Information to be passed with the event
-     * @param asIs If true, don't append event name with '-changed'
-     */
-    [de](name: string, detail: any, asIs?: boolean): CustomEvent | void;
-    /**
-     * Needed for asynchronous loading
-     * @param props Array of property names to "upgrade", without losing value set while element was Unknown
-     */
- 
-    // static observedAttributes: string[]; 
-}
 
 
 export function mergeProps(props1: EvaluatedAttributeProps | AttributeProps, props2: EvaluatedAttributeProps | AttributeProps): EvaluatedAttributeProps{
@@ -173,7 +159,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
         }
 
-        static attributeProps : any = ({disabled} : IXtallatXI) => ({
+        static attributeProps : any = ({disabled } : IXtallatXI) => ({
             bool: [disabled],
         } as AttributeProps);
 
@@ -193,7 +179,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return (<any>this)[this.evalPath] as EvaluatedAttributeProps;
         }
 
-        
+
 
         /**
          * Tracks how many times each event type was called.
@@ -289,9 +275,20 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
          */
-        [de](name: string, detail: any, asIs: boolean = false, bubbles: boolean = false) {
+        [de](name: string, detail: any, asIs: boolean = false) {
             if(this.disabled) return;
             const eventName = name + (asIs ? '' : '-changed');
+            let bubbles = false;
+            let composed = false;
+            let cancelable = false;
+            if(this.eventScopes !== undefined){
+                const eventScope = this.eventScopes.find(x => x[0] === eventName);
+                if(eventScope !== undefined){
+                    bubbles = eventScope[1] === 'bubbles';
+                    cancelable = eventScope[2] === 'cancelable';
+                    composed = eventScope[3] === 'composed';
+                }
+            } 
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
                 bubbles: bubbles,
@@ -302,6 +299,8 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             this.__incAttr(eventName);
             return newEvent;
         }
+
+        eventScopes: EventScopes | undefined;
 
         ___processActionDebouncer!: any;
         get __processActionDebouncer(){ //TODO:  https://github.com/denoland/deno/issues/5258
