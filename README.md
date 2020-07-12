@@ -586,11 +586,11 @@ export interface MyCustomElementProps {
 
 export class MyCustomElement extends XtalElement{
     static is = 'my-custom-element';
-    static defaultValues = ({myProp1, myProp2, myProp3} : MyCustomElement) => ({
+    static defaultValues  = {
         myProp1: 'myValue',
         myProp2: 42,
         myProp3: true
-    } as MyCustomElementProps);
+    } as MyCustomElementProps;
 
 }
 ```
