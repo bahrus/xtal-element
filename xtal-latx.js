@@ -269,8 +269,8 @@ export function XtallatX(superClass) {
                 const newEvent = new CustomEvent(eventName, {
                     detail: detail,
                     bubbles: bubbles,
-                    composed: false,
-                    cancelable: true,
+                    composed: composed,
+                    cancelable: cancelable,
                 });
                 this.dispatchEvent(newEvent);
                 this.__incAttr(eventName);

@@ -292,8 +292,8 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
                 bubbles: bubbles,
-                composed: false,
-                cancelable: true, //https://dev.to/open-wc/composed-true-considered-harmful-5g59
+                composed: composed,
+                cancelable: cancelable, //https://dev.to/open-wc/composed-true-considered-harmful-5g59
             } as CustomEventInit);
             this.dispatchEvent(newEvent);
             this.__incAttr(eventName);
