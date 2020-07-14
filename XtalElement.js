@@ -1,6 +1,6 @@
 import { XtallatX, deconstruct, intersection } from './xtal-latx.js';
 import { hydrate } from 'trans-render/hydrate.js';
-import { transform, doImports } from 'trans-render/transform.js';
+import { transform } from 'trans-render/transform.js';
 export { define } from './xtal-latx.js';
 import { debounce } from './debounce.js';
 const deconstructed = Symbol();
@@ -28,15 +28,27 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     }
     afterInitRenderCallback(ctx, target, renderOptions) { }
     afterUpdateRenderCallback(ctx, target, renderOptions) { }
-    initRenderContext() {
+    async initRenderContext() {
+        const plugins = await this.plugins();
         const ctx = {
             Transform: (typeof this.initTransform === 'function') ? this.initTransform(this) : this.initTransform,
             host: this,
             cache: this.constructor,
             mode: 'init',
         };
+        Object.assign(ctx, plugins);
         ctx.ctx = ctx;
         return ctx;
+    }
+    async plugins() {
+        const { doObjectMatch, repeateth, interpolateSym, plugin } = await import('trans-render/standardPlugins.js');
+        return {
+            customObjProcessor: doObjectMatch,
+            repeatProcessor: repeateth,
+            plugins: {
+                [interpolateSym]: plugin
+            }
+        };
     }
     get [transformDebouncer]() {
         if (this[_transformDebouncer] === undefined) {
@@ -46,18 +58,10 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         return this[_transformDebouncer];
     }
-    doImports() {
-        return new Promise((resolve) => {
-            doImports(true, true).then(() => {
-                resolve();
-            });
-        });
-    }
     async transform() {
         const readyToRender = this.readyToRender;
         if (readyToRender === false)
             return;
-        await doImports();
         if (typeof (readyToRender) === 'string') {
             if (readyToRender !== this._mainTemplateProp) {
                 this.root.innerHTML = '';
@@ -74,7 +78,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         let isFirst = true;
         if (rc === undefined) {
             this.dataset.upgraded = 'true';
-            rc = this._renderContext = this.initRenderContext();
+            rc = this._renderContext = await this.initRenderContext();
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this),
             };

@@ -4,8 +4,8 @@ import {hydrate} from 'trans-render/hydrate.js';
 // import {init} from 'trans-render/init.js';
 // import {update} from 'trans-render/update.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate, TransformGetter} from './types.d.js';
-import {RenderContext, RenderOptions} from 'trans-render/types2.d.js';
-import {transform, doImports} from 'trans-render/transform.js';
+import {RenderContext, RenderOptions, Plugins} from 'trans-render/types2.d.js';
+import {transform} from 'trans-render/transform.js';
 export {AttributeProps} from './types.d.js';
 export {define} from './xtal-latx.js';
 import {debounce} from './debounce.js';
@@ -48,18 +48,31 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     afterInitRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined){}
     afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined){}
-    initRenderContext() : RenderContext{
+    async initRenderContext() : Promise<RenderContext>{
+        const plugins = await this.plugins();
         const ctx = {
             Transform: (typeof this.initTransform === 'function') ? (<any>this).initTransform(this) as TransformRules : this.initTransform as unknown as TransformRules,
             host: this,
             cache: this.constructor,
             mode: 'init',
         } as RenderContext;
+        Object.assign(ctx, plugins);
         ctx.ctx = ctx;
         return ctx;
     }
     _renderContext: RenderContext | undefined;
     _mainTemplateProp = 'mainTemplate';
+
+    async plugins() : Promise<Plugins> {
+        const {doObjectMatch, repeateth, interpolateSym, plugin} = await import('trans-render/standardPlugins.js');
+        return {
+            customObjProcessor: doObjectMatch,
+            repeatProcessor: repeateth,
+            plugins:{
+                [interpolateSym]: plugin
+            }
+        } as Plugins;
+    }
 
     [_transformDebouncer]!: any;
     get [transformDebouncer](){
@@ -70,17 +83,11 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         }
         return this[_transformDebouncer];
     }
-    doImports(){
-        return new Promise((resolve) =>{
-            doImports(true, true).then(() =>{
-                resolve();
-            })
-        })
-    }
+
     async transform(){
         const readyToRender = this.readyToRender;
         if(readyToRender === false) return;
-        await doImports();
+        
         if(typeof(readyToRender) === 'string'){
             if(readyToRender !== this._mainTemplateProp){
                 this.root.innerHTML = '';
@@ -97,7 +104,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         let isFirst = true;
         if(rc === undefined){
             this.dataset.upgraded = 'true';
-            rc = this._renderContext = this.initRenderContext();
+            rc = this._renderContext = await this.initRenderContext();
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this) as (ctx: RenderContext, target: HTMLElement | DocumentFragment, options?: RenderOptions) => RenderContext | void,
             };
