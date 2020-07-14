@@ -481,9 +481,9 @@ export class MyCustomElement extends XtalElement{
 
 To make the code above easier to manage, you can stick with simple fields for all the properties (see [cautionary note](#default-values-of-properties-in-depth) below), and implement the property "propActions":
 
-```js
+```JavaSCript
 export class MyCustomElement extends XtalElement{
-    static attributeProps ({prop1, prop2, prop3} : XtalFetchReq) => ({
+    static attributeProps ({prop1, prop2, prop3} : MyCustomElement) => ({
         str: [prop1, prop2, prop3]
     });
     ...
@@ -573,6 +573,50 @@ export class MyCustomElement extends XtalElement{
     }
 }
 ```
+
+## Notification / Events
+
+Properties that are categorized as "notify" properties in AttribteProps emit events when they change value.
+
+For example:
+
+```JavaScript
+export class MyCustomElement extends XtalElement{
+    static attributeProps ({prop1, prop2, prop3} : XtalFetchReq) => ({
+        str: [prop1, prop2, prop3],
+        notify:[prop1]
+    });
+    ...
+}
+```
+
+Then whenever the value of prop1 changes on a web component instance, the instance emits a custom event:
+
+```JavaScript
+new CustomEvent('prop1-changed', {
+    details{
+        value: /*new value of prop1*/
+    },
+    bubbles: false,
+    cancelable: false,
+    composed: false
+})
+```
+
+The name of the event is the lisp-cased name of the property followed by -changed.
+
+The default propagation values for bubbles, cancelable, composed, is a point of some contention, at least in my mind.  Polymer defaults bubbles to true.  This is quite convenient, especially when handling a large group of child elements of the same type.  Only one event handler needs to be attached to some parent or ancestor in this case.  Attaching individual event handlers on this (dynamic) list of elements is quite a nuisance.  
+
+However, recent recommendations seem to [discourage making events bubble](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/lwc.events_best_practices), as that would be "the least disruptive."
+
+Trying to predict ahead of time which events would be most used for a group of component, where not bubbling is a nuisance, vs. not, where event bubbling could be disruptive, seems near impossible.
+
+So XtalElement allows users to individual instances to override how the events should propagate.  E.g.
+
+```html
+<xtal-link-preview event-scopes='[["view-model-changed","bubbles"]]'  base-link-id=corsAnywhere href="https://ionicframework.com/docs/components/"></xtal-link-preview>
+```
+
 
 If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrate the extra steps needed to provide some type safety:
 
