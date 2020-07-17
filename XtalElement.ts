@@ -25,7 +25,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     abstract mainTemplate: HTMLTemplateElement;
 
-    abstract initTransform: TransformRules | TransformGetter ;
+    abstract initTransform: TransformRules | TransformGetter<this> ;
 
     abstract readyToInit: boolean;
 
@@ -147,12 +147,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     async onPropsChange(name: string, skipTransform = false) {
         super.onPropsChange(name);
         this._propChangeQueue.add(name);
-        // if(Array.isArray(name)){
-        //     name.forEach(subName => this._propChangeQueue.add(subName));
-        // }else{
-        //     this._propChangeQueue.add(name);
-        // }
-        
+
         if(this.disabled || !this._xlConnected || !this.readyToInit){
             return;
         };
