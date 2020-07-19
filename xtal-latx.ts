@@ -301,6 +301,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             return newEvent;
         }
 
+        /**
+         * Allow instances of component to specify custom event propagation (EventInit) parameters
+         */
         eventScopes: EventScopes | undefined;
 
         ___processActionDebouncer!: any;

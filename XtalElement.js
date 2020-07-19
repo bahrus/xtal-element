@@ -30,8 +30,12 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     afterUpdateRenderCallback(ctx, target, renderOptions) { }
     async initRenderContext() {
         const plugins = await this.plugins();
+        const isInitTransformAFunction = typeof this.initTransform === 'function';
+        if (isInitTransformAFunction && this.__initTransformArgs === undefined) {
+            this.__initTransformArgs = new Set(deconstruct(this.initTransform));
+        }
         const ctx = {
-            Transform: (typeof this.initTransform === 'function') ? this.initTransform(this) : this.initTransform,
+            Transform: isInitTransformAFunction ? this.initTransform(this) : this.initTransform,
             host: this,
             cache: this.constructor,
             mode: 'init',
@@ -72,6 +76,14 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             //Since there's no delicate update transform,
             //assumption is that if data changes, just redraw based on init
             this.root.innerHTML = '';
+        }
+        else {
+            if (this.__initTransformArgs && intersection(this._propChangeQueue, this.__initTransformArgs).size > 0) {
+                //we need to retart the ui initialization, since the initialization depended on some properties that have since changed.
+                //reset the UI
+                this.root.innerHTML = '';
+                delete this._renderContext;
+            }
         }
         let rc = this._renderContext;
         let target;
