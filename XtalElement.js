@@ -79,7 +79,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         else {
             if (this.__initTransformArgs && intersection(this._propChangeQueue, this.__initTransformArgs).size > 0) {
-                //we need to retart the ui initialization, since the initialization depended on some properties that have since changed.
+                //we need to restart the ui initialization, since the initialization depended on some properties that have since changed.
                 //reset the UI
                 this.root.innerHTML = '';
                 delete this._renderContext;
