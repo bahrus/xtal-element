@@ -115,8 +115,8 @@ export function define(MyElementClass: any){
                 }
                 if(propInfo.debug) debugger;
                 this.onPropsChange(prop);
-                if(propInfo.notify){
-                    this[de](c2l, {value: nv})
+                if(propInfo.notify && this[updateInProgress]){
+                    this[de](c2l, {value: nv});
                 }
             },
         });
@@ -130,7 +130,7 @@ export function define(MyElementClass: any){
 }
 
 export const de: unique symbol = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
-
+const updateInProgress: unique symbol = Symbol();
 
 
 
@@ -322,6 +322,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
 
         __processActionQueue(){ //TODO:  https://github.com/denoland/deno/issues/5258
             if(this.propActions === undefined) return;
+            (<any>this)[updateInProgress] = true;
             const queue = this.__propActionQueue;
             this.__propActionQueue = new Set();
             this.propActions.forEach(propAction =>{
@@ -331,7 +332,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                     propAction(this);
                 }
             });
-            
+            (<any>this)[updateInProgress] = false;
         }
 
     }

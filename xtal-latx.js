@@ -98,7 +98,7 @@ export function define(MyElementClass) {
                 if (propInfo.debug)
                     debugger;
                 this.onPropsChange(prop);
-                if (propInfo.notify) {
+                if (propInfo.notify && this[updateInProgress]) {
                     this[de](c2l, { value: nv });
                 }
             },
@@ -112,6 +112,7 @@ export function define(MyElementClass) {
     customElements.define(tagName, MyElementClass);
 }
 export const de = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
+const updateInProgress = Symbol();
 export function mergeProps(props1, props2) {
     const returnObj = {};
     propCategories.forEach(propCat => {
@@ -288,6 +289,7 @@ export function XtallatX(superClass) {
             __processActionQueue() {
                 if (this.propActions === undefined)
                     return;
+                this[updateInProgress] = true;
                 const queue = this.__propActionQueue;
                 this.__propActionQueue = new Set();
                 this.propActions.forEach(propAction => {
@@ -297,6 +299,7 @@ export function XtallatX(superClass) {
                         propAction(this);
                     }
                 });
+                this[updateInProgress] = false;
             }
         },
         _a.attributeProps = ({ disabled }) => ({
