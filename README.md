@@ -481,7 +481,7 @@ export class MyCustomElement extends XtalElement{
 
 To make the code above easier to manage, you can stick with simple fields for all the properties (see [cautionary note](#default-values-of-properties-in-depth) below), and implement the property "propActions":
 
-```JavaSCript
+```JavaScript
 export class MyCustomElement extends XtalElement{
     static attributeProps ({prop1, prop2, prop3} : MyCustomElement) => ({
         str: [prop1, prop2, prop3]
@@ -574,6 +574,28 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
+If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrate the extra steps needed to provide some type safety:
+
+```Typescript
+
+export interface MyCustomElementProps {
+    myProp1: string;
+    myProp2: number;
+    myProp3: boolean;
+}
+
+export class MyCustomElement extends XtalElement{
+    static is = 'my-custom-element';
+    static defaultValues  = {
+        myProp1: 'myValue',
+        myProp2: 42,
+        myProp3: true
+    } as MyCustomElementProps;
+
+}
+```
+
+
 ## Notification / Events
 
 Properties that are categorized as "notify" properties in AttribteProps emit events when they change value.
@@ -615,28 +637,6 @@ So XtalElement allows users to individual instances to override how the events s
 
 ```html
 <xtal-link-preview event-scopes='[["view-model-changed","bubbles"]]'  base-link-id=corsAnywhere href="https://ionicframework.com/docs/components/"></xtal-link-preview>
-```
-
-
-If you must do this for a significant number of properties, XtalElement provides support for an alternative, more declarative  way of initializing values that may pay off.  Typescript is added to illustrate the extra steps needed to provide some type safety:
-
-```Typescript
-
-export interface MyCustomElementProps {
-    myProp1: string;
-    myProp2: number;
-    myProp3: boolean;
-}
-
-export class MyCustomElement extends XtalElement{
-    static is = 'my-custom-element';
-    static defaultValues  = {
-        myProp1: 'myValue',
-        myProp2: 42,
-        myProp3: true
-    } as MyCustomElementProps;
-
-}
 ```
 
 ## Inheritance overindulgence?
