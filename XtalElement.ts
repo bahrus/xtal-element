@@ -92,6 +92,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     async transform(){
         const readyToRender = this.readyToRender;
+        let evaluateAllUpdateTransforms = false;
         if(readyToRender === false) return;
         
         if(typeof(readyToRender) === 'string'){
@@ -110,11 +111,13 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 //reset the UI
                 this.root.innerHTML = '';
                 delete this._renderContext;
+                evaluateAllUpdateTransforms = true;
             }
         }
         let rc = this._renderContext;
         let target: Node;
         let isFirst = true;
+        
         if(rc === undefined){
             this.dataset.upgraded = 'true';
             rc = this._renderContext = await this.initRenderContext();
@@ -139,7 +142,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             this.updateTransforms.forEach(async selectiveUpdateTransform =>{
                 const dependencies = deconstruct(selectiveUpdateTransform as Function);
                 const dependencySet = new Set<string>(dependencies);
-                if(intersection(propChangeQueue, dependencySet).size > 0){
+                if(evaluateAllUpdateTransforms || intersection(propChangeQueue, dependencySet).size > 0){
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc!.Transform = selectiveUpdateTransform(this);
                     await transform(target as DocumentFragment, rc!);

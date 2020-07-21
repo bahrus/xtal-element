@@ -64,6 +64,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     }
     async transform() {
         const readyToRender = this.readyToRender;
+        let evaluateAllUpdateTransforms = false;
         if (readyToRender === false)
             return;
         if (typeof (readyToRender) === 'string') {
@@ -83,6 +84,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
                 //reset the UI
                 this.root.innerHTML = '';
                 delete this._renderContext;
+                evaluateAllUpdateTransforms = true;
             }
         }
         let rc = this._renderContext;
@@ -108,7 +110,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             this.updateTransforms.forEach(async (selectiveUpdateTransform) => {
                 const dependencies = deconstruct(selectiveUpdateTransform);
                 const dependencySet = new Set(dependencies);
-                if (intersection(propChangeQueue, dependencySet).size > 0) {
+                if (evaluateAllUpdateTransforms || intersection(propChangeQueue, dependencySet).size > 0) {
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
                     rc.Transform = selectiveUpdateTransform(this);
                     await transform(target, rc);
