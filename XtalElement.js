@@ -22,7 +22,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         if (this.noShadow)
             return this;
         if (this.shadowRoot == null) {
-            this.attachShadow({ mode: 'open', delegatesFocus: true });
+            this.attachShadow({ mode: 'open' });
         }
         return this.shadowRoot;
     }
