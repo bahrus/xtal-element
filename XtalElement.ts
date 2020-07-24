@@ -31,8 +31,6 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
     abstract readyToRender: boolean | string | symbol;
 
-    //updateTransform: TransformRules | TransformGetter | undefined;
-
     updateTransforms: SelectiveUpdate<this>[] | undefined;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
@@ -89,8 +87,9 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         }
         return this[_transformDebouncer];
     }
-
+    __initRCIP = false;
     async transform(){
+        if(this.__initRCIP) return;
         const readyToRender = this.readyToRender;
         let evaluateAllUpdateTransforms = false;
         if(readyToRender === false) return;
@@ -120,6 +119,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         
         if(rc === undefined){
             this.dataset.upgraded = 'true';
+            this.__initRCIP = true;
             rc = this._renderContext = await this.initRenderContext();
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this) as (ctx: RenderContext, target: HTMLElement | DocumentFragment, options?: RenderOptions) => RenderContext | void,
@@ -130,6 +130,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 rc
             );
             delete rc.options.initializedCallback;
+            this.__initRCIP = false;
         }else{
             target = this.root;
             isFirst = false;

@@ -12,6 +12,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         this.noShadow = false;
         this._renderOptions = {};
         this._mainTemplateProp = 'mainTemplate';
+        this.__initRCIP = false;
         this._propChangeQueue = new Set();
     }
     get renderOptions() {
@@ -63,6 +64,8 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         return this[_transformDebouncer];
     }
     async transform() {
+        if (this.__initRCIP)
+            return;
         const readyToRender = this.readyToRender;
         let evaluateAllUpdateTransforms = false;
         if (readyToRender === false)
@@ -92,6 +95,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         let isFirst = true;
         if (rc === undefined) {
             this.dataset.upgraded = 'true';
+            this.__initRCIP = true;
             rc = this._renderContext = await this.initRenderContext();
             rc.options = {
                 initializedCallback: this.afterInitRenderCallback.bind(this),
@@ -99,6 +103,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             target = this[this._mainTemplateProp].content.cloneNode(true);
             await transform(target, rc);
             delete rc.options.initializedCallback;
+            this.__initRCIP = false;
         }
         else {
             target = this.root;
