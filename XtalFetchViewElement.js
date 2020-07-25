@@ -20,9 +20,9 @@ export class XtalFetchViewElement extends XtalRoomWithAView {
     get readyToInit() { return !this.disabled && this.href !== undefined && (!this.reqInitRequired || this.reqInit !== undefined); }
 }
 XtalFetchViewElement.is = 'xtal-fetch-view-element';
-XtalFetchViewElement.attributeProps = ({ href, reqInit, reqInitRequired, baseLinkId }) => ({
+XtalFetchViewElement.attributeProps = ({ href, reqInit, reqInitRequired, baseLinkId, viewModel }) => ({
     str: [href, baseLinkId],
-    obj: [reqInit],
+    obj: [reqInit, viewModel],
     jsonProp: [reqInit],
     bool: [reqInitRequired],
     reflect: [href, reqInitRequired]

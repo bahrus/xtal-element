@@ -8,9 +8,9 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TRefreshViewMod
 
     static is = 'xtal-fetch-view-element';
 
-    static attributeProps : any = ({href, reqInit, reqInitRequired, baseLinkId} : XtalFetchViewElement) => ({
+    static attributeProps : any = ({href, reqInit, reqInitRequired, baseLinkId, viewModel} : XtalFetchViewElement) => ({
         str: [href, baseLinkId],
-        obj: [reqInit],
+        obj: [reqInit, viewModel],
         jsonProp: [reqInit],
         bool: [reqInitRequired],
         reflect:[href, reqInitRequired]
