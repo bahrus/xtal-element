@@ -1,8 +1,6 @@
 import {XtallatX, deconstruct, intersection} from './xtal-latx.js';
 import {TransformValueOptions} from 'trans-render/types.d.js';
 import {hydrate} from 'trans-render/hydrate.js';
-// import {init} from 'trans-render/init.js';
-// import {update} from 'trans-render/update.js';
 import {AttributeProps, EvaluatedAttributeProps, TransformRules, SelectiveUpdate, TransformGetter} from './types.d.js';
 import {RenderContext, RenderOptions, Plugins} from 'trans-render/types2.d.js';
 import {transform} from 'trans-render/transform.js';
