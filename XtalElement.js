@@ -19,6 +19,9 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         return this._renderOptions;
     }
     initRenderCallback(ctx, target) { }
+    /**
+     * @private
+     */
     get root() {
         if (this.noShadow)
             return this;

@@ -261,6 +261,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         self = this;
         
+
         _xlConnected = false;
         connectedCallback(){
             super.connectedCallback();
@@ -274,6 +275,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
+         * @private
          */
         [de](name: string, detail: any, asIs: boolean = false) {
             if(this.disabled) return;
@@ -302,6 +304,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
 
         /**
          * Allow instances of component to specify custom event propagation (EventInit) parameters
+         * @private
          */
         eventScopes: EventScopes | undefined;
 

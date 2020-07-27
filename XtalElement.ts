@@ -21,19 +21,33 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         return this._renderOptions;
     }
 
+    /**
+     * @private
+     */
     abstract mainTemplate: HTMLTemplateElement;
 
+    /**
+     * @private
+     */
     abstract initTransform: TransformRules | TransformGetter<this> ;
-
+    /**
+     * @private
+     */
     abstract readyToInit: boolean;
-
+    /**
+     * @private
+     */
     abstract readyToRender: boolean | string | symbol;
-
+    /**
+     * @private
+     */
     updateTransforms: SelectiveUpdate<this>[] | undefined;
 
     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment){}
 
-
+    /**
+     * @private
+     */
     get root() : HTMLElement | ShadowRoot{
         if(this.noShadow) return this;
         if(this.shadowRoot == null){
