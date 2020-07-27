@@ -282,7 +282,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             let composed = false;
             let cancelable = false;
             if(this.eventScopes !== undefined){
-                const eventScope = this.eventScopes.find(x => x[0] === eventName);
+                const eventScope = this.eventScopes.find(x => (x[0] === undefined) || x[0].startsWith(eventName));
                 if(eventScope !== undefined){
                     bubbles = eventScope[1] === 'bubbles';
                     cancelable = eventScope[2] === 'cancelable';

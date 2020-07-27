@@ -639,6 +639,20 @@ So XtalElement allows users to individual instances to override how the events s
 <xtal-link-preview event-scopes='[["view-model-changed","bubbles"]]'  base-link-id=corsAnywhere href="https://ionicframework.com/docs/components/"></xtal-link-preview>
 ```
 
+The event mapping uses "starts with", so that you could also do:
+
+```html
+<xtal-link-preview event-scopes='[["view-","bubbles"]]'  base-link-id=corsAnywhere href="https://ionicframework.com/docs/components/"></xtal-link-preview>
+```
+
+which makes any custom events starting with "view-" to bubble (at least those custom events caused by XtalElement's notification support).
+
+If you want to make all XtalElement generated events bubble, do something like this:
+
+```html
+<xtal-link-preview event-scopes='[[,"bubbles"]]'  base-link-id=corsAnywhere href="https://ionicframework.com/docs/components/"></xtal-link-preview>
+```
+
 ## Inheritance overindulgence?
 
 By leveraging css-based transformations, subclasses which override the transformations have fairly free reign.  But probably no more so than more traditional class-based components (which can override render and do whatever it pleases).  This is largely a symptom of lack of a "final" keyword for properties and methods, even within TypeScript.
