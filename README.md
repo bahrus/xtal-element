@@ -680,7 +680,7 @@ HTML Modules and scoped custom element registries are easily the two proposals I
 
 A number of intriguing proposals are being adopted for this.  Because trans-render provides a number of facilities for substituting one tag name for another, here's the approach xtal-element adopts.
 
-If another custom element is found matching the same name, the custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.
+If another custom element is found matching the same name, the custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.  Using this feature i not easy if using dynamic import (I think). 
 
 ## A room with a view 
 
