@@ -40,6 +40,33 @@ const ignoreAttrKey = Symbol();
 const propInfoSym = Symbol('propInfo');
 const atrInit = Symbol('atrInit');
 export function define(MyElementClass) {
+    const tagName = MyElementClass.is;
+    let n = 0;
+    let foundIt = false;
+    let isNew = false;
+    let name = tagName;
+    do {
+        if (n > 0)
+            name = `${tagName}-${n}`;
+        const test = customElements.get(name);
+        if (test !== undefined) {
+            if (test === MyElementClass) {
+                foundIt = true; //all good;
+                MyElementClass.isReally = name;
+            }
+            else {
+                //do nothing, which will cause next name to be tested
+            }
+        }
+        else {
+            isNew = true;
+            MyElementClass.isReally = name;
+            foundIt = true;
+        }
+        n++;
+    } while (!foundIt);
+    if (!isNew)
+        return;
     const props = MyElementClass.props;
     const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
@@ -104,12 +131,10 @@ export function define(MyElementClass) {
             },
         });
     });
-    const tagName = MyElementClass.is;
-    if (customElements.get(tagName)) {
-        console.warn('Already registered ' + tagName);
-        return;
-    }
-    customElements.define(tagName, MyElementClass);
+    customElements.define(name, MyElementClass);
+}
+function getName(is, n) {
+    //use generator function?
 }
 export const de = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
 export function mergeProps(props1, props2) {

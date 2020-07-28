@@ -64,6 +64,29 @@ interface PropInfo{
 const propInfoSym = Symbol('propInfo');
 const atrInit = Symbol('atrInit');
 export function define(MyElementClass: any){
+    const tagName = MyElementClass.is as string;
+    let n = 0;
+    let foundIt = false;
+    let isNew = false;
+    let name = tagName;
+    do{
+        if(n > 0) name = `${tagName}-${n}`;
+        const test = customElements.get(name);
+        if(test !== undefined){
+            if(test === MyElementClass){
+                foundIt = true; //all good;
+                MyElementClass.isReally = name;
+            }else{
+                //do nothing, which will cause next name to be tested
+            }
+        }else{
+            isNew = true;
+            MyElementClass.isReally = name;
+            foundIt = true;
+        }
+        n++;
+    }while(!foundIt);
+    if(!isNew) return;
     const props = MyElementClass.props as EvaluatedAttributeProps;
     const proto = MyElementClass.prototype;
     const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
@@ -121,12 +144,13 @@ export function define(MyElementClass: any){
             },
         });
     })
-    const tagName = MyElementClass.is as string;
-    if(customElements.get(tagName)){
-        console.warn('Already registered ' + tagName);
-        return;
-    }
-    customElements.define(tagName, MyElementClass);
+    customElements.define(name, MyElementClass);
+
+}
+
+function getName(is: string, n: number){
+    //use generator function?
+   
 }
 
 export const de: unique symbol = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');

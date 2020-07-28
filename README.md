@@ -22,6 +22,7 @@ Anyway, xtal-element's target audience is those who are looking for a base class
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which seems to be stalled?  The base class is an abstract class.  Typescript then highlights what you need to implement in your subclass.  No need to memorize or look things up.  (Unfortunately, Typescript doesn't support [abstract static properties / methods.](https://github.com/microsoft/TypeScript/issues/34516)).
 5.  Some of xtal-element's base classes adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.
+6.  Supports micro-frontends with versioning.
 
 </details>
 
@@ -74,8 +75,8 @@ export class Foo extends XtalElement{
 }
 ```
 
-4.  A similar pattern is used for easily testable "propActions" - where property changes can be partitioned and turned into a logical workflow.
-5.  All these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library-neutral class.
+4.  A similar pattern is used for easily testable "propActions" - where property changes can be grouped/partitioned and turned into a logical workflow.
+5.  Many of these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library-neutral class.
 
 ## X -- the simplest xtal-element base class
 
@@ -285,6 +286,7 @@ export class CounterXtalElement extends XtalElement{
 
     //This property / field allows the developer to wait for some required 
     //properties to be set before doing anything.
+    // To make this depend on the context, switch from a class field to a getter.
     readyToInit = true;
 
     //Until readyToRender is set to true, the user will see the light children (if using Shadow DOM).
