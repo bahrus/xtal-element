@@ -661,7 +661,7 @@ But what XtalElement is guilty of, perhaps, is making it more tempting to take g
 
 XtalElement's template processing can still benefit from standard inheritance, in the sense that transformation branches can be defined within a method, and that method can be overridden, which is all fine and good.  But XtalElement allows an easy way to amend *any* part of the document easily, not just specially marked sections from the base class.
 
-XtalElement's initTransform, with it's JSON like object literal transform, can fairly easily be (deep) merged with additional / alternative transform rules.  The updateTrasforms array could likewise be tweaked, though with a bit more difficulty.
+XtalElement's initTransform, with it's JSON like object literal transform, can fairly easily be (deep) merged with additional / alternative transform rules.  The updateTransforms array could likewise be tweaked, though with a bit more difficulty.
 
 As a final stop gap, XtalElement allows a chain to be set up during initialization (and updates) of the component.  The benefits of this are much stronger with initialization and the first update, because during that time, nothing has been added to the DOM tree, hence alterations are fairly low cost and best done ahead of time.
 
@@ -673,6 +673,14 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 ```
 
 **NB**  This kind of css-based inheritance chain that XtalElement provides probably shouldn't go too many levels deep.  I.e. a vendor provides a default UI, which a consumer can tweak, essentially.  But having a chain of independent, loosely coupled third party developers inheriting in this manner seems like it could lend itself to some significant fragility.
+
+## Versioning [TODO, will it work?]
+
+HTML Modules and scoped custom element registries are easily the two proposals I most eagerly await.
+
+A number of intriguing proposals are being adopted for this.  Because trans-render provides a number of facilities for substituting one tag name for another, here's the approach xtal-element adopts.
+
+If another custom element is found matching the same name, the custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.
 
 ## A room with a view 
 
