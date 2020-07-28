@@ -709,6 +709,29 @@ The names will surely conform to a [geometric distribution](https://en.wikipedia
 
 > p = number of versions in circulation via npm / number of commits in git.
 
+The main template could then have some indicator like:
+
+```html
+<template>
+    <div>
+        <my-element- my-attribute="myValue"></my-element->
+    </div>
+</template>
+```
+
+And if that's coupled with a substitution transform rule:
+
+```JavaScript
+
+import {MyElement} from 'MyElement/MyElement.js';
+
+const initTransform = {
+    ...
+    'my-element-': [MyElement.isReally]
+}
+
+```
+
 
 ## A room with a view 
 
