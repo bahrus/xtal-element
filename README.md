@@ -676,7 +676,7 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 
 **NB**  This kind of css-based inheritance chain that XtalElement provides probably shouldn't go too many levels deep.  I.e. a vendor provides a default UI, which a consumer can tweak, essentially.  But having a chain of independent, loosely coupled third party developers inheriting in this manner seems like it could lend itself to some significant fragility.
 
-## Versioning [TODO, will it work?]
+## Versioning [Experimental implementation in place]
 
 HTML Modules and scoped custom element registries are easily the two proposals I most eagerly await.
 
@@ -716,7 +716,7 @@ The main template could then have some indicator like:
 ```html
 <template>
     <div>
-        <my-element- my-attribute="myValue"></my-element->
+        <my-element my-attribute="myValue"></my-element>
     </div>
 </template>
 ```
@@ -729,7 +729,7 @@ import {MyElement} from 'MyElement/MyElement.js';
 
 const initTransform = {
     ...
-    'my-element-': [MyElement.isReally, 'replace'],
+    'my-element': [MyElement.isReally, 'replace'], //TODO:  support for 'replace'
     ...
 }
 
