@@ -379,7 +379,7 @@ import {AttributeProps, EvaluatedAttributeProps} from 'xtal-element/types.d.js';
 ...
 export class MyBar extends MyFoo{
     ...
-    static attributeProps: any = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : XtalFetchReq) => {
+    static attributeProps: any = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : MyBar) => {
         const ap = {
             bool: [reqInitRequired, insertResults],
             str: [cacheResults],
@@ -678,13 +678,13 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 
 HTML Modules and scoped custom element registries are easily the two proposals I most eagerly await.
 
-A number of intriguing interim proposals are being adopted in the absence of scoped custom element registries.  Because trans-render provides a number of facilities for substituting one tag name for another, here's the approach xtal-element adopts.
+A number of intriguing interim proposals are being adopted in the absence of scoped custom element registries.  Because trans-render provides a number of facilities for substituting one tag name for another, here's the approach xtal-element adopts:
 
 The best analogy would be web servers that have a default port, but if that port is in use, it searches for a close by port not in use.
 
 If another custom element is found matching the same name, the new custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.  Using this feature is not easy if using dynamic import (I think). 
 
-So for XtalElement, use the is static prop to define the default custom element name:
+So for XtalElement, use the "is" static prop to define the default custom element name, as before (modeled after Polymer):
 
 ```JavaScript
 import {define} from 'xtal-element/XtalElement.js';
@@ -695,12 +695,12 @@ export class MyElement extends XtalElement{
 define(MyElement)
 ```
 
-Regardless whether a custom element already exists with name 'my-element', you can reference the actual tag name via:
+Regardless of whether a custom element already exists with name 'my-element', you can reference the actual tag name via:
 
 ```JavaScript
 import {MyElement} from 'MyElement/MyElement.js';
 
-document.createElement(MyElement.isReally);
+const myElement = document.createElement(MyElement.isReally);
 ```
 
 Most of the time, MyElement.isReally will equal "my-element" but sometimes it will be "my-element-1", even more rarely it could be "my-element-2", etc.
