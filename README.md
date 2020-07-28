@@ -727,7 +727,8 @@ import {MyElement} from 'MyElement/MyElement.js';
 
 const initTransform = {
     ...
-    'my-element-': [MyElement.isReally]
+    'my-element-': [MyElement.isReally, 'replace'],
+    ...
 }
 
 ```
