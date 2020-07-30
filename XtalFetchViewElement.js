@@ -1,6 +1,6 @@
 import { XtalRoomWithAView } from './XtalRoomWithAView.js';
 import { getFullURL } from './base-link-id.js';
-export { define, mergeProps } from './xtal-latx.js';
+export { define, mergeProps, symbolize, p } from './xtal-latx.js';
 export class XtalFetchViewElement extends XtalRoomWithAView {
     constructor() {
         super(...arguments);

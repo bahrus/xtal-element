@@ -61,6 +61,20 @@ export interface IXtallatXI extends IHydrate {
     // static observedAttributes: string[]; 
 }
 
+export interface PropInfo{
+    bool: boolean;
+    str: boolean;
+    num: boolean;
+    reflect: boolean;
+    notify: boolean;
+    obj: boolean;
+    jsonProp: boolean;
+    dry: boolean;
+    log: boolean;
+    debug: boolean;
+    async: boolean;
+}
+
 
 
 

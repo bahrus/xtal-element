@@ -1,7 +1,7 @@
 import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
 import {AttributeProps} from './types.d.js';
 import {getFullURL, IBaseLinkContainer} from './base-link-id.js';
-export {define, mergeProps} from './xtal-latx.js';
+export {define, mergeProps, symbolize, p} from './xtal-latx.js';
 export {AttributeProps} from './types.d.js';
 
 export abstract class XtalFetchViewElement<TInitViewModel = any, TRefreshViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TRefreshViewModel> implements IBaseLinkContainer{

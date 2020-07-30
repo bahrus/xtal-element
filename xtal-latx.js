@@ -1,149 +1,5 @@
 import { debounce } from './debounce.js';
 export { hydrate } from 'trans-render/hydrate.js';
-const ltcRe = /(\-\w)/g;
-export function lispToCamel(s) {
-    return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
-}
-const ctlRe = /[\w]([A-Z])/g;
-export function camelToLisp(s) {
-    return s.replace(ctlRe, function (m) {
-        return m[0] + "-" + m[1];
-    }).toLowerCase();
-}
-const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async'];
-const argList = Symbol('argList');
-export function deconstruct(fn) {
-    if (fn[argList] === undefined) {
-        const fnString = fn.toString().trim();
-        if (fnString.startsWith('({')) {
-            const iPos = fnString.indexOf('})', 2);
-            fn[argList] = fnString.substring(2, iPos).split(',').map(s => s.trim());
-        }
-        else {
-            fn[argList] = [];
-        }
-    }
-    return fn[argList];
-}
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
-export function intersection(setA, setB) {
-    let _intersection = new Set();
-    for (let elem of setB) {
-        if (setA.has(elem)) {
-            _intersection.add(elem);
-        }
-    }
-    return _intersection;
-}
-const ignorePropKey = Symbol();
-const ignoreAttrKey = Symbol();
-const propInfoSym = Symbol('propInfo');
-const atrInit = Symbol('atrInit');
-export function define(MyElementClass) {
-    const tagName = MyElementClass.is;
-    let n = 0;
-    let foundIt = false;
-    let isNew = false;
-    let name = tagName;
-    do {
-        if (n > 0)
-            name = `${tagName}-${n}`;
-        const test = customElements.get(name);
-        if (test !== undefined) {
-            if (test === MyElementClass) {
-                foundIt = true; //all good;
-                MyElementClass.isReally = name;
-            }
-            else {
-                //do nothing, which will cause next name to be tested
-            }
-        }
-        else {
-            isNew = true;
-            MyElementClass.isReally = name;
-            foundIt = true;
-        }
-        n++;
-    } while (!foundIt);
-    if (!isNew)
-        return;
-    const props = MyElementClass.props;
-    const proto = MyElementClass.prototype;
-    const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
-    const existingProps = Object.getOwnPropertyNames(proto);
-    MyElementClass[propInfoSym] = {};
-    flatProps.forEach(prop => {
-        if (existingProps.includes(prop))
-            return;
-        const sym = Symbol(prop);
-        const propInfo = {};
-        propCategories.forEach(cat => {
-            propInfo[cat] = props[cat].includes(prop);
-        });
-        MyElementClass[propInfoSym][prop] = propInfo;
-        Object.defineProperty(proto, prop, {
-            get() {
-                return this[sym];
-            },
-            set(nv) {
-                const ik = this[ignorePropKey];
-                if (ik !== undefined && ik[prop] === true) {
-                    delete ik[prop];
-                    this[sym] = nv;
-                    return;
-                }
-                const propInfo = MyElementClass[propInfoSym][prop];
-                if (propInfo.dry) {
-                    if (nv === this[sym])
-                        return;
-                }
-                const c2l = camelToLisp(prop);
-                if (propInfo.reflect) {
-                    //experimental line -- we want the attribute to take precedence over default value.
-                    if (this[atrInit] === undefined && this.hasAttribute(c2l))
-                        return;
-                    if (this[ignoreAttrKey] === undefined)
-                        this[ignoreAttrKey] = {};
-                    this[ignoreAttrKey][c2l] = true;
-                    if (propInfo.bool) {
-                        this.attr(c2l, nv, '');
-                    }
-                    else if (propInfo.str) {
-                        this.attr(c2l, nv);
-                    }
-                    else if (propInfo.num) {
-                        this.attr(c2l, nv.toString());
-                    }
-                    else if (propInfo.obj) {
-                        this.attr(c2l, JSON.stringify(nv));
-                    }
-                }
-                this[sym] = nv;
-                if (propInfo.log) {
-                    console.log(propInfo, nv);
-                }
-                if (propInfo.debug)
-                    debugger;
-                this.onPropsChange(prop);
-                if (propInfo.notify) {
-                    this[de](c2l, { value: nv });
-                }
-            },
-        });
-    });
-    customElements.define(name, MyElementClass);
-}
-function getName(is, n) {
-    //use generator function?
-}
-export const de = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
-export function mergeProps(props1, props2) {
-    const returnObj = {};
-    propCategories.forEach(propCat => {
-        returnObj[propCat] = (props1[propCat] || []).concat(props2[propCat] || []);
-    });
-    return returnObj;
-}
 /**
  * Base class for many xtal- components
  * @param superClass
@@ -329,4 +185,152 @@ export function XtallatX(superClass) {
             bool: [disabled],
         }),
         _a;
+}
+//utility fns
+const ignorePropKey = Symbol();
+const ignoreAttrKey = Symbol();
+const propInfoSym = Symbol('propInfo');
+const atrInit = Symbol('atrInit');
+export function define(MyElementClass) {
+    const tagName = MyElementClass.is;
+    let n = 0;
+    let foundIt = false;
+    let isNew = false;
+    let name = tagName;
+    do {
+        if (n > 0)
+            name = `${tagName}-${n}`;
+        const test = customElements.get(name);
+        if (test !== undefined) {
+            if (test === MyElementClass) {
+                foundIt = true; //all good;
+                MyElementClass.isReally = name;
+            }
+            else {
+                //do nothing, which will cause next name to be tested
+            }
+        }
+        else {
+            isNew = true;
+            MyElementClass.isReally = name;
+            foundIt = true;
+        }
+        n++;
+    } while (!foundIt);
+    if (!isNew)
+        return;
+    const props = MyElementClass.props;
+    const proto = MyElementClass.prototype;
+    const flatProps = [...props.bool, ...props.num, ...props.str, ...props.obj];
+    const existingProps = Object.getOwnPropertyNames(proto);
+    MyElementClass[propInfoSym] = {};
+    flatProps.forEach(prop => {
+        if (existingProps.includes(prop))
+            return;
+        const sym = Symbol(prop);
+        const propInfo = {};
+        propCategories.forEach(cat => {
+            propInfo[cat] = props[cat].includes(prop);
+        });
+        MyElementClass[propInfoSym][prop] = propInfo;
+        Object.defineProperty(proto, prop, {
+            get() {
+                return this[sym];
+            },
+            set(nv) {
+                const ik = this[ignorePropKey];
+                if (ik !== undefined && ik[prop] === true) {
+                    delete ik[prop];
+                    this[sym] = nv;
+                    return;
+                }
+                const propInfo = MyElementClass[propInfoSym][prop];
+                if (propInfo.dry) {
+                    if (nv === this[sym])
+                        return;
+                }
+                const c2l = camelToLisp(prop);
+                if (propInfo.reflect) {
+                    //experimental line -- we want the attribute to take precedence over default value.
+                    if (this[atrInit] === undefined && this.hasAttribute(c2l))
+                        return;
+                    if (this[ignoreAttrKey] === undefined)
+                        this[ignoreAttrKey] = {};
+                    this[ignoreAttrKey][c2l] = true;
+                    if (propInfo.bool) {
+                        this.attr(c2l, nv, '');
+                    }
+                    else if (propInfo.str) {
+                        this.attr(c2l, nv);
+                    }
+                    else if (propInfo.num) {
+                        this.attr(c2l, nv.toString());
+                    }
+                    else if (propInfo.obj) {
+                        this.attr(c2l, JSON.stringify(nv));
+                    }
+                }
+                this[sym] = nv;
+                if (propInfo.log) {
+                    console.log(propInfo, nv);
+                }
+                if (propInfo.debug)
+                    debugger;
+                this.onPropsChange(prop);
+                if (propInfo.notify) {
+                    this[de](c2l, { value: nv });
+                }
+            },
+        });
+    });
+    customElements.define(name, MyElementClass);
+}
+export const de = Symbol.for('1f462044-3fe5-4fa8-9d26-c4165be15551');
+export function mergeProps(props1, props2) {
+    const returnObj = {};
+    propCategories.forEach(propCat => {
+        returnObj[propCat] = (props1[propCat] || []).concat(props2[propCat] || []);
+    });
+    return returnObj;
+}
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+export function intersection(setA, setB) {
+    let _intersection = new Set();
+    for (let elem of setB) {
+        if (setA.has(elem)) {
+            _intersection.add(elem);
+        }
+    }
+    return _intersection;
+}
+const ltcRe = /(\-\w)/g;
+export function lispToCamel(s) {
+    return s.replace(ltcRe, function (m) { return m[1].toUpperCase(); });
+}
+const ctlRe = /[\w]([A-Z])/g;
+export function camelToLisp(s) {
+    return s.replace(ctlRe, function (m) {
+        return m[0] + "-" + m[1];
+    }).toLowerCase();
+}
+export const p = Symbol('placeholder');
+export function symbolize(obj) {
+    for (var key in obj) {
+        obj[key] = Symbol(key);
+    }
+}
+const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async'];
+const argList = Symbol('argList');
+export function deconstruct(fn) {
+    if (fn[argList] === undefined) {
+        const fnString = fn.toString().trim();
+        if (fnString.startsWith('({')) {
+            const iPos = fnString.indexOf('})', 2);
+            fn[argList] = fnString.substring(2, iPos).split(',').map(s => s.trim());
+        }
+        else {
+            fn[argList] = [];
+        }
+    }
+    return fn[argList];
 }
