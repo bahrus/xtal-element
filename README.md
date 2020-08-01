@@ -711,7 +711,7 @@ The names will surely conform to a [geometric distribution](https://en.wikipedia
 
 > p = number of versions in circulation via npm / number of commits in git.
 
-The main template could then have some indicator like:
+The main template can then be spared the details of this name readjustment
 
 ```html
 <template>
@@ -721,7 +721,7 @@ The main template could then have some indicator like:
 </template>
 ```
 
-And if that's coupled with a substitution transform rule:
+**if** that's coupled with a substitution transform rule, preferably in initTransform (or afterInitCallback or the first updateTransforms round), before the template has been added to the document.  If done afterwards, some dynamically generated properties may get lost, and a more sophisticated approach is needed (there is a "directive" available for that)
 
 ```JavaScript
 
@@ -735,9 +735,20 @@ const initTransform = {
 
 ```
 
-[TODO]:  If MyElement.isReally !== MyElement.is, then add an attribute "is-really" which would allow global search and replace.
+~[TODO]:  If MyElement.isReally !== MyElement.is, then add an attribute "is-really" which would allow global search and replace.~
 
-Or what if tag simply replaces itself if parentElement is null?
+~Or what if tag simply replaces itself if parentElement is null?~
+
+
+======================================
+
+~No, both thoughts here are off base, and don't make sense on more reflection.  Trust me.~
+
+~Signed, your briefly clear-minded former self.~
+
+
+
+
 
 ## A room with a view 
 
