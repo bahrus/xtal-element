@@ -735,6 +735,7 @@ const initTransform = {
 
 ```
 
+[TODO]:  If MyElement.isReally !== MyElement.is, then add an attribute "is-really" which would allow global search and replace.
 
 ## A room with a view 
 
