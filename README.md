@@ -737,6 +737,8 @@ const initTransform = {
 
 [TODO]:  If MyElement.isReally !== MyElement.is, then add an attribute "is-really" which would allow global search and replace.
 
+Or what if tag simply replaces itself if parentElement is null?
+
 ## A room with a view 
 
 I suspect that many (most?) components today tend to have a one-to-one mapping between a component and a business domain object fetched via some promise-based Rest / GraphQL / (SOAP?) api.  XtalRoomWithAView provides help to provide a pattern for doing this, in such a way that the light children will continue to display until such a time as there's something better to see than the light children.  
