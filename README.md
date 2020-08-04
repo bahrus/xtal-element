@@ -729,7 +729,7 @@ import {MyElement} from 'MyElement/MyElement.js';
 
 const initTransform = {
     ...
-    'my-element': [MyElement.isReally, 'replace'], //TODO:  support for 'replace'
+    'my-element': [MyElement.isReally, 'replace'],
     ...
 }
 
@@ -745,9 +745,6 @@ const initTransform = {
 ~No, both thoughts here are off base, and don't make sense on more reflection.  Trust me.~
 
 ~Signed, your briefly clear-minded former self.~
-
-
-
 
 
 ## A room with a view 
