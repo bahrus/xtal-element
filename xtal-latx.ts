@@ -12,15 +12,24 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase) {
     return class extends superClass implements IXtallatXI {
 
+        /**
+         * @private
+         */
         static get evalPath(){
             return lispToCamel((<any>this).is);
         }
-        
+        /**
+         * @private
+         */
         static get observedAttributes(){
             const props = this.props;
             return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
         }
 
+        /**
+         * @private
+         * @param param0 
+         */
         static attributeProps : any = ({disabled } : IXtallatXI) => ({
             bool: [disabled],
         } as AttributeProps);
@@ -121,6 +130,10 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         
             this.onPropsChange(propName);
         }
+
+        /**
+         * @private
+         */
         self = this;
         
 

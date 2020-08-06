@@ -1,4 +1,5 @@
 import { debounce } from './debounce.js';
+export * from './types.d.js';
 export { hydrate } from 'trans-render/hydrate.js';
 /**
  * Base class for many xtal- components
@@ -13,13 +14,22 @@ export function XtallatX(superClass) {
                  * Tracks how many times each event type was called.
                  */
                 this.__evCount = {};
+                /**
+                 * @private
+                 */
                 this.self = this;
                 this._xlConnected = false;
                 this.__propActionQueue = new Set();
             }
+            /**
+             * @private
+             */
             static get evalPath() {
                 return lispToCamel(this.is);
             }
+            /**
+             * @private
+             */
             static get observedAttributes() {
                 const props = this.props;
                 return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
@@ -181,6 +191,10 @@ export function XtallatX(superClass) {
                 });
             }
         },
+        /**
+         * @private
+         * @param param0
+         */
         _a.attributeProps = ({ disabled }) => ({
             bool: [disabled],
         }),

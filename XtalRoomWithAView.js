@@ -1,6 +1,7 @@
 import { XtalElement } from './XtalElement.js';
 import { deconstruct, de } from './xtal-latx.js';
-export { define, mergeProps } from './xtal-latx.js';
+export * from './xtal-latx.js';
+export * from './types.d.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
@@ -18,8 +19,8 @@ export class XtalRoomWithAView extends XtalElement {
         });
         this.onPropsChange('viewModel');
     }
-    onPropsChange(name, skipTransform = false) {
-        super.onPropsChange(name, this.viewModel === undefined);
+    async onPropsChange(name, skipTransform = false) {
+        await super.onPropsChange(name, this.viewModel === undefined);
         if (super.disabled || !this._xlConnected || !this.readyToInit)
             return;
         switch (this._state) {
