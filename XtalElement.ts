@@ -1,10 +1,10 @@
 import {XtallatX, deconstruct, intersection} from './xtal-latx.js';
 import {hydrate} from 'trans-render/hydrate.js';
 import {TransformRules, SelectiveUpdate, TransformGetter} from './types.d.js';
-import {RenderContext, RenderOptions, Plugins} from 'trans-render/types2.d.js';
+import {RenderContext, RenderOptions, Plugins} from 'trans-render/types.d.js';
 import {transform} from 'trans-render/transform.js';
-export {AttributeProps} from './types.d.js';
-export {define, symbolize, mergeProps, p} from './xtal-latx.js';
+export * from './types.d.js';
+export * from './xtal-latx.js';
 import {debounce} from './debounce.js';
 
 const deconstructed = Symbol();
