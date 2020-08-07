@@ -308,10 +308,11 @@ export class CounterXtalElement extends XtalElement{
         span: span$,
     };
 
-    // updateTransforms is called anytime property "name" changes (in this example).
+    // updateTransforms is called anytime property "count" changes (in this example).
     // Any other property changes won't trigger an update, as there is no
     // arrow function in array with any other property name.
-    // Save a little bit of class instantiation time by referencing a static updateTransforms array.
+    // You can save a little bit of class instantiation time by referencing arrow functions
+    // defined outside the class (also allow for more separation of concerns).
     updateTransforms =  [ 
         ({count}: CounterXtalElement) => ({[span$]: count.toString()})
     ];
@@ -537,14 +538,14 @@ Also, in general, these propActions (local in the class or external) is not an e
 
 The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're closer in spirit to computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
 
-It's possible that libraries that don't support this kind of property change "diffraction", but rely on "template-optimized re-rendering" of the entire UI with every property change, end up also avoiding unnecessary updates, based on their clever diff-engine algorithms.  I can say as a user of a limited number of such libraries, that what is actually getting updated, when and why, has always a bit of a mystery for me, so that I end up "winging it" more often than I'd like.  This library puts the onus (and power) in the developer's hands to devise (and fully understand) their own strategy, not sparing the developer the details of the trade off. 
+It's possible that libraries that don't support this kind of property change "diffraction", but rely on "template-optimized re-rendering" of the entire UI with every property change, end up also avoiding unnecessary updates, based on their clever diff-engine algorithms.  I can say as a user of a limited number of such libraries, that what is actually getting updated, when and why, has always a bit of a mystery for me, so that I end up "winging it" more often than I'd like.  This library puts the onus (and power) in the developer's hands to devise (and fully understand) their own strategy, not sparing the developer the details of the trade offs. 
 
 I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
 
 
 Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
 
-After experimenting with different naming patterns, personally I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more such scenarios. 
+After experimenting with different naming patterns, personally I think if you chose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propertyActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more scenarios. 
 
 It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.   
 
@@ -563,7 +564,7 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Unfortunately, these two goals appear to be at odds -- the default value myProp = 'myDefaultValue' *could* be executed *after* the value of myProp was already passed to the my-custom-element tag, especially the first time.
+Unfortunately, these two goals appear to be at odds -- the default value myProp = 'myDefaultValue' *could* be executed *after* the value of myProp was already passed to the my-custom-element instance tag, especially the first time.
 
 The only way I see how this could be safely avoided, sticking to standard class mechanisms, would be to have logic in the constructor such as:
 
