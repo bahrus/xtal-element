@@ -2,9 +2,9 @@ import { XtalElement } from './XtalElement.js';
 import { X } from './X.js';
 import {de} from './xtal-latx.js';
 import {IHydrate} from 'trans-render/types.d.js';
-export {TransformRules, PESettings, EvaluatedAttributeProps} from 'trans-render/types.d.js';
-import {TransformRules, TransformValueOptions} from 'trans-render/types.d.js';
-export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformRules;
+export {RenderContext, IHydrate, Plugins, Plugin, RenderOptions, TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions, PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings, PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform, MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, PlugInArgs, MetaInstructions, CAT, CATMI, CATMINT, CATMINT_Conditional, InsOrRep, Na, Nap, Nappe, NappeUnion, EvaluatedAttributeProps} from 'trans-render/types.d.js';
+import {TransformValueOptions} from 'trans-render/types.d.js';
+export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformValueOptions;
 export type PropDefGet<T extends XtalElement = XtalElement> = (t: T) => AttributeProps;
 export type TransformGetter<T extends XtalElement = XtalElement> = (t : T) => TransformValueOptions;
 export type PropAction<T extends HTMLElement = HTMLElement> = (t: T) => void;
@@ -74,6 +74,7 @@ export interface PropInfo{
     debug: boolean;
     async: boolean;
 }
+
 
 
 

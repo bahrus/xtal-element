@@ -1,7 +1,8 @@
 import {XtalElement} from './XtalElement.js';
 import {deconstruct, intersection, de} from './xtal-latx.js';
-export * from './xtal-latx.js';
-export * from './types.d.js';
+export {SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo} from './types.d.js';
+export {XtallatX, camelToLisp, de, intersection, lispToCamel, mergeProps, p, symbolize} from './xtal-latx.js';
+
 
 
 export type PromisedInitViewAngle<TBase, InitViewModel = any, RefreshViewModel = InitViewModel> 

@@ -1,7 +1,7 @@
 import {IHydrate} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps, PropAction, IXtallatXI, EventScopes, PropInfo} from './types.d.js';
 import {debounce} from './debounce.js';
-export * from './types.d.js';
+export {SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo} from './types.d.js';
 export {hydrate} from 'trans-render/hydrate.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;

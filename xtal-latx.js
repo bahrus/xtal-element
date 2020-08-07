@@ -1,5 +1,4 @@
 import { debounce } from './debounce.js';
-export * from './types.d.js';
 export { hydrate } from 'trans-render/hydrate.js';
 /**
  * Base class for many xtal- components

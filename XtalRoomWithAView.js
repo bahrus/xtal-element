@@ -1,7 +1,6 @@
 import { XtalElement } from './XtalElement.js';
 import { deconstruct, de } from './xtal-latx.js';
-export * from './xtal-latx.js';
-export * from './types.d.js';
+export { XtallatX, camelToLisp, de, intersection, lispToCamel, mergeProps, p, symbolize } from './xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
     constructor() {
         super();
