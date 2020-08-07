@@ -2,8 +2,7 @@ import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
 import {AttributeProps} from './types.d.js';
 import {getFullURL, IBaseLinkContainer} from './base-link-id.js';
 export {SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo} from './types.d.js';
-export {XtallatX, camelToLisp, de, intersection, lispToCamel, mergeProps, p, symbolize} from './xtal-latx.js';
-
+export {XtallatX, camelToLisp, de, intersection, define, lispToCamel, mergeProps, p, symbolize} from './xtal-latx.js';
 
 export abstract class XtalFetchViewElement<TInitViewModel = any, TRefreshViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TRefreshViewModel> implements IBaseLinkContainer{
 
