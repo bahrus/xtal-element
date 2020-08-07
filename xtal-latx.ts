@@ -1,7 +1,16 @@
-import {IHydrate} from 'trans-render/types.d.js';
+import {
+    IHydrate
+} from 'trans-render/types.d.js';
 import {EvaluatedAttributeProps, AttributeProps, PropAction, IXtallatXI, EventScopes, PropInfo} from './types.d.js';
 import {debounce} from './debounce.js';
-export {SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo} from './types.d.js';
+export {
+    SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, 
+    EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo, RenderContext, IHydrate, Plugins, Plugin, RenderOptions,
+    TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions,
+    PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings,
+    PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform,
+    MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, EvaluatedAttributeProps
+} from './types.d.js';
 export {hydrate} from 'trans-render/hydrate.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
@@ -195,6 +204,9 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
 
         __propActionQueue: Set<string> = new Set(); 
 
+        /**
+         * @private
+         */
         propActions: PropAction<this>[] | undefined;
 
         __processActionQueue(){ //TODO:  https://github.com/denoland/deno/issues/5258

@@ -11,6 +11,9 @@ export class XtalRoomWithAView extends XtalElement {
     get viewModel() {
         return this._viewModel;
     }
+    /**
+     * @private
+     */
     set viewModel(nv) {
         this._viewModel = nv;
         this[de]('view-model', {

@@ -1,10 +1,23 @@
 import {XtallatX, deconstruct, intersection} from './xtal-latx.js';
 import {hydrate} from 'trans-render/hydrate.js';
-export {SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo} from './types.d.js';
 export {XtallatX, camelToLisp, de, intersection, define, lispToCamel, mergeProps, p, symbolize} from './xtal-latx.js';
-import {RenderContext, RenderOptions, Plugins} from 'trans-render/types.d.js';
 import {transform} from 'trans-render/transform.js';
-
+import {
+    SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, 
+    EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo, RenderContext, IHydrate, Plugins, Plugin, RenderOptions,
+    TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions,
+    PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings,
+    PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform,
+    MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, EvaluatedAttributeProps
+} from './types.d.js';
+export {
+    SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, 
+    EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo, RenderContext, IHydrate, Plugins, Plugin, RenderOptions,
+    TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions,
+    PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings,
+    PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform,
+    MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, EvaluatedAttributeProps
+} from './types.d.js';
 
 import {debounce} from './debounce.js';
 
@@ -29,7 +42,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     /**
      * @private
      */
-    abstract initTransform: TransformRules | TransformGetter<this> ;
+    abstract initTransform: TransformValueOptions | TransformGetter<this> ;
     /**
      * @private
      */
