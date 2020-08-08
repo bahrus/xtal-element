@@ -9,6 +9,9 @@ const transformDebouncer = Symbol();
 export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super(...arguments);
+        /**
+         * @private
+         */
         this.noShadow = false;
         this._renderOptions = {};
         this._mainTemplateProp = 'mainTemplate';

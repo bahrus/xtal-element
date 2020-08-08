@@ -26,6 +26,9 @@ const _transformDebouncer = Symbol();
 const transformDebouncer = Symbol();
 export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
 
+    /**
+     * @private
+     */
     noShadow = false;
     
 
@@ -80,7 +83,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             this.__initTransformArgs = new Set<string>(deconstruct(this.initTransform as Function));
         }
         const ctx = {
-            Transform: isInitTransformAFunction ? (<any>this).initTransform(this) as TransformRules : this.initTransform as unknown as TransformRules,
+            Transform: isInitTransformAFunction ? (<any>this).initTransform(this) as TransformValueOptions : this.initTransform as unknown as TransformValueOptions,
             host: this,
             cache: this.constructor,
             mode: 'init',
