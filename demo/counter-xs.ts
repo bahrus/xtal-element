@@ -51,7 +51,7 @@ X.cessorize<CounterExtension>({
     main: template,
     attributeProps: ({count}: ICounterMixin) => ({num:[count]}),
     initTransform: ({changeCount} : ICounterMixin) => ({
-        button:[,{click:[changeCount, 'dataset.d', parseInt]}] as any as PESettings<CounterExtension>, 
+        button:[{},{click:[changeCount, 'dataset.d', parseInt]}] as any as PESettings<CounterExtension>, 
         span: span$,
     }) as TransformRules,
     updateTransforms:[ ({count}: ICounterMixin) => ({[span$]: count.toString()})]

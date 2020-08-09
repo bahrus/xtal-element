@@ -1,5 +1,5 @@
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {XtalElement, define} from '../XtalElement.js';
+import {XtalElement, define, TransformValueOptions} from '../XtalElement.js';
 import {AttributeProps, PESettings} from '../types.js';
 
 const mainTemplate = createTemplate(/* html */`
@@ -67,9 +67,9 @@ export class CounterXtalElement extends XtalElement{
     //uses trans-render syntax: https://github.com/bahrus/trans-render
     //initTransform is only done once.
     initTransform = {
-        button:[,{click:[this.changeCount, 'dataset.d', parseInt]}] as PESettings<CounterXtalElement>,
+        button:[{},{click:[this.changeCount, 'dataset.d', parseInt]}] as PESettings<CounterXtalElement>,
         span: span$,
-    };
+    } as TransformValueOptions;
 
     // updateTransforms is called anytime property "name" changes.
     // Any other property changes won't trigger an update, as there is no

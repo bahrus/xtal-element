@@ -41,7 +41,7 @@ X.tend<CounterX>({
     main: template,
     attributeProps: ({count}) => ({num:[count]}),
     initTransform: ({changeCount} : CounterX) => ({
-        button:[,{click:[changeCount, 'dataset.d', parseInt]}] as  PESettings<CounterX>, 
+        button:[{},{click:[changeCount, 'dataset.d', parseInt]}] as  PESettings<CounterX>, 
         span: span$,
     }) as TransformRules,
     updateTransforms:[ ({count}: CounterX) => ({[span$]: count.toString()})]

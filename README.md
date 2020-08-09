@@ -126,7 +126,7 @@ X.tend({
     attributeProps: ({count}) => ({num:[count]}),
     main: template,
     initTransform:({changeCount}) => ({
-        button:[,{click:[changeCount, 'dataset.d', parseInt]}], 
+        button:[{},{click:[changeCount, 'dataset.d', parseInt]}], 
         span: span$,
     }),
     updateTransforms: [({count}) =>({[span$]: count.toString()})]
@@ -367,7 +367,7 @@ define(MyCustomElement);
 
 The function "define" does the following:
 
-1.  Turns prop1, prop2, prop3, prop4 into public getters and setters of the class instance with the same name, without losing the value set by default (see note below). 
+1.  Turns prop1, prop2, prop3, prop4 into public properties (getters and setters) of the class prototype with the same name, without losing the value set by default (see note below). 
 2.  The setter has a call to this.onPropsChange([name of prop]) baked in.
 3.  Some logic to support asynchronous loading is also added to connectionCallback.
 4.  Registers the custom element based on the static 'is' property.
@@ -503,6 +503,8 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
+XtalElement will invoke this action anytime prop1, prop2 and/or prop3 changes.
+
 Here, "self" is another name for "this" -- inspired by Python / Rust's trait implementations.  
 
 But because it doesn't use the keyword "this," we can place the "trait implementation" in a separate constant, which is a little better, performance wise:
@@ -525,16 +527,21 @@ export class MyCustomElement extends XtalElement{
 }
 ```
 
-Another theoretical benefit -- by separating the actions from the actual class, the actions could be dynamically loaded, and only activated after the download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
-
-**Limitations**:  
-
-Separating "propAction" lambda expressions out of the class as an (imported) constant imposes one known limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered to access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, it could remain inside the class.
-
-Also, in general, these propActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
 
 <details>
     <summary>PropAction pontifications</summary>
+
+### Unit Testing benefits?
+
+For those scenarios where pure JS, browserless unit testing is important, it seems to me that unit testing linkProp4 would be quite straightforward, more straightforward than testing a method within a custom element class.  Because testing a method in a custom element class requires either a browser emulator like JSDOM or puppeteer, or a mock HTMLElement class.   Plus running the constructor code, etc.  No such requirement is need for linkProp4 above.  Furthermore, the signature of methods typically doesn't indicate what specific parameters the method depends on.  On the other hand, by design, the developer will want to spell out the dependencies explicitly with these propActions, in order to guarantee that it is always evaluated as needed.  
+
+Another theoretical benefit -- by separating the actions from the actual class, (some of) the actions could be dynamically loaded, and only activated after the initial download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
+
+### Limitations 
+
+Separating "propAction" lambda expressions out of the class as an (imported) constant imposes one known limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered with access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, it could remain inside the class.
+
+Also, in general, propActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTranform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
 
 The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're closer in spirit to computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
 

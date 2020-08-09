@@ -38,7 +38,7 @@ X.cessorize({
     main: template,
     attributeProps: ({ count }) => ({ num: [count] }),
     initTransform: ({ changeCount }) => ({
-        button: [, { click: [changeCount, 'dataset.d', parseInt] }],
+        button: [{}, { click: [changeCount, 'dataset.d', parseInt] }],
         span: span$,
     }),
     updateTransforms: [({ count }) => ({ [span$]: count.toString() })]

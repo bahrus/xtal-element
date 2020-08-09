@@ -45,7 +45,7 @@ export class CounterXtalElement extends XtalElement {
         //uses trans-render syntax: https://github.com/bahrus/trans-render
         //initTransform is only done once.
         this.initTransform = {
-            button: [, { click: [this.changeCount, 'dataset.d', parseInt] }],
+            button: [{}, { click: [this.changeCount, 'dataset.d', parseInt] }],
             span: span$,
         };
         // updateTransforms is called anytime property "name" changes.
