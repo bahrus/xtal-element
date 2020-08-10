@@ -608,7 +608,7 @@ export class MyCustomElement extends XtalElement{
 
 ## Notification / Events
 
-Properties that are categorized as "notify" properties in AttribteProps emit events when they change value.
+Properties that are categorized as "notify" properties in AttributeProps emit events when they change value.
 
 For example:
 
@@ -641,9 +641,15 @@ The default propagation values for bubbles, cancelable, composed, is a point of 
 
 However, recent recommendations seem to [discourage making events bubble](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/lwc.events_best_practices), as that would be "the least disruptive."
 
-Trying to predict ahead of time which events would be most used for a group of component, where not bubbling is a nuisance, vs. not, where event bubbling could be disruptive, seems near impossible.
+Trying to predict ahead of time which events would be most used for a group of components, where bubbling is a big win, vs. scenarios where event bubbling could be disruptive, seems near impossible.
 
-So XtalElement allows users to individual instances to override how the events should propagate.  E.g.
+So XtalElement allows:
+
+1.  Web component developers to override these defaults for all instances, and
+2.  Web component users to fine tune on an instance by instance basis how events propagate.
+
+
+The property/attribute eventScopes is used for this purpose.  The syntax below shows how it is used for one instance via the attribute.
 
 ```html
 <xtal-link-preview event-scopes='[["view-model-changed","bubbles"]]'  base-link-id=corsAnywhere href="https://ionicframework.com/docs/components/"></xtal-link-preview>
