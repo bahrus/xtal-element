@@ -102,7 +102,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
             repeatProcessor: repeateth,
             //plugins:{
                 [interpolateSym]: interpolatePlugin,
-                [templStampSym]: templStampSym
+                [templStampSym]: templStampPlugin
             //}
         } as Plugins;
     }
