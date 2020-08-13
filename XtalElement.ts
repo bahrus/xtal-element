@@ -96,12 +96,13 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     _mainTemplateProp = 'mainTemplate';
 
     async plugins() : Promise<Plugins> {
-        const {doObjectMatch, repeateth, interpolateSym, plugin} = await import('trans-render/standardPlugins.js');
+        const {doObjectMatch, repeateth, interpolateSym, interpolatePlugin, templStampSym, templStampPlugin} = await import('trans-render/standardPlugins.js');
         return {
             customObjProcessor: doObjectMatch,
             repeatProcessor: repeateth,
             plugins:{
-                [interpolateSym]: plugin
+                [interpolateSym]: interpolatePlugin,
+                [templStampSym]: templStampSym
             }
         } as Plugins;
     }

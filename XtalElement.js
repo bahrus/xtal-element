@@ -52,12 +52,13 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         return ctx;
     }
     async plugins() {
-        const { doObjectMatch, repeateth, interpolateSym, plugin } = await import('trans-render/standardPlugins.js');
+        const { doObjectMatch, repeateth, interpolateSym, interpolatePlugin, templStampSym, templStampPlugin } = await import('trans-render/standardPlugins.js');
         return {
             customObjProcessor: doObjectMatch,
             repeatProcessor: repeateth,
             plugins: {
-                [interpolateSym]: plugin
+                [interpolateSym]: interpolatePlugin,
+                [templStampSym]: templStampSym
             }
         };
     }
