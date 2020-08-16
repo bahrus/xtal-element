@@ -56,10 +56,8 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         return {
             customObjProcessor: doObjectMatch,
             repeatProcessor: repeateth,
-            //plugins:{
             [interpolateSym]: interpolatePlugin,
             [templStampSym]: templStampPlugin
-            //}
         };
     }
     get [transformDebouncer]() {

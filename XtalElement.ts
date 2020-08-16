@@ -100,10 +100,8 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         return {
             customObjProcessor: doObjectMatch,
             repeatProcessor: repeateth,
-            //plugins:{
-                [interpolateSym]: interpolatePlugin,
-                [templStampSym]: templStampPlugin
-            //}
+            [interpolateSym]: interpolatePlugin,
+            [templStampSym]: templStampPlugin
         } as Plugins;
     }
 

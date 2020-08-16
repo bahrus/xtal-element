@@ -2,7 +2,7 @@ import { XtalElement, define } from './XtalElement.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
 import { tendArgs, SelectiveUpdate, TransformGetter, } from './types.d.js';
 
-export { TransformGetter, TransformRules } from './types.d.js';
+export { TransformGetter, TransformValueOptions } from './types.d.js';
 
 function defProto<T extends X = X>(newClass: any, args: tendArgs<T>){
     const p = newClass.prototype;
