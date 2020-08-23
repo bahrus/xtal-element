@@ -6,7 +6,7 @@ export function addCSSListener(id, self, targetSelector, insertListener, customS
         self._boundInsertListeners = {};
     }
     const boundInsertListeners = self._boundInsertListeners;
-    if (boundInsertListeners(targetSelector))
+    if (boundInsertListeners[targetSelector] !== undefined)
         return;
     const styleInner = /* css */ `
         @keyframes ${id} {
