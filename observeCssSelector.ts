@@ -10,9 +10,13 @@ declare global{
 
 const eventNames = ["animationstart", "MSAnimationStart", "webkitAnimationStart"];
 
-export function addCSSListener(id: string, self: any, targetSelector: string, insertListener: any, customStyles: string = ''){
+export function addCSSListener(id: string, self: any, targetSelector: string, insertListener: any, customStyles: string = '', ){
         // See https://davidwalsh.name/detect-node-insertion
-        //if(self._boundInsertListener) return;
+        if(self._boundInsertListeners === undefined){
+            self._boundInsertListeners = {};
+        }
+        const boundInsertListeners = self._boundInsertListeners;
+        if(boundInsertListeners(targetSelector)) return;
         const styleInner = /* css */`
         @keyframes ${id} {
             from {
@@ -40,10 +44,10 @@ export function addCSSListener(id: string, self: any, targetSelector: string, in
         }else{
             document.head.appendChild(style);
         }
-        self._boundInsertListener = insertListener.bind(self);
+        boundInsertListeners[targetSelector] = insertListener.bind(self);
         const container = hostIsShadow ? self._host : document;
         eventNames.forEach(name =>{
-            container.addEventListener(name, self._boundInsertListener, false);
+            container.addEventListener(name, boundInsertListeners[targetSelector], false);
         })
 }
 
