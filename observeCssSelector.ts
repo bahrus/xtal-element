@@ -12,7 +12,7 @@ const eventNames = ["animationstart", "MSAnimationStart", "webkitAnimationStart"
 
 export function addCSSListener(id: string, self: any, targetSelector: string, insertListener: any, customStyles: string = ''){
         // See https://davidwalsh.name/detect-node-insertion
-        if(self._boundInsertListener) return;
+        //if(self._boundInsertListener) return;
         const styleInner = /* css */`
         @keyframes ${id} {
             from {
