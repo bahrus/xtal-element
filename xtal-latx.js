@@ -106,26 +106,27 @@ export function XtallatX(superClass) {
                     return;
                 }
                 const propName = lispToCamel(n);
-                if (this[ignorePropKey] === undefined)
-                    this[ignorePropKey] = {};
-                this[ignorePropKey][propName] = true;
+                const privatePropName = '_' + propName;
+                //TODO:  Do we need this?
+                // if((<any>this)[ignorePropKey] === undefined) (<any>this)[ignorePropKey] = {};
+                // (<any>this)[ignorePropKey][propName] = true;
                 const anyT = this;
                 const ep = this.constructor.props;
                 if (ep.str.includes(propName)) {
-                    anyT[propName] = nv;
+                    anyT[privatePropName] = nv;
                 }
                 else if (ep.bool.includes(propName)) {
-                    anyT[propName] = nv !== null;
+                    anyT[privatePropName] = nv !== null;
                 }
                 else if (ep.num.includes(propName)) {
-                    anyT[propName] = parseFloat(nv);
+                    anyT[privatePropName] = parseFloat(nv);
                 }
                 else if (ep.jsonProp.includes(propName)) {
                     try {
-                        anyT[propName] = JSON.parse(nv);
+                        anyT[privatePropName] = JSON.parse(nv);
                     }
                     catch (e) {
-                        anyT[propName] = nv;
+                        anyT[privatePropName] = nv;
                     }
                 }
                 this.onPropsChange(propName);
@@ -200,7 +201,7 @@ export function XtallatX(superClass) {
         _a;
 }
 //utility fns
-const ignorePropKey = Symbol();
+//const ignorePropKey = Symbol();
 const ignoreAttrKey = Symbol();
 const propInfoSym = Symbol('propInfo');
 const atrInit = Symbol('atrInit');
@@ -240,26 +241,21 @@ export function define(MyElementClass) {
     flatProps.forEach(prop => {
         if (existingProps.includes(prop))
             return;
-        const sym = Symbol(prop);
+        const privateKey = '_' + prop;
         const propInfo = {};
         propCategories.forEach(cat => {
             propInfo[cat] = props[cat].includes(prop);
         });
         MyElementClass[propInfoSym][prop] = propInfo;
+        //TODO:  make this a bound function?
         Object.defineProperty(proto, prop, {
             get() {
-                return this[sym];
+                return this[privateKey];
             },
             set(nv) {
-                const ik = this[ignorePropKey];
-                if (ik !== undefined && ik[prop] === true) {
-                    delete ik[prop];
-                    this[sym] = nv;
-                    return;
-                }
                 const propInfo = MyElementClass[propInfoSym][prop];
                 if (propInfo.dry) {
-                    if (nv === this[sym])
+                    if (nv === this[privateKey])
                         return;
                 }
                 const c2l = camelToLisp(prop);
@@ -283,7 +279,7 @@ export function define(MyElementClass) {
                         this.attr(c2l, JSON.stringify(nv));
                     }
                 }
-                this[sym] = nv;
+                this[privateKey] = nv;
                 if (propInfo.log) {
                     console.log(propInfo, nv);
                 }
