@@ -34,6 +34,8 @@ export function XtallatX(superClass) {
                 return [...props.bool, ...props.num, ...props.str, ...props.jsonProp].map(s => camelToLisp(s));
             }
             static get props() {
+                if (this.is === undefined)
+                    return {};
                 if (this[this.evalPath] === undefined) {
                     const args = deconstruct(this.attributeProps);
                     const arg = {};
@@ -46,7 +48,11 @@ export function XtallatX(superClass) {
                         ep[propCat] = ep[propCat] || [];
                     });
                 }
-                return this[this.evalPath];
+                let props = this[this.evalPath];
+                const superProps = Object.getPrototypeOf(this).props;
+                if (superProps !== undefined)
+                    props = mergeProps(props, superProps);
+                return props;
             }
             /**
              * Turn number into string with even and odd values easy to query via css.

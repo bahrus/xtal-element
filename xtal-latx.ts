@@ -44,6 +44,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         } as AttributeProps);
 
         static get props(){
+            if((<any>this).is === undefined) return {} as EvaluatedAttributeProps;
             if((<any>this)[this.evalPath] === undefined){
                 const args = deconstruct(this.attributeProps);
                 const arg: {[key: string]: string} = {};
@@ -54,9 +55,13 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 const ep = (<any>this)[this.evalPath];
                 propCategories.forEach(propCat =>{
                     ep[propCat] = ep[propCat] || [];
-                })
+                });
+
             }
-            return (<any>this)[this.evalPath] as EvaluatedAttributeProps;
+            let props = (<any>this)[this.evalPath];
+            const superProps = Object.getPrototypeOf(this).props;
+            if(superProps !== undefined) props = mergeProps(props, superProps);
+            return props as EvaluatedAttributeProps;
         }
 
 

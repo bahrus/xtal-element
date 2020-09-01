@@ -372,29 +372,6 @@ The function "define" does the following:
 3.  Some logic to support asynchronous loading is also added to connectionCallback.
 4.  Registers the custom element based on the static 'is' property.
 
-### Defining properties / attributes with inheritance
-
-In order for one custom element to merge its additional properties with the properties from subclasses do the following:
-
-```TypeScript
-import {define, mergeProps} from 'xtal-element/xtal-latx.js';
-import {AttributeProps, EvaluatedAttributeProps} from 'xtal-element/types.d.js';
-...
-export class MyBar extends MyFoo{
-    ...
-    static attributeProps: any = ({reqInit, cacheResults, reqInitRequired, debounceDuration, insertResults} : MyBar) => {
-        const ap = {
-            bool: [reqInitRequired, insertResults],
-            str: [cacheResults],
-            num: [debounceDuration],
-            obj: [reqInit],
-            jsonProp: [reqInit]
-        }  as AttributeProps;
-        return mergeProps(ap, (<any>MyFoo).props);
-    };
-}
-```
-
 
 The categories properties can be put into are:
 
