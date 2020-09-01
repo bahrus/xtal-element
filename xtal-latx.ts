@@ -311,8 +311,10 @@ export function define(MyElementClass: any){
                     this[de](c2l, {value: nv});
                 }
             },
+            enumerable: true,
+            configurable: true
         });
-    })
+    });
     customElements.define(name, MyElementClass);
 
 }

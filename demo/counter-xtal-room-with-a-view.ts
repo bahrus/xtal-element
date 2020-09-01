@@ -1,6 +1,6 @@
 import {XtalRoomWithAView, define} from '../XtalRoomWithAView.js';
 import {createTemplate} from 'trans-render/createTemplate.js';
-import {TransformRules, PESettings} from '../types.js';
+import {TransformValueOptions, PESettings} from '../types.js';
 
 const template = createTemplate(
     /* html */`<div></div>`
@@ -27,7 +27,7 @@ export class CounterXtalRoomWithAView extends XtalRoomWithAView<[string, number]
     updateTransforms = [
         ({viewModel} : CounterXtalRoomWithAView) => ({
             div: `${this.viewModel[0]}  ${this.viewModel[1]}`
-        })  as TransformRules
+        })  as TransformValueOptions
     ];
     
     updateTransform = () => ({
