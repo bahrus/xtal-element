@@ -97,11 +97,13 @@ export function XtallatX(superClass) {
                     return;
                 }
                 ;
-                if (isAsync) {
-                    this.__processActionDebouncer();
-                }
-                else {
-                    this.__processActionQueue();
+                if (!this.disabled) {
+                    if (isAsync) {
+                        this.__processActionDebouncer();
+                    }
+                    else {
+                        this.__processActionQueue();
+                    }
                 }
             }
             attributeChangedCallback(n, ov, nv) {

@@ -108,11 +108,14 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
             if(this.disabled || !this._xlConnected){
                 return;
             };
-            if(isAsync){
-                this.__processActionDebouncer();
-            }else{
-                this.__processActionQueue();
+            if(!this.disabled){
+                if(isAsync){
+                    this.__processActionDebouncer();
+                }else{
+                    this.__processActionQueue();
+                }
             }
+
             
         }
         attributeChangedCallback(n: string, ov: string, nv: string) {
