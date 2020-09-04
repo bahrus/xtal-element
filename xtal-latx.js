@@ -275,8 +275,12 @@ export function define(MyElementClass) {
                         this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
                     if (propInfo.bool) {
-                        if ((nv && !this.hasAttribute(c2l)) || nv === false)
+                        if ((nv && !this.hasAttribute(c2l)) || nv === false) {
                             this.attr(c2l, nv, '');
+                        }
+                        else {
+                            this[ignoreAttrKey][c2l] = false;
+                        }
                     }
                     else if (propInfo.str) {
                         this.attr(c2l, nv);

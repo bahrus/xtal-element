@@ -300,7 +300,11 @@ export function define(MyElementClass: any){
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
                     if(propInfo.bool){
-                       if((nv && !this.hasAttribute(c2l)) || nv === false) this.attr(c2l, nv, '');
+                       if((nv && !this.hasAttribute(c2l)) || nv === false) {
+                           this.attr(c2l, nv, '');
+                       }else{
+                        this[ignoreAttrKey][c2l] = false; 
+                       }
                     }else if(propInfo.str){
                         this.attr(c2l, nv);
                     }else if(propInfo.num){
@@ -308,6 +312,7 @@ export function define(MyElementClass: any){
                     }else if(propInfo.obj){
                         this.attr(c2l, JSON.stringify(nv));
                     }
+
                 }
                 this[privateKey] = nv;
                 if(propInfo.log){
