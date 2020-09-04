@@ -300,7 +300,7 @@ export function define(MyElementClass: any){
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
                     if(propInfo.bool){
-                       if(!this.hasAttribute(c2l)) this.attr(c2l, nv, '');
+                       if((nv && !this.hasAttribute(c2l)) || nv === false) this.attr(c2l, nv, '');
                     }else if(propInfo.str){
                         this.attr(c2l, nv);
                     }else if(propInfo.num){
