@@ -23,7 +23,7 @@ export function addCSSListener(id, self, targetSelector, insertListener, customS
             animation-name: ${id};
         }
 
-        @keyframes ${id}_remove {
+        /* @keyframes ${id}_remove {
             from {
                 opacity: 1;
             }
@@ -35,7 +35,7 @@ export function addCSSListener(id, self, targetSelector, insertListener, customS
         ${targetSelector}{
             animation-duration: 0.001s;
             animation-name: ${id}_remove;
-        }
+        } */
 
         ${customStyles}`;
     const style = document.createElement('style');
