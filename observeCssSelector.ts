@@ -32,20 +32,6 @@ export function addCSSListener(id: string, self: any, targetSelector: string, in
             animation-name: ${id};
         }
 
-         @keyframes ${id}_remove {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 0.01;
-            }
-        }
-
-        ${targetSelector}{
-            animation-duration: 0.001s;
-            animation-name: ${id}_remove;
-        } 
-
         ${customStyles}`;
         const style = document.createElement('style');
         style.innerHTML = styleInner;
