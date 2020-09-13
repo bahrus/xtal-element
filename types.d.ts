@@ -7,7 +7,7 @@ import {TransformValueOptions} from 'trans-render/types.d.js';
 export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformValueOptions;
 export type PropDefGet<T extends XtalElement = XtalElement> = (t: T) => AttributeProps;
 export type TransformGetter<T extends XtalElement = XtalElement> = (t : T) => TransformValueOptions;
-export type PropAction<T extends HTMLElement = HTMLElement> = (t: T) => void;
+export type PropAction<T extends Element = HTMLElement> = (t: T) => void;
 
 export interface AttributeProps{
     num?: any[];
