@@ -17,7 +17,7 @@ export abstract class XtalFetchViewElement<TInitViewModel = any, TRefreshViewMod
 
     /**
      * @private
-     * @param param0 
+     * 
      */
     static attributeProps : any = ({href, reqInit, reqInitRequired, baseLinkId, viewModel} : XtalFetchViewElement) => ({
         str: [href, baseLinkId],

@@ -45,7 +45,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     /**
      * @private
      */
-    abstract initTransform: TransformValueOptions | TransformGetter<this> ;
+    abstract initTransform: TransformValueOptions | TransformGetter<this> | TransformValueOptions[];
     /**
      * @private
      */
