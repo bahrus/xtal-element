@@ -29,7 +29,7 @@ export class XtalFetchViewElement extends XtalRoomWithAView {
 XtalFetchViewElement.is = 'xtal-fetch-view-element';
 /**
  * @private
- * @param param0
+ *
  */
 XtalFetchViewElement.attributeProps = ({ href, reqInit, reqInitRequired, baseLinkId, viewModel }) => ({
     str: [href, baseLinkId],

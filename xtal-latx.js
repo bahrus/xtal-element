@@ -185,6 +185,7 @@ export function XtallatX(superClass) {
                 }
                 return this.___processActionDebouncer;
             }
+            propActionsHub(propAction) { }
             __processActionQueue() {
                 if (this.propActions === undefined)
                     return;
@@ -194,6 +195,7 @@ export function XtallatX(superClass) {
                     const dependencies = deconstruct(propAction);
                     const dependencySet = new Set(dependencies);
                     if (intersection(queue, dependencySet).size > 0) {
+                        this.propActionsHub(propAction);
                         propAction(this);
                     }
                 });

@@ -535,7 +535,19 @@ Another benefit of "bunching together" property change actions: XtalElement opti
 
 After experimenting with different naming patterns, personally I think if you choose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more scenarios. 
 
-It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.   
+It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.  
+
+### Debugging Disadvantage
+
+One disadvantage of using propActions, as opposed to setter methods / class methods, is with the latter approach, one can step through the code throughout the process.  Doing so with propActions isn't so easy, so one is left wondering where the code will go next after the action is completed.
+
+To address this concern, you can override the method:  
+
+```JavaScript
+propActionsHub(propAction){
+    console.log(propAction); //or whatever helps with debugging
+}
+```
 
 </details>
 

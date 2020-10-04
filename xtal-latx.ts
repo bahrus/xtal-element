@@ -219,6 +219,8 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
          */
         propActions: PropAction<this>[] | undefined;
 
+        propActionsHub(propAction: any){}
+
         __processActionQueue(){ //TODO:  https://github.com/denoland/deno/issues/5258
             if(this.propActions === undefined) return;
             const queue = this.__propActionQueue;
@@ -227,6 +229,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
                 const dependencies = deconstruct(propAction as Function);
                 const dependencySet = new Set<string>(dependencies);
                 if(intersection(queue, dependencySet).size > 0){
+                    this.propActionsHub(propAction);
                     propAction(this);
                 }
             });
