@@ -37,6 +37,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     afterUpdateRenderCallback(ctx, target, renderOptions) { }
     async initRenderContext() {
         const plugins = await this.plugins();
+        this.transformHub(this.initTransform);
         const isInitTransformAFunction = typeof this.initTransform === 'function';
         if (isInitTransformAFunction && this.__initTransformArgs === undefined) {
             this.__initTransformArgs = new Set(deconstruct(this.initTransform));
@@ -67,6 +68,8 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             }, 16);
         }
         return this[_transformDebouncer];
+    }
+    transformHub(transform) {
     }
     async transform() {
         if (this.__initRCIP)
@@ -122,6 +125,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
                 const dependencySet = new Set(dependencies);
                 if (evaluateAllUpdateTransforms || intersection(propChangeQueue, dependencySet).size > 0) {
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
+                    this.transformHub(selectiveUpdateTransform);
                     rc.Transform = selectiveUpdateTransform(this);
                     await transform(target, rc);
                     //rc!.update!(rc!, this.root);

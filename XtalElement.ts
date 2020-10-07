@@ -78,6 +78,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     __initTransformArgs: Set<string> | undefined;
     async initRenderContext() : Promise<RenderContext>{
         const plugins = await this.plugins();
+        this.transformHub(this.initTransform);
         const isInitTransformAFunction = typeof this.initTransform === 'function';
         if(isInitTransformAFunction && this.__initTransformArgs === undefined){
             this.__initTransformArgs = new Set<string>(deconstruct(this.initTransform as Function));
@@ -115,6 +116,9 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
         return this[_transformDebouncer];
     }
     __initRCIP = false;
+    transformHub(transform: any){
+
+    }
     async transform(){
         if(this.__initRCIP) return;
         const readyToRender = this.readyToRender;
@@ -172,6 +176,7 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
                 const dependencySet = new Set<string>(dependencies);
                 if(evaluateAllUpdateTransforms || intersection(propChangeQueue, dependencySet).size > 0){
                     this._renderOptions.updatedCallback = this.afterUpdateRenderCallback.bind(this);
+                    this.transformHub(selectiveUpdateTransform);
                     rc!.Transform = selectiveUpdateTransform(this);
                     await transform(target as DocumentFragment, rc!);
                     //rc!.update!(rc!, this.root);
