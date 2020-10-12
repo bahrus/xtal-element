@@ -35,8 +35,8 @@ export class CounterXtalElement extends XtalElement{
 
     //Properties / attributes spelled out so reflection can auto generate
     //needed code
-    static attributeProps = ({count} : CounterXtalElement) => ({
-        num: [count]
+    static attributeProps = ({count: c} : CounterXtalElement) => ({
+        num: [c]
     }  as AttributeProps);
 
     static updateTransforms = [ 

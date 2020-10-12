@@ -61,8 +61,8 @@ export class CounterXtalElement extends XtalElement {
 CounterXtalElement.is = 'counter-xtal-element';
 //Properties / attributes spelled out so reflection can auto generate
 //needed code
-CounterXtalElement.attributeProps = ({ count }) => ({
-    num: [count]
+CounterXtalElement.attributeProps = ({ count: c }) => ({
+    num: [c]
 });
 CounterXtalElement.updateTransforms = [
     ({ count: c }) => ({ [span$]: c.toString() })
