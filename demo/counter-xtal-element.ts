@@ -40,7 +40,7 @@ export class CounterXtalElement extends XtalElement{
     }  as AttributeProps);
 
     static updateTransforms = [ 
-        ({count}: CounterXtalElement) => ({[span$]: count.toString()})
+        ({count: c}: CounterXtalElement) => ({[span$]: c.toString()})
     ];
 
     static defaultValues: any = {

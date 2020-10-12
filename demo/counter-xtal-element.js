@@ -65,7 +65,7 @@ CounterXtalElement.attributeProps = ({ count }) => ({
     num: [count]
 });
 CounterXtalElement.updateTransforms = [
-    ({ count }) => ({ [span$]: count.toString() })
+    ({ count: c }) => ({ [span$]: c.toString() })
 ];
 CounterXtalElement.defaultValues = {
     count: 30

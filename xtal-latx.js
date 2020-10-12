@@ -347,12 +347,19 @@ export function symbolize(obj) {
 }
 const propCategories = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async'];
 const argList = Symbol('argList');
+export function substrBefore(s, search) {
+    let returnS = s.trim();
+    let iPosOfColon = returnS.indexOf(search);
+    if (iPosOfColon > -1)
+        return returnS.substr(0, iPosOfColon);
+    return returnS;
+}
 export function deconstruct(fn) {
     if (fn[argList] === undefined) {
         const fnString = fn.toString().trim();
         if (fnString.startsWith('({')) {
             const iPos = fnString.indexOf('})', 2);
-            fn[argList] = fnString.substring(2, iPos).split(',').map(s => s.trim());
+            fn[argList] = fnString.substring(2, iPos).split(',').map(s => substrBefore(s, ':'));
         }
         else {
             fn[argList] = [];

@@ -382,12 +382,18 @@ export function symbolize(obj: any){
 type keys = keyof EvaluatedAttributeProps;
 const propCategories : keys[] = ['bool', 'str', 'num', 'reflect', 'notify', 'obj', 'jsonProp', 'dry', 'log', 'debug', 'async'];
 const argList = Symbol('argList');
+export function substrBefore(s: string, search: string){
+    let returnS = s.trim();
+    let iPosOfColon = returnS.indexOf(search);
+    if(iPosOfColon > -1) return returnS.substr(0, iPosOfColon);
+    return returnS;
+}
 export function deconstruct(fn: Function){
     if((<any>fn)[argList] === undefined){
         const fnString = fn.toString().trim();
         if(fnString.startsWith('({')){
             const iPos = fnString.indexOf('})', 2);
-            (<any>fn)[argList] = fnString.substring(2, iPos).split(',').map(s => s.trim());
+            (<any>fn)[argList] = fnString.substring(2, iPos).split(',').map(s => substrBefore(s, ':'));
         }else{
             (<any>fn)[argList] = []
         }
