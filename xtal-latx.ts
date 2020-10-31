@@ -120,7 +120,7 @@ export function XtallatX<TBase extends Constructor<IHydrate>>(superClass: TBase)
         }
         attributeChangedCallback(n: string, ov: string, nv: string) {
             //(<any>this)[atrInit] = true; // track each attribute?
-            wm.set(this, true);
+            wmAtrInit.set(this, true);
             const ik = (<any>this)[ignoreAttrKey];
             if(ik !== undefined && ik[n] === true){
                 delete ik[n];
@@ -249,7 +249,7 @@ const ignoreAttrKey = Symbol();
 
 const propInfoSym = Symbol('propInfo');
 //const atrInit = Symbol('atrInit');
-const wm = new WeakMap();
+const wmAtrInit = new WeakMap();
 export function define(MyElementClass: any){
     const tagName = MyElementClass.is as string;
     let n = 0;
@@ -301,7 +301,7 @@ export function define(MyElementClass: any){
                 const c2l = camelToLisp(prop);
                 if(propInfo.reflect){
                     //experimental line -- we want the attribute to take precedence over default value.
-                    if(!wm.has(this) && this.hasAttribute(c2l)) return;
+                    if(!wmAtrInit.has(this) && this.hasAttribute(c2l)) return;
                     //if(this[atrInit] === undefined && this.hasAttribute(c2l)) return;
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
