@@ -301,7 +301,7 @@ export function define(MyElementClass: any){
                 const c2l = camelToLisp(prop);
                 if(propInfo.reflect){
                     //experimental line -- we want the attribute to take precedence over default value.
-                    if(wm.has(this) && this.hasAttribute(c2l)) return;
+                    if(!wm.has(this) && this.hasAttribute(c2l)) return;
                     //if(this[atrInit] === undefined && this.hasAttribute(c2l)) return;
                     if(this[ignoreAttrKey] === undefined) this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;
