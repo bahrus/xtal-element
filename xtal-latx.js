@@ -107,7 +107,8 @@ export function XtallatX(superClass) {
                 }
             }
             attributeChangedCallback(n, ov, nv) {
-                this[atrInit] = true; // track each attribute?
+                //(<any>this)[atrInit] = true; // track each attribute?
+                wm.set(this, true);
                 const ik = this[ignoreAttrKey];
                 if (ik !== undefined && ik[n] === true) {
                     delete ik[n];
@@ -214,7 +215,8 @@ export function XtallatX(superClass) {
 //const ignorePropKey = Symbol();
 const ignoreAttrKey = Symbol();
 const propInfoSym = Symbol('propInfo');
-const atrInit = Symbol('atrInit');
+//const atrInit = Symbol('atrInit');
+const wm = new WeakMap();
 export function define(MyElementClass) {
     const tagName = MyElementClass.is;
     let n = 0;
@@ -271,8 +273,9 @@ export function define(MyElementClass) {
                 const c2l = camelToLisp(prop);
                 if (propInfo.reflect) {
                     //experimental line -- we want the attribute to take precedence over default value.
-                    if (this[atrInit] === undefined && this.hasAttribute(c2l))
+                    if (wm.has(this) && this.hasAttribute(c2l))
                         return;
+                    //if(this[atrInit] === undefined && this.hasAttribute(c2l)) return;
                     if (this[ignoreAttrKey] === undefined)
                         this[ignoreAttrKey] = {};
                     this[ignoreAttrKey][c2l] = true;

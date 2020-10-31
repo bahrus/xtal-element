@@ -33,6 +33,9 @@ export abstract class XtalElement extends XtallatX(hydrate(HTMLElement)){
     
 
     _renderOptions = {} as RenderOptions;
+    /**
+     * @private
+     */
     get renderOptions() : RenderOptions{
         return this._renderOptions;
     }

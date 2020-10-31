@@ -18,6 +18,9 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         this.__initRCIP = false;
         this._propChangeQueue = new Set();
     }
+    /**
+     * @private
+     */
     get renderOptions() {
         return this._renderOptions;
     }
