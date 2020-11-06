@@ -753,6 +753,36 @@ const initTransform = {
 
 ~Signed, your briefly clear-minded former self.~
 
+## Selecting custom plugins
+
+XtalElement has an asynchronous method, where plugins are provided to the renderer:
+
+```JavaScript
+async plugins() : Promise<Plugins> {
+    const {doObjectMatch, repeateth, interpolateSym, interpolatePlugin, templStampSym, templStampPlugin} = await import('trans-render/standardPlugins.js');
+    return {
+        customObjProcessor: doObjectMatch,
+        repeatProcessor: repeateth,
+        [interpolateSym]: interpolatePlugin,
+        [templStampSym]: templStampPlugin
+    } as Plugins;
+}
+```
+
+This allows you to use fewer plugins, which would lower the footprint of your element.
+
+Or you can add more plugins:
+
+```JavaScript 
+plugins(): Promise<Plugins>{
+    const {myExtraPlugin, pluginSym} = await import('my-package/myExtraPlugin.js');
+    const standardPlugins = await super.plugins();
+    return Object.assign(standardPlugins, {
+        [pluginSym]: myExtraPlugin
+    })
+}
+```
+
 
 ## A room with a view 
 
