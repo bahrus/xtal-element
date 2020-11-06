@@ -774,7 +774,7 @@ This allows you to use fewer plugins, which would lower the footprint of your el
 Or you can add more plugins:
 
 ```JavaScript 
-plugins(): Promise<Plugins>{
+async plugins(): Promise<Plugins>{
     const {myExtraPlugin, pluginSym} = await import('my-package/myExtraPlugin.js');
     const standardPlugins = await super.plugins();
     return Object.assign(standardPlugins, {
