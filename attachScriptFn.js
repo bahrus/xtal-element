@@ -28,7 +28,12 @@ function attachFn(constructor, count, target, prop) {
         }, 10);
         return;
     }
-    target[prop] = Fn;
+    if (typeof prop === 'function') {
+        prop(Fn);
+    }
+    else {
+        target[prop] = Fn;
+    }
 }
 export function getDynScript(el, callBack) {
     el._script = el.querySelector('script');

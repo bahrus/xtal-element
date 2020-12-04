@@ -1,4 +1,4 @@
-export function attachScriptFn(tagName: string, target: any, prop: string, body: string, imports:string){
+export function attachScriptFn(tagName: string, target: any, prop: string | Function, body: string, imports:string){
     const constructor = customElements.get(tagName);
     const count = constructor._count++;
     const script = document.createElement('script');
@@ -23,7 +23,7 @@ function supportsStaticImport() {
     return 'noModule' in script; 
   }
 
-function attachFn(constructor: any, count: number, target: any, prop: string){
+function attachFn(constructor: any, count: number, target: any, prop: string | Function){
     const Fn = constructor['fn_' + count];
     if(Fn === undefined){
         setTimeout(() => {
@@ -31,7 +31,12 @@ function attachFn(constructor: any, count: number, target: any, prop: string){
         }, 10);
         return;
     }
-    target[prop] = Fn;
+    if(typeof prop ==='function'){
+        prop(Fn);
+    }else{
+        target[prop] = Fn;
+    }
+    
 }
 export function getDynScript(el: HTMLElement, callBack: any){
     (<any>el)._script = el.querySelector('script') as HTMLScriptElement;
