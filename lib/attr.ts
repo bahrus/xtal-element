@@ -1,4 +1,4 @@
-import {lispToCamel} from './lispToCamel.js'; 
+import {camelToLisp} from './camelToLisp.js'; 
 /**
  * xtal-element doesn't think the static observedAttributes adds much value, and only makes life more difficult for web component development.
  * xtal-element's philosophy is that attributes should only be used to 1)  Pass in initial values (from the server), which overrides default values only.  
@@ -6,19 +6,22 @@ import {lispToCamel} from './lispToCamel.js';
  */
 function mergeBool<T = any>(self: HTMLElement, names: string[], defaultValues: T){
     for(const name of names){
-        (<any>defaultValues)[lispToCamel(name)] = self.hasAttribute(name);
+        const ctl = camelToLisp(name);
+        (<any>defaultValues)[name] = self.hasAttribute(ctl);
     }
 }
 
 function mergeStr<T = any>(self: HTMLElement, names: string[], defaultValues: T){
     for(const name of names){
-        if(self.hasAttribute(name)) (<any>defaultValues)[lispToCamel(name)] = self.getAttribute(name);
+        const ctl = camelToLisp(name);
+        if(self.hasAttribute(ctl)) (<any>defaultValues)[name] = self.getAttribute(ctl);
     }
 }
 
 function mergeObj<T = any>(self: HTMLElement, names: string[], defaultValues: T){
     for(const name of names){
-        if(self.hasAttribute(name)) (<any>defaultValues)[lispToCamel(name)] = JSON.parse(self.getAttribute(name)!);
+        const ctl = camelToLisp(name);
+        if(self.hasAttribute(ctl)) (<any>defaultValues)[name] = JSON.parse(self.getAttribute(ctl)!);
     }
 }
 
