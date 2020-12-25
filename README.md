@@ -11,18 +11,18 @@ xtal-element adopts a number of "opinions" that may be best suited for some type
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with business logic using methods, inheritance, etc.).  But xtal-element avoids mixins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy.  It borrows some ideas from Rust and Python.
+xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy.  It borrows some ideas from Rust and Python.
 
-xtal-element's utility functions, then, are served a la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily.  The cost of this freedom is a little more boilerplate, more "primitives" to content with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate. 
+xtal-element's utility functions, then, are served a la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate. 
 
-Anyway, xtal-element's target audience is those who are looking for a base class that:
+Anyway, xtal-element's target audience is those who are looking for a web component helpers that:
 
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility and separation of concerns to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional).   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which *seems* to be progressing into the standard, albeit slowly.  
 5.  Some of xtal-element's utility functions adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.  This separation of concerns could, in theory, be extended to support other processes -- including build and server component processes (to be explored.)
-6.  Supports micro-frontends with versioning.
+6.  Supports micro-front-ends with versioning.
 
 </details>
 
