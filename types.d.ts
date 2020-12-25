@@ -91,6 +91,13 @@ export interface PropDef{
 
 export type destructPropInfo<T = any> = (x: T) => PropDef;
 
+export interface ReactivePropChangeHandler<T extends HTMLElement>{
+    self: T,
+    propActions: PropAction<T>[];
+    propActionsHub(propAction: PropAction<T>): void;
+    processActionQueue(): void;
+}
+
 
 
 

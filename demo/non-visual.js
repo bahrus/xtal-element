@@ -3,13 +3,13 @@ import { getPropDefs } from '../lib/getPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { propUp } from '../lib/propUp.js';
 import { attr } from '../lib/attr.js';
-const propers = [
+const propDefGetter = [
     ({ myStringProp }) => ({
         type: String,
         reflect: true
     })
 ];
-const propDefs = getPropDefs(propers);
+const propDefs = getPropDefs(propDefGetter);
 const propNames = propDefs.map(propDef => propDef.name);
 const stringNames = propDefs.filter(propDef => propDef.type === String).map(propDef => propDef.name);
 export class NonVisual extends HTMLElement {
