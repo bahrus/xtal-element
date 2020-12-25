@@ -50,7 +50,7 @@ export function propDef(elementClass: any, props: PropDef[], callbackMethodName?
                         }
                     };
                     Object.assign(eventInit, prop.notify);
-                    this.dispatchEvent(new CustomEvent(name + '-changed'), eventInit);
+                    this.dispatchEvent(new CustomEvent(camelToLisp(name) + '-changed'), eventInit);
                 }
             },
             enumerable: true,
