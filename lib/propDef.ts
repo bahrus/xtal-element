@@ -2,7 +2,7 @@ import {PropDef} from '../types.d.js';
 import {camelToLisp} from './camelToLisp.js';
 
 export function propDef(elementClass: any, props: PropDef[], callbackMethodName?: string){
-    const proto = elementClass.proto;
+    const proto = elementClass.prototype;
     const existingProps = Object.getOwnPropertyNames(proto);
     for(const prop of props){
         const name = prop.name!;

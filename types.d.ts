@@ -89,9 +89,7 @@ export interface PropDef{
     defaultValue?: any;
 }
 
-export interface XtalData{
-    isReallyConnected: boolean;
-}
+export type destructPropInfo<T = any> = (x: T) => PropDef;
 
 
 
