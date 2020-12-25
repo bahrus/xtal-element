@@ -75,6 +75,10 @@ export interface PropInfo{
     async: boolean;
 }
 
+export interface XtalData{
+    isReallyConnected: boolean;
+}
+
 
 
 
