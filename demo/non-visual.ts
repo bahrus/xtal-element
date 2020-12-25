@@ -1,6 +1,6 @@
 import {define} from '../lib/define.js';
 import {destructPropInfo, PropDef} from '../types.d.js';
-import {getPropDefs} from '../lib/getPropDefs.js';
+import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {propUp} from '../lib/propUp.js';
 import {attr} from '../lib/attr.js';
@@ -11,22 +11,21 @@ const propDefGetter : destructPropInfo[] = [
         reflect: true
     })
 ];
-const propDefs = getPropDefs(propDefGetter);
-const propNames = propDefs.map(propDef => propDef.name!);
-const stringNames = propDefs.filter(propDef => propDef.type === String).map(propDef => propDef.name!);
+const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+
 export class NonVisual extends HTMLElement{
     static is = 'non-visual';
     myStringProp: string | undefined;
     connectedCallback(){
         const defaultValues: any = {};
-        attr.mergeStr(this, stringNames, defaultValues);
-        propUp(this, propNames, defaultValues);
+        attr.mergeStr(this, slicedPropDefs.strNames, defaultValues);
+        propUp(this, slicedPropDefs.propNames, defaultValues);
     }
     onPropChange(name: string, prop: PropDef){
         console.log(prop);
     }
 
 }
-letThereBeProps(NonVisual, propDefs, 'onPropChange');
+letThereBeProps(NonVisual, slicedPropDefs.propDefs, 'onPropChange');
 
 define(NonVisual);
