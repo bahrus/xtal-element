@@ -13,7 +13,7 @@ For example, an interesting duality paradox that has existed for a number of yea
 
 xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy.  It borrows some ideas from Rust and Python.
 
-xtal-element's utility functions, then, are served a la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate. 
+xtal-element's utility functions, then, are served à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate. 
 
 Anyway, xtal-element's target audience is those who are looking for a web component helpers that:
 

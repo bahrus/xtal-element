@@ -6,19 +6,23 @@ import {propUp} from '../lib/propUp.js';
 import {attr} from '../lib/attr.js';
 
 const propDefGetter : destructPropInfo[] = [
-    ({myStringProp}: NonVisual) => ({
+    ({myStringProp}: NonVisualProps) => ({
         type: String,
         reflect: true
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 
-export class NonVisual extends HTMLElement{
+export interface NonVisualProps{
+    myStringProp?: string | undefined;
+}
+
+export class NonVisual extends HTMLElement implements NonVisualProps{
     static is = 'non-visual';
     myStringProp: string | undefined;
     connectedCallback(){
-        const defaultValues: any = {};
-        attr.mergeStr(this, slicedPropDefs.strNames, defaultValues);
+        const defaultValues: NonVisualProps = {};
+        attr.mergeStr<NonVisualProps>(this, slicedPropDefs.strNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
     }
     onPropChange(name: string, prop: PropDef){
