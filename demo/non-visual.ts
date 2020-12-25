@@ -1,7 +1,7 @@
 import {define} from '../lib/define.js';
 import {destructPropInfo, PropDef} from '../types.d.js';
 import {getPropDefs} from '../lib/getPropDefs.js';
-import {propDef} from '../lib/propDef.js';
+import {letThereBeProps} from '../lib/letThereBeProps.js';
 
 const propers : destructPropInfo[] = [
     ({myStringProp}: NonVisual) => ({
@@ -13,10 +13,10 @@ const propDefs = getPropDefs(propers);
 export class NonVisual extends HTMLElement{
     static is = 'non-visual';
     myStringProp: string | undefined;
-    onPropChange(prop: PropDef){
+    onPropChange(name: string, prop: PropDef){
         console.log(prop);
     }
 }
-propDef(NonVisual, propDefs, 'onPropChange');
+letThereBeProps(NonVisual, propDefs, 'onPropChange');
 
 define(NonVisual);
