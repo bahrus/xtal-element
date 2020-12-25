@@ -73,6 +73,20 @@ export interface PropInfo{
     log: boolean;
     debug: boolean;
     async: boolean;
+    name: string;
+}
+
+export interface PropDef{
+    type?: Boolean | String | Number | Object;
+    reflect?: boolean;
+    notify?: CustomEventInit;
+    parse?: boolean;
+    dry?: boolean;
+    log?: boolean;
+    debug?: boolean;
+    async?: boolean;
+    name?: string;
+    defaultValue?: any;
 }
 
 export interface XtalData{
