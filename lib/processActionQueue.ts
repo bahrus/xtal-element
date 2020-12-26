@@ -32,6 +32,7 @@ export function processActionQueue(reactiveCoordinator: ReactiveCoordinator){
         return;
     }
     const queue = queueMap.get(reactiveCoordinator)!;
+    queueMap.set(reactiveCoordinator, new Set<string>());
     for(const propAction of reactiveCoordinator.propActions){
         let args: string[] | undefined = undefined;
         if(!deconstructedArgs.has(propAction)){
