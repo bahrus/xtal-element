@@ -33,8 +33,8 @@ export class NonVisual extends HTMLElement implements NonVisualProps, ReactiveCo
 
     //ReactiveCoordinator implementation
     self = this;
-    propActions = [({myStringProp}: NonVisual) => {
-        console.log('I am here');
+    propActions = [({myStringProp, self}: NonVisual) => {
+        console.log('I am here', self, myStringProp);
     }] as PropAction[]
 
 

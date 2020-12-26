@@ -2,8 +2,6 @@ import {ReactiveCoordinator, PropAction, PropDef} from '../types.d.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
 
-
-
 const queueMap = new WeakMap<ReactiveCoordinator, Set<string>>();
 const deconstructedArgs = new WeakMap<PropAction, string[]>();
 

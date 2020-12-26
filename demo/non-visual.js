@@ -16,8 +16,8 @@ export class NonVisual extends HTMLElement {
         super(...arguments);
         //ReactiveCoordinator implementation
         this.self = this;
-        this.propActions = [({ myStringProp }) => {
-                console.log('I am here');
+        this.propActions = [({ myStringProp, self }) => {
+                console.log('I am here', self, myStringProp);
             }];
     }
     connectedCallback() {
