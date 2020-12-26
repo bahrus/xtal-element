@@ -111,7 +111,7 @@ import {DoReMi} from 'DoReMi/DoReMi.js';
 const firstThreeNotes = document.createElement(DoReMi.isReally);
 ```
 
-Most of the time, MyElement.isReally will equal "my-custom-element" but sometimes it will be "my-custom-element-1", even more rarely it could be "my-element-2", etc.
+Most of the time, DoReMi.isReally will equal "do-re-mi" but sometimes it will be "do-re-me-1", even more rarely it could be "do-re-me-2", etc.
 
 This solution works best for web components that either use a programmatic api as shown above, or use templates for the UI definition, as the template, or clone, can be dynamically modified to adjust the element names prior to landing inside the live DOM tree.
 
