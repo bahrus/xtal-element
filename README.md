@@ -5,13 +5,15 @@
 
 **NB**:  Major changes in progress.
 
-xtal-element provides a handful of utility functions for creating web components.  The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
+xtal-element provides an opinionated "pattern" for creating a web component.  It does this by providing a handful of utility functions which facilitate the process.  
+
+The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
 xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not everything.  
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy.  It borrows some ideas from Rust and Python.
+xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of the utility functions also implement their business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy.  It borrows some ideas from Rust and Python.
 
 xtal-element's utility functions, then, are served à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate. 
 
@@ -77,6 +79,43 @@ export class Foo extends HTMLElement{
 
 4.  A similar pattern is used for easily testable "propActions" - where property changes can be grouped/partitioned and turned into a logical workflow.
 5.  Many of these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library-neutral class.
+
+
+## Let's start from the very beginning
+
+The first thing you will want to do when defining a web component is to name it.  Polymer established a pattern whereby the name is provided by a static field.  xtal-element continues this tradition (as there are subtle advantages to doing so, not explained here).  
+
+Currently, within a single document / application, that name must be unique.  This poses some contentious questions about what should happen if there's already a custom element with the same name.  xtal-element values micro-front-ends, and allows multiple versions running at the same time.  To accomplish this, do the following: 
+
+```JavaScript
+import {define} from 'xtal-element/lib/define.js';
+export class DoReMi extends HTMLElement{
+    static is = 'do-re-mi';
+}
+define(DoReMi);
+```
+
+<details>
+    <summary>Lengthy explanation</summary>
+
+
+As far as avoiding name conflicts, the best analogy for what xtal-element's "define" function does would be web servers that have a default port, but if that port is in use, it searches for a close by port not in use.
+
+If another custom element is found matching the same name, the new custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.  
+
+So for the example above, regardless of whether a custom element already exists with name 'my-custom-element', you can reference the actual tag name via:
+
+```JavaScript
+import {DoReMi} from 'DoReMi/DoReMi.js';
+
+const firstThreeNotes = document.createElement(DoReMi.isReally);
+```
+
+Most of the time, MyElement.isReally will equal "my-custom-element" but sometimes it will be "my-custom-element-1", even more rarely it could be "my-element-2", etc.
+
+This solution works best for web components that either use a programmatic api as shown above, or use templates for the UI definition, as the template, or clone, can be dynamically modified to adjust the element names prior to landing inside the live DOM tree.
+
+</details>
 
 **NB:** Discussion below will change radically.
 
@@ -689,32 +728,7 @@ afterUpdateRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFrag
 
 HTML Modules and scoped custom element registries are easily the two proposals I most eagerly await.
 
-A number of intriguing interim proposals are being adopted in the absence of scoped custom element registries.  Because trans-render provides a number of facilities for substituting one tag name for another, here's the approach xtal-element adopts:
 
-The best analogy would be web servers that have a default port, but if that port is in use, it searches for a close by port not in use.
-
-If another custom element is found matching the same name, the new custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.  Using this feature is not easy if using dynamic import (I think). 
-
-So for XtalElement, use the "is" static prop to define the default custom element name, as before (modeled after Polymer):
-
-```JavaScript
-import {define} from 'xtal-element/XtalElement.js';
-
-export class MyElement extends XtalElement{
-    static is = 'my-element';
-}
-define(MyElement)
-```
-
-Regardless of whether a custom element already exists with name 'my-element', you can reference the actual tag name via:
-
-```JavaScript
-import {MyElement} from 'MyElement/MyElement.js';
-
-const myElement = document.createElement(MyElement.isReally);
-```
-
-Most of the time, MyElement.isReally will equal "my-element" but sometimes it will be "my-element-1", even more rarely it could be "my-element-2", etc.
 
 The names will surely conform to a [geometric distribution](https://en.wikipedia.org/wiki/Geometric_distribution) where
 
