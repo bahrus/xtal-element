@@ -117,6 +117,74 @@ This solution works best for web components that either use a programmatic api a
 
 </details>
 
+## Let there be props
+
+Not so much typing, magic strings:
+
+```JavaScript
+import {letThereBeProps} from '../lib/letThereBeProps.js';
+
+const propDefs = {
+    BrownPaperPackagesTiedUpWith: {
+        type: String,
+        dry: true
+    }
+}
+export class MyFavoriteThings extends HTMLElement{
+    onPropChange(name, prop){
+        console.log(prop);
+    }
+}
+letThereBeProps(MyFavoriteThings, propDefs, 'onPropChange');
+```
+
+The third parameter, 'onPropChange' is optional.
+
+
+With lots of typing:
+
+```TypeScript
+import {letThereBeProps} from '../lib/letThereBeProps.js';
+import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
+import {destructPropInfo, PropDef} from '../types.d.js';
+
+const propDefGetter : destructPropInfo[] = [
+    ({BrownPaperPackagesTiedUpWith}: MyFavoriteThings) => ({
+        type: String,
+        dry: true
+    })
+];
+const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+
+export class MyFavoriteThings extends HTMLElement{
+    BrownPaperPackagesTiedUpWith: String;
+    onPropChange(name: string, prop: PropDef){
+        console.log(prop);
+    }
+}
+letThereBeProps(MyFavoriteThings, slicedPropDefs.propDefs, 'onPropChange');
+```
+
+## Support for asynchronous loading
+
+If prop values might be passed to an element before the element becomes registered (always safe to assume this could happen).
+
+```TypeScript
+import {propUp} from '../lib/propUp.js';
+export class SixteenGoingOnSeventeen extends HTMLElement{
+    foodAndWine: Offerings;
+    connectedCallback(){
+        propUp(this, ['foodAndWine'], {
+            foodAndWine: 'appleStrudel'
+        });
+    }
+}
+```
+
+## Reactive Prop Actions
+
+
+
 **NB:** Discussion below will change radically.
 
 ## X -- the simplest xtal-element base class
