@@ -1,4 +1,4 @@
-import {ReactiveCoordinator, PropAction, PropDef} from '../types.d.js';
+import {ReactiveCoordinator, PropAction, PropDef} from '../types.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
 
@@ -25,7 +25,7 @@ export async function addToQueue(reactiveCoordinator: ReactiveCoordinator, prop:
         processActionQueue(reactiveCoordinator);
     }
 }
-export function processActionQueue(reactiveCoordinator: ReactiveCoordinator){
+function processActionQueue(reactiveCoordinator: ReactiveCoordinator){
     if(!queueMap.has(reactiveCoordinator)){
         return;
     }

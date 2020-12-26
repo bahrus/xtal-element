@@ -4,7 +4,7 @@ import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {propUp} from '../lib/propUp.js';
 import {attr} from '../lib/attr.js';
-import {addToQueue} from '../lib/processActionQueue.js';
+import {addToQueue} from '../lib/addToQueue.js';
 
 const propDefGetter : destructPropInfo[] = [
     ({myStringProp}: NonVisualProps) => ({
