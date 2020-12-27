@@ -193,6 +193,8 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     SearchedHighAndLow: boolean;
     FollowedEveryHighway: boolean;
     FoundMyDream: boolean;
+
+
     //ReactiveSurface implementation
     self = this;
     propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway, self}: ClimbEveryMountain) => {
@@ -200,8 +202,187 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     }] as PropAction[]
     reactor = new Reactor(this);
 
+    onPropChange(name: string, prop: PropDef){
+        console.log("Been there, done that.");
+        this.reactor.addToQueue(prop);
+    }
+
 }
 ```
+
+<details>
+    <summary>Detailed Explanation</summary>
+
+## Setter logic
+
+Defining a new property is, by design, meant to be as easy as possible:
+
+```Typescript
+export class MyCustomElement extends HTMLElement{
+    myProp:string;
+}
+```
+
+The problem arises when something special needs to happen when myProp's value is set.  
+
+If all you want to do is fire off an event when a property is set, xtal-element supports defining "notifying" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by xtal-element's init and update transforms, discussed farther down..
+
+But the need to do different types of things when properties change isn't limited to these two common requirements.  So typically, you then have to add logic like this:
+
+```js
+export class MyCustomElement extends HTMLElement{
+    _myProp = 'myValue';
+    get myProp(){
+        return this._myProp;
+    }
+    set myProp(nv){
+        this._myProp;
+        //do my special logic
+
+        //Don't forget to make the call below, so everything is in sync:
+        this.onPropsChange('myProp');
+    }
+}
+```
+
+which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no debouncing support out of the box etc.:
+
+```js
+export class MyCustomElement extends HTMLElement{
+    
+    ...
+    _prop1 = 'myValue1';
+    get prop1(){
+        return this._myProp;
+    }
+    set prop1(nv){
+        this._prop1 = nv;
+        this.doSomeCommonLogic();
+        this.onPropsChange('prop1');
+    }
+
+    _prop2 = 'myValue2';
+    get prop2(){
+        return this._prop2;
+    }
+    set prop2(nv){
+        this.prop2 = nv;
+        this.doSomeCommonLogic();
+        this.onPropsChange('prop2');
+    }
+
+    _prop3 = 'myValue3';
+    get prop3(){
+        return this._prop3;
+    }
+    set prop3(nv){
+        this._prop3 = nv;
+        this.doSomeCommonLogic();
+        this.onPropsChange('prop3');
+    }
+
+    prop4;
+
+    doSomeCommonLogic(){
+        //TODO:  debouncing
+        this.prop4 = this.prop1 + this.prop2 + this.prop3;
+    }
+}
+```
+
+### Observable Property Groups
+
+To make the code above easier to manage, you can stick with simple fields for all the properties, and implement the property "propActions":
+
+```JavaScript
+export class MyCustomElement extends HTMLElement{
+
+    ...
+    prop1 = 'myValue1';
+    prop2 = 'myValue2';
+    prop3 = 'myValue3';
+    prop4;
+    propActions = [
+        ({prop1, prop2, prop3, self}) => {
+            self.prop4 = prop1 + prop2 + prop3;
+        }
+    ]
+    ...
+}
+```
+
+XtalElement will invoke this action anytime prop1, prop2 and/or prop3 changes.
+
+Here, "self" is another name for "this" -- inspired by Python / Rust's trait implementations.  
+
+But because it doesn't use the keyword "this," we can place the "trait implementation" in a separate constant, which is a little better, performance wise:
+
+```js
+
+const linkProp4: ({prop1, prop2, prop3, self}) => ({
+    self.prop4 = prop1 + prop2 + prop3;
+});
+
+export class MyCustomElement extends HTMLElement{
+    ...
+    prop1 = 'myValue1';
+    prop2 = 'myValue2';
+    prop3 = 'myValue3';
+    prop4;
+
+    propActions = [linkProp4];
+
+}
+```
+
+
+<details>
+    <summary>PropAction pontifications</summary>
+
+### Unit Testing benefits?
+
+For those scenarios where pure JS, browser-less unit testing is important, it seems to me that unit testing linkProp4 would be quite straightforward, more straightforward than testing a method within a custom element class.  Because testing a method in a custom element class requires either a browser emulator like JSDOM or puppeteer, or a mock HTMLElement class.   Plus running the constructor code, etc.  No such requirement is need for linkProp4 above.  Furthermore, the signature of methods typically doesn't indicate what specific parameters the method depends on.  On the other hand, by design, the developer will want to spell out the dependencies explicitly with these propActions, in order to guarantee that it is always evaluated as needed.  
+
+Another theoretical benefit -- by separating the actions from the actual class, (some of) the actions could be dynamically loaded, and only activated after the  download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
+
+### Limitations 
+
+propActions (and updateTransforms, discussed below) rely heavily on destructuring the class as the argument of an arrow function.  JavaScript doesn't appear to support destructuring objects with ES6 symbols as keys.
+
+Separating "propAction" arrow functions out of the class as an (imported) constant imposes an additional limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  I thought using "bind" might give access to private fields, but no such luck.  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered with access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, those actions could remain inside the class.
+
+Also, in general, propActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTransform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
+
+### Priors
+
+The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're closer in spirit to computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
+
+It's possible that libraries that don't support this kind of property change "diffraction", but rely on "template-optimized re-rendering" of the entire UI with every property change, end up also avoiding unnecessary updates, based on their clever diff-engine algorithms.  I can say as a user of a limited number of such libraries, that what is actually getting updated, when and why, has always a bit of a mystery for me, so that I end up "winging it" more often than I'd like.  This library puts the onus (and power) in the developer's hands to devise (and fully understand) their own strategy, not sparing the developer the details of the trade offs. 
+
+I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
+
+
+Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
+
+After experimenting with different naming patterns, personally I think if you choose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more scenarios. 
+
+It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.  
+
+### Debugging Disadvantage
+
+One disadvantage of using propActions, as opposed to setter methods / class methods, is with the latter approach, one can step through the code throughout the process.  Doing so with propActions isn't so easy, so one is left wondering where the code will go next after the action is completed.
+
+To address this concern, you can override the method:  
+
+```JavaScript
+propActionsHub(propAction){
+    console.log(propAction); //or whatever helps with debugging
+}
+```
+
+</details>
+
+</details>
 
 **NB:** Discussion below will change radically.
 
@@ -507,176 +688,7 @@ The categories properties can be put into are:
 ```
 
 
-## Setter logic
 
-Defining a new property is, by design, meant to be as easy as possible (but see [cautionary](#default-values-of-properties-in-depth) note below):
-
-```js
-export class MyCustomElement extends XtalElement{
-    myProp = 'myValue';
-}
-```
-
-The problem arises when something special needs to happen when myProp's value is set.  
-
-If all you want to do is fire off an event when a property is set, XtalElement supports defining "notify" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by XtalElement's init and update transforms.
-
-But the need to do different types of things when properties change isn't limited to these two common requirements.  So typically, you then have to add logic like this:
-
-```js
-export class MyCustomElement extends XtalElement{
-    _myProp = 'myValue';
-    get myProp(){
-        return this._myProp;
-    }
-    set myProp(nv){
-        this._myProp;
-        //do my special logic
-
-        //Don't forget to make the call below, so everything is in sync:
-        this.onPropsChange('myProp');
-    }
-}
-```
-
-which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no debouncing support out of the box etc.:
-
-```js
-export class MyCustomElement extends XtalElement{
-    
-    ...
-    _prop1 = 'myValue1';
-    get prop1(){
-        return this._myProp;
-    }
-    set prop1(nv){
-        this._prop1 = nv;
-        this.doSomeCommonLogic();
-        this.onPropsChange('prop1');
-    }
-
-    _prop2 = 'myValue2';
-    get prop2(){
-        return this._prop2;
-    }
-    set prop2(nv){
-        this.prop2 = nv;
-        this.doSomeCommonLogic();
-        this.onPropsChange('prop2');
-    }
-
-    _prop3 = 'myValue3';
-    get prop3(){
-        return this._prop3;
-    }
-    set prop3(nv){
-        this._prop3 = nv;
-        this.doSomeCommonLogic();
-        this.onPropsChange('prop3');
-    }
-
-    prop4;
-
-    doSomeCommonLogic(){
-        //TODO:  debouncing
-        this.prop4 = this.prop1 + this.prop2 + this.prop3;
-    }
-}
-```
-
-### Observable Property Groups
-
-To make the code above easier to manage, you can stick with simple fields for all the properties (see [cautionary note](#default-values-of-properties-in-depth) below), and implement the property "propActions":
-
-```JavaScript
-export class MyCustomElement extends XtalElement{
-    static attributeProps ({prop1, prop2, prop3} : MyCustomElement) => ({
-        str: [prop1, prop2, prop3]
-    });
-    ...
-    prop1 = 'myValue1';
-    prop2 = 'myValue2';
-    prop3 = 'myValue3';
-    prop4;
-    propActions = [
-        ({prop1, prop2, prop3, self}) => {
-            self.prop4 = prop1 + prop2 + prop3;
-        }
-    ]
-    ...
-}
-```
-
-XtalElement will invoke this action anytime prop1, prop2 and/or prop3 changes.
-
-Here, "self" is another name for "this" -- inspired by Python / Rust's trait implementations.  
-
-But because it doesn't use the keyword "this," we can place the "trait implementation" in a separate constant, which is a little better, performance wise:
-
-```js
-
-const linkProp4: ({prop1, prop2, prop3, self}) => ({
-    self.prop4 = prop1 + prop2 + prop3;
-});
-
-export class MyCustomElement extends XtalElement{
-    ...
-    prop1 = 'myValue1';
-    prop2 = 'myValue2';
-    prop3 = 'myValue3';
-    prop4;
-
-    propActions = [linkProp4];
-
-}
-```
-
-
-<details>
-    <summary>PropAction pontifications</summary>
-
-### Unit Testing benefits?
-
-For those scenarios where pure JS, browser-less unit testing is important, it seems to me that unit testing linkProp4 would be quite straightforward, more straightforward than testing a method within a custom element class.  Because testing a method in a custom element class requires either a browser emulator like JSDOM or puppeteer, or a mock HTMLElement class.   Plus running the constructor code, etc.  No such requirement is need for linkProp4 above.  Furthermore, the signature of methods typically doesn't indicate what specific parameters the method depends on.  On the other hand, by design, the developer will want to spell out the dependencies explicitly with these propActions, in order to guarantee that it is always evaluated as needed.  
-
-Another theoretical benefit -- by separating the actions from the actual class, (some of) the actions could be dynamically loaded, and only activated after the  download is complete (if these property actions are only applicable after the initial render).  In the meantime, an initial view can be presented.  The savings could be significant when working with a JS-heavy web component.  This is a TODO item to explore.
-
-### Limitations 
-
-propActions (and updateTransforms) rely heavily on destructuring the class as the argument of an arrow function.  JavaScript doesn't appear to support destructuring objects with ES6 symbols as keys.
-
-Separating "propAction" arrow functions out of the class as an (imported) constant imposes an additional limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  I thought using "bind" might give access to private fields, but no such luck.  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered with access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, those actions could remain inside the class.
-
-Also, in general, propActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTransform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
-
-### Priors
-
-The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're closer in spirit to computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
-
-It's possible that libraries that don't support this kind of property change "diffraction", but rely on "template-optimized re-rendering" of the entire UI with every property change, end up also avoiding unnecessary updates, based on their clever diff-engine algorithms.  I can say as a user of a limited number of such libraries, that what is actually getting updated, when and why, has always a bit of a mystery for me, so that I end up "winging it" more often than I'd like.  This library puts the onus (and power) in the developer's hands to devise (and fully understand) their own strategy, not sparing the developer the details of the trade offs. 
-
-I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
-
-
-Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
-
-After experimenting with different naming patterns, personally I think if you choose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more scenarios. 
-
-It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.  
-
-### Debugging Disadvantage
-
-One disadvantage of using propActions, as opposed to setter methods / class methods, is with the latter approach, one can step through the code throughout the process.  Doing so with propActions isn't so easy, so one is left wondering where the code will go next after the action is completed.
-
-To address this concern, you can override the method:  
-
-```JavaScript
-propActionsHub(propAction){
-    console.log(propAction); //or whatever helps with debugging
-}
-```
-
-</details>
 
 ### Default values of properties, in depth
 
