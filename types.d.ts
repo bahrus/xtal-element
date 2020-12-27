@@ -92,7 +92,7 @@ export interface PropDef{
 
 export type destructPropInfo<T = any> = (x: T) => PropDef;
 
-export interface ReactiveSurface{
+export interface ReactiveSurface extends Partial<HTMLElement>{
     self: HTMLElement,
     disabled?: boolean;
     propActions: PropAction[];

@@ -37,7 +37,7 @@ export class Reactor implements IReactor {
             const dependencySet = new Set<string>(args);
             if (intersection(queue, dependencySet).size > 0) {
                 if (this.surface.propActionsHub !== undefined) this.surface.propActionsHub(propAction);
-                propAction(this.surface.self);
+                propAction(this.surface as HTMLElement);
             }
         }
         

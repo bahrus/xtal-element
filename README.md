@@ -196,9 +196,8 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
 
 
     //ReactiveSurface implementation
-    self = this;
-    propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway, self}: ClimbEveryMountain) => {
-        self.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
+    propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
+        this.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
     }] as PropAction[]
     reactor = new Reactor(this);
 
