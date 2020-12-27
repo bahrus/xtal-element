@@ -152,7 +152,6 @@ import {destructPropInfo, PropDef} from '../types.d.js';
 const propDefGetter : destructPropInfo[] = [
     ({BrownPaperPackagesTiedUpWith}: MyFavoriteThings) => ({
         type: String,
-        dry: true
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
@@ -186,7 +185,23 @@ The third, optional parameter is where you can specify the default values, if no
 
 ## Reactive Prop Actions
 
+```TypeScript
+import {Reactor} from 'xtal-element/lib/Reactor.js';
+import {ReactiveSurface} from 'xtal-element/lib/types.d.js';
+export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
+    ClimbedEveryMountain: boolean;
+    SearchedHighAndLow: boolean;
+    FollowedEveryHighway: boolean;
+    FoundMyDream: boolean;
+    //ReactiveSurface implementation
+    self = this;
+    propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway, self}: ClimbEveryMountain) => {
+        self.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
+    }] as PropAction[]
+    reactor = new Reactor(this);
 
+}
+```
 
 **NB:** Discussion below will change radically.
 
