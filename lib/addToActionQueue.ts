@@ -5,9 +5,9 @@ import {intersection} from './intersection.js';
 const queueMap = new WeakMap<ReactiveCoordinator, Set<string>>();
 const deconstructedArgs = new WeakMap<PropAction, string[]>();
 
-export async function addToQueue(reactiveCoordinator: ReactiveCoordinator, prop: PropDef){
+export async function addToActionQueue(reactiveCoordinator: ReactiveCoordinator, prop: PropDef){
     let queue: Set<string> | undefined = undefined;
-    if(!queueMap.has(reactiveCoordinator as ReactiveCoordinator)){
+    if(!queueMap.has(reactiveCoordinator)){
         queue = new Set<string>();
         queueMap.set(reactiveCoordinator, queue);
     }else{
@@ -26,7 +26,7 @@ export async function addToQueue(reactiveCoordinator: ReactiveCoordinator, prop:
     }
 }
 function processActionQueue(reactiveCoordinator: ReactiveCoordinator){
-    if(!queueMap.has(reactiveCoordinator)){
+    if(!queueMap.has(reactiveCoordinator) || reactiveCoordinator.disabled){
         return;
     }
     const queue = queueMap.get(reactiveCoordinator)!;

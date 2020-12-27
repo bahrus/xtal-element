@@ -2,6 +2,7 @@ import { XtalElement } from './XtalElement.js';
 import { X } from './X.js';
 import {de} from './xtal-latx.js';
 import {IHydrate} from 'trans-render/types.d.js';
+import {RenderContext, RenderOptions, Plugins} from 'trans-render/types.d.js';
 export {RenderContext, IHydrate, Plugins, Plugin, RenderOptions, TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions, PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings, PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform, MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, PlugInArgs, MetaInstructions, CAT, CATMI, CATMINT, CATMINT_Conditional, InsOrRep, Na, Nap, Nappe, NappeUnion, EvaluatedAttributeProps} from 'trans-render/types.d.js';
 import {TransformValueOptions} from 'trans-render/types.d.js';
 export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformValueOptions;
@@ -94,10 +95,25 @@ export type destructPropInfo<T = any> = (x: T) => PropDef;
 export interface ReactiveCoordinator{
     self: HTMLElement,
     _requestUpdate?: boolean;
+    disabled?: boolean;
     propActions: PropAction[];
     propActionsHub?(propAction: PropAction): void;
-    //addToQueue(prop: PropDef): void;
-    //processActionQueue(): void;
+}
+
+export interface TransformConfig {
+    self: HTMLElement;
+    noShadow?:  boolean; 
+    renderOptions?: RenderOptions;
+    renderContext?: RenderContext;
+    plugins?(): Promise<Plugins>;
+    transformHub?(transform: any):void;
+    mainTemplate: HTMLTemplateElement;
+    notReadyForInitView?: boolean;
+    initTransform: TransformValueOptions | TransformGetter | TransformValueOptions[];
+    updateTransforms: SelectiveUpdate[] | undefined;
+    root?: HTMLElement | ShadowRoot;
+    afterInitRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
+    afterUpdateRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
 }
 
 

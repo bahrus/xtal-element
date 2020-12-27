@@ -4,7 +4,7 @@ import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {propUp} from '../lib/propUp.js';
 import {attr} from '../lib/attr.js';
-import {addToQueue} from '../lib/addToQueue.js';
+import {addToActionQueue} from '../lib/addToActionQueue.js';
 
 const propDefGetter : destructPropInfo[] = [
     ({myStringProp}: NonVisualProps) => ({
@@ -28,7 +28,7 @@ export class NonVisual extends HTMLElement implements NonVisualProps, ReactiveCo
     }
     onPropChange(name: string, prop: PropDef){
         console.log(prop);
-        addToQueue(this, prop)
+        addToActionQueue(this, prop)
     }
 
     //ReactiveCoordinator implementation

@@ -3,7 +3,7 @@ import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { propUp } from '../lib/propUp.js';
 import { attr } from '../lib/attr.js';
-import { addToQueue } from '../lib/addToQueue.js';
+import { addToActionQueue } from '../lib/addToActionQueue.js';
 const propDefGetter = [
     ({ myStringProp }) => ({
         type: String,
@@ -27,7 +27,7 @@ export class NonVisual extends HTMLElement {
     }
     onPropChange(name, prop) {
         console.log(prop);
-        addToQueue(this, prop);
+        addToActionQueue(this, prop);
     }
 }
 NonVisual.is = 'non-visual';

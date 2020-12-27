@@ -13,9 +13,11 @@ xtal-element adopts a number of "opinions" that may be best suited for some type
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of the utility functions also implement their business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy.  It borrows some ideas from Rust and Python.
+xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of the utility functions also implementing their business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy, and having maximum choice in what pieces to leverage from xtal-element.  
 
-xtal-element's utility functions, then, are served à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate. 
+xtal-element borrows some ideas from Rust and Python.
+
+xtal-element's utility functions, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate from extending classes. 
 
 Anyway, xtal-element's target audience is those who are looking for a web component helpers that:
 
@@ -119,15 +121,14 @@ This solution works best for web components that either use a programmatic api a
 
 ## Let there be props
 
-Not so much typing, magic strings:
+Not so much typing, but more magic strings:
 
 ```JavaScript
-import {letThereBeProps} from '../lib/letThereBeProps.js';
+import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';
 
 const propDefs = {
     BrownPaperPackagesTiedUpWith: {
         type: String,
-        dry: true
     }
 }
 export class MyFavoriteThings extends HTMLElement{
@@ -141,11 +142,11 @@ letThereBeProps(MyFavoriteThings, propDefs, 'onPropChange');
 The third parameter, 'onPropChange' is optional.
 
 
-With lots of typing:
+With lots of typing, "if it compiles, then it works" attitude:
 
 ```TypeScript
-import {letThereBeProps} from '../lib/letThereBeProps.js';
-import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
+import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';
+import {getSlicedPropDefs} from 'xtal-element/lib/getSlicedPropDefs.js';
 import {destructPropInfo, PropDef} from '../types.d.js';
 
 const propDefGetter : destructPropInfo[] = [
@@ -167,10 +168,10 @@ letThereBeProps(MyFavoriteThings, slicedPropDefs.propDefs, 'onPropChange');
 
 ## Support for asynchronous loading
 
-If prop values might be passed to an element before the element becomes registered (always safe to assume this could happen).
+If prop values might be passed to an element before the element becomes registered (always best to be prepared for this to happen), then you can do this by utilizing the "propUp" function:
 
-```TypeScript
-import {propUp} from '../lib/propUp.js';
+```JavaScript
+import {propUp} from 'xtal-element/lib/propUp.js';
 export class SixteenGoingOnSeventeen extends HTMLElement{
     foodAndWine: Offerings;
     connectedCallback(){
@@ -180,6 +181,8 @@ export class SixteenGoingOnSeventeen extends HTMLElement{
     }
 }
 ```
+
+The third, optional parameter is where you can specify the default values, if nothing was passed in yet.
 
 ## Reactive Prop Actions
 
