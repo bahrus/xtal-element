@@ -5,21 +5,21 @@
 
 **NB**:  Major changes in progress.
 
-xtal-element provides an opinionated "pattern" for creating a web component.  It does this by providing a handful of utility functions which facilitate the process.  
+xtal-element provides an opinionated "pattern" for creating a web component.  It does this by providing a handful of utility functions and classes, which facilitate the process.  
 
 The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
-xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not everything.  
+xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not necessarily everything.  
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of the utility functions also implementing their business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy, and having maximum choice in what pieces to leverage from xtal-element.  
+xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of the xtal-element facilities also implementing their business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy, and having maximum choice in what pieces to leverage from xtal-element.  
 
 xtal-element borrows some ideas from Rust and Python.
 
-xtal-element's utility functions, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class can always be constructed, that hides the boilerplate from extending classes. 
+xtal-element's utility functions and helper classes, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class combined with common mixins can always be constructed, that hides the boilerplate from extending classes. 
 
-Anyway, xtal-element's target audience is those who are looking for a web component helpers that:
+Anyway, xtal-element's target audience is those who are looking for web component helpers that:
 
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
 2.  Takes extensibility and separation of concerns to a whole other level.

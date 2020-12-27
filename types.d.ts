@@ -105,15 +105,25 @@ export interface TransformConfig {
     noShadow?:  boolean; 
     renderOptions?: RenderOptions;
     renderContext?: RenderContext;
-    plugins?(): Promise<Plugins>;
+    
     transformHub?(transform: any):void;
     mainTemplate: HTMLTemplateElement;
     notReadyForInitView?: boolean;
     initTransform: TransformValueOptions | TransformGetter | TransformValueOptions[];
     updateTransforms: SelectiveUpdate[] | undefined;
-    root?: HTMLElement | ShadowRoot;
+    
     afterInitRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
     afterUpdateRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
+}
+
+export interface TransformImplementation {
+    config: TransformConfig; //passed into constructor
+    plugins?(): Promise<Plugins>;
+    root?: HTMLElement | ShadowRoot;
+    addToRenderQueue(prop: PropDef): void;
+    initRenderContext() : Promise<RenderContext>;
+    initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment): void;
+    transform(): void;
 }
 
 
