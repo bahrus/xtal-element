@@ -1,11 +1,11 @@
-import {ReactiveCoordinator, PropAction, PropDef} from '../types.js';
+import {ReactiveSurface, PropAction, PropDef} from '../types.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
 
-const queueMap = new WeakMap<ReactiveCoordinator, Set<string>>();
+const queueMap = new WeakMap<ReactiveSurface, Set<string>>();
 const deconstructedArgs = new WeakMap<PropAction, string[]>();
 
-export async function addToActionQueue(reactiveCoordinator: ReactiveCoordinator, prop: PropDef){
+export async function addToActionQueue(reactiveCoordinator: ReactiveSurface, prop: PropDef){
     let queue: Set<string> | undefined = undefined;
     if(!queueMap.has(reactiveCoordinator)){
         queue = new Set<string>();
@@ -25,7 +25,7 @@ export async function addToActionQueue(reactiveCoordinator: ReactiveCoordinator,
         processActionQueue(reactiveCoordinator);
     }
 }
-function processActionQueue(reactiveCoordinator: ReactiveCoordinator){
+function processActionQueue(reactiveCoordinator: ReactiveSurface){
     if(!queueMap.has(reactiveCoordinator) || reactiveCoordinator.disabled){
         return;
     }

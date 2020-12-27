@@ -1,10 +1,10 @@
 import {define} from '../lib/define.js';
-import {destructPropInfo, PropDef, ReactiveCoordinator, PropAction} from '../types.d.js';
+import {destructPropInfo, PropDef, ReactiveSurface, PropAction} from '../types.d.js';
 import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {propUp} from '../lib/propUp.js';
 import {attr} from '../lib/attr.js';
-import {addToActionQueue} from '../lib/addToActionQueue.js';
+import {Reactor} from '../lib/Reactor.js';
 
 const propDefGetter : destructPropInfo[] = [
     ({myStringProp}: NonVisualProps) => ({
@@ -18,7 +18,7 @@ export interface NonVisualProps{
     myStringProp?: string | undefined;
 }
 
-export class NonVisual extends HTMLElement implements NonVisualProps, ReactiveCoordinator{
+export class NonVisual extends HTMLElement implements NonVisualProps, ReactiveSurface{
     static is = 'non-visual';
     myStringProp: string | undefined;
     connectedCallback(){
@@ -28,15 +28,15 @@ export class NonVisual extends HTMLElement implements NonVisualProps, ReactiveCo
     }
     onPropChange(name: string, prop: PropDef){
         console.log(prop);
-        addToActionQueue(this, prop)
+        this.reactor.addToQueue(prop);
     }
 
-    //ReactiveCoordinator implementation
+    //ReactiveSurface implementation
     self = this;
     propActions = [({myStringProp, self}: NonVisual) => {
         console.log('I am here', self, myStringProp);
     }] as PropAction[]
-
+    reactor = new Reactor(this);
 
 }
 letThereBeProps(NonVisual, slicedPropDefs.propDefs, 'onPropChange');

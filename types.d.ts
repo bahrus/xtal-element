@@ -92,12 +92,16 @@ export interface PropDef{
 
 export type destructPropInfo<T = any> = (x: T) => PropDef;
 
-export interface ReactiveCoordinator{
+export interface ReactiveSurface{
     self: HTMLElement,
-    _requestUpdate?: boolean;
     disabled?: boolean;
     propActions: PropAction[];
     propActionsHub?(propAction: PropAction): void;
+}
+
+export interface IReactor{
+    addToQueue(prop: PropDef): void;
+    requestUpdate?: boolean;
 }
 
 export interface TransformConfig {

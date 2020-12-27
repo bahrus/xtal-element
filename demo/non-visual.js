@@ -3,7 +3,7 @@ import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { propUp } from '../lib/propUp.js';
 import { attr } from '../lib/attr.js';
-import { addToActionQueue } from '../lib/addToActionQueue.js';
+import { Reactor } from '../lib/Reactor.js';
 const propDefGetter = [
     ({ myStringProp }) => ({
         type: String,
@@ -14,11 +14,12 @@ const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 export class NonVisual extends HTMLElement {
     constructor() {
         super(...arguments);
-        //ReactiveCoordinator implementation
+        //ReactiveSurface implementation
         this.self = this;
         this.propActions = [({ myStringProp, self }) => {
                 console.log('I am here', self, myStringProp);
             }];
+        this.reactor = new Reactor(this);
     }
     connectedCallback() {
         const defaultValues = {};
@@ -27,7 +28,7 @@ export class NonVisual extends HTMLElement {
     }
     onPropChange(name, prop) {
         console.log(prop);
-        addToActionQueue(this, prop);
+        this.reactor.addToQueue(prop);
     }
 }
 NonVisual.is = 'non-visual';
