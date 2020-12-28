@@ -93,7 +93,6 @@ export interface PropDef{
 export type destructPropInfo<T = any> = (x: T) => PropDef;
 
 export interface ReactiveSurface extends Partial<HTMLElement>{
-    self: HTMLElement,
     disabled?: boolean;
     propActions: PropAction[];
     propActionsHub?(propAction: PropAction): void;
@@ -104,12 +103,11 @@ export interface IReactor{
     requestUpdate?: boolean;
 }
 
-export interface TransformConfig {
-    self: HTMLElement;
+export interface ViewSurface extends Partial<HTMLElement>{
     noShadow?:  boolean; 
     renderOptions?: RenderOptions;
     renderContext?: RenderContext;
-    
+    plugins?: Symbol[];
     transformHub?(transform: any):void;
     mainTemplate: HTMLTemplateElement;
     notReadyForInitView?: boolean;
@@ -120,8 +118,8 @@ export interface TransformConfig {
     afterUpdateRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
 }
 
-export interface TransformImplementation {
-    config: TransformConfig; //passed into constructor
+export interface IViewPipeline {
+    config: ViewSurface; //passed into constructor
     plugins?(): Promise<Plugins>;
     root?: HTMLElement | ShadowRoot;
     addToRenderQueue(prop: PropDef): void;
