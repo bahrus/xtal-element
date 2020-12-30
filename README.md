@@ -403,7 +403,7 @@ Reactions can be nested:
     propActions = [linkFindingMyDream, [linkFindYourPlace]]
 ```
 
-### Post Reaction [TODO]
+### Post-Reaction [TODO]
 
 In the example above, the function:
 
@@ -429,6 +429,18 @@ reactor = new Reactor(this, [
         do: myArrayProcessor
     }
 ]);
+```
+
+So if the right-hand-side of the action returns a string, pass the context to function myStringProcessor.  If it returns an array, use myArrayProcessor.
+
+Out actions don't have to have a function body.  If a post-reaction function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
+
+```JavaScript
+({prop1}) => ({
+    section:{
+        h1: prop1
+    }
+})
 ```
 
 This also allows us to use reactions as opportunities to pass declarative JSON-ish syntax to template transformers (for example), which we will see below.
