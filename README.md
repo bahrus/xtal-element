@@ -310,7 +310,7 @@ export class MyCustomElement extends HTMLElement{
 }
 ```
 
-XtalElement will invoke this action anytime prop1, prop2 and/or prop3 changes.
+XtalElement will invoke this action anytime prop1, prop2 and/or prop3 change.
 
 Here, "self" is another name for "this" -- inspired by Python / Rust's trait implementations.  
 
@@ -384,6 +384,16 @@ propActionsHub(propAction){
 </details>
 
 **NB:** Discussion below will change radically.
+
+
+
+## Development Section
+
+The next few sections are going to prove to be a bit dry reading.  Think of it as the [boring](https://youtu.be/okWr-tzwOEg?t=78) [development section](https://en.wikipedia.org/wiki/Musical_development) of a sonata.
+
+Previously, the way xtal-element handled visual updates was in a way that closely resembled the "reactor" functionality, but there was no unifying force, and also picking and choosing which libraries to use was overly complicated, resulting in larger than needed base footprint..
+
+What we will be discussing for a while will finally lead up to our rendering approach, but first we must go through some [exercises](https://www.youtube.com/watch?v=TPtDbHXkDp4) to get there.
 
 ## X -- the simplest xtal-element base class
 
