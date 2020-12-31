@@ -403,7 +403,7 @@ Reactions can be nested:
     propActions = [linkFindingMyDream, [linkFindYourPlace]];
 ```
 
-### Post-Reaction [TODO]
+### Post-Reaction
 
 In the example above, the function:
 
