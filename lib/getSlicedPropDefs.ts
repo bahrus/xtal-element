@@ -12,5 +12,5 @@ export function getSlicedPropDefs(propDefGetters: destructPropInfo[]){
     for(const propDef of propDefs){
         propLookup[propDef.name!] = propDef;
     }
-    return {propDefs, propNames, strNames, boolNames, parseNames, propLookup};
+    return {propDefs, propNames, strNames, boolNames, numNames, parseNames, propLookup};
 }
