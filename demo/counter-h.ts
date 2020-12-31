@@ -9,7 +9,7 @@ import {propUp} from '../lib/propUp.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 
 const mainTemplate = html`
-<button data-d=-1>-</button><span part=count></span><button data-d=1>+</button>
+<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
     * {
       font-size: 200%;
@@ -40,21 +40,25 @@ const propDefGetter : destructPropInfo[] = [
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
-const refs: {[key:string]: string | symbol} = {
-    dData: '',
+const refs = {
+    downPart: '',
+    upPart: '',
     countPart: ''
 };
 export interface CounterHProps {
     clonedTemplate?: DocumentFragment | undefined;
     domCache?: any;
+    count: number;
 }
 export class CounterH extends HTMLElement implements CounterHProps{
     static is = 'counter-h';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
-    count: number | undefined;
+    count!: number;
     connectedCallback(){
-        const defaultValues: CounterHProps = {};
+        const defaultValues: CounterHProps = {
+            count: 0
+        };
         attr.mergeStr<CounterHProps>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
@@ -69,8 +73,21 @@ export class CounterH extends HTMLElement implements CounterHProps{
             pinTheDOMToKeys(clonedTemplate, refs, cache);
             this.domCache = cache;
         },
-        ({domCache}: CounterH) => {
-            console.log('iah');
+        ({domCache, clonedTemplate}: CounterH) => {
+            if(domCache === undefined || clonedTemplate === undefined) return;
+            domCache[refs.downPart].addEventListener('click', (e: Event) => {
+                this.count--;
+            });
+            domCache[refs.upPart].addEventListener('click', (e: Event) => {
+                this.count--;
+            });
+            const shadow = this.attachShadow({mode: 'open'});
+            shadow.appendChild(clonedTemplate);
+            this.clonedTemplate = undefined;
+        },
+        ({domCache, count}: CounterH) => {
+            if(domCache === undefined) return;
+            domCache[refs.countPart].textContent = count.toString();
         }
     ] as PropAction[];
     reactor = new Reactor(this);

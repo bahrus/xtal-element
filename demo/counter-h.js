@@ -7,7 +7,7 @@ import { Reactor } from '../lib/Reactor.js';
 import { propUp } from '../lib/propUp.js';
 import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
 const mainTemplate = html `
-<button data-d=-1>-</button><span part=count></span><button data-d=1>+</button>
+<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
     * {
       font-size: 200%;
@@ -39,7 +39,8 @@ const propDefGetter = [
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = {
-    dData: '',
+    downPart: '',
+    upPart: '',
     countPart: ''
 };
 export class CounterH extends HTMLElement {
@@ -53,14 +54,31 @@ export class CounterH extends HTMLElement {
                 pinTheDOMToKeys(clonedTemplate, refs, cache);
                 this.domCache = cache;
             },
-            ({ domCache }) => {
-                console.log('iah');
+            ({ domCache, clonedTemplate }) => {
+                if (domCache === undefined || clonedTemplate === undefined)
+                    return;
+                domCache[refs.downPart].addEventListener('click', (e) => {
+                    this.count--;
+                });
+                domCache[refs.upPart].addEventListener('click', (e) => {
+                    this.count--;
+                });
+                const shadow = this.attachShadow({ mode: 'open' });
+                shadow.appendChild(clonedTemplate);
+                this.clonedTemplate = undefined;
+            },
+            ({ domCache, count }) => {
+                if (domCache === undefined)
+                    return;
+                domCache[refs.countPart].textContent = count.toString();
             }
         ];
         this.reactor = new Reactor(this);
     }
     connectedCallback() {
-        const defaultValues = {};
+        const defaultValues = {
+            count: 0
+        };
         attr.mergeStr(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true);

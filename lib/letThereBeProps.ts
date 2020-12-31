@@ -7,7 +7,7 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
     for(const prop of props){
         const name = prop.name!;
         if(existingProps.includes(name)) return;
-        const privateKey = '_' + prop;
+        const privateKey = '_' + name;
         Object.defineProperty(proto, name, {
             get(){
                 return this[privateKey];
