@@ -26,7 +26,7 @@ export class Reactor implements IReactor {
     processActionQueue() {
         const queue = this.queue;
         this.queue = new Set<string>();
-        for (const propAction of this.surface.propActions) {
+        for (const propAction of this.surface.propActions.flat()) {
             let args: string[] | undefined = undefined;
             if (!this.deconstructedArgs.has(propAction)) {
                 args = getDestructArgs(propAction);
