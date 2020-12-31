@@ -383,7 +383,6 @@ propActionsHub(propAction){
 
 </details>
 
-**NB:** Discussion below will change radically.
 
 
 
