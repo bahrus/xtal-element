@@ -79,7 +79,7 @@ export class CounterH extends HTMLElement implements CounterHProps{
                 this.count--;
             });
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
-                this.count--;
+                this.count++;
             });
             const shadow = this.attachShadow({mode: 'open'});
             shadow.appendChild(clonedTemplate);

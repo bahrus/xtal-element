@@ -61,7 +61,7 @@ export class CounterH extends HTMLElement {
                     this.count--;
                 });
                 domCache[refs.upPart].addEventListener('click', (e) => {
-                    this.count--;
+                    this.count++;
                 });
                 const shadow = this.attachShadow({ mode: 'open' });
                 shadow.appendChild(clonedTemplate);
