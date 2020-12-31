@@ -1,4 +1,4 @@
-import { IReactor, ReactiveSurface, PropAction, PropDef } from '../types.d.js';
+import { IReactor, ReactiveSurface, PropAction, PropDef, ProcessorMap } from '../types.d.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
 
@@ -7,7 +7,7 @@ export class Reactor implements IReactor {
     queue = new Set<string>();
     requestUpdate = false;
     deconstructedArgs = new WeakMap<PropAction, string[]>();
-    constructor(public surface: ReactiveSurface) { }
+    constructor(public surface: ReactiveSurface , returnMap?: ProcessorMap[]) { }
 
     async addToQueue(prop: PropDef) {
         this.queue.add(prop.name!);

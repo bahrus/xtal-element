@@ -395,7 +395,7 @@ Previously, the way xtal-element handled visual updates was in a way that closel
 
 What we will be discussing for a while will finally lead up to our rendering approach, but first we must go through some [exercises](https://youtu.be/TPtDbHXkDp4?t=187) to get there.
 
-### Nested reactions [TODO]
+### Nested reactions
 
 Reactions can be nested:
 
@@ -409,11 +409,11 @@ In the example above, the function:
 
 ```JavaScript
 [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
-        this.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
+    this.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
 }]
 ```
 
-didn't actually *return* anything.  What should the reactor do with anything returned?
+doesn't actually *return* anything.  What should the reactor do with anything returned?
 
 We can specify that using a return mapping:
 

@@ -1,4 +1,4 @@
-import {TransformConfig, PropDef, SelectiveUpdate, RenderContext} from '../types.d.js';
+import {TransformConfig, PropDef, SelectiveUpdate, RenderContext} from '../types.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
 

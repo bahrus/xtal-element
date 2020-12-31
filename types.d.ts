@@ -103,29 +103,34 @@ export interface IReactor{
     requestUpdate?: boolean;
 }
 
-export interface ViewSurface extends Partial<HTMLElement>{
-    noShadow?:  boolean; 
-    renderOptions?: RenderOptions;
-    renderContext?: RenderContext;
-    plugins?: Symbol[];
-    transformHub?(transform: any):void;
-    mainTemplate: HTMLTemplateElement;
-    notReadyForInitView?: boolean;
-    initTransform: TransformValueOptions | TransformGetter | TransformValueOptions[];
-    updateTransforms: SelectiveUpdate[] | undefined;
+// export interface ViewSurface extends Partial<HTMLElement>{
+//     noShadow?:  boolean; 
+//     renderOptions?: RenderOptions;
+//     renderContext?: RenderContext;
+//     plugins?: Symbol[];
+//     transformHub?(transform: any):void;
+//     mainTemplate: HTMLTemplateElement;
+//     notReadyForInitView?: boolean;
+//     initTransform: TransformValueOptions | TransformGetter | TransformValueOptions[];
+//     updateTransforms: SelectiveUpdate[] | undefined;
     
-    afterInitRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
-    afterUpdateRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
-}
+//     afterInitRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
+//     afterUpdateRenderCallback?(ctx: RenderContext, target: HTMLElement | DocumentFragment, renderOptions: RenderOptions | undefined): void;
+// }
 
-export interface IViewPipeline {
-    config: ViewSurface; //passed into constructor
-    plugins?(): Promise<Plugins>;
-    root?: HTMLElement | ShadowRoot;
-    addToRenderQueue(prop: PropDef): void;
-    initRenderContext() : Promise<RenderContext>;
-    initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment): void;
-    transform(): void;
+// export interface IViewPipeline {
+//     config: ViewSurface; //passed into constructor
+//     plugins?(): Promise<Plugins>;
+//     root?: HTMLElement | ShadowRoot;
+//     addToRenderQueue(prop: PropDef): void;
+//     initRenderContext() : Promise<RenderContext>;
+//     initRenderCallback(ctx: RenderContext, target: HTMLElement | DocumentFragment): void;
+//     transform(): void;
+// }
+
+export interface ProcessorMap {
+    type: Function;
+    do: Function;
 }
 
 
