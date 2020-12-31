@@ -395,9 +395,7 @@ Previously, the way xtal-element handled visual updates was in a way that closel
 
 What we will be discussing for a while will finally lead up to our rendering approach, but first we must go through some [exercises](https://youtu.be/TPtDbHXkDp4?t=187) to get there.
 
-
-
-## Planting flags in a template
+### Planting flags in a template
 
 xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
 
@@ -419,7 +417,7 @@ pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
 ```
 It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace them by unique symbols.
 
-The cache can be used to retrieve the unique matching element from the domFragment:
+The cache can then be used to retrieve the unique matching element from the domFragment:
 
 ```JavaScript
 const myDiv = cache[refs.myDivId];
@@ -524,6 +522,17 @@ define(CounterDo);
 ```
 
 </details>
+
+### Ignoring prop changes when the new value is undefined or null. [TODO]
+
+We can specify to not react to changes of a property when it is falsy:
+
+```JavaScript
+{
+    type: Object,
+    stopReactionsIfFalsy: true
+}
+```
 
 ### Nested reactions
 

@@ -42,7 +42,7 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
                     console.log(prop, nv);
                 }
                 if(prop.debug) debugger;
-                if(callbackMethodName !== undefined) this[callbackMethodName](name, prop);
+                if(callbackMethodName !== undefined) this[callbackMethodName](name, prop, nv);
                 if(prop.notify !== undefined){
                     const eventInit: CustomEventInit = {
                         detail: {

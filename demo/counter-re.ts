@@ -34,6 +34,7 @@ const mainTemplate = html`
 const propDefGetter : destructPropInfo[] = [
     ({clonedTemplate, domCache}: CounterDo) => ({
         type: Object,
+        stopReactionsIfFalsy: true
     }),
     ({count}: CounterDo) => ({
         type: Number
@@ -58,35 +59,32 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
     connectedCallback(){
         this.attachShadow({mode: 'open'});
         const defaultValues: CounterDoProps = {
-            count: 0,
+            count: 0
         };
         attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
     }
-    onPropChange(name: string, prop: PropDef){
-        this.reactor.addToQueue(prop);
+    onPropChange(name: string, prop: PropDef, nv: any){
+        this.reactor.addToQueue(prop, nv);
     }
     propActions = [
         ({clonedTemplate}: CounterDo) => {
-            if(clonedTemplate === undefined) return;
             const cache = {};
-            pinTheDOMToKeys(clonedTemplate, refs, cache);
+            pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
         ({domCache, clonedTemplate}: CounterDo) => {
-            if(domCache === undefined || clonedTemplate === undefined) return;
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
                 this.count++;
             });
-            this.shadowRoot!.appendChild(clonedTemplate);
+            this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
         },
         ({domCache, count}: CounterDo) => {
-            if(domCache === undefined) return;
             domCache[refs.countPart].textContent = count.toString();
         }
     ] as PropAction[];

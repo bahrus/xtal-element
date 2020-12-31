@@ -8,11 +8,16 @@ export class Reactor implements IReactor {
     queue = new Set<string>();
     requestUpdate = false;
     deconstructedArgs = new WeakMap<PropAction, string[]>();
+    ignore = new Set<string>();
     constructor(public surface: ReactiveSurface , public returnMap?: ProcessorMap[], public getProcessor?: getProcessor) {
         if(getProcessor === undefined) import('./getProcessor.js');
      }
 
-    async addToQueue(prop: PropDef) {
+    async addToQueue(prop: PropDef, newVal?: any) {
+        if(prop.stopReactionsIfFalsy){
+            const verb = !newVal ? 'add' : 'delete';
+            this.ignore[verb](prop.name!); 
+        }
         this.queue.add(prop.name!);
         if (prop.async) {
             //https://medium.com/ing-blog/litelement-a-deepdive-into-batched-updates-b9431509fc4f
@@ -38,10 +43,10 @@ export class Reactor implements IReactor {
                 args = this.deconstructedArgs.get(propAction);
             }
             const dependencySet = new Set<string>(args);
+            if(intersection(dependencySet, this.ignore).size > 0) continue;
             if (intersection(queue, dependencySet).size > 0) {
                 if (this.surface.propActionsHub !== undefined) this.surface.propActionsHub(propAction);
                 const returnVal = propAction(this.surface as HTMLElement);
-
                 if(this.returnMap !== undefined){
                     let processorGetter: getProcessor | undefined = this.getProcessor;
                     if(processorGetter === undefined){

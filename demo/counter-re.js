@@ -32,6 +32,7 @@ const mainTemplate = html `
 const propDefGetter = [
     ({ clonedTemplate, domCache }) => ({
         type: Object,
+        stopReactionsIfFalsy: true
     }),
     ({ count }) => ({
         type: Number
@@ -48,15 +49,11 @@ export class CounterDo extends HTMLElement {
         super(...arguments);
         this.propActions = [
             ({ clonedTemplate }) => {
-                if (clonedTemplate === undefined)
-                    return;
                 const cache = {};
                 pinTheDOMToKeys(clonedTemplate, refs, cache);
                 this.domCache = cache;
             },
             ({ domCache, clonedTemplate }) => {
-                if (domCache === undefined || clonedTemplate === undefined)
-                    return;
                 domCache[refs.downPart].addEventListener('click', (e) => {
                     this.count--;
                 });
@@ -67,8 +64,6 @@ export class CounterDo extends HTMLElement {
                 this.clonedTemplate = undefined;
             },
             ({ domCache, count }) => {
-                if (domCache === undefined)
-                    return;
                 domCache[refs.countPart].textContent = count.toString();
             }
         ];
@@ -77,14 +72,14 @@ export class CounterDo extends HTMLElement {
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
         const defaultValues = {
-            count: 0,
+            count: 0
         };
         attr.mergeStr(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true);
     }
-    onPropChange(name, prop) {
-        this.reactor.addToQueue(prop);
+    onPropChange(name, prop, nv) {
+        this.reactor.addToQueue(prop, nv);
     }
 }
 CounterDo.is = 'counter-h';

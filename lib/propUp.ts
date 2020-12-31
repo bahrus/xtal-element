@@ -13,6 +13,6 @@ export function propUp<T = any>(self: HTMLElement, props: string[], defaultValue
         if (self.hasOwnProperty(prop)) {
             delete (<any>self)[prop];
         }
-        if(value !== undefined) (<any>self)[prop] = value;
+        (<any>self)[prop] = value;
     });
 }
