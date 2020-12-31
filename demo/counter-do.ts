@@ -1,5 +1,5 @@
 import {define} from '../lib/define.js';
-import {destructPropInfo, PropDef, ReactiveSurface, PropAction} from '../types.d.js';
+import {destructPropInfo, PropDef, ReactiveSurface, PropAction} from '../types.js';
 import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -32,10 +32,10 @@ const mainTemplate = html`
 </style>
 `;
 const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterH) => ({
+    ({clonedTemplate, domCache}: CounterDo) => ({
         type: Object,
     }),
-    ({count}: CounterH) => ({
+    ({count}: CounterDo) => ({
         type: Number
     })
 ];
@@ -45,21 +45,22 @@ const refs = {
     upPart: '',
     countPart: ''
 };
-export interface CounterHProps {
+export interface CounterDoProps {
     clonedTemplate?: DocumentFragment | undefined;
     domCache?: any;
     count: number;
 }
-export class CounterH extends HTMLElement implements CounterHProps{
+export class CounterDo extends HTMLElement implements CounterDoProps{
     static is = 'counter-h';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
     connectedCallback(){
-        const defaultValues: CounterHProps = {
+        this.attachShadow({mode: 'open'});
+        const defaultValues: CounterDoProps = {
             count: 0
         };
-        attr.mergeStr<CounterHProps>(this, slicedPropDefs.numNames, defaultValues);
+        attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
     }
@@ -67,13 +68,13 @@ export class CounterH extends HTMLElement implements CounterHProps{
         this.reactor.addToQueue(prop);
     }
     propActions = [
-        ({clonedTemplate}: CounterH) => {
+        ({clonedTemplate}: CounterDo) => {
             if(clonedTemplate === undefined) return;
             const cache = {};
             pinTheDOMToKeys(clonedTemplate, refs, cache);
             this.domCache = cache;
         },
-        ({domCache, clonedTemplate}: CounterH) => {
+        ({domCache, clonedTemplate}: CounterDo) => {
             if(domCache === undefined || clonedTemplate === undefined) return;
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
@@ -81,16 +82,15 @@ export class CounterH extends HTMLElement implements CounterHProps{
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
                 this.count++;
             });
-            const shadow = this.attachShadow({mode: 'open'});
-            shadow.appendChild(clonedTemplate);
+            this.shadowRoot!.appendChild(clonedTemplate);
             this.clonedTemplate = undefined;
         },
-        ({domCache, count}: CounterH) => {
+        ({domCache, count}: CounterDo) => {
             if(domCache === undefined) return;
             domCache[refs.countPart].textContent = count.toString();
         }
     ] as PropAction[];
     reactor = new Reactor(this);
 }
-letThereBeProps(CounterH, slicedPropDefs.propDefs, 'onPropChange');
-define(CounterH)
+letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+define(CounterDo);

@@ -395,6 +395,136 @@ Previously, the way xtal-element handled visual updates was in a way that closel
 
 What we will be discussing for a while will finally lead up to our rendering approach, but first we must go through some [exercises](https://youtu.be/TPtDbHXkDp4?t=187) to get there.
 
+
+
+## Planting flags in a template
+
+xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
+
+```JavaScript
+const s = '';
+const p = symbol();
+const refs = {
+    myDivId: '',
+    myOtherId: '',
+    somePart: s,
+    someClass: s,
+    mainElement: Symbol(),
+    myDataFlagData = p
+    someOtherClass = s
+    someCustomElementElement = p
+}
+const cache = {};
+pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
+```
+It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace them by unique symbols.
+
+The cache can be used to retrieve the unique matching element from the domFragment:
+
+```JavaScript
+const myDiv = cache[refs.myDivId];
+```
+
+The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name ('Element'), and by Dataset ('Data'), depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.
+
+Only the first matching element is put into the cache.  If the element isn't found, the key is deleted from the cache.
+
+Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component, for example, has no support for passing in the count via an attribute, or asynchronous passing in the count property, or caching DOM elements, parallel versions, etc.  Import statements are not shown, to avoid further embarrassment.
+
+<details>
+    <summary>Spot Check I</summary>
+
+```Typescript
+    const mainTemplate = html`
+<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
+<style>
+    * {
+      font-size: 200%;
+    }
+
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
+</style>
+`;
+const propDefGetter : destructPropInfo[] = [
+    ({clonedTemplate, domCache}: CounterDo) => ({
+        type: Object,
+    }),
+    ({count}: CounterDo) => ({
+        type: Number
+    })
+];
+const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+const refs = {
+    downPart: '',
+    upPart: '',
+    countPart: ''
+};
+export interface CounterDoProps {
+    clonedTemplate?: DocumentFragment | undefined;
+    domCache?: any;
+    count: number;
+}
+export class CounterDo extends HTMLElement implements CounterDoProps{
+    static is = 'counter-h';
+    clonedTemplate: DocumentFragment | undefined;
+    domCache: any;
+    count!: number;
+    connectedCallback(){
+        this.attachShadow({mode: 'open'});
+        const defaultValues: CounterDoProps = {
+            count: 0
+        };
+        attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
+        propUp(this, slicedPropDefs.propNames, defaultValues);
+        this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
+    }
+    onPropChange(name: string, prop: PropDef){
+        this.reactor.addToQueue(prop);
+    }
+    propActions = [
+        ({clonedTemplate}: CounterDo) => {
+            if(clonedTemplate === undefined) return;
+            const cache = {};
+            pinTheDOMToKeys(clonedTemplate, refs, cache);
+            this.domCache = cache;
+        },
+        ({domCache, clonedTemplate}: CounterDo) => {
+            if(domCache === undefined || clonedTemplate === undefined) return;
+            domCache[refs.downPart].addEventListener('click', (e: Event) => {
+                this.count--;
+            });
+            domCache[refs.upPart].addEventListener('click', (e: Event) => {
+                this.count++;
+            });
+            this.shadowRoot!.appendChild(clonedTemplate);
+            this.clonedTemplate = undefined;
+        },
+        ({domCache, count}: CounterDo) => {
+            if(domCache === undefined) return;
+            domCache[refs.countPart].textContent = count.toString();
+        }
+    ] as PropAction[];
+    reactor = new Reactor(this);
+}
+letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+define(CounterDo);
+```
+
+</details>
+
 ### Nested reactions
 
 Reactions can be nested:
@@ -453,37 +583,6 @@ But we're jumping ahead ouf ourselves.
 
 Back to our Kreutzer exercises.
 
-## Planting flags in a template
-
-xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
-
-```JavaScript
-const s = '';
-const p = symbol();
-const refs = {
-    myDivId: '',
-    myOtherId: '',
-    somePart: s,
-    someClass: s,
-    mainElement: Symbol(),
-    myDataFlagData = p
-    someOtherClass = s
-    someCustomElementElement = p
-}
-const cache = {};
-pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
-```
-It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace them by unique symbols.
-
-The cache can be used to retrieve the unique matching element from the domFragment:
-
-```JavaScript
-const myDiv = cache[refs.myDivId];
-```
-
-The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name ('Element'), and by Dataset ('Data'), depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.
-
-Only the first matching element is put into the cache.  If the element isn't found, the key is deleted from the cache.
 
 
 

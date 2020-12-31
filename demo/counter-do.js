@@ -43,7 +43,7 @@ const refs = {
     upPart: '',
     countPart: ''
 };
-export class CounterH extends HTMLElement {
+export class CounterDo extends HTMLElement {
     constructor() {
         super(...arguments);
         this.propActions = [
@@ -63,8 +63,7 @@ export class CounterH extends HTMLElement {
                 domCache[refs.upPart].addEventListener('click', (e) => {
                     this.count++;
                 });
-                const shadow = this.attachShadow({ mode: 'open' });
-                shadow.appendChild(clonedTemplate);
+                this.shadowRoot.appendChild(clonedTemplate);
                 this.clonedTemplate = undefined;
             },
             ({ domCache, count }) => {
@@ -76,6 +75,7 @@ export class CounterH extends HTMLElement {
         this.reactor = new Reactor(this);
     }
     connectedCallback() {
+        this.attachShadow({ mode: 'open' });
         const defaultValues = {
             count: 0
         };
@@ -87,6 +87,6 @@ export class CounterH extends HTMLElement {
         this.reactor.addToQueue(prop);
     }
 }
-CounterH.is = 'counter-h';
-letThereBeProps(CounterH, slicedPropDefs.propDefs, 'onPropChange');
-define(CounterH);
+CounterDo.is = 'counter-h';
+letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+define(CounterDo);
