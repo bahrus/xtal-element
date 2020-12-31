@@ -449,6 +449,38 @@ Now our "actions" don't have to have a function body.  If a post-reaction functi
 
 This also allows us to use reactions as opportunities to pass declarative JSON-ish syntax to template transformers (for example), which we will see below.
 
+## Planting flags in a template [TODO]
+
+xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
+
+```JavaScript
+const s = '';
+const p = symbol();
+const refs = {
+    myDivId: '',
+    myOtherId: '',
+    somePart: s,
+    someClass: s,
+    mainElement: Symbol(),
+    myDataFlagData = p
+    someOtherClass = s
+    someCustomElementElement = p
+}
+const cache = {};
+pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
+```
+It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace it by unique symbols.
+
+The cache can be used to retrieve the unique matching element from the domFragment:
+
+```JavaScript
+    const myDiv = cache[refs.myDivId];
+```
+
+The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name, and by Dataset ('Data'), depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.
+
+Only the first matching element is put into the cache.  If the element isn't found, the key is deleted from the cache.
+
 ### Ready-made reactor libraries
 
 ## Rendering Views
