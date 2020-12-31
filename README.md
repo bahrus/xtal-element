@@ -105,7 +105,7 @@ As far as avoiding name conflicts, the best analogy for what xtal-element's "def
 
 If another custom element is found matching the same name, the new custom element will be registered with the first non-taken number appended to the name.  Static prop 'isReally' allows consumers to know which tag name to use.  
 
-So for the example above, regardless of whether a custom element already exists with name 'my-custom-element', you can reference the actual tag name via:
+So for the example above, regardless of whether a custom element already exists with name 'do-re-mi', you can reference the actual tag name via:
 
 ```JavaScript
 import {DoReMi} from 'DoReMi/DoReMi.js';
@@ -244,7 +244,7 @@ export class MyCustomElement extends HTMLElement{
 }
 ```
 
-which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no debouncing support out of the box etc.:
+which is kind of a pain.  Furthermore sometimes you need to add logic that is tied to more than one property changing, so now you need to add a call to a common method, and there's no async support out of the box etc.:
 
 ```js
 export class MyCustomElement extends HTMLElement{
@@ -294,9 +294,10 @@ export class MyCustomElement extends HTMLElement{
 To make the code above easier to manage, you can stick with simple fields for all the properties, and implement the property "propActions":
 
 ```JavaScript
-export class MyCustomElement extends HTMLElement{
+export class MyCustomElement extends HTMLElement  implements ReactiveSurface{
 
     ...
+    this = self;
     prop1 = 'myValue1';
     prop2 = 'myValue2';
     prop3 = 'myValue3';
@@ -310,7 +311,7 @@ export class MyCustomElement extends HTMLElement{
 }
 ```
 
-XtalElement will invoke this action anytime prop1, prop2 and/or prop3 change.
+The Reactor class/object will invoke this action anytime prop1, prop2 and/or prop3 change.
 
 Here, "self" is another name for "this" -- inspired by Python / Rust's trait implementations.  
 
@@ -399,7 +400,7 @@ What we will be discussing for a while will finally lead up to our rendering app
 Reactions can be nested:
 
 ```TypeScript
-    propActions = [linkFindingMyDream, [linkFindYourPlace]]
+    propActions = [linkFindingMyDream, [linkFindYourPlace]];
 ```
 
 ### Post-Reaction [TODO]
@@ -426,13 +427,17 @@ reactor = new Reactor(this, [
     {
         type: Array,
         do: myArrayProcessor
+    },
+    {
+        type: HTMLDivElement,
+        do: myHTMLDivProcessor
     }
 ]);
 ```
 
 So if the right-hand-side of the action returns a string, pass the context to function myStringProcessor.  If it returns an array, use myArrayProcessor.
 
-Out actions don't have to have a function body.  If a post-reaction function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
+Now our "actions" don't have to have a function body.  If a post-reaction function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
 
 ```JavaScript
 ({prop1}) => ({

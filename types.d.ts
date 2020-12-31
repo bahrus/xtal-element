@@ -133,6 +133,8 @@ export interface ProcessorMap {
     do: Function;
 }
 
+export type getProcessor =  (value: any, processorMappings: ProcessorMap[]) => ProcessorMap | undefined;
+
 
 
 
