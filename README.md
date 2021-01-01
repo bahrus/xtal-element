@@ -443,7 +443,7 @@ We can specify to not react to changes of a property when it is falsy:
 Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component showcased by webcomponents.dev, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, micro-frontend parallel versions, asynchronous reactions, etc.  The example shown below (if you expand) supports all these features.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component showcased by webcomponents.dev is perfectly compatible with xtal-element.
 
 <details>
-    <summary>Spot Check I</summary>
+    <summary>Spot Check I - counter-do</summary>
 
 ```TypeScript
 const mainTemplate = html`
@@ -493,8 +493,8 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
     }
-    onPropChange(name: string, prop: PropDef){
-        this.reactor.addToQueue(prop);
+    onPropChange(name: string, prop: PropDef, nv: any){
+        this.reactor.addToQueue(prop, nv);
     }
     propActions = [
         ({clonedTemplate}: CounterDo) => {
@@ -525,6 +525,11 @@ define(CounterDo);
 </details>
 
 For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example, will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
+
+### Property Hydrattion, in detail
+
+Let's look at these three lines of code in our counter-do example above:
+
 
 
 ### Nested reactions

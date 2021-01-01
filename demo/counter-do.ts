@@ -56,8 +56,8 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
     }
-    onPropChange(name: string, prop: PropDef){
-        this.reactor.addToQueue(prop);
+    onPropChange(name: string, prop: PropDef, nv: any){
+        this.reactor.addToQueue(prop, nv);
     }
     propActions = [
         ({clonedTemplate}: CounterDo) => {
