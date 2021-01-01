@@ -7,6 +7,7 @@ import {attr} from '../lib/attr.js';
 import {Reactor} from '../lib/Reactor.js';
 import {propUp} from '../lib/propUp.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
+import {CounterDoProps} from './types.d.js';
 
 const mainTemplate = html`
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
@@ -34,6 +35,7 @@ const mainTemplate = html`
 const propDefGetter : destructPropInfo[] = [
     ({clonedTemplate, domCache}: CounterDo) => ({
         type: Object,
+        stopReactionsIfFalsy: true
     }),
     ({count}: CounterDo) => ({
         type: Number
@@ -41,11 +43,7 @@ const propDefGetter : destructPropInfo[] = [
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = { downPart: '', upPart: '', countPart: '' };
-export interface CounterDoProps {
-    clonedTemplate?: DocumentFragment | undefined;
-    domCache?: any;
-    count: number;
-}
+
 export class CounterDo extends HTMLElement implements CounterDoProps{
     static is = 'counter-do';
     clonedTemplate: DocumentFragment | undefined;
@@ -63,17 +61,14 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
     }
     propActions = [
         ({clonedTemplate}: CounterDo) => {
-            if(clonedTemplate === undefined) return;
             const cache = {};
-            pinTheDOMToKeys(clonedTemplate, refs, cache);
+            pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
         ({domCache, count}: CounterDo) => {
-            if(domCache === undefined) return;
             domCache[refs.countPart].textContent = count.toString();
         },
         ({domCache, clonedTemplate}: CounterDo) => {
-            if(domCache === undefined || clonedTemplate === undefined) return;
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });

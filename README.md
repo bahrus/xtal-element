@@ -429,7 +429,18 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 Only the first matching element is put into the cache.  If the element isn't found, the key is deleted from the cache.
 
-Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component, for example, has no support for passing in the count via an attribute, or asynchronous passing in the count property, or caching DOM elements, parallel versions, etc.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component is perfectly compatible with xtal-element.
+### Ignoring prop changes when the new value is undefined or null.
+
+We can specify to not react to changes of a property when it is falsy:
+
+```JavaScript
+{
+    type: Object,
+    stopReactionsIfFalsy: true
+}
+```
+
+Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, micro-frontend parallel versions, asynchronous reactions, etc.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component is perfectly compatible with xtal-element.
 
 <details>
     <summary>Spot Check I</summary>
@@ -461,6 +472,7 @@ const mainTemplate = html`
 const propDefGetter : destructPropInfo[] = [
     ({clonedTemplate, domCache}: CounterDo) => ({
         type: Object,
+        stopReactionsIfFalsy: true
     }),
     ({count}: CounterDo) => ({
         type: Number
@@ -468,11 +480,7 @@ const propDefGetter : destructPropInfo[] = [
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = { downPart: '', upPart: '', countPart: '' };
-export interface CounterDoProps {
-    clonedTemplate?: DocumentFragment | undefined;
-    domCache?: any;
-    count: number;
-}
+
 export class CounterDo extends HTMLElement implements CounterDoProps{
     static is = 'counter-do';
     clonedTemplate: DocumentFragment | undefined;
@@ -490,17 +498,14 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
     }
     propActions = [
         ({clonedTemplate}: CounterDo) => {
-            if(clonedTemplate === undefined) return;
             const cache = {};
-            pinTheDOMToKeys(clonedTemplate, refs, cache);
+            pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
         ({domCache, count}: CounterDo) => {
-            if(domCache === undefined) return;
             domCache[refs.countPart].textContent = count.toString();
         },
         ({domCache, clonedTemplate}: CounterDo) => {
-            if(domCache === undefined || clonedTemplate === undefined) return;
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });
@@ -519,16 +524,8 @@ define(CounterDo);
 
 </details>
 
-### Ignoring prop changes when the new value is undefined or null.
+For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example, will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
 
-We can specify to not react to changes of a property when it is falsy:
-
-```JavaScript
-{
-    type: Object,
-    stopReactionsIfFalsy: true
-}
-```
 
 ### Nested reactions
 

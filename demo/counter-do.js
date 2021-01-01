@@ -32,6 +32,7 @@ const mainTemplate = html `
 const propDefGetter = [
     ({ clonedTemplate, domCache }) => ({
         type: Object,
+        stopReactionsIfFalsy: true
     }),
     ({ count }) => ({
         type: Number
@@ -44,20 +45,14 @@ export class CounterDo extends HTMLElement {
         super(...arguments);
         this.propActions = [
             ({ clonedTemplate }) => {
-                if (clonedTemplate === undefined)
-                    return;
                 const cache = {};
                 pinTheDOMToKeys(clonedTemplate, refs, cache);
                 this.domCache = cache;
             },
             ({ domCache, count }) => {
-                if (domCache === undefined)
-                    return;
                 domCache[refs.countPart].textContent = count.toString();
             },
             ({ domCache, clonedTemplate }) => {
-                if (domCache === undefined || clonedTemplate === undefined)
-                    return;
                 domCache[refs.downPart].addEventListener('click', (e) => {
                     this.count--;
                 });
