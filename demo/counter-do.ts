@@ -9,7 +9,6 @@ import {Reactor} from '../lib/Reactor.js';
 import {propUp} from '../lib/propUp.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
-import { getProp } from '../lib/getProp.js';
 
 const mainTemplate = html`
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
