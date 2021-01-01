@@ -440,7 +440,7 @@ We can specify to not react to changes of a property when it is falsy:
 }
 ```
 
-Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, micro-frontend parallel versions, asynchronous reactions, etc.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component is perfectly compatible with xtal-element.
+Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component showcased by webcomponents.dev, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, micro-frontend parallel versions, asynchronous reactions, etc.  The example shown below (if you expand) supports all these features.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component showcased by webcomponents.dev is perfectly compatible with xtal-element.
 
 <details>
     <summary>Spot Check I</summary>
