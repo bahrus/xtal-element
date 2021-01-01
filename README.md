@@ -526,11 +526,33 @@ define(CounterDo);
 
 For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example, will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
 
-### Property Hydrattion, in detail
+### Property Hydration, in detail [TODO]
 
 Let's look at these three lines of code in our counter-do example above:
 
+```JavaScript
+connectedCallback(){
+    ...
+    const defaultValues: CounterDoProps = { count: 0};
+    attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
+    propUp(this, slicedPropDefs.propNames, defaultValues);
+    ...
+}
+```
 
+But these two functions, mergeStr, and propUp can be used independently of each other, and don't impose any arbitrary data structures.
+
+But the resulting code is a bit of a mind twister.
+
+In English, this is saying "If something passes in the count property while I was attaching myself to the Live DOM element, that takes precedence.  If not, check for a value from a corresponding attribute.  If no attribute is found, as a last resort, just default the initial count to 0."
+
+Translating between the code and the paragraph above requires quite a bit of intimate knowledge about what the functions do (and realizing that what you read is the opposite order of how you would typically express this in English).  
+
+So let's see if we can simplify these primitives into an easy to read single line of code.
+
+```Typescript
+hydrate<CounterDoProps>(self: HTMLElement, ([propDef, defaultVal]: [PropDef, any])[]);
+```
 
 ### Nested reactions
 
