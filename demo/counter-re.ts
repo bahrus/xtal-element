@@ -7,6 +7,7 @@ import {attr} from '../lib/attr.js';
 import {Reactor} from '../lib/Reactor.js';
 import {propUp} from '../lib/propUp.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
+import {CounterDoProps} from './types.d.js';
 
 const mainTemplate = html`
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
@@ -41,26 +42,16 @@ const propDefGetter : destructPropInfo[] = [
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
-const refs = {
-    downPart: '',
-    upPart: '',
-    countPart: ''
-};
-export interface CounterDoProps {
-    clonedTemplate?: DocumentFragment | undefined;
-    domCache?: any;
-    count: number;
-}
-export class CounterDo extends HTMLElement implements CounterDoProps{
+const refs = {downPart: '', upPart: '', countPart: ''};
+
+export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSurface{
     static is = 'counter-h';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
     connectedCallback(){
         this.attachShadow({mode: 'open'});
-        const defaultValues: CounterDoProps = {
-            count: 0
-        };
+        const defaultValues: CounterDoProps = {count: 0};
         attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
@@ -74,6 +65,9 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
+        ({domCache, count}: CounterDo) => {
+            domCache[refs.countPart].textContent = count.toString();
+        },
         ({domCache, clonedTemplate}: CounterDo) => {
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
@@ -84,9 +78,6 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
         },
-        ({domCache, count}: CounterDo) => {
-            domCache[refs.countPart].textContent = count.toString();
-        }
     ] as PropAction[];
     reactor = new Reactor(this);
 }

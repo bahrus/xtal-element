@@ -17,7 +17,9 @@ xtal-element, though, embraces the duality paradox in a slightly different way. 
 
 xtal-element borrows some ideas from Rust and Python.
 
-xtal-element's utility functions and helper classes, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class combined with common mixins can always be constructed, that hides the boilerplate from extending classes. 
+xtal-element's utility functions and helper classes, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class combined with common mix-ins can always be constructed, that hides the boilerplate from extending classes. 
+
+[Catalyst](https://github.github.io/catalyst/) takes the same approach.
 
 Anyway, xtal-element's target audience is those who are looking for web component helpers that:
 
@@ -427,13 +429,13 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 Only the first matching element is put into the cache.  If the element isn't found, the key is deleted from the cache.
 
-Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component, for example, has no support for passing in the count via an attribute, or asynchronous passing in the count property, or caching DOM elements, parallel versions, etc.  Import statements are not shown, to avoid further embarrassment.
+Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component, for example, has no support for passing in the count via an attribute, or asynchronous passing in the count property, or caching DOM elements, parallel versions, etc.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component is perfectly compatible with xtal-element.
 
 <details>
     <summary>Spot Check I</summary>
 
-```Typescript
-    const mainTemplate = html`
+```TypeScript
+const mainTemplate = html`
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
     * {
@@ -465,26 +467,20 @@ const propDefGetter : destructPropInfo[] = [
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
-const refs = {
-    downPart: '',
-    upPart: '',
-    countPart: ''
-};
+const refs = { downPart: '', upPart: '', countPart: '' };
 export interface CounterDoProps {
     clonedTemplate?: DocumentFragment | undefined;
     domCache?: any;
     count: number;
 }
 export class CounterDo extends HTMLElement implements CounterDoProps{
-    static is = 'counter-h';
+    static is = 'counter-do';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
     connectedCallback(){
         this.attachShadow({mode: 'open'});
-        const defaultValues: CounterDoProps = {
-            count: 0
-        };
+        const defaultValues: CounterDoProps = { count: 0};
         attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
@@ -499,6 +495,10 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             pinTheDOMToKeys(clonedTemplate, refs, cache);
             this.domCache = cache;
         },
+        ({domCache, count}: CounterDo) => {
+            if(domCache === undefined) return;
+            domCache[refs.countPart].textContent = count.toString();
+        },
         ({domCache, clonedTemplate}: CounterDo) => {
             if(domCache === undefined || clonedTemplate === undefined) return;
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
@@ -510,10 +510,6 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             this.shadowRoot!.appendChild(clonedTemplate);
             this.clonedTemplate = undefined;
         },
-        ({domCache, count}: CounterDo) => {
-            if(domCache === undefined) return;
-            domCache[refs.countPart].textContent = count.toString();
-        }
     ] as PropAction[];
     reactor = new Reactor(this);
 }
@@ -523,7 +519,7 @@ define(CounterDo);
 
 </details>
 
-### Ignoring prop changes when the new value is undefined or null. [TODO]
+### Ignoring prop changes when the new value is undefined or null.
 
 We can specify to not react to changes of a property when it is falsy:
 

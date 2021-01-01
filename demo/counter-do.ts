@@ -40,26 +40,20 @@ const propDefGetter : destructPropInfo[] = [
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
-const refs = {
-    downPart: '',
-    upPart: '',
-    countPart: ''
-};
+const refs = { downPart: '', upPart: '', countPart: '' };
 export interface CounterDoProps {
     clonedTemplate?: DocumentFragment | undefined;
     domCache?: any;
     count: number;
 }
 export class CounterDo extends HTMLElement implements CounterDoProps{
-    static is = 'counter-h';
+    static is = 'counter-do';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
     connectedCallback(){
         this.attachShadow({mode: 'open'});
-        const defaultValues: CounterDoProps = {
-            count: 0,
-        };
+        const defaultValues: CounterDoProps = { count: 0};
         attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
@@ -74,6 +68,10 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             pinTheDOMToKeys(clonedTemplate, refs, cache);
             this.domCache = cache;
         },
+        ({domCache, count}: CounterDo) => {
+            if(domCache === undefined) return;
+            domCache[refs.countPart].textContent = count.toString();
+        },
         ({domCache, clonedTemplate}: CounterDo) => {
             if(domCache === undefined || clonedTemplate === undefined) return;
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
@@ -85,10 +83,6 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             this.shadowRoot!.appendChild(clonedTemplate);
             this.clonedTemplate = undefined;
         },
-        ({domCache, count}: CounterDo) => {
-            if(domCache === undefined) return;
-            domCache[refs.countPart].textContent = count.toString();
-        }
     ] as PropAction[];
     reactor = new Reactor(this);
 }

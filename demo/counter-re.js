@@ -39,11 +39,7 @@ const propDefGetter = [
     })
 ];
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
-const refs = {
-    downPart: '',
-    upPart: '',
-    countPart: ''
-};
+const refs = { downPart: '', upPart: '', countPart: '' };
 export class CounterDo extends HTMLElement {
     constructor() {
         super(...arguments);
@@ -52,6 +48,9 @@ export class CounterDo extends HTMLElement {
                 const cache = {};
                 pinTheDOMToKeys(clonedTemplate, refs, cache);
                 this.domCache = cache;
+            },
+            ({ domCache, count }) => {
+                domCache[refs.countPart].textContent = count.toString();
             },
             ({ domCache, clonedTemplate }) => {
                 domCache[refs.downPart].addEventListener('click', (e) => {
@@ -63,17 +62,12 @@ export class CounterDo extends HTMLElement {
                 this.shadowRoot.appendChild(clonedTemplate);
                 this.clonedTemplate = undefined;
             },
-            ({ domCache, count }) => {
-                domCache[refs.countPart].textContent = count.toString();
-            }
         ];
         this.reactor = new Reactor(this);
     }
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
-        const defaultValues = {
-            count: 0
-        };
+        const defaultValues = { count: 0 };
         attr.mergeStr(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true);
