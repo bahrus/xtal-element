@@ -1,8 +1,7 @@
 import {destructPropInfo, PropDef, PropDefGet} from '../types.js';
 import {getPropDefs} from './getPropDefs.js';
 
-export function getSlicedPropDefs(propDefGetters: destructPropInfo[]){
-    const propDefs = getPropDefs(propDefGetters);
+export function getSlicedPropDefs(propDefs: PropDef[]){
     const propNames = propDefs.map(propDef => propDef.name!);
     const strNames = propDefs.filter(propDef => propDef.type === String).map(propDef => propDef.name!);
     const boolNames = propDefs.filter(propDef => propDef.type === Boolean).map(propDef => propDef.name!);

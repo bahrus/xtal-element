@@ -1,4 +1,5 @@
 import { define } from '../lib/define.js';
+import { getPropDefs } from '../lib/getPropDefs.js';
 import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
@@ -38,6 +39,7 @@ const propDefGetter = [
         type: Number
     })
 ];
+const propDefs = getPropDefs(propDefGetter);
 const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = { downPart: '', upPart: '', countPart: '' };
 export class CounterDo extends HTMLElement {

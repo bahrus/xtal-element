@@ -194,12 +194,12 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     ClimbedEveryMountain: boolean;
     SearchedHighAndLow: boolean;
     FollowedEveryHighway: boolean;
-    FoundMyDream: boolean;
+    FoundYourDream: boolean;
 
 
     //ReactiveSurface implementation
     propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
-        this.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
+        this.FoundYourDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
     }] as PropAction[]
     reactor = new Reactor(this);
 
@@ -352,9 +352,7 @@ Another theoretical benefit -- by separating the actions from the actual class, 
 
 propActions (and updateTransforms, discussed below) rely heavily on destructuring the class as the argument of an arrow function.  JavaScript doesn't appear to support destructuring objects with ES6 symbols as keys.
 
-Separating "propAction" arrow functions out of the class as an (imported) constant imposes an additional limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the very early stages of browser adoption).  I thought using "bind" might give access to private fields, but no such luck.  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered with access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, those actions could remain inside the class.
-
-Also, in general, propActions (local in the class or external) is not an elegant place to add event handlers onto internal components.  The best place to add event handlers is in the initTransform.  (Note:  Even the initTransform can be defined via a destructured arrow function, and moved outside of the class.)
+Separating "propAction" arrow functions out of the class as an (imported) constant imposes an additional limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the middle stages of browser and TypeScript adoption).  I thought using "bind" might give access to private fields, but no such luck.  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered with access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, those actions could remain inside the class.
 
 ### Priors
 
@@ -365,17 +363,17 @@ It's possible that libraries that don't support this kind of property change "di
 I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
 
 
-Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it will only be evaluated once, with the same result.  Note that this async feature is opt in (by putting the desired properties in the "async" category).
+Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it may only be evaluated once, with the same result.  Note that this async feature is opt in (by configuring the desired properties via "async" boolean setting).
 
 After experimenting with different naming patterns, personally I think if you choose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more scenarios. 
 
-It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.  
+It's been my (biased) experience that putting as much "workflow" logic as possible into these propActions makes managing changing properties easier -- especially when working with asynchronous actions, and if the propActions are arranged in a logical order based on the flow of data, similar in concept perhaps to RxJs, where property groupings become the observables, and "subscriptions" based on resulting property changes come below the observable actions.  
 
 ### Debugging Disadvantage
 
 One disadvantage of using propActions, as opposed to setter methods / class methods, is with the latter approach, one can step through the code throughout the process.  Doing so with propActions isn't so easy, so one is left wondering where the code will go next after the action is completed.
 
-To address this concern, you can override the method:  
+To address this concern, you can optionally implement the method:  
 
 ```JavaScript
 propActionsHub(propAction){
@@ -387,9 +385,6 @@ propActionsHub(propAction){
 
 </details>
 
-
-
-
 ## Development Section
 
 The next few sections are going to prove to be a bit dry reading.  Think of it as the [boring](https://youtu.be/okWr-tzwOEg?t=78) [development](<https://en.wikipedia.org/wiki/Violin_Sonata_No._9_(Beethoven)>) [section](https://en.wikipedia.org/wiki/Musical_development) of a sonata.
@@ -398,7 +393,7 @@ Previously, the way xtal-element handled visual updates was in a way that closel
 
 What we will be discussing for a while will finally lead up to our rendering approach, but first we must go through some [exercises](https://youtu.be/TPtDbHXkDp4?t=187) to get there.
 
-### Planting flags in a template
+### Planting flags in a cloned template
 
 xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
 
@@ -525,7 +520,7 @@ define(CounterDo);
 
 </details>
 
-For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example, will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
+For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
 
 ### Property Hydration, in detail [TODO]
 
@@ -541,7 +536,7 @@ connectedCallback(){
 }
 ```
 
-But these two functions, mergeStr, and propUp can be used independently of each other, and don't impose any arbitrary data structures.  They also try to minimize assumptions.
+These two functions, mergeStr, and propUp can be used independently of each other, and don't impose any arbitrary data structures.  They also try to minimize assumptions.
 
 But the resulting code is a bit of a mind twister.
 
@@ -562,7 +557,7 @@ export function hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, p
 Reactions can be nested:
 
 ```TypeScript
-    propActions = [linkFindingMyDream, [linkFindYourPlace]];
+    propActions = [linkFindingYourDream, [linkFindYourPlace]];
 ```
 
 ### Reusable Post-Reactions
