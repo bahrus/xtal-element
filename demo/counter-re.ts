@@ -4,9 +4,7 @@ import {getPropDefs} from '../lib/getPropDefs.js';
 import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
-import {attr} from '../lib/attr.js';
 import {Reactor} from '../lib/Reactor.js';
-import {propUp} from '../lib/propUp.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
 
