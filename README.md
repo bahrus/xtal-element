@@ -169,7 +169,7 @@ letThereBeProps(MyFavoriteThings, slicedPropDefs.propDefs, 'onPropChange');
 
 ## Support for asynchronous loading
 
-If prop values might be passed to an element before the element becomes registered (always best to be prepared for this to happen), then you can do this by utilizing the "propUp" function:
+If prop values might be passed to an element before the [element becomes registered](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) (always best to be prepared for this to happen), then you can do this by utilizing the "propUp" function:
 
 ```JavaScript
 import {propUp} from 'xtal-element/lib/propUp.js';
@@ -299,7 +299,7 @@ To make the code above easier to manage, you can stick with simple fields for al
 export class MyCustomElement extends HTMLElement  implements ReactiveSurface{
 
     ...
-    this = self;
+    self = this;
     prop1 = 'myValue1';
     prop2 = 'myValue2';
     prop3 = 'myValue3';
@@ -331,6 +331,7 @@ export class MyCustomElement extends HTMLElement{
     prop2 = 'myValue2';
     prop3 = 'myValue3';
     prop4;
+    self = this;
 
     propActions = [linkProp4];
 
@@ -417,7 +418,7 @@ const refs = {
 const cache = {};
 pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
 ```
-It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace them by unique symbols.
+It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace them by unique symbols if needed.
 
 The cache can then be used to retrieve the unique matching element from the domFragment:
 
@@ -540,18 +541,20 @@ connectedCallback(){
 }
 ```
 
-But these two functions, mergeStr, and propUp can be used independently of each other, and don't impose any arbitrary data structures.
+But these two functions, mergeStr, and propUp can be used independently of each other, and don't impose any arbitrary data structures.  They also try to minimize assumptions.
 
 But the resulting code is a bit of a mind twister.
 
-In English, this is saying "If something passes in the count property while I was attaching myself to the Live DOM element, that takes precedence.  If not, check for a value from a corresponding attribute.  If no attribute is found, as a last resort, just default the initial count to 0."
+In English, what the code is trying to do is this: 
+
+>If something passes in the count property while I was attaching myself to the Live DOM element, that takes precedence.  If not, check for a value from a corresponding attribute.  If no attribute is found, as a last resort, just set the initial count to a default value of 0.
 
 Translating between the code and the paragraph above requires quite a bit of intimate knowledge about what the functions do (and realizing that what you read is the opposite order of how you would typically express this in English).  
 
 So let's see if we can simplify these primitives into an easy to read single line of code.
 
 ```Typescript
-hydrate<CounterDoProps>(self: HTMLElement, ([propDef, defaultVal]: [PropDef, any])[]);
+export function hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, propDefs: PropDef[], defaultVals: T){}
 ```
 
 ### Nested reactions
