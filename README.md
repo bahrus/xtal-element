@@ -156,7 +156,8 @@ const propDefGetter : destructPropInfo[] = [
         type: String,
     })
 ];
-const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+const propDefs = getPropDefs(propDefGetter);
+const slicedPropDefs = getSlicedPropDefs(propDefs);
 
 export class MyFavoriteThings extends HTMLElement{
     BrownPaperPackagesTiedUpWith: String;
@@ -474,7 +475,8 @@ const propDefGetter : destructPropInfo[] = [
         type: Number
     })
 ];
-const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+const propDefs = getPropDefs(propDefGetter);
+const slicedPropDefs = getSlicedPropDefs(propDefs);
 const refs = { downPart: '', upPart: '', countPart: '' };
 
 export class CounterDo extends HTMLElement implements CounterDoProps{
@@ -524,9 +526,12 @@ For this simple "counter" web component, the code shown above (if you expand) is
 
 ### Property Hydration, in detail [TODO]
 
-Let's look at these three lines of code in our counter-do example above:
+Let's look at these five lines of code in our counter-do example above:
 
 ```JavaScript
+const propDefs = getPropDefs(propDefGetter);
+const slicedPropDefs = getSlicedPropDefs(propDefs);
+...
 connectedCallback(){
     ...
     const defaultValues: CounterDoProps = { count: 0};
