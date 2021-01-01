@@ -541,7 +541,7 @@ connectedCallback(){
 }
 ```
 
-These two functions, mergeStr, and propUp can be used independently of each other, and don't impose any arbitrary data structures.  They also try to minimize assumptions.
+These two functions, mergeStr, and propUp, can be used independently of each other, and don't impose any arbitrary data structure requirements.  They also try to minimize assumptions.
 
 But the resulting code is a bit of a mind twister.
 
@@ -554,8 +554,16 @@ Translating between the code and the paragraph above requires quite a bit of int
 So let's see if we can simplify these primitives into an easy to read single line of code.
 
 ```Typescript
-export function hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, propDefs: PropDef[], defaultVals: T){}
+hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, propDefs: PropDef[], defaultVals: T);
 ```
+
+or more simply (without the ceremony of typing):
+
+```Typescript
+hydrate(self, propDefs, defaultVals);
+```
+
+where self is the custom element instance.
 
 ### Nested reactions
 

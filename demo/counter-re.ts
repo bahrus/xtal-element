@@ -1,6 +1,7 @@
 import {define} from '../lib/define.js';
 import {destructPropInfo, PropDef, ReactiveSurface, PropAction} from '../types.js';
-import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
+import {getPropDefs} from '../lib/getPropDefs.js';
+import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
 import {attr} from '../lib/attr.js';
@@ -41,7 +42,8 @@ const propDefGetter : destructPropInfo[] = [
         type: Number
     })
 ];
-const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+const propDefs = getPropDefs(propDefGetter);
+//const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = {downPart: '', upPart: '', countPart: ''};
 
 export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSurface{
@@ -51,9 +53,9 @@ export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSu
     count!: number;
     connectedCallback(){
         this.attachShadow({mode: 'open'});
-        const defaultValues: CounterDoProps = {count: 0};
-        attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
-        propUp(this, slicedPropDefs.propNames, defaultValues);
+        hydrate<CounterDoProps>(this, propDefs, {
+            count: 0
+        });
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
     }
     onPropChange(name: string, prop: PropDef, nv: any){
@@ -81,5 +83,5 @@ export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSu
     ] as PropAction[];
     reactor = new Reactor(this);
 }
-letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+letThereBeProps(CounterDo, propDefs, 'onPropChange');
 define(CounterDo);

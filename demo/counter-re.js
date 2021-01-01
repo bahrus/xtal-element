@@ -1,10 +1,9 @@
 import { define } from '../lib/define.js';
-import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
+import { getPropDefs } from '../lib/getPropDefs.js';
+import { hydrate } from '../lib/hydrate.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
-import { attr } from '../lib/attr.js';
 import { Reactor } from '../lib/Reactor.js';
-import { propUp } from '../lib/propUp.js';
 import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
@@ -38,7 +37,8 @@ const propDefGetter = [
         type: Number
     })
 ];
-const slicedPropDefs = getSlicedPropDefs(propDefGetter);
+const propDefs = getPropDefs(propDefGetter);
+//const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = { downPart: '', upPart: '', countPart: '' };
 export class CounterDo extends HTMLElement {
     constructor() {
@@ -67,9 +67,9 @@ export class CounterDo extends HTMLElement {
     }
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
-        const defaultValues = { count: 0 };
-        attr.mergeStr(this, slicedPropDefs.numNames, defaultValues);
-        propUp(this, slicedPropDefs.propNames, defaultValues);
+        hydrate(this, propDefs, {
+            count: 0
+        });
         this.clonedTemplate = mainTemplate.content.cloneNode(true);
     }
     onPropChange(name, prop, nv) {
@@ -77,5 +77,5 @@ export class CounterDo extends HTMLElement {
     }
 }
 CounterDo.is = 'counter-h';
-letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+letThereBeProps(CounterDo, propDefs, 'onPropChange');
 define(CounterDo);
