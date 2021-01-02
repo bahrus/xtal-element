@@ -8,7 +8,7 @@ import {Reactor} from '../lib/Reactor.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
 import {doDOMKeyPEAction} from '../lib/doDOMKeyPEAction.js';
-import {XtalPattern, xp} from '../lib/XtalPattern.js';
+import {XtalPattern, xp, manageMainTemplate} from '../lib/XtalPattern.js';
 
 
 const mainTemplate = html`
@@ -75,14 +75,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     refs = refs;
     mainTemplate = mainTemplate;
     propActions = [
-        ({mainTemplate, self}: CounterRe) =>{
-            self.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
-        },
-        ({clonedTemplate}: CounterRe) => {
-            const cache = {};
-            pinTheDOMToKeys(clonedTemplate!, refs, cache);
-            this.domCache = cache;
-        },
+        manageMainTemplate,
         ({domCache, count}: CounterRe) => ([
             {[refs.countPart]: [{textContent: count}]}
         ]),

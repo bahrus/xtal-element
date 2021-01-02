@@ -4,9 +4,8 @@ import { hydrate } from '../lib/hydrate.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
-import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
 import { doDOMKeyPEAction } from '../lib/doDOMKeyPEAction.js';
-import { xp } from '../lib/XtalPattern.js';
+import { xp, manageMainTemplate } from '../lib/XtalPattern.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
@@ -56,14 +55,7 @@ export class CounterRe extends HTMLElement {
         this.refs = refs;
         this.mainTemplate = mainTemplate;
         this.propActions = [
-            ({ mainTemplate, self }) => {
-                self.clonedTemplate = mainTemplate.content.cloneNode(true);
-            },
-            ({ clonedTemplate }) => {
-                const cache = {};
-                pinTheDOMToKeys(clonedTemplate, refs, cache);
-                this.domCache = cache;
-            },
+            manageMainTemplate,
             ({ domCache, count }) => ([
                 { [refs.countPart]: [{ textContent: count }] }
             ]),
