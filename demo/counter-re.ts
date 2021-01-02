@@ -51,7 +51,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSu
     domCache: any;
     count!: number;
     connectedCallback(){
-        this.attachShadow({mode: 'open'});
+        
         hydrate<CounterDoProps>(this, propDefs, {
             count: 0
         });
@@ -69,14 +69,15 @@ export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSu
             pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
-        ({domCache, count}: CounterRe) => {
-            domCache[refs.countPart].textContent = count.toString();
-        },
+        ({domCache, count}: CounterRe) => ([
+            {[refs.countPart]: [{textContent: count}]}
+        ]),
         ({domCache, changeCount}: CounterRe) => ([
             {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
-            {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+            {[refs.upPart]: '"'}
         ]),
         ({domCache, clonedTemplate}: CounterRe) => {
+            this.attachShadow({mode: 'open'});
             this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
         }

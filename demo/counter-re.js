@@ -50,14 +50,15 @@ export class CounterRe extends HTMLElement {
                 pinTheDOMToKeys(clonedTemplate, refs, cache);
                 this.domCache = cache;
             },
-            ({ domCache, count }) => {
-                domCache[refs.countPart].textContent = count.toString();
-            },
+            ({ domCache, count }) => ([
+                { [refs.countPart]: [{ textContent: count }] }
+            ]),
             ({ domCache, changeCount }) => ([
                 { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
-                { [refs.upPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] }
+                { [refs.upPart]: '"' }
             ]),
             ({ domCache, clonedTemplate }) => {
+                this.attachShadow({ mode: 'open' });
                 this.shadowRoot.appendChild(clonedTemplate);
                 this.clonedTemplate = undefined;
             }
@@ -70,7 +71,6 @@ export class CounterRe extends HTMLElement {
         ]);
     }
     connectedCallback() {
-        this.attachShadow({ mode: 'open' });
         hydrate(this, propDefs, {
             count: 0
         });

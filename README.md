@@ -567,7 +567,7 @@ where self is the custom element instance.
 
 
 
-### Reusable, Declarative, Post-Reactions
+### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
 
 Let's take another look at one of our earlier propActions:
 
@@ -601,7 +601,7 @@ reactor = new Reactor(this, [
 
 So if the right-hand-side of the action returns a string, pass the context to function myStringProcessor.  If it returns an array, use myArrayProcessor.
 
-Now our "actions" don't have to have a function body.  If a post-reaction function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
+Now our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
 
 ```JavaScript
 ({prop1}) => ({
@@ -633,6 +633,14 @@ In our counter web component, let's make this code more declarative, as it is bo
 },
 ```
 
+We can replace this.count-- / this.count++ with a more powerful method capable of so much more:
+
+```JavaScript
+changeCount(delta: number){
+    this.count += delta;
+}
+```
+
 We can split the action in two, separating different concerns:
 
 ```JavaScript
@@ -646,22 +654,98 @@ We can split the action in two, separating different concerns:
     
 },
 ({domCache, clonedTemplate}: CounterDo) => {
+    this.attachShadow({mode: 'open'});
     this.shadowRoot!.appendChild(clonedTemplate);
     this.clonedTemplate = undefined;
 }
 ```
 
-We can replace this.count--; with a more powerful method not tied to the UI:
 
-```JavaScript
-changeCount(delta: number){
-    this.count += delta;
-}
-```
 
 The first action can be replaced by:
 
+```JavaScript
+({domCache, changeCount}: CounterRe) => ([
+    {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+    {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+]),
+```
 
+*if* we provide the following rxn-suppl:
+
+```JavaScript
+reactor = new Reactor(this, [
+    {
+        type: Array,
+        do: doDOMKeyPEAction
+    }
+]);
+```
+
+Not the abbreviation "PE".  That stands for Properties/Events.
+
+The array [,{click:[changeCount, 'dataset.d', parseInt]}] is a nested tuple.  The first, undefined element allow us to set prop vals.
+
+The second element of the tuple is a mapping of declarative event handling.
+
+If it had looked like this:  {click:changeCount}, which is supported, then the signature of changeCount would need to look like:
+
+```TypeScript
+changeCount(e: Event){
+    ...
+}
+```
+
+But we created a nice, pristine method which is UI neutral.  To allow us to do that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluated target.dataset.d, and applying parseInt to that value."
+
+### Ditto reactions
+
+This is pretty annoying to DRYophiles:
+
+```JavaScript
+[
+    {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+    {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+]
+```
+
+We can DRYphon out the wasted typing, using ditto notation:
+
+```JavaScript
+({domCache, changeCount}: CounterRe) => ([
+    {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+    {[refs.upPart]: '"'}
+]),
+```
+
+### Shareable Actions
+
+The action:
+
+```JavaScript
+({domCache, clonedTemplate}) => {
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot!.appendChild(clonedTemplate);
+    this.clonedTemplate = undefined;
+}
+```
+
+... is apt to found in most every visual component, so as long as all components use the names domCache, clonedTemplate, we can share it by doing the following:
+
+1.  Make sure this field is defined in the class:
+
+```JavaScript
+self = this;
+```
+
+2.  Now we can move the action out to a constant, and place it some common import for reduced bandwidth when developing multiple custom elements:
+
+```JavaScript
+const linkClonedTemplate = ({domCache, clonedTemplate, self}) => {
+    self.attachShadow({mode: 'open'});
+    self.shadowRoot!.appendChild(clonedTemplate);
+    self.clonedTemplate = undefined;
+}
 
 ### Nested reactions
 
