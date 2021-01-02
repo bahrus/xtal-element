@@ -7,7 +7,7 @@ import {html} from '../lib/html.js';
 import {Reactor} from '../lib/Reactor.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
-import {doDOMKeyAction} from '../lib/doDOMKeyAction.js';
+import {doDOMKeyPEAction} from '../lib/doDOMKeyPEAction.js';
 
 const mainTemplate = html`
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
@@ -72,12 +72,6 @@ export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSu
             domCache[refs.countPart].textContent = count.toString();
         },
         ({domCache, clonedTemplate, changeCount}: CounterRe) => {
-            domCache[refs.downPart].addEventListener('click', (e: Event) => {
-                this.count--;
-            });
-            domCache[refs.upPart].addEventListener('click', (e: Event) => {
-                this.count++;
-            });
             this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
             const postAction = [,{click:[changeCount, 'dataset.d', parseInt]}]
@@ -90,7 +84,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSu
     reactor = new Reactor(this, [
         {
             type: Array,
-            do: doDOMKeyAction
+            do: doDOMKeyPEAction
         }
     ]);
 }

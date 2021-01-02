@@ -18,6 +18,16 @@ function mergeStr<T = any>(self: HTMLElement, names: string[], defaultValues: T)
     }
 }
 
+function mergeNum<T = any>(self: HTMLElement, names: string[], defaultValues: T){
+    for(const name of names){
+        const ctl = camelToLisp(name);
+        if(self.hasAttribute(ctl)){
+            const attrib = self.getAttribute(ctl)!;
+            (<any>defaultValues)[name] = attrib.includes('.') ? parseFloat(attrib) : parseInt(attrib);
+        } 
+    }
+}
+
 function mergeObj<T = any>(self: HTMLElement, names: string[], defaultValues: T){
     for(const name of names){
         const ctl = camelToLisp(name);
@@ -25,5 +35,5 @@ function mergeObj<T = any>(self: HTMLElement, names: string[], defaultValues: T)
     }
 }
 
-export const attr = {mergeBool, mergeStr, mergeObj};
+export const attr = {mergeBool, mergeStr, mergeObj, mergeNum};
 

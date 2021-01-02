@@ -54,7 +54,7 @@ export class Reactor implements IReactor {
                         processorGetter = getProcessor;
                     }
                     const processor = processorGetter(returnVal, this.returnMap);
-                    if(processor !== undefined) processor.do(returnVal, this);
+                    if(processor !== undefined) processor.do(returnVal, args, this);
                 }
             }
         }

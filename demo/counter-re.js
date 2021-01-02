@@ -5,7 +5,7 @@ import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
 import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
-import { doDOMKeyAction } from '../lib/doDOMKeyAction.js';
+import { doDOMKeyPEAction } from '../lib/doDOMKeyPEAction.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
@@ -53,12 +53,6 @@ export class CounterRe extends HTMLElement {
                 domCache[refs.countPart].textContent = count.toString();
             },
             ({ domCache, clonedTemplate, changeCount }) => {
-                domCache[refs.downPart].addEventListener('click', (e) => {
-                    this.count--;
-                });
-                domCache[refs.upPart].addEventListener('click', (e) => {
-                    this.count++;
-                });
                 this.shadowRoot.appendChild(clonedTemplate);
                 this.clonedTemplate = undefined;
                 const postAction = [, { click: [changeCount, 'dataset.d', parseInt] }];
@@ -71,7 +65,7 @@ export class CounterRe extends HTMLElement {
         this.reactor = new Reactor(this, [
             {
                 type: Array,
-                do: doDOMKeyAction
+                do: doDOMKeyPEAction
             }
         ]);
     }
