@@ -51,6 +51,7 @@ const propDefs = getPropDefs(propDefGetter);
 export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
+        this.propActions = propActions;
         this.reactor = new Reactor(this, [
             {
                 type: Array,
@@ -60,7 +61,6 @@ export class CounterRe extends HTMLElement {
         this.self = this;
         this.refs = refs;
         this.mainTemplate = mainTemplate;
-        this.propActions = propActions;
     }
     connectedCallback() {
         hydrate(this, propDefs, {

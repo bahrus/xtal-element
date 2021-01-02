@@ -56,6 +56,7 @@ const propDefs = getPropDefs(propDefGetter);
 
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
+    propActions = propActions;
     reactor = new Reactor(this, [
         {
             type: Array,
@@ -79,7 +80,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     self = this;
     refs = refs;
     mainTemplate = mainTemplate;
-    propActions = propActions;
+    
 
 }
 letThereBeProps(CounterRe, propDefs, 'onPropChange');

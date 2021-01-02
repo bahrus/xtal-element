@@ -22,7 +22,7 @@ export const manageMainTemplate = [
 export const props = ({clonedTemplate, domCache, mainTemplate}: XtalPattern) => ({
     type: Object,
     stopReactionsIfFalsy: true,
-    async: true,
+    async: false,
     dry: true,
 });
 
