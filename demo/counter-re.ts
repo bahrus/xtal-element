@@ -35,7 +35,8 @@ const mainTemplate = html`
 const propDefGetter : destructPropInfo[] = [
     ({clonedTemplate, domCache}: CounterRe) => ({
         type: Object,
-        stopReactionsIfFalsy: true
+        stopReactionsIfFalsy: true,
+        async: true,
     }),
     ({count}: CounterRe) => ({
         type: Number
@@ -71,15 +72,14 @@ export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSu
         ({domCache, count}: CounterRe) => {
             domCache[refs.countPart].textContent = count.toString();
         },
-        ({domCache, clonedTemplate, changeCount}: CounterRe) => {
+        ({domCache, changeCount}: CounterRe) => ([
+            {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+            {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+        ]),
+        ({domCache, clonedTemplate}: CounterRe) => {
             this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
-            const postAction = [,{click:[changeCount, 'dataset.d', parseInt]}]
-            return [
-                {[refs.downPart]: postAction},
-                {[refs.upPart]: postAction}
-            ]
-        },
+        }
     ] as PropAction[];
     reactor = new Reactor(this, [
         {

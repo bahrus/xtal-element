@@ -565,101 +565,11 @@ hydrate(self, propDefs, defaultVals);
 
 where self is the custom element instance.
 
-So now we have something that is a bit easier to read (expand below).
 
-<details>
-    <summary>Spot Check I - counter-do</summary>
 
-```Typescript
-const mainTemplate = html`
-<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
-<style>
-    * {
-      font-size: 200%;
-    }
+### Reusable, Declarative, Post-Reactions
 
-    span {
-      width: 4rem;
-      display: inline-block;
-      text-align: center;
-    }
-
-    button {
-      width: 4rem;
-      height: 4rem;
-      border: none;
-      border-radius: 10px;
-      background-color: seagreen;
-      color: white;
-    }
-</style>
-`;
-const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterRe) => ({
-        type: Object,
-        stopReactionsIfFalsy: true
-    }),
-    ({count}: CounterRe) => ({
-        type: Number
-    })
-];
-const propDefs = getPropDefs(propDefGetter);
-const refs = {downPart: '', upPart: '', countPart: ''};
-
-export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSurface{
-    static is = 'counter-re';
-    clonedTemplate: DocumentFragment | undefined;
-    domCache: any;
-    count!: number;
-    connectedCallback(){
-        this.attachShadow({mode: 'open'});
-        hydrate<CounterDoProps>(this, propDefs, {
-            count: 0
-        });
-        this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
-    }
-    onPropChange(name: string, prop: PropDef, nv: any){
-        this.reactor.addToQueue(prop, nv);
-    }
-    propActions = [
-        ({clonedTemplate}: CounterRe) => {
-            const cache = {};
-            pinTheDOMToKeys(clonedTemplate!, refs, cache);
-            this.domCache = cache;
-        },
-        ({domCache, count}: CounterRe) => {
-            domCache[refs.countPart].textContent = count.toString();
-        },
-        ({domCache, clonedTemplate}: CounterRe) => {
-            domCache[refs.downPart].addEventListener('click', (e: Event) => {
-                this.count--;
-            });
-            domCache[refs.upPart].addEventListener('click', (e: Event) => {
-                this.count++;
-            });
-            this.shadowRoot!.appendChild(clonedTemplate!);
-            this.clonedTemplate = undefined;
-        },
-    ] as PropAction[];
-    reactor = new Reactor(this);
-}
-letThereBeProps(CounterRe, propDefs, 'onPropChange');
-define(CounterRe);
-```
-
-</details>
-
-### Nested reactions
-
-Reactions can be nested:
-
-```TypeScript
-    propActions = [linkFindingYourDream, [linkFindYourPlace]];
-```
-
-### Reusable Post-Reactions
-
-In the example above, the function:
+Let's take another look at one of our earlier propActions:
 
 ```JavaScript
 [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
@@ -667,7 +577,7 @@ In the example above, the function:
 }]
 ```
 
-doesn't actually *return* anything.  What should the reactor do with anything returned?
+As with all our examples so far, this propAction doesn't actually *return* anything.  What should the reactor do with anything returned?
 
 We can specify that using a return mapping:
 
@@ -707,7 +617,59 @@ But we're jumping ahead ouf ourselves.
 
 Back to our Kreutzer exercises.
 
+In our counter web component, let's make this code more declarative, as it is boilerplate code:
 
+
+```JavaScript
+({domCache, clonedTemplate}: CounterDo) => {
+    domCache[refs.downPart].addEventListener('click', (e: Event) => {
+        this.count--;
+    });
+    domCache[refs.upPart].addEventListener('click', (e: Event) => {
+        this.count++;
+    });
+    this.shadowRoot!.appendChild(clonedTemplate);
+    this.clonedTemplate = undefined;
+},
+```
+
+We can split the action in two, separating different concerns:
+
+```JavaScript
+({domCache}: CounterDo) => {
+    domCache[refs.downPart].addEventListener('click', (e: Event) => {
+        this.count--;
+    });
+    domCache[refs.upPart].addEventListener('click', (e: Event) => {
+        this.count++;
+    });
+    
+},
+({domCache, clonedTemplate}: CounterDo) => {
+    this.shadowRoot!.appendChild(clonedTemplate);
+    this.clonedTemplate = undefined;
+}
+```
+
+We can replace this.count--; with a more powerful method not tied to the UI:
+
+```JavaScript
+changeCount(delta: number){
+    this.count += delta;
+}
+```
+
+The first action can be replaced by:
+
+
+
+### Nested reactions
+
+Reactions can be nested:
+
+```TypeScript
+    propActions = [linkFindingYourDream, [linkFindYourPlace]];
+```
 
 
 ### Ready-made reactor libraries

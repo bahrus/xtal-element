@@ -32,7 +32,8 @@ const mainTemplate = html `
 const propDefGetter = [
     ({ clonedTemplate, domCache }) => ({
         type: Object,
-        stopReactionsIfFalsy: true
+        stopReactionsIfFalsy: true,
+        async: true,
     }),
     ({ count }) => ({
         type: Number
@@ -52,15 +53,14 @@ export class CounterRe extends HTMLElement {
             ({ domCache, count }) => {
                 domCache[refs.countPart].textContent = count.toString();
             },
-            ({ domCache, clonedTemplate, changeCount }) => {
+            ({ domCache, changeCount }) => ([
+                { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
+                { [refs.upPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] }
+            ]),
+            ({ domCache, clonedTemplate }) => {
                 this.shadowRoot.appendChild(clonedTemplate);
                 this.clonedTemplate = undefined;
-                const postAction = [, { click: [changeCount, 'dataset.d', parseInt] }];
-                return [
-                    { [refs.downPart]: postAction },
-                    { [refs.upPart]: postAction }
-                ];
-            },
+            }
         ];
         this.reactor = new Reactor(this, [
             {
