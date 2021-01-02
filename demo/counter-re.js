@@ -5,7 +5,7 @@ import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
 import { doDOMKeyPEAction } from '../lib/doDOMKeyPEAction.js';
-import { xp, manageMainTemplate } from '../lib/XtalPattern.js';
+import { xp } from '../lib/XtalPattern.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
@@ -29,19 +29,25 @@ const mainTemplate = html `
     }
 </style>
 `;
+const refs = { downPart: '', upPart: '', countPart: '' };
+const propActions = [
+    xp.manageMainTemplate,
+    ({ domCache, count }) => ([
+        { [refs.countPart]: [{ textContent: count }] }
+    ]),
+    ({ domCache, changeCount }) => ([
+        { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
+        { [refs.upPart]: '"' }
+    ]),
+    xp.createShadow
+];
 const propDefGetter = [
-    ({ clonedTemplate, domCache, mainTemplate }) => ({
-        type: Object,
-        stopReactionsIfFalsy: true,
-        async: true,
-        dry: true,
-    }),
+    xp.props,
     ({ count }) => ({
         type: Number
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
-const refs = { downPart: '', upPart: '', countPart: '' };
 export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
@@ -54,17 +60,7 @@ export class CounterRe extends HTMLElement {
         this.self = this;
         this.refs = refs;
         this.mainTemplate = mainTemplate;
-        this.propActions = [
-            manageMainTemplate,
-            ({ domCache, count }) => ([
-                { [refs.countPart]: [{ textContent: count }] }
-            ]),
-            ({ domCache, changeCount }) => ([
-                { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
-                { [refs.upPart]: '"' }
-            ]),
-            xp.createShadow
-        ];
+        this.propActions = propActions;
     }
     connectedCallback() {
         hydrate(this, propDefs, {

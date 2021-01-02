@@ -5,10 +5,9 @@ import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
 import {Reactor} from '../lib/Reactor.js';
-import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
 import {doDOMKeyPEAction} from '../lib/doDOMKeyPEAction.js';
-import {XtalPattern, xp, manageMainTemplate} from '../lib/XtalPattern.js';
+import {XtalPattern, xp} from '../lib/XtalPattern.js';
 
 
 const mainTemplate = html`
@@ -34,19 +33,26 @@ const mainTemplate = html`
     }
 </style>
 `;
+const refs = {downPart: '', upPart: '', countPart: ''};
+const propActions = [
+    xp.manageMainTemplate,
+    ({domCache, count}: CounterRe) => ([
+        {[refs.countPart]: [{textContent: count}]}
+    ]),
+    ({domCache, changeCount}: CounterRe) => ([
+        {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+        {[refs.upPart]: '"'}
+    ]),
+    xp.createShadow
+] as PropAction[];
 const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache, mainTemplate}: CounterRe) => ({
-        type: Object,
-        stopReactionsIfFalsy: true,
-        async: true,
-        dry: true,
-    }),
+    xp.props,
     ({count}: CounterRe) => ({
         type: Number
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
-const refs = {downPart: '', upPart: '', countPart: ''};
+
 
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
@@ -63,7 +69,6 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
         hydrate<CounterDoProps>(this, propDefs, {
             count: 0
         });
-        
     }
     onPropChange(name: string, prop: PropDef, nv: any){
         this.reactor.addToQueue(prop, nv);
@@ -74,17 +79,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     self = this;
     refs = refs;
     mainTemplate = mainTemplate;
-    propActions = [
-        manageMainTemplate,
-        ({domCache, count}: CounterRe) => ([
-            {[refs.countPart]: [{textContent: count}]}
-        ]),
-        ({domCache, changeCount}: CounterRe) => ([
-            {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
-            {[refs.upPart]: '"'}
-        ]),
-        xp.createShadow
-    ] as PropAction[];
+    propActions = propActions;
 
 }
 letThereBeProps(CounterRe, propDefs, 'onPropChange');

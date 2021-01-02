@@ -19,4 +19,11 @@ export const manageMainTemplate = [
     },
 ] 
 
-export const xp = {createShadow};
+export const props = ({clonedTemplate, domCache, mainTemplate}: XtalPattern) => ({
+    type: Object,
+    stopReactionsIfFalsy: true,
+    async: true,
+    dry: true,
+});
+
+export const xp = {createShadow, manageMainTemplate, props};
