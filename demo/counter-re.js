@@ -31,10 +31,11 @@ const mainTemplate = html `
 </style>
 `;
 const propDefGetter = [
-    ({ clonedTemplate, domCache }) => ({
+    ({ clonedTemplate, domCache, mainTemplate }) => ({
         type: Object,
         stopReactionsIfFalsy: true,
         async: true,
+        dry: true,
     }),
     ({ count }) => ({
         type: Number
@@ -45,10 +46,19 @@ const refs = { downPart: '', upPart: '', countPart: '' };
 export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
+        this.reactor = new Reactor(this, [
+            {
+                type: Array,
+                do: doDOMKeyPEAction
+            }
+        ]);
         this.self = this;
         this.refs = refs;
         this.mainTemplate = mainTemplate;
         this.propActions = [
+            ({ mainTemplate, self }) => {
+                self.clonedTemplate = mainTemplate.content.cloneNode(true);
+            },
             ({ clonedTemplate }) => {
                 const cache = {};
                 pinTheDOMToKeys(clonedTemplate, refs, cache);
@@ -63,18 +73,11 @@ export class CounterRe extends HTMLElement {
             ]),
             xp.createShadow
         ];
-        this.reactor = new Reactor(this, [
-            {
-                type: Array,
-                do: doDOMKeyPEAction
-            }
-        ]);
     }
     connectedCallback() {
         hydrate(this, propDefs, {
             count: 0
         });
-        this.clonedTemplate = mainTemplate.content.cloneNode(true);
     }
     onPropChange(name, prop, nv) {
         this.reactor.addToQueue(prop, nv);

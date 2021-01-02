@@ -35,10 +35,11 @@ const mainTemplate = html`
 </style>
 `;
 const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterRe) => ({
+    ({clonedTemplate, domCache, mainTemplate}: CounterRe) => ({
         type: Object,
         stopReactionsIfFalsy: true,
         async: true,
+        dry: true,
     }),
     ({count}: CounterRe) => ({
         type: Number
@@ -49,6 +50,12 @@ const refs = {downPart: '', upPart: '', countPart: ''};
 
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
+    reactor = new Reactor(this, [
+        {
+            type: Array,
+            do: doDOMKeyPEAction
+        }
+    ]);
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
@@ -56,7 +63,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
         hydrate<CounterDoProps>(this, propDefs, {
             count: 0
         });
-        this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
+        
     }
     onPropChange(name: string, prop: PropDef, nv: any){
         this.reactor.addToQueue(prop, nv);
@@ -68,6 +75,9 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     refs = refs;
     mainTemplate = mainTemplate;
     propActions = [
+        ({mainTemplate, self}: CounterRe) =>{
+            self.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
+        },
         ({clonedTemplate}: CounterRe) => {
             const cache = {};
             pinTheDOMToKeys(clonedTemplate!, refs, cache);
@@ -82,12 +92,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
         ]),
         xp.createShadow
     ] as PropAction[];
-    reactor = new Reactor(this, [
-        {
-            type: Array,
-            do: doDOMKeyPEAction
-        }
-    ]);
+
 }
 letThereBeProps(CounterRe, propDefs, 'onPropChange');
 define(CounterRe);
