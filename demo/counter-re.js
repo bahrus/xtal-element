@@ -6,6 +6,7 @@ import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
 import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
 import { doDOMKeyPEAction } from '../lib/doDOMKeyPEAction.js';
+import { xp } from '../lib/XtalPattern.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
@@ -44,6 +45,9 @@ const refs = { downPart: '', upPart: '', countPart: '' };
 export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
+        this.self = this;
+        this.refs = refs;
+        this.mainTemplate = mainTemplate;
         this.propActions = [
             ({ clonedTemplate }) => {
                 const cache = {};
@@ -57,11 +61,7 @@ export class CounterRe extends HTMLElement {
                 { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
                 { [refs.upPart]: '"' }
             ]),
-            ({ domCache, clonedTemplate }) => {
-                this.attachShadow({ mode: 'open' });
-                this.shadowRoot.appendChild(clonedTemplate);
-                this.clonedTemplate = undefined;
-            }
+            xp.createShadow
         ];
         this.reactor = new Reactor(this, [
             {

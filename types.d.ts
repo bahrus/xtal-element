@@ -113,7 +113,13 @@ export interface ProcessorMap {
 
 export type getProcessor =  (value: any, processorMappings: ProcessorMap[]) => ProcessorMap | undefined;
 
-
+export interface XtalPattern extends ReactiveSurface{
+    domCache: any,
+    mainTemplate: HTMLTemplateElement;
+    clonedTemplate: DocumentFragment | undefined;
+    refs: any;
+    self: this,
+}
 
 
 

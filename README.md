@@ -730,7 +730,7 @@ The action:
 }
 ```
 
-... is apt to found in most every visual component, so as long as all components use the names domCache, clonedTemplate, we can share it by doing the following:
+... is apt to be found in most every visual component, so long as all components use the names "domCache} and "clonedTemplate." In that case, we can share it by doing the following:
 
 1.  Make sure this field is defined in the class:
 
