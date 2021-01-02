@@ -5,6 +5,7 @@ import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
 import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
+import { doDOMKeyAction } from '../lib/doDOMKeyAction.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
@@ -38,9 +39,8 @@ const propDefGetter = [
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
-//const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = { downPart: '', upPart: '', countPart: '' };
-export class CounterDo extends HTMLElement {
+export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
         this.propActions = [
@@ -52,7 +52,7 @@ export class CounterDo extends HTMLElement {
             ({ domCache, count }) => {
                 domCache[refs.countPart].textContent = count.toString();
             },
-            ({ domCache, clonedTemplate }) => {
+            ({ domCache, clonedTemplate, changeCount }) => {
                 domCache[refs.downPart].addEventListener('click', (e) => {
                     this.count--;
                 });
@@ -61,9 +61,19 @@ export class CounterDo extends HTMLElement {
                 });
                 this.shadowRoot.appendChild(clonedTemplate);
                 this.clonedTemplate = undefined;
+                const postAction = [, { click: [changeCount, 'dataset.d', parseInt] }];
+                return [
+                    { [refs.downPart]: postAction },
+                    { [refs.upPart]: postAction }
+                ];
             },
         ];
-        this.reactor = new Reactor(this);
+        this.reactor = new Reactor(this, [
+            {
+                type: Array,
+                do: doDOMKeyAction
+            }
+        ]);
     }
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
@@ -75,7 +85,10 @@ export class CounterDo extends HTMLElement {
     onPropChange(name, prop, nv) {
         this.reactor.addToQueue(prop, nv);
     }
+    changeCount(delta) {
+        this.count += delta;
+    }
 }
-CounterDo.is = 'counter-h';
-letThereBeProps(CounterDo, propDefs, 'onPropChange');
-define(CounterDo);
+CounterRe.is = 'counter-re';
+letThereBeProps(CounterRe, propDefs, 'onPropChange');
+define(CounterRe);

@@ -595,20 +595,19 @@ const mainTemplate = html`
 </style>
 `;
 const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterDo) => ({
+    ({clonedTemplate, domCache}: CounterRe) => ({
         type: Object,
         stopReactionsIfFalsy: true
     }),
-    ({count}: CounterDo) => ({
+    ({count}: CounterRe) => ({
         type: Number
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
-//const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = {downPart: '', upPart: '', countPart: ''};
 
-export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSurface{
-    static is = 'counter-h';
+export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSurface{
+    static is = 'counter-re';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
@@ -623,15 +622,15 @@ export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSu
         this.reactor.addToQueue(prop, nv);
     }
     propActions = [
-        ({clonedTemplate}: CounterDo) => {
+        ({clonedTemplate}: CounterRe) => {
             const cache = {};
             pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
-        ({domCache, count}: CounterDo) => {
+        ({domCache, count}: CounterRe) => {
             domCache[refs.countPart].textContent = count.toString();
         },
-        ({domCache, clonedTemplate}: CounterDo) => {
+        ({domCache, clonedTemplate}: CounterRe) => {
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });
@@ -644,8 +643,8 @@ export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSu
     ] as PropAction[];
     reactor = new Reactor(this);
 }
-letThereBeProps(CounterDo, propDefs, 'onPropChange');
-define(CounterDo);
+letThereBeProps(CounterRe, propDefs, 'onPropChange');
+define(CounterRe);
 ```
 
 </details>

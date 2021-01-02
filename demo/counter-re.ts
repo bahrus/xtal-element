@@ -7,6 +7,7 @@ import {html} from '../lib/html.js';
 import {Reactor} from '../lib/Reactor.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
+import {doDOMKeyAction} from '../lib/doDOMKeyAction.js';
 
 const mainTemplate = html`
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
@@ -32,20 +33,19 @@ const mainTemplate = html`
 </style>
 `;
 const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterDo) => ({
+    ({clonedTemplate, domCache}: CounterRe) => ({
         type: Object,
         stopReactionsIfFalsy: true
     }),
-    ({count}: CounterDo) => ({
+    ({count}: CounterRe) => ({
         type: Number
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
-//const slicedPropDefs = getSlicedPropDefs(propDefGetter);
 const refs = {downPart: '', upPart: '', countPart: ''};
 
-export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSurface{
-    static is = 'counter-h';
+export class CounterRe extends HTMLElement implements CounterDoProps, ReactiveSurface{
+    static is = 'counter-re';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
@@ -59,16 +59,19 @@ export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSu
     onPropChange(name: string, prop: PropDef, nv: any){
         this.reactor.addToQueue(prop, nv);
     }
+    changeCount(delta: number){
+        this.count += delta;
+    }
     propActions = [
-        ({clonedTemplate}: CounterDo) => {
+        ({clonedTemplate}: CounterRe) => {
             const cache = {};
             pinTheDOMToKeys(clonedTemplate!, refs, cache);
             this.domCache = cache;
         },
-        ({domCache, count}: CounterDo) => {
+        ({domCache, count}: CounterRe) => {
             domCache[refs.countPart].textContent = count.toString();
         },
-        ({domCache, clonedTemplate}: CounterDo) => {
+        ({domCache, clonedTemplate, changeCount}: CounterRe) => {
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });
@@ -77,9 +80,19 @@ export class CounterDo extends HTMLElement implements CounterDoProps, ReactiveSu
             });
             this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
+            const postAction = [,{click:[changeCount, 'dataset.d', parseInt]}]
+            return [
+                {[refs.downPart]: postAction},
+                {[refs.upPart]: postAction}
+            ]
         },
     ] as PropAction[];
-    reactor = new Reactor(this);
+    reactor = new Reactor(this, [
+        {
+            type: Array,
+            do: doDOMKeyAction
+        }
+    ]);
 }
-letThereBeProps(CounterDo, propDefs, 'onPropChange');
-define(CounterDo);
+letThereBeProps(CounterRe, propDefs, 'onPropChange');
+define(CounterRe);
