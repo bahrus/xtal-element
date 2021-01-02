@@ -9,7 +9,7 @@ export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: 
             if(typeof lookup !== 'symbol') lookup = refs[key] = Symbol(key);
             const lpKey = camelToLisp(key);
             if(lpKey.endsWith(attrib)){
-                const attribVal = lpKey.substr(0, key.length - attrib.length);
+                const attribVal = lpKey.substr(0, lpKey.length - attrib.length - 1);
                 let query: string | undefined;
                 switch(attrib){
                     case 'id':
