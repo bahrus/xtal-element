@@ -292,43 +292,6 @@ export class MyCustomElement extends HTMLElement{
 }
 ```
 
-### A tribute to attributes [TODO]
-
-The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
-
-1.  The getSlicedPropDefs function groups the PropDefs by type, so you can use that to help create the flat array of strings to monitor for.  
-2.  The function camelToLisp may also come in handy if you want to use dash separators in your attribute names.  
-3.  A helper function "passAttrToProp" can be placed as the body of the attributeChangedCallback [TODO]:
-
-
-```TypeScript
-passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string);
-```
-
-
-But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements.  Naturalized custom elements are already facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.  Deviations from what native-born elements do will likely lead to more recriminations, I'm sure.
-
-On the other hand, working with native-born elements, like the iframe and hyperlinks, it [can be frustrating](https://discourse.wicg.io/t/reflecting-prop-changes/5049) when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
-
-xtal-element believes, first and foremost, in empowering the developer, the consumer of the web components built with xtal-element.  So how to balance all these concerns?
-
-First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=" -- in order to guarantee no infinite loop issues.
-
-
-```html
-<my-custom-element data-href-is="//example.com"></my-custom-element>
-```
-
-Ideally, in the future, the [custom pseudo state](https://www.chromestatus.com/feature/6537562418053120) proposal will gain more momentum, which would replace the "data-[lisp-case-of-property]-is=" approach above.
-
-For properties that don't reflect automatically, custom elements that implement the XtalPattern (discussed below) supports an attribute/property, "be-reflective/beReflective", which applies to that instance[TODO]:
-
-```html
-<my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
-```
-
-This will also reflect to "data-[lisp-case-of-property]-is="
-
 
 ### Observable Property Groups
 
@@ -603,7 +566,46 @@ hydrate(self, propDefs, defaultVals);
 
 where self is the custom element instance.
 
+"hydrate" should continue to be called within the connectedCallback lifecycle event.
 
+### A tribute to attributes [TODO]
+
+The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
+
+1.  The getSlicedPropDefs function groups the PropDefs by type, so you can use that to help create the flat array of strings to monitor for.  
+2.  The function camelToLisp may also come in handy if you want to use dash separators in your attribute names.  
+3.  A helper function "passAttrToProp" can be placed as the body of the attributeChangedCallback:
+
+
+```TypeScript
+passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string);
+```
+
+This function will **only work properly in combination with the hydrate function mentioned above.** 
+
+
+But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements.  Naturalized custom elements are already facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.  Deviations from what native-born elements do will likely lead to more recriminations, I'm sure.
+
+On the other hand, working with native-born elements, like the iframe and hyperlinks, it [can be frustrating](https://discourse.wicg.io/t/reflecting-prop-changes/5049) when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
+
+xtal-element believes, first and foremost, in empowering the developer, the consumer of the web components built with xtal-element.  So how to balance all these concerns?
+
+First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=" -- in order to guarantee no infinite loop issues.
+
+
+```html
+<my-custom-element data-href-is="//example.com"></my-custom-element>
+```
+
+Ideally, in the future, the [custom pseudo state](https://www.chromestatus.com/feature/6537562418053120) proposal will gain more momentum, which would replace the "data-[lisp-case-of-property]-is=" approach above.
+
+For properties that don't reflect automatically, custom elements that implement the XtalPattern (discussed below) supports an attribute/property, "be-reflective/beReflective", which applies to that instance[TODO]:
+
+```html
+<my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
+```
+
+This will also reflect to "data-[lisp-case-of-property]-is="
 
 ### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
 
