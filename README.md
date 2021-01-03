@@ -298,11 +298,14 @@ The custom element specs provide for a way to monitor for attribute changes.  xt
 
 In particular, xtal-element lacks much support for supporting live attribute changes thus far.  Supporting this feature may be extremely important when working with a DOM-challenged framework.  But another use case dear to xtal-element's heart is the disabled attribute.
 
-But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements, which tend not to reflect, and it seems that naturalized elements are facing enough prejudice as it is.
+But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements, which seem to deviate quite a bit from the best practices advice, and it seems that naturalized custom elements are facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.
 
-On the other hand, working with native-born elements, like the iframe and hyperlinks, it can be frustrating when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
+On the other hand, working with native-born elements, like the iframe and hyperlinks, it [can be frustrating](https://discourse.wicg.io/t/reflecting-prop-changes/5049) when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
 
-xtal-element believes, first and foremost in empowering the developer, the consumer the web components built with xtal-element.  So how balance all these concerns?
+xtal-element believes, first and foremost in empowering the developer, the consumer the web components built with xtal-element.  So how to balance all these concerns?
+
+xtal-element supports an attribute, "be-reflective", which applies to that instance:
+
 
 
 
