@@ -594,8 +594,10 @@ First, xtal-element supports the ability for a property to always reflect, but t
 
 
 ```html
-<my-custom-element data-href-is="//example.com"></my-custom-element>
+<my-custom-element href="//example.com" data-href-is="//example.com"></my-custom-element>
 ```
+
+In the example above, if the href *property* is set, nothing happens to the href attribute, only the data-href-is attribute is modified (if "reflect" is turned on for the href property).
 
 Ideally, in the future, the [custom pseudo state](https://www.chromestatus.com/feature/6537562418053120) proposal will gain more momentum, which would replace the "data-[lisp-case-of-property]-is=" approach above.
 
@@ -605,7 +607,11 @@ For properties that don't reflect automatically, custom elements that implement 
 <my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
 ```
 
-This will also reflect to "data-[lisp-case-of-property]-is="
+This will also reflect to "data-[lisp-case-of-property]-is=" (for now, until custom psuedo state is a thing).
+
+This gives a consumer of the web component to power to get the behavior they need, instance by instance.
+
+Or they can extend the web component, and set beReflective to true in the constructor, if needed all the time.
 
 ### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
 
