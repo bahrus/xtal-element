@@ -294,17 +294,35 @@ export class MyCustomElement extends HTMLElement{
 
 ### A tribute to attributes [TODO]
 
-The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides a tiny bit of help with using that -- the getSlicedPropDefs function groups the props by type, so you can use that to help create the flat array of strings to monitor for.  The function camelToList may also come in handy if you want to use dash separators in your attribute names.  Going beyond that, xtal-element is reluctant to go, as it could mean instigating a chain of classes to inherit from.  xtal-element prefers, instead, to just use the mutation observer when needed, to avoid getting in the way of the developer's inheritance model.
+The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides a tiny bit of help with using that -- the getSlicedPropDefs function groups the props by type, so you can use that to help create the flat array of strings to monitor for.  The function camelToLisp may also come in handy if you want to use dash separators in your attribute names.  Going beyond that, xtal-element is reluctant to go, as it could mean instigating a chain of classes to inherit from.  
 
 In particular, xtal-element lacks much support for supporting live attribute changes thus far.  Supporting this feature may be extremely important when working with a DOM-challenged framework.  But another use case dear to xtal-element's heart is the disabled attribute.
 
-But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements, which seem to deviate quite a bit from the best practices advice, and it seems that naturalized custom elements are facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.
+But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements, which seem to deviate quite a bit from the best practices advice, and it seems that naturalized custom elements are already facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.
 
 On the other hand, working with native-born elements, like the iframe and hyperlinks, it [can be frustrating](https://discourse.wicg.io/t/reflecting-prop-changes/5049) when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
 
-xtal-element believes, first and foremost in empowering the developer, the consumer the web components built with xtal-element.  So how to balance all these concerns?
+xtal-element believes, first and foremost, in empowering the developer, the consumer of the web components built with xtal-element.  So how to balance all these concerns?
 
-xtal-element supports an attribute, "be-reflective", which applies to that instance:
+First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp case of property]-is' -- in order to guarantee no infinite loop issues [TODO].
+
+```html
+<my-custom-element data-href-is="//example.com"></my-custom-element>
+```
+
+For properties that don't reflect automatically, xtal-element supports an attribute/property, "be-reflective/beReflective", which applies to that instance:
+
+```html
+<my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
+```
+
+This will also reflect to "data-[lisp case of property]is="
+
+xtal-element supports a function to help in the implemented attributeChangedCallback method:
+
+```TypeScript
+passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, propDefs: PropDef[], name: string, oldValue: string, newValue: string);
+```
 
 
 
