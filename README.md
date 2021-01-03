@@ -607,7 +607,7 @@ For properties that don't reflect automatically, custom elements that implement 
 <my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
 ```
 
-This will also reflect to "data-[lisp-case-of-property]-is=" (for now, until custom psuedo state is a thing).
+This will also reflect to "data-[lisp-case-of-property]-is=" (for now, until custom pseudo state is a thing).
 
 This gives a consumer of the web component to power to get the behavior they need, instance by instance.
 
