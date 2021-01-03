@@ -294,11 +294,19 @@ export class MyCustomElement extends HTMLElement{
 
 ### A tribute to attributes [TODO]
 
-The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides a tiny bit of help with using that -- the getSlicedPropDefs function groups the props by type, so you can use that to help create the flat array of strings to monitor for.  The function camelToLisp may also come in handy if you want to use dash separators in your attribute names.  Going beyond that, xtal-element is reluctant to go, as it could mean instigating a chain of classes to inherit from.  
+The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
 
-In particular, xtal-element lacks much support for supporting live attribute changes thus far.  Supporting this feature may be extremely important when working with a DOM-challenged framework.  But another use case dear to xtal-element's heart is the disabled attribute.
+1.  The getSlicedPropDefs function groups the PropDefs by type, so you can use that to help create the flat array of strings to monitor for.  
+2.  The function camelToLisp may also come in handy if you want to use dash separators in your attribute names.  
+3.  A function can be placed as the body of the attributeChangedCallback [TODO]:
 
-But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements, which seem to deviate quite a bit from the best practices advice, and it seems that naturalized custom elements are already facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.
+
+```TypeScript
+passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string);
+```
+
+
+But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements.  Naturalized custom elements are already facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.  Deviations from what native-born elements do will likely lead to more recriminations, I'm sure.
 
 On the other hand, working with native-born elements, like the iframe and hyperlinks, it [can be frustrating](https://discourse.wicg.io/t/reflecting-prop-changes/5049) when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
 
@@ -317,14 +325,6 @@ For properties that don't reflect automatically, xtal-element supports an attrib
 ```
 
 This will also reflect to "data-[lisp-case-of-property]-is="
-
-xtal-element supports a function to help in the implemented attributeChangedCallback method[TODO]:
-
-```TypeScript
-passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string);
-```
-
-
 
 
 ### Observable Property Groups

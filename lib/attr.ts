@@ -1,5 +1,6 @@
-import {camelToLisp} from './camelToLisp.js'; 
-import {} from '../types.d.js';
+import {camelToLisp} from './camelToLisp.js';
+
+import { SlicedPropDefs } from '../types.d.js';
 /**
  * xtal-element doesn't think the static observedAttributes adds much value, and only makes life more difficult for web component development.
  * xtal-element's philosophy is that attributes should only be used to 1)  Pass in initial values (from the server), which overrides default values only.  
@@ -36,9 +37,7 @@ function mergeObj<T = any>(self: HTMLElement, names: string[], defaultValues: T)
     }
 }
 
-function passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, propDefs: PropDef[], name: string, oldValue: string, newValue: string){
 
-}
 
 export const attr = {mergeBool, mergeStr, mergeObj, mergeNum};
 

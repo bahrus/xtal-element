@@ -48,7 +48,8 @@ const propActions = [
 const propDefGetter : destructPropInfo[] = [
     xp.props,
     ({count}: CounterRe) => ({
-        type: Number
+        type: Number,
+        reflect: true
     })
 ];
 const propDefs = getPropDefs(propDefGetter);

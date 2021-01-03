@@ -44,7 +44,8 @@ const propActions = [
 const propDefGetter = [
     xp.props,
     ({ count }) => ({
-        type: Number
+        type: Number,
+        reflect: true
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
