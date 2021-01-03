@@ -9,10 +9,17 @@ export function doDOMKeyPEAction(refs: any[], dependencies: string[], reactor: R
         const refKeys = Object.getOwnPropertySymbols(ref);
         for(const key of refKeys){
             let val = ref[key];
-            if(val==='"' && lastNonDittoVal !== undefined){
-                val = lastNonDittoVal;
-            }else{
-                lastNonDittoVal = val;
+            switch(typeof val){
+                case 'string':
+                    if(val==='"' && lastNonDittoVal !== undefined){
+                        val = lastNonDittoVal;
+                    }else{
+                        (cache[key] as HTMLElement).textContent = val;
+                        continue;
+                    }
+                case 'object':
+                    lastNonDittoVal = val;
+                    break;
             }
             applyPE(surface as HTMLElement, cache[key] as HTMLElement, lastNonDittoVal);
         }
