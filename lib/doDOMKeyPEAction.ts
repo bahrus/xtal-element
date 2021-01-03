@@ -9,6 +9,7 @@ export function doDOMKeyPEAction(refs: any[], dependencies: string[], reactor: R
         const refKeys = Object.getOwnPropertySymbols(ref);
         for(const key of refKeys){
             let val = ref[key];
+            if(val === undefined) continue;
             switch(typeof val){
                 case 'string':
                     if(val==='"' && lastNonDittoVal !== undefined){

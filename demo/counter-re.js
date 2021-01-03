@@ -33,7 +33,7 @@ const refs = { downPart: '', upPart: '', countPart: '' };
 const propActions = [
     xp.manageMainTemplate,
     ({ domCache, count }) => ([
-        { [refs.countPart]: [{ textContent: count }] }
+        { [refs.countPart]: isNaN(count) ? '' : count.toString() }
     ]),
     ({ domCache, changeCount }) => ([
         { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
@@ -45,7 +45,7 @@ const propDefGetter = [
     xp.props,
     ({ count }) => ({
         type: Number,
-        reflect: true
+        reflect: true,
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
