@@ -11,4 +11,5 @@ export function hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, p
     attr.mergeBool<T>(self as HTMLElement, slicedDefs.boolNames, copyOfDefaultValues);
     attr.mergeObj<T>(self as HTMLElement, slicedDefs.parseNames, copyOfDefaultValues);
     propUp(self as HTMLElement, slicedDefs.propNames, copyOfDefaultValues);
+    self.dataset!.isHydrated = '';
 }

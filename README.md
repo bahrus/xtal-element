@@ -298,7 +298,7 @@ The custom element specs provide for a way to monitor for attribute changes.  xt
 
 1.  The getSlicedPropDefs function groups the PropDefs by type, so you can use that to help create the flat array of strings to monitor for.  
 2.  The function camelToLisp may also come in handy if you want to use dash separators in your attribute names.  
-3.  A function can be placed as the body of the attributeChangedCallback [TODO]:
+3.  A helper function "passAttrToProp" can be placed as the body of the attributeChangedCallback [TODO]:
 
 
 ```TypeScript
@@ -312,13 +312,16 @@ On the other hand, working with native-born elements, like the iframe and hyperl
 
 xtal-element believes, first and foremost, in empowering the developer, the consumer of the web components built with xtal-element.  So how to balance all these concerns?
 
-First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=' -- in order to guarantee no infinite loop issues.
+First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=" -- in order to guarantee no infinite loop issues.
+
 
 ```html
 <my-custom-element data-href-is="//example.com"></my-custom-element>
 ```
 
-For properties that don't reflect automatically, xtal-element supports an attribute/property, "be-reflective/beReflective", which applies to that instance[TODO]:
+Ideally, in the future, the [custom pseudo state](https://www.chromestatus.com/feature/6537562418053120) proposal will gain more momentum, which would replace the "data-[lisp-case-of-property]-is=" approach above.
+
+For properties that don't reflect automatically, custom elements that implement the XtalPattern (discussed below) supports an attribute/property, "be-reflective/beReflective", which applies to that instance[TODO]:
 
 ```html
 <my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
@@ -399,7 +402,7 @@ It's possible that libraries that don't support this kind of property change "di
 I hasten to add that [watching a group of properties doesn't](https://medium.com/@jbmilgrom/watch-watchgroup-watchcollection-and-deep-watching-in-angularjs-6390f23508fe) appear to be a [wholly new concept, perhaps](https://guides.emberjs.com/v1.10.0/object-model/observers/#toc_observers-and-asynchrony).
 
 
-Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it may only be evaluated once, with the same result.  Note that this async feature is opt in (by configuring the desired properties via "async" boolean setting).
+Another benefit of "bunching together" property change actions: XtalElement optionally supports responding to property changes asynchronously.  As a result, rather than evaluating this action 3 times, it may only be evaluated once, with the same result.  Note that this async feature is opt-in (by configuring the desired properties via "async" boolean setting).
 
 After experimenting with different naming patterns, personally I think if you choose to separate out these prop actions into separate constants, names like "linkProp4" is (close to?) the best naming convention, at least for one common scenario.  Often, but not always, these property group change observers / actions will result in modifying a single different property, so that computed property becomes actively "linked" to the other properties its value depends on. So the name of the "property group watcher" could be named link[calculatedPropName] in this scenario.  Not all propActions will result in preemptively calculating a single "outside" property whose value depends on other property values, hence we stick with calling this orchestrating sequence "propActions" rather than "propLinks" in order to accommodate more scenarios. 
 
@@ -717,7 +720,7 @@ reactor = new Reactor(this, [
 ]);
 ```
 
-Not the abbreviation "PE".  That stands for Properties/Events.
+Note the abbreviation "PE".  That stands for Properties/Events.
 
 The array [,{click:[changeCount, 'dataset.d', parseInt]}] is a nested tuple.  The first, undefined element allow us to set prop vals.
 
@@ -731,7 +734,7 @@ changeCount(e: Event){
 }
 ```
 
-But we created a nice, pristine method which is UI neutral.  To allow us to do that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluated target.dataset.d, and applying parseInt to that value."
+But we created a nice, pristine method which is UI neutral.  To allow us to do that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluating target.dataset.d, and applying parseInt to that value."
 
 ### Ditto reactions
 
@@ -758,7 +761,7 @@ We can DRYphon out the wasted typing, using ditto notation:
 Reactions can be nested:
 
 ```TypeScript
-    propActions = [linkFindingYourDream, [linkFindYourPlace]];
+    propActions = [linkFoundYourDream, [linkFoundYourPlace]];
 ```
 
 ### Shareable Actions
@@ -773,7 +776,7 @@ The action:
 }
 ```
 
-... is apt to be found in most every visual component, so long as all components use the names "domCache} and "clonedTemplate." In that case, we can share it by doing the following:
+... is apt to be found in most every visual component, so long as all components use the names "domCache" and "clonedTemplate." In that case, we can share it by doing the following:
 
 1.  Make sure this field is defined in the class:
 

@@ -17,10 +17,10 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
                     if(nv === this[privateKey]) return;
                 }
                 if(prop.reflect){
-                    const nameIs = name + 'Is';
                     switch(prop.type){
                         case Boolean:
                             {
+                                const nameIs = 'Is' + name[0].toUpperCase() + name.substr(1);
                                 const isUndefined = this.dataset[nameIs] === undefined;
                                 if(nv && isUndefined){
                                     this.dataset[nameIs] = '';
@@ -30,11 +30,17 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
                             }
                             break;
                         case String:
-                        case Number:
-                            if(nv !== undefined) this.dataset[nameIs] = nv;
+                        case Number:{
+                                const nameIs = name + 'Is';
+                                if(nv !== undefined) this.dataset[nameIs] = nv;
+                            }
                             break;
+
                         case Object:
-                            if(nv !== undefined) this.dataset[nameIs] = JSON.stringify(nv);
+                            {
+                                const nameIs = name + 'Is';
+                                if(nv !== undefined) this.dataset[nameIs] = JSON.stringify(nv);
+                            }
                             break;
                     }
                 }
