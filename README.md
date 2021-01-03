@@ -312,7 +312,7 @@ On the other hand, working with native-born elements, like the iframe and hyperl
 
 xtal-element believes, first and foremost, in empowering the developer, the consumer of the web components built with xtal-element.  So how to balance all these concerns?
 
-First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=' -- in order to guarantee no infinite loop issues [TODO].
+First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=' -- in order to guarantee no infinite loop issues.
 
 ```html
 <my-custom-element data-href-is="//example.com"></my-custom-element>
