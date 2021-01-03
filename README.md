@@ -201,12 +201,12 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     //ReactiveSurface implementation
     propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
         this.FoundYourDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
-    }] as PropAction[]
+    }] as PropAction[];
     reactor = new Reactor(this);
 
-    onPropChange(name: string, prop: PropDef){
+    onPropChange(name: string, prop: PropDef, newVal: any){
         console.log("Been there, done that.");
-        this.reactor.addToQueue(prop);
+        this.reactor.addToQueue(prop, newVal);
     }
 
 }
@@ -227,7 +227,7 @@ export class MyCustomElement extends HTMLElement{
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
-If all you want to do is fire off an event when a property is set, xtal-element supports defining "notifying" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by xtal-element's init and update transforms, discussed farther down..
+If all you want to do is fire off an event when a property is set, xtal-element supports defining "notifying" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by xtal-element's init and update transforms, discussed farther down.
 
 But the need to do different types of things when properties change isn't limited to these two common requirements.  So typically, you then have to add logic like this:
 
@@ -242,7 +242,7 @@ export class MyCustomElement extends HTMLElement{
         //do my special logic
 
         //Don't forget to make the call below, so everything is in sync:
-        this.onPropsChange('myProp');
+        this.onPropChange('myProp');
     }
 }
 ```
@@ -260,7 +260,7 @@ export class MyCustomElement extends HTMLElement{
     set prop1(nv){
         this._prop1 = nv;
         this.doSomeCommonLogic();
-        this.onPropsChange('prop1');
+        this.onPropChange('prop1');
     }
 
     _prop2 = 'myValue2';
@@ -270,7 +270,7 @@ export class MyCustomElement extends HTMLElement{
     set prop2(nv){
         this.prop2 = nv;
         this.doSomeCommonLogic();
-        this.onPropsChange('prop2');
+        this.onPropChange('prop2');
     }
 
     _prop3 = 'myValue3';
@@ -280,7 +280,7 @@ export class MyCustomElement extends HTMLElement{
     set prop3(nv){
         this._prop3 = nv;
         this.doSomeCommonLogic();
-        this.onPropsChange('prop3');
+        this.onPropChange('prop3');
     }
 
     prop4;
@@ -291,6 +291,20 @@ export class MyCustomElement extends HTMLElement{
     }
 }
 ```
+
+### A tribute to attributes [TODO]
+
+The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides a tiny bit of help with using that -- the getSlicedPropDefs function groups the props by type, so you can use that to help create the flat array of strings to monitor for.  The function camelToList may also come in handy if you want to use dash separators in your attribute names.  Going beyond that, xtal-element is reluctant to go, as it could mean instigating a chain of classes to inherit from.  xtal-element prefers, instead, to just use the mutation observer when needed, to avoid getting in the way of the developer's inheritance model.
+
+In particular, xtal-element lacks much support for supporting live attribute changes thus far.  Supporting this feature may be extremely important when working with a DOM-challenged framework.  But another use case dear to xtal-element's heart is the disabled attribute.
+
+But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements, which tend not to reflect, and it seems that naturalized elements are facing enough prejudice as it is.
+
+On the other hand, working with native-born elements, like the iframe and hyperlinks, it can be frustrating when we *can't* reflect to attributes, as it would be quite useful for styling purposes. 
+
+xtal-element believes, first and foremost in empowering the developer, the consumer the web components built with xtal-element.  So how balance all these concerns?
+
+
 
 ### Observable Property Groups
 
