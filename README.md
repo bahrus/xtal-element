@@ -304,24 +304,24 @@ On the other hand, working with native-born elements, like the iframe and hyperl
 
 xtal-element believes, first and foremost, in empowering the developer, the consumer of the web components built with xtal-element.  So how to balance all these concerns?
 
-First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp case of property]-is' -- in order to guarantee no infinite loop issues [TODO].
+First, xtal-element supports the ability for a property to always reflect, but to "data-[lisp-case-of-property]-is=' -- in order to guarantee no infinite loop issues [TODO].
 
 ```html
 <my-custom-element data-href-is="//example.com"></my-custom-element>
 ```
 
-For properties that don't reflect automatically, xtal-element supports an attribute/property, "be-reflective/beReflective", which applies to that instance:
+For properties that don't reflect automatically, xtal-element supports an attribute/property, "be-reflective/beReflective", which applies to that instance[TODO]:
 
 ```html
 <my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
 ```
 
-This will also reflect to "data-[lisp case of property]is="
+This will also reflect to "data-[lisp-case-of-property]-is="
 
-xtal-element supports a function to help in the implemented attributeChangedCallback method:
+xtal-element supports a function to help in the implemented attributeChangedCallback method[TODO]:
 
 ```TypeScript
-passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, propDefs: PropDef[], name: string, oldValue: string, newValue: string);
+passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string);
 ```
 
 

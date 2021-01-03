@@ -91,6 +91,16 @@ export interface PropDef{
     stopReactionsIfFalsy?: boolean;
 }
 
+export interface SlicedPropDefs{
+    propDefs: PropDef[], 
+    propNames: string[],
+    strNames: string[],
+    boolNames: string[],
+    numNames: string[], 
+    parseNames: string[], 
+    propLookup: {[key: string]: PropDef},
+}
+
 export type destructPropInfo<T = any> = (x: T) => PropDef;
 
 export interface ReactiveSurface extends Partial<HTMLElement>{

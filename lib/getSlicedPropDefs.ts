@@ -1,4 +1,4 @@
-import {destructPropInfo, PropDef, PropDefGet} from '../types.js';
+import {destructPropInfo, PropDef, PropDefGet, SlicedPropDefs} from '../types.js';
 import {getPropDefs} from './getPropDefs.js';
 
 export function getSlicedPropDefs(propDefs: PropDef[]){
@@ -11,5 +11,5 @@ export function getSlicedPropDefs(propDefs: PropDef[]){
     for(const propDef of propDefs){
         propLookup[propDef.name!] = propDef;
     }
-    return {propDefs, propNames, strNames, boolNames, numNames, parseNames, propLookup};
+    return {propDefs, propNames, strNames, boolNames, numNames, parseNames, propLookup} as SlicedPropDefs;
 }
