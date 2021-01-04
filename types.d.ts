@@ -129,6 +129,7 @@ export interface XtalPattern extends ReactiveSurface{
     clonedTemplate: DocumentFragment | undefined;
     refs: any;
     self: this,
+    beReflective: string[] | undefined;
 }
 
 

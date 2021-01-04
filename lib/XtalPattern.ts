@@ -1,5 +1,5 @@
 export {XtalPattern} from '../types.d.js';
-import {XtalPattern} from '../types.d.js';
+import {XtalPattern, destructPropInfo} from '../types.d.js';
 import {pinTheDOMToKeys} from './pinTheDOMToKeys.js';
 
 const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
@@ -19,11 +19,20 @@ export const manageMainTemplate = [
     },
 ] 
 
-export const props = ({clonedTemplate, domCache, mainTemplate}: XtalPattern) => ({
-    type: Object,
-    stopReactionsIfFalsy: true,
-    async: false,
-    dry: true,
-});
+export const props = [
+    ({clonedTemplate, domCache, mainTemplate}: XtalPattern) => ({
+        type: Object,
+        stopReactionsIfFalsy: true,
+        async: false,
+        dry: true,
+    }),
+    ({}: XtalPattern) => ({
+        type: Object,
+        stopReactionsIfFalsy: true,
+        async: false,
+        dry: true,
+        parse: true,
+    })
+] as destructPropInfo[];
 
 export const xp = {createShadow, manageMainTemplate, props};

@@ -16,7 +16,7 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
                 if(prop.dry){
                     if(nv === this[privateKey]) return;
                 }
-                if(prop.reflect){
+                if(prop.reflect || (this.beReflective && this.beReflective.includes(name))){
                     switch(prop.type){
                         case Boolean:
                             {

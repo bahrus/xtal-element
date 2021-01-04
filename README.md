@@ -568,7 +568,7 @@ where self is the custom element instance.
 
 "hydrate" should continue to be called within the connectedCallback lifecycle event.
 
-### A tribute to attributes [TODO]
+### A tribute to attributes
 
 The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
 
@@ -601,7 +601,7 @@ In the example above, if the href *property* is set, nothing happens to the href
 
 Ideally, in the future, the [custom pseudo state](https://www.chromestatus.com/feature/6537562418053120) proposal will gain more momentum, which would replace the "data-[lisp-case-of-property]-is=" approach above.
 
-For properties that don't reflect automatically, custom elements that implement the XtalPattern (discussed below) supports an attribute/property, "be-reflective/beReflective", which applies to that instance[TODO]:
+For properties that don't reflect automatically, custom elements that implement the XtalPattern (discussed below) supports an attribute/property, "be-reflective/beReflective", which applies to that instance:
 
 ```html
 <my-custom-element be-reflective='["href", "disabled", "myProp"]'></my-custom-element>
@@ -623,7 +623,7 @@ Let's take another look at one of our earlier propActions:
 }]
 ```
 
-As with all our examples so far, this propAction doesn't actually *return* anything.  What should the reactor do with anything returned?
+As with all our examples so far, this propAction doesn't actually *return* anything.  What should the reactor propActions orchestrator do with anything returned?
 
 We can specify that using a return mapping:
 
@@ -902,3 +902,9 @@ XtalPattern is continuing to impose more assumptions on names of properties -- i
 </details>
 
 ## Rendering Fluid Views
+
+So far, we've seen 1-n binding between a fixed set of DOM elements, and various instructions (event handlers, properties, etc.) 
+
+But we saw already with up and down buttons, that sometimes we want multiple DOM elements to be treated in the same way, as far as binding.  
+
+For that, we utilize the trans-render library.
