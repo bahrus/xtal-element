@@ -18,6 +18,11 @@ export function doDOMKeyPEAction(refs: any[], dependencies: string[], reactor: R
                         (cache[key] as HTMLElement).textContent = val;
                         continue;
                     }
+                    break;
+                case 'number':
+                    (cache[key] as HTMLElement).textContent = val.toString();
+                    continue;
+                    break;
                 case 'object':
                     lastNonDittoVal = val;
                     break;

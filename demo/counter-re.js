@@ -33,7 +33,7 @@ const refs = { downPart: '', upPart: '', countPart: '' };
 const propActions = [
     xp.manageMainTemplate,
     ({ domCache, count }) => ([
-        { [refs.countPart]: isNaN(count) ? '' : count.toString() }
+        { [refs.countPart]: count }
     ]),
     ({ domCache, changeCount }) => ([
         { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
