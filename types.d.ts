@@ -101,7 +101,7 @@ export interface SlicedPropDefs{
     propLookup: {[key: string]: PropDef},
 }
 
-export type destructPropInfo<T = any> = (x: T) => PropDef;
+export type destructPropInfo<T = any> = (x: T) => PropDef | destructPropInfo<T>[];
 
 export interface ReactiveSurface extends Partial<HTMLElement>{
     disabled?: boolean;
@@ -124,12 +124,12 @@ export interface ProcessorMap {
 export type getProcessor =  (value: any, processorMappings: ProcessorMap[]) => ProcessorMap | undefined;
 
 export interface XtalPattern extends ReactiveSurface{
-    domCache: any,
+    domCache?: any,
     mainTemplate: HTMLTemplateElement;
-    clonedTemplate: DocumentFragment | undefined;
+    clonedTemplate?: DocumentFragment | undefined;
     refs: any;
     self: this,
-    beReflective: string[] | undefined;
+    beReflective?: string[] | undefined;
 }
 
 

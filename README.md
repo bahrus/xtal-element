@@ -616,6 +616,16 @@ This gives a consumer of the web component to power to get the behavior they nee
 
 Or they can extend the web component, and set beReflective to true in the constructor, if needed all the time.
 
+### Custom events [TODO]
+
+PropDef supports specifying that when a property changes, it should emit an event.
+
+But, like with the be-reflective option mentioned above, events can also be tailored on an instance level:
+
+```html
+<my-custom-element be-noticed='["href", "disabled", {"myProp":{"bubbles": true}]'></my-custom-element>
+```
+
 ### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
 
 Let's take another look at one of our earlier propActions:
