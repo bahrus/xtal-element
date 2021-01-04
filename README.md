@@ -578,7 +578,10 @@ The custom element specs provide for a way to monitor for attribute changes.  xt
 
 
 ```TypeScript
-passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string);
+attributeChangedCallback(name: string, oldValue: string, newValue: string){
+    passAttrToProp(this, slicedPropDefs, name: string, oldValue: string, newValue: string);
+}
+
 ```
 
 This function will **only work properly in combination with the hydrate function mentioned above.** 
@@ -896,7 +899,7 @@ define(CounterRe);
 
 Note that we've moved some of the visual Rxn-Suppl's close to the template.  This is done in an effort to place highly related pieces close together.
 
-Our class is whittling down now, so that the core buiness logic (count, changeCount) becomes easier to spot.
+Our class is whittling down now, so that the core business logic (count, changeCount) becomes easier to spot.
 
 XtalPattern is continuing to impose more assumptions on names of properties -- in particular, mainTemplate, clonedTemplate, self, refs, domCache.
 </details>
@@ -907,4 +910,4 @@ So far, we've seen 1-n binding between a fixed set of DOM elements, and various 
 
 But we saw already with up and down buttons, that sometimes we want multiple DOM elements to be treated in the same way, as far as binding.  
 
-For that, we utilize the trans-render library.
+For that, and more, we utilize the trans-render library.
