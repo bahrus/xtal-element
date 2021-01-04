@@ -839,7 +839,7 @@ const refs = {downPart: '', upPart: '', countPart: ''};
 const propActions = [
     xp.manageMainTemplate,
     ({domCache, count}: CounterRe) => ([
-        {[refs.countPart]: [{textContent: count}]}
+        {[refs.countPart]:  count}
     ]),
     ({domCache, changeCount}: CounterRe) => ([
         {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
@@ -850,7 +850,8 @@ const propActions = [
 const propDefGetter : destructPropInfo[] = [
     xp.props,
     ({count}: CounterRe) => ({
-        type: Number
+        type: Number,
+        reflect: true,
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
@@ -858,6 +859,7 @@ const propDefs = getPropDefs(propDefGetter);
 
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
+    propActions = propActions;
     reactor = new Reactor(this, [
         {
             type: Array,
@@ -881,7 +883,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     self = this;
     refs = refs;
     mainTemplate = mainTemplate;
-    propActions = propActions;
+    
 
 }
 letThereBeProps(CounterRe, propDefs, 'onPropChange');
