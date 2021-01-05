@@ -1,5 +1,5 @@
 import { IReactor, ReactiveSurface, PropAction, PropDef, ProcessorMap, getProcessor } from '../types.d.js';
-export {ReactiveSurface} from '../types.d.js';
+export {ReactiveSurface, PSDo} from '../types.d.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
 
@@ -10,7 +10,7 @@ export class Reactor implements IReactor {
     requestUpdate = false;
     deconstructedArgs = new WeakMap<PropAction, string[]>();
     ignore = new Set<string>();
-    constructor(public surface: ReactiveSurface , public returnMap?: ProcessorMap[], public getProcessor?: getProcessor) {
+    constructor(public surface: ReactiveSurface , public PSMap?: ProcessorMap[], public getProcessor?: getProcessor) {
         if(getProcessor === undefined) import('./getProcessor.js');
      }
 
@@ -48,14 +48,17 @@ export class Reactor implements IReactor {
             if (intersection(queue, dependencySet).size > 0) {
                 if (this.surface.propActionsHub !== undefined) this.surface.propActionsHub(propAction);
                 const returnVal = propAction(this.surface as HTMLElement);
-                if(this.returnMap !== undefined){
+                if(this.PSMap !== undefined){
                     let processorGetter: getProcessor | undefined = this.getProcessor;
                     if(processorGetter === undefined){
                         const {getProcessor} = await import('./getProcessor.js');
                         processorGetter = getProcessor;
                     }
-                    const processor = processorGetter(returnVal, this.returnMap);
-                    if(processor !== undefined) processor.do(returnVal, args, this);
+                    const processor = processorGetter(returnVal, this.PSMap);
+                    if(processor !== undefined) {
+                        const processorInstance = new processor.ctor();
+                        processorInstance.do(returnVal, args, this);
+                    }
                 }
             }
         }

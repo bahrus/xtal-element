@@ -6,7 +6,7 @@ import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
 import {Reactor} from '../lib/Reactor.js';
 import {CounterDoProps} from './types.d.js';
-import {doDOMKeyPEAction} from '../lib/doDOMKeyPEAction.js';
+import {DOMKeyPE} from '../lib/DOMKeyPE.js';
 import {XtalPattern, xp} from '../lib/XtalPattern.js';
 
 
@@ -60,7 +60,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     reactor = new Reactor(this, [
         {
             type: Array,
-            do: doDOMKeyPEAction
+            ctor: DOMKeyPE
         }
     ]);
     clonedTemplate: DocumentFragment | undefined; domCache: any;

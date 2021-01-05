@@ -4,7 +4,7 @@ import { hydrate } from '../lib/hydrate.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
-import { doDOMKeyPEAction } from '../lib/doDOMKeyPEAction.js';
+import { DOMKeyPE } from '../lib/DOMKeyPE.js';
 import { xp } from '../lib/XtalPattern.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
@@ -45,7 +45,6 @@ const propDefGetter = [
     xp.props,
     ({ count }) => ({
         type: Number,
-        reflect: true,
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
@@ -56,7 +55,7 @@ export class CounterRe extends HTMLElement {
         this.reactor = new Reactor(this, [
             {
                 type: Array,
-                do: doDOMKeyPEAction
+                ctor: DOMKeyPE
             }
         ]);
         this.self = this;

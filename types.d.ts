@@ -118,7 +118,7 @@ export interface IReactor{
 
 export interface ProcessorMap {
     type: Function;
-    do: Function;
+    ctor: {new(): PSDo};
 }
 
 export type getProcessor =  (value: any, processorMappings: ProcessorMap[]) => ProcessorMap | undefined;
@@ -130,6 +130,10 @@ export interface XtalPattern extends ReactiveSurface{
     refs: any;
     self: this,
     beReflective?: string[] | undefined;
+}
+
+export interface PSDo{
+    do(refs: any, dependencies: string[] | undefined, reactor: IReactor): void;
 }
 
 
