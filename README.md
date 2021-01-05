@@ -856,17 +856,16 @@ const propActions = [
     ]),
     ({domCache, changeCount}: CounterRe) => ([
         {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
-        {[refs.upPart]: '"'}
+        {[refs.upPart]:                       '"'                        }
     ]),
     xp.createShadow
 ] as PropAction[];
-const propDefGetter : destructPropInfo[] = [
+const propDefGetter= [
     xp.props,
     ({count}: CounterRe) => ({
         type: Number,
-        reflect: true,
     })
-];
+] as destructPropInfo[];
 const propDefs = getPropDefs(propDefGetter);
 
 
@@ -876,11 +875,10 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     reactor = new Reactor(this, [
         {
             type: Array,
-            do: doDOMKeyPEAction
+            ctor: DOMKeyPE
         }
     ]);
-    clonedTemplate: DocumentFragment | undefined;
-    domCache: any;
+    clonedTemplate: DocumentFragment | undefined; domCache: any;
     count!: number;
     connectedCallback(){
         hydrate<CounterDoProps>(this, propDefs, {
