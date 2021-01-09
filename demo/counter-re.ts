@@ -8,6 +8,7 @@ import {Reactor} from '../lib/Reactor.js';
 import {CounterDoProps} from './types.d.js';
 import {DOMKeyPE} from '../lib/DOMKeyPE.js';
 import {XtalPattern, xp} from '../lib/XtalPattern.js';
+import {transform} from 'trans-render/lib/transform.js';
 
 
 const mainTemplate = html`

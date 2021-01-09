@@ -1,5 +1,5 @@
 import {Reactor} from './Reactor.js';
-import {applyPE} from './applyPE.js';
+import {applyPE} from 'trans-render/lib/applyPE.js';
 
 export class DOMKeyPE{
     do(refs: any[], dependencies: string[], reactor: Reactor){

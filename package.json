@@ -10,7 +10,7 @@
     "start": "es-dev-server --app-index demo/counter-x.html --node-resolve --watch --open"
   },
   "dependencies": {
-    "trans-render": "0.0.270"
+    "trans-render": "0.0.272"
   },
   "devDependencies": {
     "es-dev-server": "1.57.4",
