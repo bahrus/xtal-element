@@ -10,12 +10,12 @@
     "start": "es-dev-server --app-index demo/counter-x.html --node-resolve --watch --open"
   },
   "dependencies": {
-    "trans-render": "0.0.269"
+    "trans-render": "0.0.270"
   },
   "devDependencies": {
+    "es-dev-server": "1.57.4",
     "es-module-shims": "0.5.2",
-    "xtal-test": "0.0.48",
-    "es-dev-server": "1.57.4"
+    "xtal-test": "0.0.48"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
-import {lispToCamel} from './lispToCamel.js'; 
+import {lispToCamel} from 'trans-render/lib/lispToCamel.js'; 
 import {SlicedPropDefs} from '../types.d.js';
 export function passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string){
     if(self.dataset.isHydrated === undefined) return;

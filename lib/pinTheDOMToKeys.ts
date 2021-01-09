@@ -1,4 +1,4 @@
-import {camelToLisp} from './camelToLisp.js';
+import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
 export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: {[key:string]: string | symbol}, cache: any){
     const rootNode = fragment.getRootNode() as DocumentFragment; //can't remember why getting the root node

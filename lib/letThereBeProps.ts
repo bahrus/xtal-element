@@ -1,5 +1,5 @@
 import {PropDef} from '../types.js';
-import {camelToLisp} from './camelToLisp.js';
+import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
 export function letThereBeProps(elementClass: any, props: PropDef[], callbackMethodName?: string){
     const proto = elementClass.prototype;

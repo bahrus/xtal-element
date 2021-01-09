@@ -1,4 +1,4 @@
-import {camelToLisp} from './camelToLisp.js';
+import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
 import { SlicedPropDefs } from '../types.d.js';
 /**

@@ -7,7 +7,7 @@ export function getPropDefs(propDefGetters: destructPropInfo[]): PropDef[]{
         const args = getDestructArgs(propper);
         const propDef = propper(0);
         for(var arg of args){
-            const propDefClone = {...propDef};
+            const propDefClone = {...propDef} as PropDef;
             propDefClone.name = arg;
             returnObj.push(propDefClone);
         }
