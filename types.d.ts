@@ -87,8 +87,8 @@ export interface PropDef{
     debug?: boolean;
     async?: boolean;
     name?: string;
-    defaultValue?: any;
     stopReactionsIfFalsy?: boolean;
+    echoTo?: string;
 }
 
 export interface SlicedPropDefs{
