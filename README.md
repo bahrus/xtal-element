@@ -134,7 +134,7 @@ const propDefs = {
     }
 }
 export class MyFavoriteThings extends HTMLElement{
-    onPropChange(name, prop){
+    onPropChange(name, prop, newValue){
         console.log(prop);
     }
 }
@@ -161,7 +161,7 @@ const slicedPropDefs = getSlicedPropDefs(propDefs);
 
 export class MyFavoriteThings extends HTMLElement{
     BrownPaperPackagesTiedUpWith: String;
-    onPropChange(name: string, prop: PropDef){
+    onPropChange(name: string, prop: PropDef, newVal: any){
         console.log(prop);
     }
 }
@@ -401,16 +401,15 @@ xtal-element provides a function, pinTheDOMToKeys, for creating symbolic referen
 
 ```JavaScript
 const s = '';
-const p = symbol();
 const refs = {
     myDivId: '',
     myOtherId: '',
     somePart: s,
     someClass: s,
-    mainElement: Symbol(),
-    myDataFlagData = p
+    mainElement: s,
+    myDataFlagData = s
     someOtherClass = s
-    someCustomElementElement = p
+    someCustomElementElement = s
 }
 const cache = {};
 pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
@@ -612,7 +611,7 @@ For properties that don't reflect automatically, custom elements that implement 
 
 This will also reflect to "data-[lisp-case-of-property]-is=" (for now, until custom pseudo state is a thing).
 
-This gives a consumer of the web component to power to get the behavior they need, instance by instance.
+This gives a consumer of the web component the power to get the behavior they need, instance by instance.
 
 Or they can extend the web component, and set beReflective to true in the constructor, if needed all the time.
 
