@@ -560,7 +560,7 @@ hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, propDefs: PropDef
 or more simply (without the ceremony of typing):
 
 ```Typescript
-hydrate(self, propDefs, defaultVals);
+hydrate(this, propDefs, defaultVals);
 ```
 
 where self is the custom element instance.
