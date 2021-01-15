@@ -19,7 +19,6 @@ export class Reactor implements IReactor {
             const verb = !newVal ? 'add' : 'delete';
             this.ignore[verb](prop.name!); 
         }
-        //if(prop.dry && (newVal === (<any>this.surface)[prop.name!])) return;
         this.queue.add(prop.name!);
         if(this.surface.disabled) return;
         if (prop.async) {
