@@ -36,8 +36,10 @@ const propActions = [
         { [refs.countPart]: count }
     ]),
     ({ domCache, changeCount }) => ([
-        { [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }] },
-        { [refs.upPart]: '"' }
+        {
+            [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }],
+            [refs.upPart]: '"'
+        }
     ]),
     xp.createShadow
 ];
