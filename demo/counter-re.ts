@@ -44,7 +44,7 @@ const propActions = [
         {
             [refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}],
             [refs.upPart]:                       '"'                        
-        }
+        },
     ]),
     xp.createShadow
 ] as PropAction[];
