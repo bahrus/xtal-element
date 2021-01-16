@@ -58,6 +58,7 @@ const propDefs = getPropDefs(propDefGetter);
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
     propActions = propActions;
+    
     reactor = new Reactor(this, [
         {
             type: Array,

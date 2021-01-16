@@ -118,7 +118,7 @@ export interface IReactor{
 
 export interface ProcessorMap {
     type: Function;
-    ctor: {new(): PSDo};
+    ctor: {new(): PSDo} | PSDo;
 }
 
 export type getProcessor =  (value: any, processorMappings: ProcessorMap[]) => ProcessorMap | undefined;

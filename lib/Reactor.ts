@@ -57,8 +57,17 @@ export class Reactor implements IReactor {
                     }
                     const processor = processorGetter(returnVal, this.PSMap);
                     if(processor !== undefined) {
-                        const processorInstance = new processor.ctor();
-                        processorInstance.do(returnVal, args, this);
+                        const ctor = processor.ctor;
+                        switch(typeof ctor){
+                            case 'function':
+                                const processorInstance = new ctor();
+                                processorInstance.do(returnVal, args, this);
+                                break;
+                            case 'object':
+                                ctor.do(returnVal, args, this);
+                                break;
+                        }
+
                     }
                 }
             }

@@ -2,10 +2,11 @@ import {Reactor} from './Reactor.js';
 import {applyPE} from 'trans-render/lib/applyPE.js';
 
 export class DOMKeyPE{
+    constructor(public domCacheProp: string = 'domCache'){}
     do(refs: any[], dependencies: string[], reactor: Reactor){
         const surface = reactor.surface;
         const aSurface = surface as any;
-        const cache = aSurface[dependencies[0]];
+        const cache = aSurface[this.domCacheProp];
         let lastNonDittoVal = undefined;
         for(const ref of refs){
             const refKeys = Object.getOwnPropertySymbols(ref);
