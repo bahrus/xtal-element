@@ -130,6 +130,7 @@ export interface XtalPattern extends ReactiveSurface{
     refs: any;
     self: this,
     beReflective?: string[] | undefined;
+    handlersAttached?: boolean | undefined;
 }
 
 export interface PSDo{

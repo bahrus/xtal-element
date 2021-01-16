@@ -3,9 +3,14 @@ import {XtalPattern, destructPropInfo} from '../types.d.js';
 import {pinTheDOMToKeys} from './pinTheDOMToKeys.js';
 
 const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
+    if(domCache===undefined) return;
     self.attachShadow!({mode: 'open'});
     self.shadowRoot!.appendChild(clonedTemplate!);
     self.clonedTemplate = undefined;
+}
+
+const attachShadow = ({handlersAttached, domCache, self}: XtalPattern) => {
+    if(handlersAttached) createShadow(self);
 }
 
 export const manageMainTemplate = [
@@ -35,4 +40,4 @@ export const props = [
     })
 ] as destructPropInfo[];
 
-export const xp = {createShadow, manageMainTemplate, props};
+export const xp = {createShadow, attachShadow, manageMainTemplate, props};
