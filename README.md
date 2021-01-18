@@ -917,7 +917,7 @@ XtalPattern is continuing to impose more assumptions on names of properties -- i
 
 Many component libraries prominently support some ability to render repeating content as part of the native syntax.  xtal-element likes the idea Polymer pioneered -- use web components to do this.  There are a number of high quality repeating web components, from Polymer, Vaadin, and others.
 
-One such web component confirmed to be compatible with xtal-element is [ib-id](https://github.com/bahrus/ib-id).
+One such web component confirmed to be compatible with xtal-element is [ib-id](https://github.com/bahrus/ib-id).  It builds on xtal-element, so another happy feature is the additional footprint from using ib-id is ~400b.
 
 ### Conditional / Lazy Display?
 
