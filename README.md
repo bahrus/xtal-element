@@ -911,6 +911,20 @@ Our class is whittling down now, so that the core business logic (count, changeC
 XtalPattern is continuing to impose more assumptions on names of properties -- in particular, mainTemplate, clonedTemplate, self, refs, domCache.
 </details>
 
+## Whatabouts
+
+### What about loops?
+
+Many component libraries prominently support some ability to render repeating content as part of the native syntax.  xtal-element likes the idea Polymer pioneered -- use web components to do this.  There are a number of high quality repeating web components, from Polymer, Vaadin, and others.
+
+One such web component confirmed to be compatible with xtal-element is [ib-id](https://github.com/bahrus/ib-id).
+
+### Conditional / Lazy Display?
+
+Again, for HTML-centric environments (such as server-centric or HTML module based web components) why not use web components for this?
+
+Two libraries recommended as compatible with xtal-element is [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
+
 ## Rendering Fluid Views
 
 So far, we've seen 1-n binding between a fixed set of DOM elements, and various instructions (event handlers, properties, etc.) 
