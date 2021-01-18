@@ -923,7 +923,7 @@ One such web component confirmed to be compatible with xtal-element is [ib-id](h
 
 Again, for HTML-centric environments (such as server-centric or HTML module based web components) why not use web components for this?
 
-Two libraries recommended as compatible with xtal-element is [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
+Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
 ## Rendering Fluid Views
 
