@@ -921,9 +921,34 @@ One such web component confirmed to be compatible with xtal-element is [ib-id](h
 
 ### Conditional / Lazy Display?
 
-Again, for HTML-centric environments (such as server-centric or HTML module based web components) why not use web components for this?
+Again, for HTML-centric environments (such as server-centric or HTML-module based web components) why not use web components for this?
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
+
+### "Private", low-ceremony Xtal components [TODO]
+
+As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
+
+But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use it that, for example?
+
+```JavaScript
+const mainTemplate = html `
+...
+`;
+const refs = {
+    ...
+}
+propActions = [
+    ({prop1, prop2}) => [
+        {[refs....]: }
+    ]
+]
+class MyClass extends X{}
+X.tend(MyClass, {
+    propActions: propActions,
+    mainTemplate: mainTemplate
+})
+```
 
 ## Rendering Fluid Views
 
