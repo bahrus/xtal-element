@@ -34,9 +34,15 @@ export class DOMKeyPE{
                             lastNonDittoVal = val;
                             break;
                     }
-                    for(var el of cache[key]){
-                        applyPE(surface as HTMLElement, el as HTMLElement, lastNonDittoVal);
+                    const matchOrMatches = cache[key];
+                    if(Array.isArray(matchOrMatches)){
+                        for(var el of matchOrMatches){
+                            applyPE(surface as HTMLElement, el as HTMLElement, lastNonDittoVal);
+                        }
+                    }else{
+                        applyPE(surface as HTMLElement, matchOrMatches as HTMLElement, lastNonDittoVal);
                     }
+
                     
                 }
             }
