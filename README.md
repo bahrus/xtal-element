@@ -99,6 +99,18 @@ export class DoReMi extends HTMLElement{
 define(DoReMi);
 ```
 
+To support Typescript-centric frameworks like Angular, you will also need:
+
+```Typescript
+declare global {
+    interface HTMLElementTagNameMap {
+        "do-re-mi": DoReMi,
+    }
+}
+```
+
+... either in the same file or a separate *.d.ts file.
+
 <details>
     <summary>Lengthy explanation</summary>
 
@@ -401,30 +413,31 @@ xtal-element provides a function, pinTheDOMToKeys, for creating symbolic referen
 
 ```JavaScript
 const s = '';
+const m = '*';
 const refs = {
-    myDivId: '',
-    myOtherId: '',
-    somePart: s,
-    someClass: s,
+    myDivId: s,
+    myOtherId: s,
+    somePart: m,
+    someClass: m,
     mainElement: s,
     myDataFlagData = s
     someOtherClass = s
-    someCustomElementElement = s
+    someCustomElementElement = m
 }
 const cache = {};
 pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
 ```
-It doesn't really matter what the right-hand-side of each expression inside refs is -- pinTheDOMToKeys will replace them by unique symbols if needed.
+If the right-hand-side (rhs) of the refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol.
 
-The cache can then be used to retrieve the unique matching element from the domFragment:
+The cache can then be used to retrieve the matching element(s) from the domFragment:
 
 ```JavaScript
 const myDiv = cache[refs.myDivId];
+const someParts = cache[refs.somePart];
 ```
 
 The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name ('Element'), and by Dataset ('Data'), depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.
 
-Only the first matching element is put into the cache.  If the element isn't found, the key is deleted from the cache.
 
 ### Ignoring prop changes when the new value is undefined or null.
 
