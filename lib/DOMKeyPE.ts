@@ -34,7 +34,10 @@ export class DOMKeyPE{
                             lastNonDittoVal = val;
                             break;
                     }
-                    applyPE(surface as HTMLElement, cache[key] as HTMLElement, lastNonDittoVal);
+                    for(var el of cache[key]){
+                        applyPE(surface as HTMLElement, el as HTMLElement, lastNonDittoVal);
+                    }
+                    
                 }
             }
             

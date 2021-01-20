@@ -41,7 +41,8 @@ const propDefGetter = [
 ];
 const propDefs = getPropDefs(propDefGetter);
 const slicedPropDefs = getSlicedPropDefs(propDefs);
-const refs = { downPart: '', upPart: '', countPart: '' };
+const s = '';
+const refs = { downPart: s, upPart: s, countPart: s };
 export class CounterDo extends HTMLElement {
     constructor() {
         super(...arguments);

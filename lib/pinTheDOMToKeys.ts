@@ -1,17 +1,23 @@
-import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
+import { camelToLisp } from 'trans-render/lib/camelToLisp.js';
 
-export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: {[key:string]: string | symbol}, cache: any){
+export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: { [key: string]: string | symbol }, cache: any) {
     const rootNode = fragment.getRootNode() as DocumentFragment; //can't remember why getting the root node
     const attribs = ['id', 'part', 'class', 'data', 'element'];
-    for(const attrib of attribs){
-        for(const key in refs){
-            let lookup = refs[key];
-            if(typeof lookup !== 'symbol') lookup = refs[key] = Symbol(key);
-            const lpKey = camelToLisp(key);
-            if(lpKey.endsWith(attrib)){
+
+    for (const key in refs) {
+        let lookup = refs[key];
+        let subQuery = '*';
+        const isSingle = lookup === '';
+        if (typeof lookup !== 'symbol') {
+            subQuery = lookup;
+            lookup = refs[key] = Symbol(key);
+        }
+        const lpKey = camelToLisp(key);
+        for (const attrib of attribs) {
+            if (lpKey.endsWith(attrib)) {
                 const attribVal = lpKey.substr(0, lpKey.length - attrib.length - 1);
                 let query: string | undefined;
-                switch(attrib){
+                switch (attrib) {
                     case 'id':
                         query = `#${attribVal}`;
                         break;
@@ -30,12 +36,14 @@ export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: 
                     default:
                         throw '';
                 }
-                const firstMatchingNode = rootNode.querySelector(query);
-                if(firstMatchingNode === null){
-                    delete cache[lookup];
-                }else{
-                    cache[lookup] = firstMatchingNode
+                if (isSingle) {
+                    const firstMatchingNode = rootNode.querySelector(query);
+                    cache[lookup] = firstMatchingNode;
+                } else {
+                    const matchingNodes = rootNode.querySelectorAll(query);
+                    cache[lookup] = Array.from(matchingNodes).filter(el => el.matches(subQuery));
                 }
+                break;
             }
         }
     }
