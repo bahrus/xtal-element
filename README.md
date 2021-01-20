@@ -932,6 +932,9 @@ As we've seen, being able to choose exactly what utility functions to aid in dev
 But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use it that, for example?
 
 ```JavaScript
+
+class MyClass extends X{}
+
 const mainTemplate = html `
 ...
 `;
@@ -943,7 +946,6 @@ propActions = [
         {[refs....]: }
     ]
 ]
-class MyClass extends X{}
 X.tend(MyClass, {
     propActions: propActions,
     mainTemplate: mainTemplate
