@@ -29,16 +29,15 @@ const mainTemplate = html `
     }
 </style>
 `;
-const refs = { downPart: '', upPart: '', countPart: '' };
+const refs = { dData: '*', countPart: '' };
 const propActions = [
     xp.manageMainTemplate,
     ({ domCache, count }) => ([
         { [refs.countPart]: count }
     ]),
-    ({ domCache, changeCount }) => ([
+    ({ domCache, self }) => ([
         {
-            [refs.downPart]: [, { click: [changeCount, 'dataset.d', parseInt] }],
-            [refs.upPart]: '"'
+            [refs.dData]: [, { click: [self.changeCount, 'dataset.d', parseInt] }],
         },
     ]),
     xp.createShadow

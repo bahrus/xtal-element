@@ -78,7 +78,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
                 this.count++;
             });
-            this.shadowRoot!.appendChild(clonedTemplate);
+            this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
         },
     ] as PropAction[];

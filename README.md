@@ -84,6 +84,18 @@ export class Foo extends HTMLElement{
 4.  A similar pattern is used for easily testable "propActions" - where property changes can be grouped/partitioned and turned into a logical workflow.
 5.  Many of these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library-neutral class.
 
+## In defense of pomp and circumstance
+
+For many developers, a key criteria in evaluating which component library they like is based exclusively on how little "fuss" is required to create a new component.  I can totally relate to this concern.  However, every principle, including KISS, follows a law of diminishing returns.  
+
+There are two extremes to consider:
+
+1.  Creating a component meant to be highly reusable, leveraged in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc.
+2.  Creating a local component only to be used in a specific way by one application or one component.
+
+If you want to skip over the ceremony needed for the first type of component, skip to [the low ceremony solutions](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
+
+But addressing the first goal is important, and understanding what is underlying the low ceremony solutions, which builds on what's discussed below, can only help. 
 
 ## Let's start from the very beginning
 
@@ -364,7 +376,7 @@ Another theoretical benefit -- by separating the actions from the actual class, 
 
 ### Limitations 
 
-propActions (and updateTransforms, discussed below) rely heavily on destructuring the class as the argument of an arrow function.  JavaScript doesn't appear to support destructuring objects with ES6 symbols as keys.
+propActions rely heavily on destructuring the class as the argument of an arrow function.  JavaScript doesn't appear to support destructuring objects with ES6 symbols as keys.
 
 Separating "propAction" arrow functions out of the class as an (imported) constant imposes an additional limitation -- a limitation that isn't applicable when the actions are defined inside the class -- these external constants don't support responding to, or modifying, private members (something in the middle stages of browser and TypeScript adoption).  I thought using "bind" might give access to private fields, but no such luck.  The propActions public field, of course, allows a mixture of inline, instance-based propActions, empowered with access to private members, combined with the more limited (but portable, individually testable) external lambda expressions. So when private member access is needed, those actions could remain inside the class.
 
@@ -409,6 +421,9 @@ What we will be discussing for a while will finally lead up to our rendering app
 
 ### Planting flags in a cloned template
 
+<details>
+    <summary>pinTheDOMToKeys</summary>
+
 xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
 
 ```JavaScript
@@ -427,7 +442,7 @@ const refs = {
 const cache = {};
 pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
 ```
-If the right-hand-side (rhs) of the refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol.
+If the right-hand-side (rhs) of the refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches based on the lhs key name, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol.
 
 The cache can then be used to retrieve the matching element(s) from the domFragment:
 
@@ -438,8 +453,12 @@ const someParts = cache[refs.somePart];
 
 The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name ('Element'), and by Dataset ('Data'), depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.
 
+</details>
 
 ### Ignoring prop changes when the new value is undefined or null.
+
+<details>
+    <summary>stopReactionsIfFalsy</summary>
 
 We can specify to not react to changes of a property when it is falsy:
 
@@ -449,6 +468,8 @@ We can specify to not react to changes of a property when it is falsy:
     stopReactionsIfFalsy: true
 }
 ```
+
+</details>
 
 Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component showcased by webcomponents.dev, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, micro-frontend parallel versions, asynchronous reactions, etc.  The example shown below (if you expand) supports all these features.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component showcased by webcomponents.dev is perfectly compatible with xtal-element.
 
@@ -860,15 +881,16 @@ const mainTemplate = html`
     }
 </style>
 `;
-const refs = {downPart: '', upPart: '', countPart: ''};
+const refs = {dData: '*', countPart: ''};
 const propActions = [
     xp.manageMainTemplate,
     ({domCache, count}: CounterRe) => ([
         {[refs.countPart]:  count}
     ]),
-    ({domCache, changeCount}: CounterRe) => ([
-        {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
-        {[refs.upPart]:                       '"'                        }
+    ({domCache, self}: CounterRe) => ([
+        {
+            [refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
+        },
     ]),
     xp.createShadow
 ] as PropAction[];
@@ -884,6 +906,7 @@ const propDefs = getPropDefs(propDefGetter);
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
     propActions = propActions;
+    
     reactor = new Reactor(this, [
         {
             type: Array,
