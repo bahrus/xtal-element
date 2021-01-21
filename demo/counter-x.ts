@@ -50,4 +50,4 @@ X.tend({
     mainTemplate: mainTemplate,
     propActions: propActions,
     refs: refs
-})
+});

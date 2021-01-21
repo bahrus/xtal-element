@@ -938,7 +938,7 @@ Again, for HTML-centric environments (such as server-centric or HTML-module base
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
-### "Private", low-ceremony Xtal components [TODO]
+### "Private", low-ceremony Xtal components
 
 As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
@@ -946,23 +946,55 @@ But what about web components that are only meant to be used within one applicat
 
 ```JavaScript
 
-class MyClass extends X{}
+const mainTemplate = html`
+<button data-d=-1>-</button><span></span><button data-d=1>+</button>
+<style>
+    * {
+      font-size: 200%;
+    }
 
-const mainTemplate = html `
-...
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
+</style>
 `;
-const refs = {
-    ...
+
+const refs = {dData: '*', spanElement: ''};
+export abstract class CounterX extends X{
+    count = 0;
+
+    changeCount(delta: number){
+        this.count += delta;
+    }
 }
-propActions = [
-    ({prop1, prop2}) => [
-        {[refs....]: }
-    ]
-]
-X.tend(MyClass, {
+
+const propActions = [
+  ({count}: CounterX) => ([
+    {[refs.spanElement]:  count}
+  ]),
+  ({domCache, self}: CounterX) => ([
+    {[refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
+  ])
+] as PropAction[];
+
+X.tend({
+    name: 'counter-x',
+    class: CounterX as any as {new(): X},
+    mainTemplate: mainTemplate,
     propActions: propActions,
-    mainTemplate: mainTemplate
-})
+    refs: refs
+});
 ```
 
 Missing features of low-ceremony Xtal components:
