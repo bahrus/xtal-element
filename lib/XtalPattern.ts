@@ -1,6 +1,7 @@
-export {XtalPattern} from '../types.d.js';
+export {XtalPattern, PropAction} from '../types.d.js';
 import {XtalPattern, destructPropInfo} from '../types.d.js';
 import {pinTheDOMToKeys} from './pinTheDOMToKeys.js';
+import {PropAction} from '../types.d.js';
 
 const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
     if(domCache===undefined) return;
@@ -22,7 +23,7 @@ export const manageMainTemplate = [
         pinTheDOMToKeys(clonedTemplate!, refs, cache);
         self.domCache = cache;
     },
-] 
+] as PropAction[];
 
 export const props = [
     ({clonedTemplate, domCache, mainTemplate}: XtalPattern) => ({

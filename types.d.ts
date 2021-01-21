@@ -33,6 +33,13 @@ export interface tendArgs<T extends X = X>{
     initTransform: TransformGetter<T>,
     updateTransforms?: SelectiveUpdate<T>[]
 }
+
+export interface XConfig{
+    mainTemplate: HTMLTemplateElement;
+    propActions: PropAction[];
+    name: string;
+    refs: any;
+}
 //TODO look into variadic tuple types
 export type EventScopeT = [string | undefined];
 export type EventScopeTB = [string | undefined, 'bubbles' | undefined];

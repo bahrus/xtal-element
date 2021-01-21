@@ -648,7 +648,7 @@ Let's take another look at one of our earlier propActions:
 }]
 ```
 
-As with all our examples so far, this propAction doesn't actually *return* anything.  What should the reactor propActions orchestrator do with anything returned?
+As with all our examples so far, this propAction doesn't actually *return* anything.  What should the propActions Reactor orchestrator do with anything returned?
 
 We can specify that using a return mapping:
 
@@ -657,20 +657,20 @@ import {myStringProcessor, myArrayProcessor}
 reactor = new Reactor(this, [
     {
         type: String,
-        do: myStringProcessor
+        ctor: myStringProcessor
     },
     {
         type: Array,
-        do: myArrayProcessor
+        ctor: myArrayProcessor
     },
     {
         type: HTMLDivElement,
-        do: myHTMLDivProcessor
+        ctor: myHTMLDivProcessor
     }
 ]);
 ```
 
-So if the right-hand-side of the action returns a string, pass the context to function myStringProcessor.  If it returns an array, use myArrayProcessor.
+So if the right-hand-side of the action returns a string, pass the context class myStringProcessor.  If it returns an array, use myArrayProcessor.
 
 Now our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
 
@@ -829,7 +829,7 @@ const linkClonedTemplate = ({domCache, clonedTemplate, self}) => {
 
 ### XtalPattern
 
-The library XtalPattern removes as much of the common boilerplate as possible (without using class inheritance or mixins).  It provides a interface.  Implementing the interface with Typescript will hopefully help the developer remember what needs to be done for a complete component.
+The library XtalPattern removes as much of the common boilerplate as possible (without using class inheritance or mixins).  It provides an interface.  Implementing the interface with Typescript will hopefully help the developer remember what needs to be done for a complete component.
 
 Using XtalPattern, our component now looks like what's shown below (after expanding)
 
@@ -942,7 +942,7 @@ Two libraries recommended as compatible with xtal-element are [iff-diff](https:/
 
 As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
-But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use it that, for example?
+But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use them, for example?
 
 ```JavaScript
 
@@ -964,6 +964,10 @@ X.tend(MyClass, {
     mainTemplate: mainTemplate
 })
 ```
+
+Missing features of low-ceremony Xtal components:
+
+dynamic import support, attributes
 
 ## Rendering Fluid Views
 
