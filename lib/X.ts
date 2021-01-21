@@ -4,7 +4,6 @@ import {xc} from './XtalCore.js';
 import {xp} from './XtalPattern.js';
 import {DOMKeyPE} from './DOMKeyPE.js';
 import {getDestructArgs} from './getDestructArgs.js';
-import { letThereBeProps } from './letThereBeProps.js';
 
 export abstract class X extends HTMLElement {
     self = this;
