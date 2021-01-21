@@ -23,7 +23,7 @@ export  class X extends HTMLElement {
 
 
     static tend(config: XConfig){
-        const propActions = [xp.manageMainTemplate, config.propActions, xp.attachShadow] as PropAction[];
+        const propActions = [xp.manageMainTemplate, config.propActions, xp.createShadow] as PropAction[];
         const s = new Set<string>();
         for(const propAction of propActions.flat()){
             const props = getDestructArgs(propAction);
