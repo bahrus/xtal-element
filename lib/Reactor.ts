@@ -34,6 +34,7 @@ export class Reactor implements IReactor {
     }
 
     async processActionQueue() {
+        if(this.surface.propActions === undefined) return;
         const queue = this.queue;
         this.queue = new Set<string>();
         for (const propAction of this.surface.propActions.flat()) {

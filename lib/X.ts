@@ -25,10 +25,14 @@ export  class X extends HTMLElement {
     static tend(config: XConfig){
         const propActions = [xp.manageMainTemplate, config.propActions, xp.createShadow] as PropAction[];
         const s = new Set<string>();
-        for(const propAction of propActions.flat()){
+        const nativeProps = xc.getPropDefs(xp.props);
+        for(const propAction of config.propActions.flat()){
             const props = getDestructArgs(propAction);
             for(const prop of props){
-                s.add(prop);
+                if(nativeProps.findIndex(x => x.name === prop) === -1){
+                    s.add(prop);
+                }
+                
             }
         }
         class newClass extends (config.class || X){
@@ -44,7 +48,8 @@ export  class X extends HTMLElement {
             dry: true,
             async: true,
         }));
-        xc.letThereBeProps(newClass, propDefs, 'onPropChange');
+        const allPropDefs = propDefs.concat(nativeProps);
+        xc.letThereBeProps(newClass, allPropDefs, 'onPropChange');
         xc.define(newClass);
     }
 }

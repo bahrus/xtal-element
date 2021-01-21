@@ -32,13 +32,7 @@ export const props = [
         async: false,
         dry: true,
     }),
-    ({}: XtalPattern) => ({
-        type: Object,
-        stopReactionsIfFalsy: true,
-        async: false,
-        dry: true,
-        parse: true,
-    })
+    
 ] as destructPropInfo[];
 
 export const xp = {createShadow, attachShadow, manageMainTemplate, props};
