@@ -28,7 +28,7 @@ export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: 
                         query = `.${attribVal}`;
                         break;
                     case 'data':
-                        query = `[data-${attribVal}="${attribVal}"]`;
+                        query = `[data-${attribVal}]`;
                         break;
                     case 'element':
                         query = attribVal;

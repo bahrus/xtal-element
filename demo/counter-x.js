@@ -37,8 +37,8 @@ const propActions = [
     ({ count }) => ([
         { [refs.spanElement]: count }
     ]),
-    ({ domCache, changeCount }) => ([
-        { [refs.dData]: [, { click: [changeCount, 'dataset.d', parseInt] }] }
+    ({ domCache, self }) => ([
+        { [refs.dData]: [, { click: [self.changeCount, 'dataset.d', parseInt] }] }
     ])
 ];
 X.tend({

@@ -39,8 +39,8 @@ const propActions = [
   ({count}: CounterX) => ([
     {[refs.spanElement]:  count}
   ]),
-  ({domCache, changeCount}: CounterX) => ([
-    {[refs.dData]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+  ({domCache, self}: CounterX) => ([
+    {[refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ])
 ] as PropAction[];
 
