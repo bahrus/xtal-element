@@ -1,8 +1,8 @@
-import {X, TransformGetter, TransformValueOptions} from '../X.js';
-import {PESettings} from 'trans-render/types.d.js';
-import { SelectiveUpdate } from '../types.js';
+import {html} from '../lib/html.js';
+import {X} from '../lib/X.js';
+import {PropAction} from '../types.d.js';
 
-const template = /* html */`
+const mainTemplate = html`
 <button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>
     * {
@@ -26,7 +26,7 @@ const template = /* html */`
 </style>
 `;
 
-const [span$] = [Symbol('span')];
+const refs = {dData: '*', spanElement: ''};
 export abstract class CounterX extends X{
     count = 0;
 
@@ -35,14 +35,19 @@ export abstract class CounterX extends X{
     }
 }
 
-X.tend<CounterX>({
+const propActions = [
+  ({count}: CounterX) => ([
+    {[refs.spanElement]:  count}
+  ]),
+  ({domCache, changeCount}: CounterX) => ([
+    {[refs.dData]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+  ])
+] as PropAction[];
+
+X.tend({
     name: 'counter-x',
-    class: CounterX,
-    main: template,
-    attributeProps: ({count}) => ({num:[count]}),
-    initTransform: ({changeCount} : CounterX) => ({
-        button:[{},{click:[changeCount, 'dataset.d', parseInt]}] as  PESettings<CounterX>, 
-        span: span$,
-    }) as TransformValueOptions,
-    updateTransforms:[ ({count}: CounterX) => ({[span$]: count.toString()})]
+    class: CounterX as any as {new(): X},
+    mainTemplate: mainTemplate,
+    propActions: propActions,
+    refs: refs
 })

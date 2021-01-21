@@ -1,5 +1,6 @@
-import { X } from '../X.js';
-const template = /* html */ `
+import { html } from '../lib/html.js';
+import { X } from '../lib/X.js';
+const mainTemplate = html `
 <button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>
     * {
@@ -22,7 +23,7 @@ const template = /* html */ `
     }
 </style>
 `;
-const [span$] = [Symbol('span')];
+const refs = { dData: '*', spanElement: '' };
 export class CounterX extends X {
     constructor() {
         super(...arguments);
@@ -32,14 +33,18 @@ export class CounterX extends X {
         this.count += delta;
     }
 }
+const propActions = [
+    ({ count }) => ([
+        { [refs.spanElement]: count }
+    ]),
+    ({ domCache, changeCount }) => ([
+        { [refs.dData]: [, { click: [changeCount, 'dataset.d', parseInt] }] }
+    ])
+];
 X.tend({
     name: 'counter-x',
     class: CounterX,
-    main: template,
-    attributeProps: ({ count }) => ({ num: [count] }),
-    initTransform: ({ changeCount }) => ({
-        button: [{}, { click: [changeCount, 'dataset.d', parseInt] }],
-        span: span$,
-    }),
-    updateTransforms: [({ count }) => ({ [span$]: count.toString() })]
+    mainTemplate: mainTemplate,
+    propActions: propActions,
+    refs: refs
 });
