@@ -24,17 +24,7 @@ export  class X extends HTMLElement {
 
     static tend(config: XConfig){
         const propActions = [xp.manageMainTemplate, config.propActions, xp.createShadow] as PropAction[];
-        const s = new Set<string>();
-        const nativeProps = xc.getPropDefs(xp.props);
-        for(const propAction of config.propActions.flat()){
-            const props = getDestructArgs(propAction);
-            for(const prop of props){
-                if(nativeProps.findIndex(x => x.name === prop) === -1 && prop !== 'self'){
-                    s.add(prop);
-                }
-                
-            }
-        }
+
         class newClass extends (config.class || X){
             static is = config.name;
             mainTemplate = config.mainTemplate;
@@ -42,12 +32,27 @@ export  class X extends HTMLElement {
             propActions = propActions;
 
         }
-        const propDefs = Array.from(s).map<PropDef>(prop => ({
-            name: prop,
-            type: Object,
-            dry: true,
-            async: true,
-        }));
+        const nativeProps = xc.getPropDefs(xp.props);
+        let propDefs = config.propDefs;
+        if(propDefs === undefined){
+            const s = new Set<string>();
+            
+            for(const propAction of config.propActions.flat()){
+                const props = getDestructArgs(propAction);
+                for(const prop of props){
+                    if(nativeProps.findIndex(x => x.name === prop) === -1 && prop !== 'self'){
+                        s.add(prop);
+                    }
+                    
+                }
+            }
+            propDefs = Array.from(s).map<PropDef>(prop => ({
+                name: prop,
+                type: Object,
+                dry: true,
+                async: true,
+            }));
+        }
         const allPropDefs = propDefs.concat(nativeProps);
         xc.letThereBeProps(newClass, allPropDefs, 'onPropChange');
         xc.define(newClass);

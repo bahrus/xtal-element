@@ -1026,7 +1026,7 @@ X.tend({
     <summary>Talking points</summary>
 
 1.  Note that the class CounterMi is fairly library neutral.  With the exception of extending class X, none of the logic within is library specific.
-2.  For true library agnostic class, use mixins.
+2.  For true library agnostic classes, use mixins.
 </details>
 
 
@@ -1034,7 +1034,17 @@ Missing features of low-ceremony Xtal components:
 
 hydrating properties support, attributes.
 
-Support for custom property settings will be supported [TODO].
+Support for custom property settings is supported:
+
+```JavaScript
+X.tend({
+    name: 'counter-mi',
+    class: CounterMi,
+    mainTemplate: mainTemplate,
+    propActions: propActions,
+    refs: refs
+});
+```
 
 [TODO]  Support non shadow DOM custom element.
 

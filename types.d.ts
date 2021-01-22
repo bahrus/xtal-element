@@ -38,6 +38,7 @@ export interface tendArgs<T extends X = X>{
 export interface XConfig{
     mainTemplate: HTMLTemplateElement;
     propActions: PropAction[];
+    propDefs?: PropDef[];
     name: string;
     class?: {new(): newX};
     refs: any;
