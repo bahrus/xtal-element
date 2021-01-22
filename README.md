@@ -961,7 +961,7 @@ Again, for HTML-centric environments (such as server-centric or HTML-module base
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
-### "Private", low-ceremony Xtal components
+### "Private", low-ceremony xtal components
 
 As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
@@ -1005,17 +1005,17 @@ export abstract class CounterMi extends X{
 }
 
 const propActions = [
-  ({count}: CounterMi) => ([
+  ({count}) => ([
     {[refs.spanElement]:  count}
   ]),
-  ({domCache, self}: CounterMi) => ([
+  ({domCache, self}) => ([
     {[refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ])
-] as PropAction[];
+];
 
 X.tend({
     name: 'counter-mi',
-    class: CounterMi as any as {new(): X},
+    class: CounterMi,
     mainTemplate: mainTemplate,
     propActions: propActions,
     refs: refs
