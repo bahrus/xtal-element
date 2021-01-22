@@ -626,8 +626,8 @@ where this is the custom element instance.
 
 ### A tribute to attributes
 
-<summary>
-<details>passAttrToProp</details>
+<details>
+<summary>passAttrToProp</summary>
 
 The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
 
