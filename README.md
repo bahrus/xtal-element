@@ -93,9 +93,9 @@ There are two extremes to consider:
 1.  Creating a component meant to be highly reusable, leveraged in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc.
 2.  Creating a local component only to be used in a specific way by one application or one component.
 
-If you want to skip over the ceremony needed for the first type of component, skip to [the low ceremony solutions](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
+If you want to skip over the tender loving care needed for the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
 
-But addressing the first goal is important, and understanding what is underlying the low ceremony solutions, which builds on what's discussed below, can only help. 
+But addressing the first goal is important, and understanding what underlies the low ceremony solutions, which builds on what's discussed below, can only help. 
 
 ## Let's start from the very beginning
 
@@ -194,7 +194,7 @@ letThereBeProps(MyFavoriteThings, slicedPropDefs.propDefs, 'onPropChange');
 
 ## Support for asynchronous loading
 
-If prop values might be passed to an element before the [element becomes registered](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) (always best to be prepared for this to happen), then you can do this by utilizing the "propUp" function:
+If prop values might be passed to an element before the [element becomes registered](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) (always best to be prepared for this to happen), then you can account for this by utilizing the "propUp" function:
 
 ```JavaScript
 import {propUp} from 'xtal-element/lib/propUp.js';
@@ -251,7 +251,7 @@ export class MyCustomElement extends HTMLElement{
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
-If all you want to do is fire off an event when a property is set, xtal-element supports defining "notifying" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported by xtal-element's init and update transforms, discussed farther down.
+If all you want to do is fire off an event when a property is set, xtal-element supports defining "notifying" properties which will do that for you.  Likewise, if the only impact of the changed property is in what is displayed, that is supported in ways discussed farther down.
 
 But the need to do different types of things when properties change isn't limited to these two common requirements.  So typically, you then have to add logic like this:
 
@@ -424,7 +424,7 @@ What we will be discussing for a while will finally lead up to our rendering app
 <details>
     <summary>pinTheDOMToKeys</summary>
 
-xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references:
+xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references to DOM elements in a cloned template:
 
 ```JavaScript
 const s = '';
@@ -442,7 +442,7 @@ const refs = {
 const cache = {};
 pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
 ```
-If the right-hand-side (rhs) of the refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches based on the lhs key name, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol.
+If the right-hand-side (rhs) of each refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches based on the lhs key name, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol for later reference.
 
 The cache can then be used to retrieve the matching element(s) from the domFragment:
 
@@ -455,7 +455,7 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 </details>
 
-### Ignoring prop changes when the new value is undefined or null.
+### Ignoring prop actions  when one or more dependency value is falsy.
 
 <details>
     <summary>stopReactionsIfFalsy</summary>
