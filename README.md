@@ -95,9 +95,12 @@ There are two extremes to consider:
 
 If you want to skip over the tender loving care needed for the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
 
-But addressing the first goal is important, and understanding what underlies the low ceremony solutions, which builds on what's discussed below, can only help. 
+But addressing the first goal is important, and understanding what primitives the simpler components rely on can only help. 
 
 ## Let's start from the very beginning
+
+<details>
+    <summary>Name it</summary>
 
 The first thing you will want to do when defining a web component is to name it.  Polymer established a pattern whereby the name is provided by a static field.  xtal-element continues this tradition (as there are subtle advantages to doing so, not explained here).  
 
@@ -123,6 +126,7 @@ declare global {
 
 ... either in the same file or a separate *.d.ts file.
 
+
 <details>
     <summary>Lengthy explanation</summary>
 
@@ -145,7 +149,12 @@ This solution works best for web components that either use a programmatic api a
 
 </details>
 
+</details>
+
 ## Let there be props
+
+<details>
+    <summary>Prop Defs</summary>
 
 Not so much typing, but more magic strings:
 
@@ -192,7 +201,12 @@ export class MyFavoriteThings extends HTMLElement{
 letThereBeProps(MyFavoriteThings, slicedPropDefs.propDefs, 'onPropChange');
 ```
 
+</details>
+
 ## Support for asynchronous loading
+
+<details>
+    <summary>propUp</summary>
 
 If prop values might be passed to an element before the [element becomes registered](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) (always best to be prepared for this to happen), then you can account for this by utilizing the "propUp" function:
 
@@ -207,10 +221,12 @@ export class SixteenGoingOnSeventeen extends HTMLElement{
     }
 }
 ```
-
 The third, optional parameter is where you can specify the default values, if nothing was passed in yet.
+</details>
 
 ## Reactive Prop Actions
+
+<details>ReactiveSurface
 
 ```TypeScript
 import {Reactor} from 'xtal-element/lib/Reactor.js';
@@ -406,6 +422,8 @@ propActionsHub(propAction){
     console.log(propAction); //or whatever helps with debugging
 }
 ```
+
+</details>
 
 </details>
 
