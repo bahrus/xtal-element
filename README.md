@@ -1022,11 +1022,17 @@ X.tend({
 });
 ```
 
+<details>
+    <summary>Talking points</summary>
+
+1.  Note that the class CounterMi is fairly library neutral.  With the exception of extending class X, none of the logic within is library specific.
+2.  For true library agnostic class, use mixins.
+</details>
 
 
 Missing features of low-ceremony Xtal components:
 
-dynamic import support, attributes, custom property settings.
+hydrating properties support, attributes.
 
 Support for custom property settings will be supported [TODO].
 
