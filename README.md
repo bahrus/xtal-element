@@ -597,7 +597,7 @@ or more simply (without the ceremony of typing):
 hydrate(this, propDefs, defaultVals);
 ```
 
-where self is the custom element instance.
+where this is the custom element instance.
 
 "hydrate" should continue to be called within the connectedCallback lifecycle event.
 
@@ -953,7 +953,7 @@ XtalPattern is continuing to impose more assumptions on names of properties -- i
 
 Many component libraries prominently support some ability to render repeating content as part of the native syntax.  xtal-element likes the idea Polymer pioneered -- use web components to do this.  There are a number of high quality repeating web components, from Polymer, Vaadin, and others.
 
-One such web component confirmed to be compatible with xtal-element is [ib-id](https://github.com/bahrus/ib-id).  It builds on xtal-element, so another happy feature is the additional footprint from using ib-id is ~400b.
+One looping web component confirmed to be compatible with xtal-element is [ib-id](https://github.com/bahrus/ib-id).  It builds on xtal-element, so another happy feature is the additional footprint from using ib-id is ~400b.  It differs from other repeating elements, in that it doesn't support internal markup within each iteration loop -- instead promoting the idea that that markup should be encapsulated inside a web component -- here is a place where we would really benefit from a ceremony-free way of rapidly creating web components.
 
 ### Conditional / Lazy Display?
 
@@ -963,9 +963,11 @@ Two libraries recommended as compatible with xtal-element are [iff-diff](https:/
 
 ### "Private", low-ceremony Xtal components
 
-As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
+As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
 But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use them, for example?
+
+The first solution we provide for this is "X.tend".  
 
 ```JavaScript
 
@@ -994,7 +996,7 @@ const mainTemplate = html`
 `;
 
 const refs = {dData: '*', spanElement: ''};
-export abstract class CounterX extends X{
+export abstract class CounterMi extends X{
     count = 0;
 
     changeCount(delta: number){
@@ -1003,26 +1005,32 @@ export abstract class CounterX extends X{
 }
 
 const propActions = [
-  ({count}: CounterX) => ([
+  ({count}: CounterMi) => ([
     {[refs.spanElement]:  count}
   ]),
-  ({domCache, self}: CounterX) => ([
+  ({domCache, self}: CounterMi) => ([
     {[refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ])
 ] as PropAction[];
 
 X.tend({
-    name: 'counter-x',
-    class: CounterX as any as {new(): X},
+    name: 'counter-mi',
+    class: CounterMi as any as {new(): X},
     mainTemplate: mainTemplate,
     propActions: propActions,
     refs: refs
 });
 ```
 
+
+
 Missing features of low-ceremony Xtal components:
 
-dynamic import support, attributes
+dynamic import support, attributes, custom property settings.
+
+Support for custom property settings will be supported [TODO].
+
+[TODO]  Support non shadow DOM custom element.
 
 ## Rendering Fluid Views
 
