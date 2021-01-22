@@ -473,7 +473,7 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 </details>
 
-### Ignoring prop actions  when one or more dependency value is falsy.
+### Ignoring prop actions when one or more dependency value is falsy.
 
 <details>
     <summary>stopReactionsIfFalsy</summary>
@@ -576,7 +576,10 @@ define(CounterDo);
 
 For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
 
-### Property Hydration, in detail
+### Property hydration, in detail
+
+<details>
+    <summary>hydrate</summary>
 
 Let's look at these five lines of code in our counter-do example above:
 
@@ -619,7 +622,12 @@ where this is the custom element instance.
 
 "hydrate" should continue to be called within the connectedCallback lifecycle event.
 
+</details>
+
 ### A tribute to attributes
+
+<summary>
+<details>passAttrToProp</details>
 
 The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
 
@@ -667,6 +675,8 @@ This gives a consumer of the web component the power to get the behavior they ne
 
 Or they can extend the web component, and set beReflective to true in the constructor, if needed all the time.
 
+</details>
+
 ### Custom events [TODO]
 
 PropDef supports specifying that when a property changes, it should emit an event.
@@ -678,6 +688,9 @@ But, like with the be-reflective option mentioned above, events can also be tail
 ```
 
 ### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
+
+<details>
+    <summary>Rxn-Suppls</summary>
 
 Let's take another look at one of our earlier propActions:
 
@@ -726,6 +739,8 @@ This also allows us to use reactions as opportunities to pass declarative JSON-i
 But we're jumping ahead ouf ourselves.
 
 Back to our Kreutzer exercises.
+
+</details>
 
 In our counter web component, let's make this code more declarative, as it is boilerplate code:
 
