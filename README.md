@@ -970,7 +970,6 @@ But what about web components that are only meant to be used within one applicat
 The first solution we provide for this is "X.tend".  
 
 ```JavaScript
-
 const mainTemplate = html`
 <button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>
@@ -994,8 +993,8 @@ const mainTemplate = html`
     }
 </style>
 `;
+const refs = {buttonElement: '*', spanElement: ''};
 
-const refs = {dData: '*', spanElement: ''};
 export abstract class CounterMi extends X{
     count = 0;
 
@@ -1009,9 +1008,9 @@ const propActions = [
     {[refs.spanElement]:  count}
   ]),
   ({domCache, self}) => ([
-    {[refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
+    {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ])
-];
+] as PropAction[];
 
 X.tend({
     name: 'counter-mi',
@@ -1042,16 +1041,14 @@ X.tend({
     class: CounterMi,
     mainTemplate: mainTemplate,
     propActions: propActions,
+    propDefs: {
+        ...
+    },
     refs: refs
 });
 ```
 
 [TODO]  Support non shadow DOM custom element.
 
-## Rendering Fluid Views
+## Rendering Fluid Views [TODO]
 
-So far, we've seen 1-n binding between a fixed set of DOM elements, and various instructions (event handlers, properties, etc.) 
-
-But we saw already with up and down buttons, that sometimes we want multiple DOM elements to be treated in the same way, as far as binding.  
-
-For that, and more, we utilize the trans-render library.
