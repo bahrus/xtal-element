@@ -37,31 +37,44 @@ xtal-element's target audience is those who are looking for web component helper
 3.  Provides first-class support for progressive enhancement, low bandwidth.
 4.  Efforts made to reap the most out of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities,  (hoping to include import maps soon).  
 5.  Some of xtal-element's utility functions adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.  This separation of concerns could, in theory, be extended to support other processes -- including build and server component processes (to be explored.)
-6.  Supports micro-front-ends with versioning.
+6.  Micro FrontEnd friendly versioning support.
 
 </details>
 
-## In defense of pomp and circumstance
+## Another duality paradox
+
+<details>
+    <summary>à la carte vs. buffet</summary>
 
 For many developers, a key criteria in evaluating which component library they like is based exclusively on how little "fuss" is required to create a new component.  I can totally relate to this concern.  However, every principle, including KISS, follows a law of diminishing returns.  
 
 There are two extremes to consider:
 
-1.  Creating a component meant to be highly reusable, leveraged in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc.
+1.  Creating a component meant to have a minimum footprint, while being highly reusable, leverageable in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc.
 2.  Creating a local component only to be used in a specific way by one application or one component.
 
-If you want to skip over the tender loving care needed for the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
+There's a lot of room in between these two extremes that should also be supported.
 
-But addressing the first goal is important, and understanding what primitives the simpler components rely on can only help. 
+The way xtal-element looks at this problem is via à la carte vs. buffet.
+
+We'll first be laboriously walking through the primitive building blocks xtal-element provides, and see how the developer can pick and choose precisely which building blocks to utilize.  If you are developing a non-visual component, why bear the weight of the visual display machinery, for example?  This à la carte approach is better suited for components that are closer in spirit to the first extreme listed above.
+
+If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
+
+</details> 
 
 ## Let's start from the very beginning
 
 <details>
-    <summary>Name it</summary>
+    <summary>Naming it</summary>
 
-The first thing you will want to do when defining a web component is to name it.  Polymer established a pattern whereby the name is provided by a static field.  xtal-element continues this tradition (as there are subtle advantages to doing so, not explained here).  
+The first thing you will want to do when defining a web component is to name it.  
 
-Currently, within a single document / application, that name must be unique.  This poses some contentious questions about what should happen if there's already a custom element with the same name.  xtal-element values micro-front-ends, and allows multiple versions running at the same time.  To accomplish this, do the following: 
+Of course, [the platform as an api for that](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define).
+
+Polymer established a pattern whereby the source of truth for the name is provided by a static field, to more closely associate the class with the custom element name, essentially.  xtal-element continues this tradition (as there are subtle advantages to doing so, not explained here).
+
+Currently, within a single document / application, that name must be unique.  This poses some contentious questions about what should happen if there's already a custom element with the same name.  xtal-element values Micro Frontends, and allows multiple versions running at the same time.  To accomplish this, xtal-element provides the following optional function for establishing the name of the component: 
 
 ```JavaScript
 import {define} from 'xtal-element/lib/define.js';
