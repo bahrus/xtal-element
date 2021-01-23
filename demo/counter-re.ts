@@ -1,6 +1,5 @@
 import {define} from '../lib/define.js';
 import {destructPropInfo, PropDef, PropAction} from '../types.js';
-import {getPropDefs} from '../lib/getPropDefs.js';
 import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';

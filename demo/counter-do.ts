@@ -1,6 +1,5 @@
 import {define} from '../lib/define.js';
-import {destructPropInfo, PropDef, ReactiveSurface, PropAction} from '../types.js';
-import {getPropDefs} from '../lib/getPropDefs.js';
+import {destructPropInfo, PropDef, ReactiveSurface, PropAction, PropDefMap} from '../types.js';
 import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -33,14 +32,12 @@ const mainTemplate = html`
     }
 </style>
 `;
-type PropDefMap = {
-    [P in keyof CounterDoProps]?: PropDef;
-}
+
 const nonFalsyObject: PropDef = {
     type: Object,
     stopReactionsIfFalsy: true
 };
-const propDefs: PropDefMap = {
+const propDefs: PropDefMap<CounterDoProps> = {
     clonedTemplate: nonFalsyObject,
     domCache: nonFalsyObject,
     count: {

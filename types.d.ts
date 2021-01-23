@@ -133,14 +133,19 @@ export interface PropDef{
     echoTo?: string;
 }
 
-export interface SlicedPropDefs{
+export type PropDefMap<T> = {
+    [P in keyof T]?: PropDef;
+}
+
+export interface SlicedPropDefs<T = any>{
     propDefs: PropDef[], 
     propNames: string[],
     strNames: string[],
     boolNames: string[],
     numNames: string[], 
     parseNames: string[], 
-    propLookup: {[key: string]: PropDef},
+    //propLookup: {[key: string]: PropDef},
+    propLookup: PropDefMap<T>,
 }
 
 export type destructPropInfo<T = any> = (x: T) => PropDef | destructPropInfo<T>[];
