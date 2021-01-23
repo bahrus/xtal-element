@@ -443,7 +443,7 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 <details>
     <summary>stopReactionsIfFalsy</summary>
 
-We can specify to not react to changes of a property when it is falsy:
+We can specify to not react to any changes of any prop that a PropAction depends on, if a specific is falsy:
 
 ```JavaScript
 {
@@ -451,6 +451,8 @@ We can specify to not react to changes of a property when it is falsy:
     stopReactionsIfFalsy: true
 }
 ```
+
+[TODO] Explain this better.
 
 </details>
 
