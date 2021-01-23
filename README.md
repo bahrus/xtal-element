@@ -1,11 +1,13 @@
 # xtal-element
 
+
 <details>
-<summary>Target Audience</summary>
+    <summary>Mission Statement</summary>
 
-**NB**:  Major changes in progress.
+xtal-element provides 
 
-xtal-element provides an opinionated "pattern" for creating a web component.  It does this by providing a handful of utility functions and classes, which facilitate the process.  
+1.  An opinionated "pattern" for creating a web component.  It does this by providing a handful of utility functions and classes, which facilitate the process. 
+2.  A base class which implements a combination of these  functions, resulting in less boilerplate.
 
 The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
@@ -17,72 +19,27 @@ xtal-element, though, embraces the duality paradox in a slightly different way. 
 
 xtal-element borrows some ideas from Rust and Python.
 
-xtal-element's utility functions and helper classes, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  But if a class of components will all use the same features, a base class combined with common mix-ins can always be constructed, that hides the boilerplate from extending classes. 
+xtal-element's utility functions and helper classes, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  
 
 [Catalyst](https://github.github.io/catalyst/) takes the same approach.
 
-Anyway, xtal-element's target audience is those who are looking for web component helpers that:
+But if a class of components will all use the same features, a base class combined with common mix-ins can always be constructed, that hides the boilerplate from extending classes.  xtal-element also provides one such base class.
 
-1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals, to define the HTML structure.
+</details>
+
+<details>
+<summary>Target Audience</summary>
+
+xtal-element's target audience is those who are looking for web component helpers that:
+
+1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals.
 2.  Takes extensibility and separation of concerns to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
-4.  Efforts made to reap the most out of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with the exception of support for import maps, which *seems* to be progressing into the standard, albeit slowly.  
+4.  Efforts made to reap the most out of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities,  (hoping to include import maps soon).  
 5.  Some of xtal-element's utility functions adopt the philosophy that it makes sense to keep the initialization process separate from the update process.  The initialization process typically involves doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  The update process focuses on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.  This separation of concerns could, in theory, be extended to support other processes -- including build and server component processes (to be explored.)
 6.  Supports micro-front-ends with versioning.
 
 </details>
-
-## What makes xtal-element different
-
-1.  xtal-element uses the [trans-render](https://github.com/bahrus/trans-render) library for updating the UI as properties change.
-2.  The separation of concerns that trans-render provides makes it possible to separate out the initial render from update renders.
-3.  Even the update renders can be easily partitioned based on which properties change.   Consider the following example:
-
-```JavaScript
-mainTemplate = createTemplate(/* html */`
-    <section>
-        <h1></h1>
-        <h2></h2>
-    </section>
-    <footer>
-        <h3></h3>
-        <h4></h4>
-    </footer>
-`);
-
-export class Foo extends HTMLElement{
-    prop1 = 'a';
-    prop2 = 'b';
-    prop3 = 'c';
-    ...
-    updateTransforms = [
-        ({prop1}) => ({
-            section:{
-                h1: prop1
-            }
-        }),
-        ({prop1, prop2}) => ({
-            section:{
-                h2: prop1 + prop2
-            }
-        }),
-        ({prop1, prop3}) => ({
-            footer: {
-                h3: prop1 + prop3
-            }
-        }),
-        ({prop1, prop2, prop3}) => ({
-            footer:{
-                h4: prop1 + prop2 + prop3
-            }
-        })
-    }]
-
-}
-```
-
-4.  A similar pattern is used for easily testable "propActions" - where property changes can be grouped/partitioned and turned into a logical workflow.
-5.  Many of these transforms and actions can be separated from the custom element class, leaving behind a pristine, mostly library-neutral class.
 
 ## In defense of pomp and circumstance
 
@@ -226,7 +183,8 @@ The third, optional parameter is where you can specify the default values, if no
 
 ## Reactive Prop Actions
 
-<details>ReactiveSurface
+<details>
+<summary>ReactiveSurface</summary>
 
 ```TypeScript
 import {Reactor} from 'xtal-element/lib/Reactor.js';
