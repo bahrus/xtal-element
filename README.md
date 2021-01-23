@@ -64,7 +64,7 @@ If you want to skip over the tender loving care / tedious discussion needed for 
 
 The first thing you will want to do when defining a web component is to name it.  
 
-Of course, [the platform as an api for that](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define).
+Of course, [the platform has an api for that](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define).
 
 Polymer established a pattern whereby the source of truth for the name is provided by a static field, to more closely associate the class with the custom element name, essentially.  xtal-element continues this tradition (as there are subtle advantages to doing so, not explained here).
 
