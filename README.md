@@ -15,15 +15,9 @@ xtal-element adopts a number of "opinions" that may be best suited for some type
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of the xtal-element facilities also implementing their business logic using methods, inheritance, etc.).  But xtal-element avoids mix-ins and base classes, as they will only get in the way of the developer's ability to create their own class hierarchy, and having maximum choice in what pieces to leverage from xtal-element.  
+xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of xtal-element's utilities, also implementing their business logic using standard OOP methodology -- methods, inheritance, etc.).  But xtal-element itself deviates considerably from standard OOP approaches in some critical ways.  
 
 xtal-element borrows some ideas from Rust and Python.
-
-xtal-element's utility functions and helper classes, are all imported à la carte, meaning you can pick and choose exactly what you want to use, and not incur any costs from "bundling" unused features unnecessarily into a mixin or base class.  The cost of this freedom is a little more boilerplate, more "primitives" to contend with.  
-
-[Catalyst](https://github.github.io/catalyst/) takes the same approach.
-
-But if a class of components will all use the same features, a base class combined with common mix-ins can always be constructed, that hides the boilerplate from extending classes.  xtal-element also provides one such base class.
 
 </details>
 
@@ -46,20 +40,20 @@ xtal-element's target audience is those who are looking for web component helper
 <details>
     <summary>à la carte vs. buffet</summary>
 
-For many developers, a key criteria in evaluating which component library they like is based exclusively on how little "fuss" is required to create a new component.  I can totally relate to this concern.  However, every principle, including KISS, follows a law of diminishing returns.  
+For many developers, a key criteria in evaluating which component library they like is based exclusively on how little "fuss" is required to create a new component.  I can totally relate to this concern.  However, in practice, there are two extremes to consider:  
 
-There are two extremes to consider:
-
-1.  Creating a component meant to have a minimum footprint, while being highly reusable, leverageable in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc.
-2.  Creating a local component only to be used in a specific way by one application or one component.
+1.  Creating, with tender loving care, a component meant to have a minimum footprint, while being highly reusable, leverageable in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc.
+2.  RAD-style creation of a local component only to be used in a specific way by one application or one component.
 
 There's a lot of room in between these two extremes that should also be supported.
 
-The way xtal-element looks at this problem is via à la carte vs. buffet.
+The way xtal-element looks at this problem is via the à la carte vs. buffet duality paradox.
 
-We'll first be laboriously walking through the primitive building blocks xtal-element provides, and see how the developer can pick and choose precisely which building blocks to utilize.  If you are developing a non-visual component, why bear the weight of the visual display machinery, for example?  This à la carte approach is better suited for components that are closer in spirit to the first extreme listed above.
+We'll first be laboriously walking through the primitive building blocks xtal-element provides, and see how the developer can pick and choose precisely which functions/classes to utilize.  If you are developing a non-visual component, why bear the weight of the visual display machinery, for example?  This *à la carte* approach is better suited for components that are closer in spirit to the first extreme listed above.
 
-If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  
+[Catalyst](https://github.github.io/catalyst/) takes the same approach.
+
+If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  You may then want to slowly review the first section as needed, in order to better understand the under pinnings.
 
 </details> 
 
