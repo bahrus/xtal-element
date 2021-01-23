@@ -5,6 +5,7 @@ import { html } from '../lib/html.js';
 import { Reactor } from '../lib/Reactor.js';
 import { DOMKeyPE } from '../lib/DOMKeyPE.js';
 import { xp } from '../lib/XtalPattern.js';
+import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 const mainTemplate = html `
 <button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>
 <style>
@@ -28,7 +29,7 @@ const mainTemplate = html `
     }
 </style>
 `;
-const refs = { dData: '*', countPart: '' };
+const refs = { buttonElement: '*', countPart: '' };
 const propActions = [
     xp.manageMainTemplate,
     ({ domCache, count }) => ([
@@ -36,18 +37,18 @@ const propActions = [
     ]),
     ({ domCache, self }) => ([
         {
-            [refs.dData]: [, { click: [self.changeCount, 'dataset.d', parseInt] }],
+            [refs.buttonElement]: [, { click: [self.changeCount, 'dataset.d', parseInt] }],
         },
     ]),
     xp.createShadow
 ];
-const propDefGetter = [
-    xp.props,
-    ({ count }) => ({
-        type: Number,
-    })
-];
-const propDefs = getPropDefs(propDefGetter);
+const propDefMap = {
+    ...xp.props,
+    count: {
+        type: Number
+    }
+};
+const slicedPropDefs = getSlicedPropDefs(propDefMap);
 export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
@@ -63,7 +64,7 @@ export class CounterRe extends HTMLElement {
         this.mainTemplate = mainTemplate;
     }
     connectedCallback() {
-        hydrate(this, propDefs, {
+        hydrate(this, slicedPropDefs, {
             count: 0
         });
     }
@@ -75,5 +76,5 @@ export class CounterRe extends HTMLElement {
     }
 }
 CounterRe.is = 'counter-re';
-letThereBeProps(CounterRe, propDefs, 'onPropChange');
+letThereBeProps(CounterRe, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterRe);

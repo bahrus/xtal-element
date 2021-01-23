@@ -1,5 +1,5 @@
 import {define} from '../lib/define.js';
-import {destructPropInfo, PropDef, PropAction} from '../types.js';
+import {destructPropInfo, PropDef, PropAction, PropDefMap} from '../types.js';
 import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -7,7 +7,7 @@ import {Reactor} from '../lib/Reactor.js';
 import {CounterDoProps} from './types.d.js';
 import {DOMKeyPE} from '../lib/DOMKeyPE.js';
 import {XtalPattern, xp} from '../lib/XtalPattern.js';
-import {transform} from 'trans-render/lib/transform.js';
+import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 
 
 const mainTemplate = html`
@@ -33,7 +33,7 @@ const mainTemplate = html`
     }
 </style>
 `;
-const refs = {dData: '*', countPart: ''};
+const refs = {buttonElement: '*', countPart: ''};
 const propActions = [
     xp.manageMainTemplate,
     ({domCache, count}: CounterRe) => ([
@@ -41,18 +41,20 @@ const propActions = [
     ]),
     ({domCache, self}: CounterRe) => ([
         {
-            [refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
+            [refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
         },
     ]),
     xp.createShadow
 ] as PropAction[];
-const propDefGetter= [
-    xp.props,
-    ({count}: CounterRe) => ({
-        type: Number,
-    })
-] as destructPropInfo[];
-const propDefs = getPropDefs(propDefGetter);
+
+
+const propDefMap: PropDefMap<CounterRe> = {
+    ...xp.props,
+    count: {
+        type: Number
+    }
+};
+const slicedPropDefs = getSlicedPropDefs(propDefMap);
 
 
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
@@ -68,7 +70,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     clonedTemplate: DocumentFragment | undefined; domCache: any;
     count!: number;
     connectedCallback(){
-        hydrate<CounterDoProps>(this, propDefs, {
+        hydrate<CounterDoProps>(this, slicedPropDefs, {
             count: 0
         });
     }
@@ -84,5 +86,5 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     
 
 }
-letThereBeProps(CounterRe, propDefs, 'onPropChange');
+letThereBeProps(CounterRe, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterRe);

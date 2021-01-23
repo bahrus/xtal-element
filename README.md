@@ -484,7 +484,7 @@ We can specify to not react to any changes of any prop that a PropAction depends
 
 </details>
 
-Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component showcased by webcomponents.dev, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, micro-frontend parallel versions, asynchronous reactions, etc.  The example shown below (if you expand) supports all these features.  Import statements are not shown, to avoid further embarrassment.  If you don't need these features, then the vanilla component showcased by webcomponents.dev is perfectly compatible with xtal-element.
+Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component showcased by webcomponents.dev, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, Micro Frontend parallel versions, asynchronous reactions, etc.  The example shown below (if you expand) supports all these features.  If you don't need these features, then the vanilla component showcased by webcomponents.dev is perfectly compatible with xtal-element.  Import statements are not shown, to avoid further embarrassment.  
 
 <details>
     <summary>Spot Check I - counter-do</summary>
@@ -513,18 +513,22 @@ const mainTemplate = html`
     }
 </style>
 `;
-const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterDo) => ({
-        type: Object,
-        stopReactionsIfFalsy: true
-    }),
-    ({count}: CounterDo) => ({
+
+const nonFalsyObject: PropDef = {
+    type: Object,
+    stopReactionsIfFalsy: true
+};
+const propDefs: PropDefMap<CounterDo> = {
+    clonedTemplate: nonFalsyObject,
+    domCache: nonFalsyObject,
+    count: {
         type: Number
-    })
-];
-const propDefs = getPropDefs(propDefGetter);
+    }
+};
+
 const slicedPropDefs = getSlicedPropDefs(propDefs);
-const refs = { downPart: '', upPart: '', countPart: '' };
+const s = '';
+const refs = { downPart: s, upPart: s, countPart: s};
 
 export class CounterDo extends HTMLElement implements CounterDoProps{
     static is = 'counter-do';
@@ -557,7 +561,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
                 this.count++;
             });
-            this.shadowRoot!.appendChild(clonedTemplate);
+            this.shadowRoot!.appendChild(clonedTemplate!);
             this.clonedTemplate = undefined;
         },
     ] as PropAction[];
@@ -591,7 +595,7 @@ connectedCallback(){
 }
 ```
 
-These two functions, mergeStr, and propUp, can be used independently of each other, and don't impose any arbitrary data structure requirements.  They also try to minimize assumptions.
+These two functions, mergeStr, and propUp, can be used independently of each other, and don't impose any arbitrary data structure requirements (in particular the PropDef structure).  The functions try to minimize assumptions, in other words.
 
 But the resulting code is a bit of a mind twister.
 
@@ -613,7 +617,7 @@ or more simply (without the ceremony of typing):
 hydrate(this, propDefs, defaultVals);
 ```
 
-where this is the custom element instance.
+where "this" is the custom element instance.
 
 "hydrate" should continue to be called within the connectedCallback lifecycle event.
 
@@ -668,7 +672,7 @@ This will also reflect to "data-[lisp-case-of-property]-is=" (for now, until cus
 
 This gives a consumer of the web component the power to get the behavior they need, instance by instance.
 
-Or they can extend the web component, and set beReflective to true in the constructor, if needed all the time.
+Or they can extend the web component, and set beReflective in the constructor, if needed all the time.
 
 </details>
 
@@ -731,7 +735,7 @@ So if the right-hand-side of the action returns a string, pass the context to an
 
 This also allows us to use reactions as opportunities to pass declarative JSON-ish syntax to template transformers (for example), which we will see below.
 
-But we're jumping ahead ouf ourselves.
+But we're jumping ahead of ourselves.
 
 Back to our Kreutzer exercises.
 
@@ -808,7 +812,7 @@ reactor = new Reactor(this, [
 
 Note the abbreviation "PE".  That stands for Properties/Events.
 
-The array [,{click:[changeCount, 'dataset.d', parseInt]}] is a nested tuple.  The first, undefined element allow us to set prop vals.
+The array [,{click:[changeCount, 'dataset.d', parseInt]}] is a nested tuple.  The first, undefined (in this case) member of the tuple allows us to set prop vals.
 
 The second element of the tuple is a mapping of declarative event handling.
 
@@ -876,7 +880,7 @@ The action:
 }
 ```
 
-... is apt to be found in most every visual component, so long as all components use the names "domCache" and "clonedTemplate." In that case, we can share it by doing the following:
+... is apt to be found in most every visual component that uses ShadowDOM, so long as all components use the names "domCache" and "clonedTemplate." In that case, we can share it by doing the following:
 
 1.  Make sure this field is defined in the class:
 
@@ -1040,7 +1044,7 @@ const mainTemplate = html`
     }
 </style>
 `;
-const refs = {buttonElement: '*', spanElement: ''};
+const refs = {buttonElements: '*', spanElement: ''};
 
 export abstract class CounterMi extends X{
     count = 0;
@@ -1055,7 +1059,7 @@ const propActions = [
     {[refs.spanElement]:  count}
   ]),
   ({domCache, self}) => ([
-    {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
+    {[refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ])
 ] as PropAction[];
 
@@ -1072,7 +1076,7 @@ X.tend({
     <summary>Talking points</summary>
 
 1.  Note that the class CounterMi is fairly library neutral.  With the exception of extending class X, none of the logic within is library specific.
-2.  For true library agnostic classes, use mixins.
+2.  For true library agnostic classes, use [mix-ins](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#mix-ins).
 </details>
 
 
