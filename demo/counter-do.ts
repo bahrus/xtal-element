@@ -37,7 +37,7 @@ const nonFalsyObject: PropDef = {
     type: Object,
     stopReactionsIfFalsy: true
 };
-const propDefs: PropDefMap<CounterDoProps> = {
+const propDefs: PropDefMap<CounterDo> = {
     clonedTemplate: nonFalsyObject,
     domCache: nonFalsyObject,
     count: {

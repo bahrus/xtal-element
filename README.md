@@ -171,56 +171,27 @@ export interface PropDef{
 
 So you can define a propDefs object that lists all the properties, as shown below.  
 
-The example below is for non-typescript users.
 
-```JavaScript
+```Typescript
 import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';
+import {PropDefMap} from 'xtal-element/types.d.js';
 
-const propDefs = {
+const propDefMap : PropDefMap<MyFavoriteThings> = {
     BrownPaperPackagesTiedUpWith: {
         type: String,
     }
 }
+const slicedPropDefs = getSlicedPropDefs(propDefs);
+
 export class MyFavoriteThings extends HTMLElement{
     onPropChange(name, prop, newValue){
         console.log(prop);
     }
 }
-letThereBeProps(MyFavoriteThings, propDefs, 'onPropChange');
+letThereBeProps(MyFavoriteThings, slickedPropDefs.propDefs, 'onPropChange');
 ```
 
 The third parameter, 'onPropChange' is optional.
-
-[TODO]:  Remove this functionality.  Can be achieved with keyin Typescript support and shared object.
-
-To heavy Typescript users, who strive for a "if it compiles, then it works" environment, there's a problem with the approach above. If the class has a method or initialization using the name of the property, BrownPaperPackagesTiedUpWith, it becomes more difficult to keep the two usages (propDefs vs class implementation) in sync.  
-
-In addition, often multiple properties will share the same characteristics. It would be nice to group them together and provide one  So we can use the following syntax instead to address both these concerns:
-
-
-With lots of typing, :
-
-```TypeScript
-import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';
-import {getSlicedPropDefs} from 'xtal-element/lib/getSlicedPropDefs.js';
-import {destructPropInfo, PropDef} from '../types.d.js';
-
-const propDefGetter : destructPropInfo[] = [
-    ({BrownPaperPackagesTiedUpWith}: MyFavoriteThings) => ({
-        type: String,
-    })
-];
-const propDefs = getPropDefs(propDefGetter);
-const slicedPropDefs = getSlicedPropDefs(propDefs);
-
-export class MyFavoriteThings extends HTMLElement{
-    BrownPaperPackagesTiedUpWith: String;
-    onPropChange(name: string, prop: PropDef, newVal: any){
-        console.log(prop);
-    }
-}
-letThereBeProps(MyFavoriteThings, slicedPropDefs.propDefs, 'onPropChange');
-```
 
 </details>
 
