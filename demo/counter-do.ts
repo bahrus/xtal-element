@@ -33,16 +33,21 @@ const mainTemplate = html`
     }
 </style>
 `;
-const propDefGetter : destructPropInfo[] = [
-    ({clonedTemplate, domCache}: CounterDo) => ({
-        type: Object,
-        stopReactionsIfFalsy: true
-    }),
-    ({count}: CounterDo) => ({
+type PropDefMap = {
+    [P in keyof CounterDoProps]?: PropDef;
+}
+const nonFalsyObject: PropDef = {
+    type: Object,
+    stopReactionsIfFalsy: true
+};
+const propDefs: PropDefMap = {
+    clonedTemplate: nonFalsyObject,
+    domCache: nonFalsyObject,
+    count: {
         type: Number
-    })
-];
-const propDefs = getPropDefs(propDefGetter);
+    }
+};
+
 const slicedPropDefs = getSlicedPropDefs(propDefs);
 const s = '';
 const refs = { downPart: s, upPart: s, countPart: s};

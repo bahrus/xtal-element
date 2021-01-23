@@ -1,5 +1,4 @@
 import { define } from '../lib/define.js';
-import { getPropDefs } from '../lib/getPropDefs.js';
 import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
@@ -30,16 +29,17 @@ const mainTemplate = html `
     }
 </style>
 `;
-const propDefGetter = [
-    ({ clonedTemplate, domCache }) => ({
-        type: Object,
-        stopReactionsIfFalsy: true
-    }),
-    ({ count }) => ({
+const nonFalsyObject = {
+    type: Object,
+    stopReactionsIfFalsy: true
+};
+const propDefs = {
+    clonedTemplate: nonFalsyObject,
+    domCache: nonFalsyObject,
+    count: {
         type: Number
-    })
-];
-const propDefs = getPropDefs(propDefGetter);
+    }
+};
 const slicedPropDefs = getSlicedPropDefs(propDefs);
 const s = '';
 const refs = { downPart: s, upPart: s, countPart: s };
