@@ -53,7 +53,7 @@ We'll first be laboriously walking through the primitive building blocks xtal-el
 
 [Catalyst](https://github.github.io/catalyst/) takes the same approach.
 
-If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony solution xtal component section](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  You may then want to slowly review the first section as needed, in order to better understand the under pinnings.
+If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony X base class discussion](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  You may then want to slowly review the first sections as needed, in order to better understand the under pinnings.
 
 </details> 
 
