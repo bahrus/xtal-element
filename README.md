@@ -707,6 +707,10 @@ Back to our Kreutzer exercises.
 
 </details>
 
+## Binding
+
+<details>
+    <summary>Attaching events / setting props</summary>
 In our counter web component, let's make this code more declarative, as it is boilerplate code:
 
 
@@ -786,9 +790,14 @@ changeCount(e: Event){
 }
 ```
 
-But we created a nice, pristine method which is UI neutral.  To allow us to do that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluating target.dataset.d, and applying parseInt to that value."
+But our first changeCount method is a nice, pristine method which is UI neutral.  To allow us to bind to that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluating target.dataset.d, and applying parseInt to that value."
+
+</details>
 
 ### Ditto reactions
+
+<details>
+    <summary>'"'</summary>
 
 This is pretty annoying to DRYophiles:
 
@@ -808,15 +817,24 @@ We can DRYphon out the wasted typing, using ditto notation:
 ]),
 ```
 
+</details>
+
 ### Nested reactions
+
+<details>
+    <summary>Unnecessarily nested section</summary>
 
 Reactions can be nested:
 
 ```TypeScript
     propActions = [linkFoundYourDream, [linkFoundYourPlace]];
 ```
+</details>
 
 ### Shareable Actions
+
+<details>
+    <summary>DRY section</summary>
 
 The action:
 
@@ -845,12 +863,13 @@ const linkClonedTemplate = ({domCache, clonedTemplate, self}) => {
     self.clonedTemplate = undefined;
 }
 ```
+</details>
 
 ### XtalPattern
 
 The library XtalPattern removes as much of the common boilerplate as possible (without using class inheritance or mixins).  It provides an interface.  Implementing the interface with Typescript will hopefully help the developer remember what needs to be done for a complete component.
 
-Using XtalPattern, our component now looks like what's shown below (after expanding)
+Using XtalPattern, our component now looks like what's shown below (after expanding).  Remember, we are still in à la carte mode.
 
 <details>
     <summary>Spot Check II - counter-ro</summary>
@@ -879,7 +898,7 @@ const mainTemplate = html`
     }
 </style>
 `;
-const refs = {dData: '*', countPart: ''};
+const refs = {buttonElement: '*', countPart: ''};
 const propActions = [
     xp.manageMainTemplate,
     ({domCache, count}: CounterRe) => ([
@@ -887,7 +906,7 @@ const propActions = [
     ]),
     ({domCache, self}: CounterRe) => ([
         {
-            [refs.dData]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
+            [refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
         },
     ]),
     xp.createShadow
