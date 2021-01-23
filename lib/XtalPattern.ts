@@ -10,6 +10,11 @@ const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
     self.clonedTemplate = undefined;
 }
 
+const appendClone = ({domCache, clonedTemplate, self}: XtalPattern) => {
+    if(domCache===undefined) return;
+    self.appendChild!(clonedTemplate as Node);
+}
+
 const attachShadow = ({handlersAttached, domCache, self}: XtalPattern) => {
     if(handlersAttached) createShadow(self);
 }
@@ -35,4 +40,4 @@ export const props = [
     
 ] as destructPropInfo[];
 
-export const xp = {createShadow, attachShadow, manageMainTemplate, props};
+export const xp = {createShadow, attachShadow, manageMainTemplate, props, appendClone};

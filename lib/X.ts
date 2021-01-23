@@ -23,7 +23,7 @@ export  class X extends HTMLElement {
 
 
     static tend(config: XConfig){
-        const propActions = [xp.manageMainTemplate, config.propActions, xp.createShadow] as PropAction[];
+        const propActions = [xp.manageMainTemplate, config.propActions, config.noShadow ? xp.appendClone : xp.createShadow] as PropAction[];
 
         class newClass extends (config.class || X){
             static is = config.name;

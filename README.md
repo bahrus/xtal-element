@@ -1071,17 +1071,25 @@ Support for custom property settings is supported:
 ```JavaScript
 X.tend({
     name: 'counter-mi',
-    class: CounterMi,
-    mainTemplate: mainTemplate,
-    propActions: propActions,
+    ...
     propDefs: {
         ...
     },
-    refs: refs
+    ...
 });
 ```
 
-[TODO]  Support non shadow DOM custom element.
+To specify not to use ShadowDOM:
+
+```JavaScript
+X.tend({
+    name: 'counter-mi',
+    ...
+    noShadow: true,
+    ...
+});
+```
+
 
 ## Rendering Fluid Views [TODO]
 

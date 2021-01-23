@@ -39,6 +39,7 @@ export interface XConfig{
     mainTemplate: HTMLTemplateElement;
     propActions: PropAction[];
     propDefs?: PropDef[];
+    noShadow?: boolean;
     name: string;
     class?: {new(): newX};
     refs: any;
