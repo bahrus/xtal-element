@@ -53,7 +53,7 @@ We'll first be laboriously walking through the primitive building blocks xtal-el
 
 [Catalyst](https://github.github.io/catalyst/) takes the same approach.
 
-If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony X base class discussion](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  You may then want to slowly review the first sections as needed, in order to better understand the under pinnings.
+If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony X base class discussion](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  You may then want to slowly review the first sections as needed, in order to better understand the underpinnings.
 
 </details> 
 
@@ -689,9 +689,9 @@ reactor = new Reactor(this, [
 ]);
 ```
 
-So if the right-hand-side of the action returns a string, pass the context class myStringProcessor.  If it returns an array, use myArrayProcessor.
+So if the right-hand-side of the action returns a string, pass the context to an instance of class myStringProcessor.  If it returns an array, use myArrayProcessor.  Etc.
 
-Now our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
+*Now* our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
 
 ```JavaScript
 ({prop1}) => ({
