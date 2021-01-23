@@ -107,7 +107,7 @@ import {DoReMi} from 'DoReMi/DoReMi.js';
 const firstThreeNotes = document.createElement(DoReMi.isReally);
 ```
 
-Most of the time, DoReMi.isReally will equal "do-re-mi" but sometimes it will be "do-re-me-1", even more rarely it could be "do-re-me-2", etc.
+Most of the time, DoReMi.isReally will equal "do-re-mi" but sometimes it will be "do-re-mi-1", even more rarely it could be "do-re-mi-2", etc.
 
 This solution works best for web components that either use a programmatic api as shown above, or use templates for the UI definition, as the template, or clone, can be dynamically modified to adjust the element names prior to landing inside the live DOM tree.
 
@@ -120,7 +120,58 @@ This solution works best for web components that either use a programmatic api a
 <details>
     <summary>Prop Defs</summary>
 
-Not so much typing, but more magic strings:
+xtal-element has a Typescript Interface "PropDef" that it uses to define the characteristics of a property.
+
+```Typescript
+export interface PropDef{
+    /** Name of property */
+    name?: string;
+    /**
+     * The type of the property.  If you don't want any support for attributes, use "Object" even if it is a number/string/boolean.
+     */
+    type?: Boolean | String | Number | Object;
+    /**
+     * Reflect property changes to data-*
+     */
+    reflect?: boolean;
+    /**
+     * Spawn non-bubbling custom event when property changes.  Name of event is [lisp-case-of-property-name]-changed.
+     */
+    notify?: CustomEventInit;
+    /**
+     * Parse corresponding (lisp-cased of property name) attribute as JSON string for Object type properties
+     */
+    parse?: boolean;
+    /**
+     * Don't do anything if new value is the same as the old value.
+     */
+    dry?: boolean;
+    /**
+     * Console.log when property changes
+     */
+    log?: boolean;
+    /**
+     * Insert debugger breakpoint when property changes
+     */
+    debug?: boolean;
+    /**
+     * React to property change asynchronously
+     */
+    async?: boolean;
+    /**
+     * Block reactions containing this property if property is falsey
+     */
+    stopReactionsIfFalsy?: boolean;
+    /**
+     * Copy property value to another value specified by echoTo
+     */
+    echoTo?: string;
+}
+```
+
+So you can define a propDefs object that lists all the properties, as shown below.  
+
+The example below is for non-typescript users.
 
 ```JavaScript
 import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';
@@ -140,8 +191,14 @@ letThereBeProps(MyFavoriteThings, propDefs, 'onPropChange');
 
 The third parameter, 'onPropChange' is optional.
 
+[TODO]:  Remove this functionality.  Can be achieved with keyin Typescript support and shared object.
 
-With lots of typing, "if it compiles, then it works" attitude:
+To heavy Typescript users, who strive for a "if it compiles, then it works" environment, there's a problem with the approach above. If the class has a method or initialization using the name of the property, BrownPaperPackagesTiedUpWith, it becomes more difficult to keep the two usages (propDefs vs class implementation) in sync.  
+
+In addition, often multiple properties will share the same characteristics. It would be nice to group them together and provide one  So we can use the following syntax instead to address both these concerns:
+
+
+With lots of typing, :
 
 ```TypeScript
 import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';

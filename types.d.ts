@@ -89,16 +89,47 @@ export interface PropInfo{
 }
 
 export interface PropDef{
-    type?: Boolean | String | Number | Object;
-    reflect?: boolean;
-    notify?: CustomEventInit;
-    parse?: boolean;
-    dry?: boolean;
-    log?: boolean;
-    debug?: boolean;
-    async?: boolean;
+    /** Name of property */
     name?: string;
+    /**
+     * The type of the property.  If you don't want any support for attributes, use "Object" even if it is a number/string/boolean.
+     */
+    type?: Boolean | String | Number | Object;
+    /**
+     * Reflect property changes to data-*
+     */
+    reflect?: boolean;
+    /**
+     * Spawn non-bubbling custom event when property changes.  Name of event is [lisp-case-of-property-name]-changed.
+     */
+    notify?: CustomEventInit;
+    /**
+     * Parse corresponding (lisp-cased of property name) attribute as JSON string for Object type properties
+     */
+    parse?: boolean;
+    /**
+     * Don't do anything if new value is the same as the old value.
+     */
+    dry?: boolean;
+    /**
+     * Console.log when property changes
+     */
+    log?: boolean;
+    /**
+     * Insert debugger breakpoint when property changes
+     */
+    debug?: boolean;
+    /**
+     * React to property change asynchronously
+     */
+    async?: boolean;
+    /**
+     * Block reactions containing this property if property is falsey
+     */
     stopReactionsIfFalsy?: boolean;
+    /**
+     * Copy property value to another value specified by echoTo
+     */
     echoTo?: string;
 }
 
