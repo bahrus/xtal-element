@@ -1027,15 +1027,15 @@ Again, for HTML-centric environments (such as server-centric or HTML-module base
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
-</details>
-
-### Low ceremony xtal components
-
 As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
 But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use them, for example?
 
 The first solution we provide for this is "X.tend".  
+
+</details>
+
+### Low ceremony X base class
 
 ```JavaScript
 const mainTemplate = html`
@@ -1061,7 +1061,7 @@ const mainTemplate = html`
     }
 </style>
 `;
-const refs = {buttonElements: '*', spanElement: ''};
+const refs = {buttonElement: '*', spanElement: ''};
 
 export abstract class CounterMi extends X{
     count = 0;
@@ -1076,7 +1076,7 @@ const propActions = [
     {[refs.spanElement]:  count}
   ]),
   ({domCache, self}) => ([
-    {[refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
+    {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ])
 ] as PropAction[];
 
@@ -1097,11 +1097,18 @@ X.tend({
 </details>
 
 
-Missing features of low-ceremony Xtal components:
+<!--Missing features of low-ceremony Xtal components:
+[TODO]
+hydrating properties support, attributes.-->
 
-hydrating properties support, attributes.
+<details>
+    <summary>Custom property settings</summary>
 
-Support for custom property settings is supported:
+In the low ceremony example above, note that we didn't have to define the properties supported by the web component.  X infers the properties based on the PropAction signatures.  This should be sufficient for rapid web component development.
+
+But what if you are developing a more nuanced web component, and need to fine tune the properties?
+
+You can specify the propDefs explicitly:
 
 ```JavaScript
 X.tend({
