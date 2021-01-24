@@ -592,7 +592,6 @@ For this simple "counter" web component, the code shown above (if you expand) is
 Let's look at these five lines of code in our counter-do example above:
 
 ```JavaScript
-const propDefs = getPropDefs(propDefGetter);
 const slicedPropDefs = getSlicedPropDefs(propDefs);
 ...
 connectedCallback(){
@@ -646,7 +645,7 @@ The custom element specs provide for a way to monitor for attribute changes.  xt
 
 ```TypeScript
 attributeChangedCallback(name: string, oldValue: string, newValue: string){
-    passAttrToProp(this, slicedPropDefs, name: string, oldValue: string, newValue: string);
+    passAttrToProp(this, slicedPropDefs, name, oldValue, newValue);
 }
 
 ```
@@ -1063,7 +1062,7 @@ const mainTemplate = html`
 `;
 const refs = {buttonElement: '*', spanElement: ''};
 
-export abstract class CounterMi extends X{
+export class CounterMi extends X{
     count = 0;
 
     changeCount(delta: number){
