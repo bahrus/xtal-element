@@ -1,5 +1,5 @@
 import { XtalElement } from './XtalElement.js';
-import { X } from './X.js';
+import { X } from './legacy/X.js';
 import { X as newX} from './lib/X.js';
 import {de} from './xtal-latx.js';
 import {IHydrate} from 'trans-render/types.d.js';

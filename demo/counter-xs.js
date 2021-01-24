@@ -1,4 +1,4 @@
-import { X } from '../X.js';
+import { X } from '../legacy/X.js';
 const template = /* html */ `
 <button data-d=-1>-</button><span></span><button data-d=1>+</button>
 <style>

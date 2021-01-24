@@ -1,4 +1,4 @@
-import {X, TransformGetter, TransformValueOptions} from '../X.js';
+import {X, TransformGetter, TransformValueOptions} from '../legacy/X.js';
 import {PESettings} from 'trans-render/types.d.js';
 import { SelectiveUpdate } from '../types.js';
 

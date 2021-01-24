@@ -1,13 +1,16 @@
-import { debounce } from './debounce.js';
-export function getScript(srcScript, ignore) {
+import {debounce} from '../lib/debounce.js';
+export interface IScriptInfo{
+    args: string[],
+    body: string,
+}
+export function  getScript(srcScript: HTMLScriptElement, ignore: string) : IScriptInfo | null{
     const inner = srcScript.innerHTML.trim();
     //const trEq = 'tr = ';
-    if (inner.startsWith('(') || inner.startsWith(ignore)) {
-        const ied = self['xtal_latx_ied']; //IE11
-        if (ied !== undefined) {
+    if(inner.startsWith('(') || inner.startsWith(ignore)){
+        const ied = (<any>self)['xtal_latx_ied']; //IE11
+        if(ied !== undefined){ 
             return ied(inner);
-        }
-        else {
+        }else{
             const iFatArrowPos = inner.indexOf('=>');
             const c2del = ['(', ')', '{', '}'];
             let lhs = inner.substr(0, iFatArrowPos).replace(ignore, '').trim();
@@ -16,22 +19,23 @@ export function getScript(srcScript, ignore) {
             return {
                 args: lhs.split(',').map(s => s.trim()),
                 body: rhs,
-            };
+            }
         }
-    }
-    else {
+        
+    }else{
         return null;
     }
+    
 }
-export function destruct(target, prop, megaProp = '_input') {
-    let debouncers = target._debouncers;
-    if (!debouncers)
-        debouncers = target._debouncers = {};
+
+export function destruct(target: any, prop: string, megaProp: string = '_input'){
+    let debouncers = (<any>target)._debouncers;
+    if(!debouncers) debouncers =  (<any>target)._debouncers = {};
     let debouncer = debouncers[megaProp];
-    if (!debouncer) {
+    if(!debouncer){
         debouncer = debouncers[megaProp] = debounce((t) => {
-            t[megaProp] = Object.assign({}, t[megaProp]);
-        }, 10); //use task sceduler?
+            (<any>t)[megaProp] = Object.assign({}, (<any>t)[megaProp]);
+        }, 10);  //use task sceduler?
     }
     const symb = Symbol(prop);
     const origVal = target[prop];
@@ -41,19 +45,18 @@ export function destruct(target, prop, megaProp = '_input') {
         },
         set: function (val) {
             this[symb] = val;
-            if (this[megaProp]) {
+            if(this[megaProp]) {
                 this[megaProp][prop] = val;
                 debouncer(this);
                 //this[megaProp] = Object.assign({}, this[megaProp]);
-            }
-            else {
-                this[megaProp] = { [prop]: val };
+            }else{
+                this[megaProp] = {[prop]: val}; 
             }
         },
         enumerable: true,
         configurable: true,
     });
-    if (origVal !== undefined) {
+    if(origVal !== undefined){
         target[prop] = origVal;
     }
 }

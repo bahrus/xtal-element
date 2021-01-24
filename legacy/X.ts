@@ -1,8 +1,8 @@
-import { XtalElement, define } from './XtalElement.js';
+import { XtalElement, define } from '../XtalElement.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
-import { tendArgs, SelectiveUpdate, TransformGetter, } from './types.d.js';
+import { tendArgs, SelectiveUpdate, TransformGetter, } from '../types.js';
 
-export { TransformGetter, TransformValueOptions } from './types.d.js';
+export { TransformGetter, TransformValueOptions } from '../types.js';
 
 function defProto<T extends X = X>(newClass: any, args: tendArgs<T>){
     const p = newClass.prototype;

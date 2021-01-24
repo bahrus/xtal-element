@@ -1,6 +1,6 @@
-import {XtalRoomWithAView, PromisedInitViewAngle} from './XtalRoomWithAView.js';
-import {AttributeProps} from './types.d.js';
-import {getFullURL, IBaseLinkContainer} from './base-link-id.js';
+import {XtalRoomWithAView, PromisedInitViewAngle} from '../XtalRoomWithAView.js';
+import {AttributeProps} from '../types.js';
+import {getFullURL, IBaseLinkContainer} from '../base-link-id.js';
 export {
     SelectiveUpdate, PropDefGet, TransformGetter, PropAction, AttributeProps, tendArgs, EventScopeT, EventScopeTB, EventScopeTBC, 
     EventScopeTBCCo, EventScope, EventScopes, IXtallatXI, PropInfo, RenderContext, IHydrate, Plugins, Plugin, RenderOptions,
@@ -8,8 +8,8 @@ export {
     PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings,
     PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform,
     MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, EvaluatedAttributeProps
-} from './types.d.js';
-export {XtallatX, camelToLisp, de, intersection, define, lispToCamel, mergeProps, p, symbolize} from './xtal-latx.js';
+} from '../types.js';
+export {XtallatX, camelToLisp, de, intersection, define, lispToCamel, mergeProps, p, symbolize} from '../xtal-latx.js';
 
 export abstract class XtalFetchViewElement<TInitViewModel = any, TRefreshViewModel = TInitViewModel> extends XtalRoomWithAView<TInitViewModel, TRefreshViewModel> implements IBaseLinkContainer{
 

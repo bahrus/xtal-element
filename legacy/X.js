@@ -1,4 +1,4 @@
-import { XtalElement, define } from './XtalElement.js';
+import { XtalElement, define } from '../XtalElement.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
 function defProto(newClass, args) {
     const p = newClass.prototype;
