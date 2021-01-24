@@ -102,7 +102,7 @@ export interface PropDef{
     /**
      * Spawn non-bubbling custom event when property changes.  Name of event is [lisp-case-of-property-name]-changed.
      */
-    notify?: CustomEventInit;
+    notify?: boolean;
     /**
      * Parse corresponding (lisp-cased of property name) attribute as JSON string for Object type properties
      */
