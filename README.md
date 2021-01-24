@@ -429,7 +429,7 @@ propActionsHub(propAction){
 
 ## Development Section
 
-The next few sections are going to prove to be a bit dry reading.  Think of it as the [boring](https://youtu.be/okWr-tzwOEg?t=78) [development](<https://en.wikipedia.org/wiki/Violin_Sonata_No._9_(Beethoven)>) [section](https://en.wikipedia.org/wiki/Musical_development) of a sonata.
+The next few sections are going to prove to be a bit dry reading.  Think of it as the [boring](https://youtu.be/okWr-tzwOEg?t=78) [development](https://en.wikipedia.org/wiki/Musical_development) section of a [sonata](<https://en.wikipedia.org/wiki/Violin_Sonata_No._9_(Beethoven)>).
 
 Previously, the way xtal-element handled visual updates was in a way that closely resembled the "reactor" functionality, but there was no unifying force, and also picking and choosing which libraries to use was overly complicated, resulting in larger than needed base footprint..
 
