@@ -7,7 +7,7 @@
 xtal-element provides 
 
 1.  An opinionated "pattern" for creating a web component.  It does this by providing a handful of utility functions and classes, which facilitate the process. 
-2.  A base class which implements a combination of these  functions, resulting in less boilerplate.
+2.  A base class which implements a combination of these functions, resulting in less boilerplate.
 
 The great thing about web components is that they are the web equivalent of Martin Luther King's "I have a dream" speech.  Little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
@@ -35,10 +35,10 @@ xtal-element's target audience is those who are looking for web component helper
 
 </details>
 
-## Another duality paradox
-
 <details>
     <summary>à la carte vs. buffet</summary>
+
+## Another duality paradox
 
 For many developers, a key criteria in evaluating which component library they like is based exclusively on how little "fuss" is required to create a new component.  I can totally relate to this concern.  However, in practice, there are two extremes to consider:  
 
@@ -57,10 +57,10 @@ If you want to skip over the tender loving care / tedious discussion needed for 
 
 </details> 
 
-## Let's start from the very beginning
-
 <details>
-    <summary>Naming it</summary>
+    <summary>Defining</summary>
+
+## Let's start from the very beginning
 
 The first thing you will want to do when defining a web component is to name it.  
 
@@ -115,10 +115,10 @@ This solution works best for web components that either use a programmatic api a
 
 </details>
 
-## Let there be props
-
 <details>
-    <summary>Prop Defs</summary>
+    <summary>PropDefs</summary>
+
+## Let there be props
 
 xtal-element has a Typescript Interface "PropDef" that it uses to define the characteristics of a property.
 
