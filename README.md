@@ -686,7 +686,7 @@ Or they can extend the web component, and set beReflective in the constructor, i
 </details>
 
 <details>
-    <summary>Be Noticed
+    <summary>Be Noticed</summary>
 
 ### Custom events [TODO]
 
