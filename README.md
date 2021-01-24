@@ -195,10 +195,12 @@ The third parameter, 'onPropChange' is optional.
 
 </details>
 
-## Support for asynchronous loading
+
 
 <details>
     <summary>propUp</summary>
+
+## Support for asynchronous loading
 
 If prop values might be passed to an element before the [element becomes registered](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) (always best to be prepared for this to happen), then you can account for this by utilizing the "propUp" function:
 
@@ -216,10 +218,10 @@ export class SixteenGoingOnSeventeen extends HTMLElement{
 The third, optional parameter is where you can specify the default values, if nothing was passed in yet.
 </details>
 
-## Reactive Prop Actions
-
 <details>
-<summary>ReactiveSurface</summary>
+<summary>Reactive Surface</summary>
+
+## Reactive Prop Actions
 
 ```TypeScript
 import {Reactor} from 'xtal-element/lib/Reactor.js';
@@ -422,6 +424,9 @@ propActionsHub(propAction){
 
 </details>
 
+<details>
+    <summary>Incremental Improvements</summary>
+
 ## Development Section
 
 The next few sections are going to prove to be a bit dry reading.  Think of it as the [boring](https://youtu.be/okWr-tzwOEg?t=78) [development](<https://en.wikipedia.org/wiki/Violin_Sonata_No._9_(Beethoven)>) [section](https://en.wikipedia.org/wiki/Musical_development) of a sonata.
@@ -430,10 +435,12 @@ Previously, the way xtal-element handled visual updates was in a way that closel
 
 What we will be discussing for a while will finally lead up to our rendering approach, but first we must go through some [exercises](https://youtu.be/TPtDbHXkDp4?t=187) to get there.
 
-### Planting flags in a cloned template
+
 
 <details>
     <summary>pinTheDOMToKeys</summary>
+
+### Planting flags in a cloned template
 
 xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references to DOM elements in a cloned template:
 
@@ -466,10 +473,12 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 </details>
 
-### Ignoring prop actions when one or more dependency value is falsy.
+
 
 <details>
     <summary>stopReactionsIfFalsy</summary>
+
+### Ignoring prop actions when one or more dependency value is falsy.
 
 We can specify to not react to any changes of any prop that a PropAction depends on, if a specific is falsy:
 
@@ -575,10 +584,10 @@ define(CounterDo);
 
 For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
 
-### Property hydration, in detail
-
 <details>
     <summary>hydrate</summary>
+
+### Property hydration, in detail
 
 Let's look at these five lines of code in our counter-do example above:
 
@@ -623,10 +632,10 @@ where "this" is the custom element instance.
 
 </details>
 
-### A tribute to attributes
-
 <details>
 <summary>passAttrToProp</summary>
+
+### A tribute to attributes
 
 The custom element specs provide for a way to monitor for attribute changes.  xtal-element provides some helper functions for that, which you can pick and choose from -- 
 
@@ -676,6 +685,9 @@ Or they can extend the web component, and set beReflective in the constructor, i
 
 </details>
 
+<details>
+    <summary>Be Noticed
+
 ### Custom events [TODO]
 
 PropDef supports specifying that when a property changes, it should emit an event.
@@ -686,10 +698,12 @@ But, like with the be-reflective option mentioned above, events can also be tail
 <my-custom-element be-noticed='["href", "disabled", {"myProp":{"bubbles": true}]'></my-custom-element>
 ```
 
-### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
+</details>
 
 <details>
     <summary>Rxn-Suppls</summary>
+
+### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
 
 Let's take another look at one of our earlier propActions:
 
@@ -741,10 +755,11 @@ Back to our Kreutzer exercises.
 
 </details>
 
-## Binding
-
 <details>
     <summary>Attaching events / setting props</summary>
+
+## Binding
+
 In our counter web component, let's make this code more declarative, as it is boilerplate code:
 
 
@@ -828,10 +843,10 @@ But our first changeCount method is a nice, pristine method which is UI neutral.
 
 </details>
 
-### Ditto reactions
-
 <details>
     <summary>'"'</summary>
+
+### Ditto reactions
 
 This is pretty annoying to DRYophiles:
 
@@ -853,10 +868,10 @@ We can DRYphon out the wasted typing, using ditto notation:
 
 </details>
 
-### Nested reactions
-
 <details>
     <summary>Unnecessarily nested section</summary>
+
+### Nested reactions
 
 Reactions can be nested:
 
@@ -865,10 +880,10 @@ Reactions can be nested:
 ```
 </details>
 
-### Shareable Actions
-
 <details>
     <summary>DRY section</summary>
+
+### Shareable Actions
 
 The action:
 
@@ -1011,6 +1026,8 @@ One looping web component confirmed to be compatible with xtal-element is [ib-id
 Again, for HTML-centric environments (such as server-centric or HTML-module based web components) why not use web components for this?
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
+
+</details>
 
 ### Low ceremony xtal components
 
