@@ -127,6 +127,11 @@ export interface PropDef{
      * Block reactions containing this property if property is falsey
      */
     stopReactionsIfFalsy?: boolean;
+
+    /**
+     * Block notification if property is falsey
+     */
+    stopNotificationIfFalsy?: boolean;
     /**
      * Copy property value to another value specified by echoTo
      */

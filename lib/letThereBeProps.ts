@@ -50,7 +50,7 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
                 }
                 if(prop.debug) debugger;
                 if(callbackMethodName !== undefined) this[callbackMethodName](name, prop, nv);
-                if(prop.notify !== undefined){
+                if(prop.notify !== undefined && (!prop.stopNotificationIfFalsy || nv)){
                     const eventInit: CustomEventInit = {
                         detail: {
                             value: nv
