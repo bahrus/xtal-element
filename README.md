@@ -480,16 +480,24 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 ### Ignoring prop actions when one or more dependency value is falsy.
 
-We can specify to not react to any changes of any prop that a PropAction depends on, if a specific is falsy:
+Frequently it arises that a number of propActions depend on a key property, and those actions don't make sense to execute unless that property is not falsey.  domCache is one such property, since many propActions centered around domCache will be focused around binding elements from the domCache.  So that means lots of undefined checks in each propAction:
 
 ```JavaScript
-{
+({domCache, count}: CounterDo) => {
+    if(domCache === undefined) return;
+    domCache[refs.countPart].textContent = count.toString();
+},
+```
+
+To avoid this nuisance, we can specify that any propAction depending on this property should not be applied until the property is not falsy:
+
+```JavaScript
+domCache: {
     type: Object,
     stopReactionsIfFalsy: true
 }
 ```
 
-[TODO] Explain this better.
 
 </details>
 
@@ -1065,7 +1073,7 @@ const propActions = [
   ({domCache, self}) => ([
     {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ]),
-  ({count}) => ([
+  ({domCache, count}) => ([
     {[refs.spanElement]:  count}
   ])
 ];
