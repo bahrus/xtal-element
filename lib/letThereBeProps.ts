@@ -57,7 +57,7 @@ export function letThereBeProps(elementClass: any, props: PropDef[], callbackMet
                         }
                     };
                     Object.assign(eventInit, prop.notify);
-                    this.dispatchEvent(new CustomEvent(camelToLisp(name) + '-changed'), eventInit);
+                    this.dispatchEvent(new CustomEvent(camelToLisp(name) + '-changed', eventInit));
                 }
                 if(prop.echoTo !== undefined){
                     this[prop.echoTo] = nv;

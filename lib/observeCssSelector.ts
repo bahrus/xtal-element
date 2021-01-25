@@ -1,5 +1,3 @@
-//import {getShadowContainer} from './getShadowContainer.js';
-
 type Constructor<T = {}> = new (...args: any[]) => T;
 
 declare global{
