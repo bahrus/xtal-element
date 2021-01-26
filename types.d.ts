@@ -1,7 +1,7 @@
-import { XtalElement } from './XtalElement.js';
+import { XtalElement } from './legacy/XtalElement.js';
 import { X } from './legacy/X.js';
 import { X as newX} from './lib/X.js';
-import {de} from './xtal-latx.js';
+import {de} from './legacy/xtal-latx.js';
 import {IHydrate} from 'trans-render/types.d.js';
 import {RenderContext, RenderOptions, Plugins} from 'trans-render/types.d.js';
 export {RenderContext, IHydrate, Plugins, Plugin, RenderOptions, TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions, PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEUnionSettings, PEASettings, PEAUnionSettings, PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform, MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, PlugInArgs, MetaInstructions, CAT, CATMI, CATMINT, CATMINT_Conditional, InsOrRep, Na, Nap, Nappe, NappeUnion, EvaluatedAttributeProps} from 'trans-render/types.d.js';
@@ -149,11 +149,10 @@ export interface SlicedPropDefs<T = any>{
     boolNames: string[],
     numNames: string[], 
     parseNames: string[], 
-    //propLookup: {[key: string]: PropDef},
     propLookup: PropDefMap<T>,
 }
 
-export type destructPropInfo<T = any> = (x: T) => PropDef | destructPropInfo<T>[];
+//export type destructPropInfo<T = any> = (x: T) => PropDef | destructPropInfo<T>[];
 
 export interface ReactiveSurface extends Partial<HTMLElement>{
     disabled?: boolean;
