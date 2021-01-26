@@ -149,6 +149,8 @@ export interface SlicedPropDefs<T = any>{
     boolNames: string[],
     numNames: string[], 
     parseNames: string[], 
+    ignoreList: string[],
+    ignoreListOnce: string[] | undefined,
     propLookup: PropDefMap<T>,
 }
 
@@ -161,7 +163,7 @@ export interface ReactiveSurface extends Partial<HTMLElement>{
 }
 
 export interface IReactor{
-    addToQueue(prop: PropDef, newVal?: any): void;
+    addToQueue(prop: PropDef, newVal: any, ignoreList: string[]): void;
     requestUpdate?: boolean;
 }
 

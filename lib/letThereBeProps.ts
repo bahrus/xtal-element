@@ -3,8 +3,10 @@ import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
 export function letThereBeProps(elementClass: any, props: PropDef[], callbackMethodName?: string){
     const proto = elementClass.prototype;
+    if(proto.xtalIgnore === undefined) proto.xtalIgnore = new Set<string>();
     const existingProps = Object.getOwnPropertyNames(proto);
     for(const prop of props){
+        if(prop.stopReactionsIfFalsy) proto.xtalIgnore.add(prop.name);
         const name = prop.name!;
         if(existingProps.includes(name)) return;
         const privateKey = '_' + name;

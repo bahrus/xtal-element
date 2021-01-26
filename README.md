@@ -480,7 +480,9 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 ### Ignoring prop actions when one or more dependency value is falsy.
 
-Frequently it arises that a number of propActions depend on a key property, and those actions don't make sense to execute unless that property is not falsey.  domCache is one such property, since many propActions centered around domCache will be focused around binding elements from the domCache.  So that means lots of undefined checks in each propAction:
+This is one of the trickier aspects of this library.
+
+Frequently it arises that a number of propActions depend on a key property, and *none* of those actions make sense to execute unless that property is not falsey.  domCache is one such property, since many propActions which depend on domCache will be focused around binding elements from the domCache.  So that means lots of undefined checks in each propAction:
 
 ```JavaScript
 ({domCache, count}: CounterDo) => {
@@ -489,7 +491,7 @@ Frequently it arises that a number of propActions depend on a key property, and 
 },
 ```
 
-To avoid this nuisance, we can specify that any propAction depending on this property should not be applied until the property is not falsy:
+To avoid this nuisance, we can specify that *any and all* propActions depending on this property should not be executed until the property is not falsy:
 
 ```JavaScript
 domCache: {
@@ -498,6 +500,7 @@ domCache: {
 }
 ```
 
+The other tricky thing about this special property is, because it applies across propActions, the list of properties this is applicable to needs to be passed once into the Reactor component (via addToQueue).
 
 </details>
 

@@ -85,6 +85,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
         },
     ] as PropAction[];
     reactor = new Reactor(this);
+    
 }
 letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterDo);
