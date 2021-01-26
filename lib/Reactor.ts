@@ -9,16 +9,9 @@ export class Reactor implements IReactor {
     queue = new Set<string>();
     requestUpdate = false;
     deconstructedArgs = new WeakMap<PropAction, string[]>();
-    //ignore = new Set<string>();
     constructor(public surface: ReactiveSurface , public PSMap?: ProcessorMap[], public getProcessor?: getProcessor) {
         if(getProcessor === undefined) import('./getProcessor.js');
     }
-
-    // ignoreIfFalsy(ignoreList: string[]){
-    //     for(const token of ignoreList){
-    //         this.ignore.add(token);
-    //     }
-    // }
 
     async addToQueue(prop: PropDef, newVal: any) {
         this.queue.add(prop.name!);
