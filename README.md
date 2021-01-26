@@ -500,7 +500,6 @@ domCache: {
 }
 ```
 
-The other tricky thing about this special property is, because it applies across propActions, the list of properties this is applicable to needs to be passed once into the Reactor component (via addToQueue).
 
 </details>
 
