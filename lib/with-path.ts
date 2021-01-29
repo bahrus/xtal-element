@@ -1,4 +1,4 @@
-import {createNestedProp} from '../createNestedProp.js';
+import {createNestedProp} from './createNestedProp.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
