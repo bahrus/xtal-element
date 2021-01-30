@@ -38,16 +38,17 @@ export function addCSSListener(id: string, self: any, targetSelector: string, in
             self._host = document.firstElementChild;
         }
         const hostIsShadow = self._host.localName !== 'html';
-        if(hostIsShadow){
-            self._host.appendChild(style);
-        }else{
-            document.head.appendChild(style);
-        }
         boundInsertListeners[targetSelector] = insertListener.bind(self);
         const container = hostIsShadow ? self._host : document;
         eventNames.forEach(name =>{
             container.addEventListener(name, boundInsertListeners[targetSelector], false);
         })
+        if(hostIsShadow){
+            self._host.appendChild(style);
+        }else{
+            document.head.appendChild(style);
+        }
+
 }
 
 
