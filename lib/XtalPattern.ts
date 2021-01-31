@@ -1,7 +1,8 @@
 export {XtalPattern, PropAction, } from '../types.d.js';
-import {XtalPattern, destructPropInfo} from '../types.d.js';
+import {XtalPattern} from '../types.d.js';
 import {pinTheDOMToKeys} from './pinTheDOMToKeys.js';
 import {PropAction, PropDefMap, PropDef} from '../types.d.js';
+import {Reactor} from './Reactor.js';
 
 const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
     if(domCache===undefined) return;

@@ -1,6 +1,6 @@
 import {Rx} from './Rx.js';
 import {ReactiveSurface, ProcessorMap, getProcessor} from '../types.d.js';
-
+export {ReactiveSurface, PSDo} from '../types.d.js';
 export class Reactor extends  Rx{
 
     constructor(public surface: ReactiveSurface , public PSMap: ProcessorMap[], public getProcessor?: getProcessor) {
