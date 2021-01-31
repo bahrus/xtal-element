@@ -3,7 +3,7 @@ import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { attr } from '../lib/attr.js';
-import { Reactor } from '../lib/Reactor.js';
+import { Rx } from '../lib/Rx.js';
 import { propUp } from '../lib/propUp.js';
 import { pinTheDOMToKeys } from '../lib/pinTheDOMToKeys.js';
 const mainTemplate = html `
@@ -66,7 +66,7 @@ export class CounterDo extends HTMLElement {
                 this.clonedTemplate = undefined;
             },
         ];
-        this.reactor = new Reactor(this);
+        this.reactor = new Rx(this);
     }
     connectedCallback() {
         this.attachShadow({ mode: 'open' });

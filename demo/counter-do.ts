@@ -1,10 +1,10 @@
 import {define} from '../lib/define.js';
-import {destructPropInfo, PropDef, ReactiveSurface, PropAction, PropDefMap} from '../types.js';
+import {PropDef, ReactiveSurface, PropAction, PropDefMap} from '../types.js';
 import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
 import {attr} from '../lib/attr.js';
-import {Reactor} from '../lib/Reactor.js';
+import {Rx} from '../lib/Rx.js';
 import {propUp} from '../lib/propUp.js';
 import {pinTheDOMToKeys} from '../lib/pinTheDOMToKeys.js';
 import {CounterDoProps} from './types.d.js';
@@ -84,7 +84,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             this.clonedTemplate = undefined;
         },
     ] as PropAction[];
-    reactor = new Reactor(this);
+    reactor = new Rx(this);
     
 }
 letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');

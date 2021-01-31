@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node node_modules/xtal-test/serve.js",
-    "start": "es-dev-server --app-index demo/counter-x.html --node-resolve --watch --open"
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open"
   },
   "dependencies": {
     "trans-render": "0.0.276"
