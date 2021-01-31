@@ -224,7 +224,7 @@ The third, optional parameter is where you can specify the default values, if no
 ## Reactive Prop Actions
 
 ```TypeScript
-import {Reactor} from 'xtal-element/lib/Reactor.js';
+import {Rx} from 'xtal-element/lib/Rx.js';
 import {ReactiveSurface} from 'xtal-element/lib/types.d.js';
 export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     ClimbedEveryMountain: boolean;
@@ -237,7 +237,7 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
         this.FoundYourDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
     }] as PropAction[];
-    reactor = new Reactor(this);
+    reactor = new Rx(this);
 
     onPropChange(name: string, prop: PropDef, newVal: any){
         console.log("Been there, done that.");
@@ -584,7 +584,8 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             this.clonedTemplate = undefined;
         },
     ] as PropAction[];
-    reactor = new Reactor(this);
+    reactor = new Rx(this);
+    
 }
 letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterDo);
