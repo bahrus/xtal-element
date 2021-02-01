@@ -167,14 +167,27 @@ export interface IReactor{
     requestUpdate?: boolean;
 }
 
-
-
-export interface ProcessorMap {
-    type: Function;
+interface ProcessorCtor {
     ctor: {new(): PSDo} | PSDo;
 }
 
-export type getProcessor =  (value: any, processorMappings: ProcessorMap[]) => ProcessorMap | undefined;
+export interface LHSProcessorCtor extends ProcessorCtor {
+    lhsType: any;
+}
+
+export interface RHSProcessorCtor extends ProcessorCtor {
+    rhsType: any;
+}
+
+export interface BothProcessor {
+    lhsType: any;
+    rhsType: any;
+}
+
+interface BothProcessorCtor extends ProcessorCtor, BothProcessor {}
+
+export type ProcessorMap = LHSProcessorCtor | RHSProcessorCtor | BothProcessorCtor;
+
 
 export interface XtalPattern extends ReactiveSurface{
     domCache: any,

@@ -1,31 +1,59 @@
 import {Rx} from './Rx.js';
-import {ReactiveSurface, ProcessorMap, getProcessor} from '../types.d.js';
-export {ReactiveSurface, PSDo} from '../types.d.js';
+import {ReactiveSurface, ProcessorMap, RHSProcessorCtor, BothProcessor, LHSProcessorCtor} from '../types.d.js';
+export {ReactiveSurface, PSDo, RHSProcessorCtor, LHSProcessorCtor} from '../types.d.js';
 export class Reactor extends  Rx{
 
-    constructor(public surface: ReactiveSurface , public PSMap: ProcessorMap[], public getProcessor?: getProcessor) {
+    constructor(public surface: ReactiveSurface , public PSMap: ProcessorMap[]) {
         super(surface);
     }
 
-    async doPS(returnVal: any, args: string[] | undefined){
-        let processorGetter: getProcessor | undefined = this.getProcessor;
-        if(processorGetter === undefined){
-            const {getProcessor} = await import('./getProcessor.js');
-            processorGetter = getProcessor;
-        }
-        const processor = processorGetter(returnVal, this.PSMap);
+    async doPS(lhs: any, rhs: any, args: string[] | undefined){
+        const processor = getProcessor(lhs, rhs, this.PSMap);
         if(processor !== undefined) {
             const ctor = processor.ctor;
             switch(typeof ctor){
                 case 'function':
                     const processorInstance = new ctor();
-                    processorInstance.do(returnVal, args, this);
+                    processorInstance.do(rhs, args, this);
                     break;
                 case 'object':
-                    ctor.do(returnVal, args, this);
+                    ctor.do(rhs, args, this);
                     break;
             }
 
         }
     }
+}
+
+export function matchType(val: any, processor: ProcessorMap, member: keyof BothProcessor){
+    let typOfProcessor: any;
+    switch(member){
+        case 'lhsType':
+            typOfProcessor = (processor as LHSProcessorCtor).lhsType;
+            break;
+        case 'rhsType':
+            typOfProcessor = (processor as RHSProcessorCtor).rhsType;
+            break;
+    }
+    if(typOfProcessor === undefined) return 0;
+    switch(typeof val){
+        case 'string':
+            return typOfProcessor === String ? 1 : -1;
+        case 'number':
+            return typOfProcessor === Number ? 1 : -1;
+        case 'boolean':
+            return typOfProcessor === Boolean ? 1 : -1;
+        default:
+            return val instanceof typOfProcessor ? 1 : -1;
+
+    }
+}
+
+export function getProcessor(lhs: any, rhs: any, processorMappings: ProcessorMap[]){
+    for(const processor of processorMappings){
+        const lhsMatch = matchType(lhs, processor, 'lhsType');
+        const rhsMatch = matchType(rhs, processor, 'rhsType');
+        if(lhsMatch + rhsMatch > 0) return processor;
+    }
+    
 }

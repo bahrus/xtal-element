@@ -8,13 +8,18 @@ import { getSlicedPropDefs } from './getSlicedPropDefs.js';
 
 export  class X extends HTMLElement {
     self = this;
+    static observedAttributes = ['disabled'];
+    attributeChangedCallback(n: string, ov: string, nv: string){
+        this.disabled = nv !== null;
+    }
+    disabled: boolean | undefined;
     domCache: any;
     reactor: Reactor | undefined;
     onPropChange(name: string, prop: PropDef, nv: any){
         if(this.reactor === undefined){
-            this.reactor = new xc.Reactor(this as any as ReactiveSurface, [
+            this.reactor = new xp.Reactor(this as any as ReactiveSurface, [
                 {
-                    type: Array,
+                    rhsType: Array,
                     ctor: DOMKeyPE
                 }
             ]);            

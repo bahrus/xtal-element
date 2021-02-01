@@ -44,4 +44,4 @@ export const props = {
     mainTemplate: common
  } as PropDefMap<XtalPattern>;
 
-export const xp = {createShadow, attachShadow, manageMainTemplate, props, appendClone};
+export const xp = {createShadow, attachShadow, manageMainTemplate, props, appendClone, Reactor};

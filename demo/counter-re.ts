@@ -63,7 +63,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     
     reactor = new Reactor(this, [
         {
-            type: Array,
+            rhsType: Array,
             ctor: DOMKeyPE
         }
     ]);

@@ -25,7 +25,7 @@ export class Rx implements IReactor {
             this.processActionQueue();
         }
     }
-    async doPS(val: any, args: string[] | undefined){}
+    async doPS(lhs: any, rhs: any, args: string[] | undefined){}
     async processActionQueue() {
         if(this.surface.propActions === undefined) return;
         const flat = this.surface.propActions.flat();
@@ -54,7 +54,7 @@ export class Rx implements IReactor {
             if (intersection(queue, dependencySet).size > 0) {
                 if (this.surface.propActionsHub !== undefined) this.surface.propActionsHub(propAction);
                 const returnVal = propAction(this.surface as HTMLElement);
-                await this.doPS(returnVal, args);
+                await this.doPS(this.surface, returnVal, args);
             }
         }
         

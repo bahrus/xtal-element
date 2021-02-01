@@ -55,7 +55,7 @@ export class CounterRe extends HTMLElement {
         this.propActions = propActions;
         this.reactor = new Reactor(this, [
             {
-                type: Array,
+                rhsType: Array,
                 ctor: DOMKeyPE
             }
         ]);
