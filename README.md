@@ -731,19 +731,21 @@ We can specify that using a return mapping:
 import {myStringProcessor, myArrayProcessor}
 reactor = new Reactor(this, [
     {
-        type: String,
+        rhsType: String,
         ctor: myStringProcessor
     },
     {
-        type: Array,
+        rhsType: Array,
         ctor: myArrayProcessor
     },
     {
-        type: HTMLDivElement,
+        rhsType: HTMLDivElement,
         ctor: myHTMLDivProcessor
     }
 ]);
 ```
+
+Here "rhs" stands for right-hand-side, and ctor stands for "class constructor."
 
 So if the right-hand-side of the action returns a string, pass the context to an instance of class myStringProcessor.  If it returns an array, use myArrayProcessor.  Etc.
 
