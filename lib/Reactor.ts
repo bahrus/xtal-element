@@ -50,6 +50,7 @@ export function matchType(val: any, processor: ProcessorMap, member: keyof BothP
         case 'bigint':
             return typOfProcessor === BigInt ? 1 : -1;
     }
+    return 0;
 }
 
 export function getProcessor(lhs: any, rhs: any, processorMappings: ProcessorMap[]){

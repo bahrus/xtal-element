@@ -1,5 +1,5 @@
 import {define} from '../lib/define.js';
-import {destructPropInfo, PropDef, PropAction, PropDefMap} from '../types.js';
+import {PropDef, PropAction, PropDefMap} from '../types.js';
 import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -36,14 +36,13 @@ const mainTemplate = html`
 const refs = {buttonElement: '*', countPart: ''};
 const propActions = [
     xp.manageMainTemplate,
-    ({domCache, count}: CounterRe) => ([
-        {[refs.countPart]:  count}
-    ]),
-    ({domCache, self}: CounterRe) => ([
-        {
-            [refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
-        },
-    ]),
+    ({domCache, count}: CounterRe) => [{
+        [refs.countPart]:  count
+    }],
+    ({domCache, self}: CounterRe) => [{
+        [refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
+        
+    }],
     xp.createShadow
 ] as PropAction[];
 

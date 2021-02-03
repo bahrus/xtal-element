@@ -32,14 +32,12 @@ const mainTemplate = html `
 const refs = { buttonElement: '*', countPart: '' };
 const propActions = [
     xp.manageMainTemplate,
-    ({ domCache, count }) => ([
-        { [refs.countPart]: count }
-    ]),
-    ({ domCache, self }) => ([
-        {
+    ({ domCache, count }) => [{
+            [refs.countPart]: count
+        }],
+    ({ domCache, self }) => [{
             [refs.buttonElement]: [, { click: [self.changeCount, 'dataset.d', parseInt] }],
-        },
-    ]),
+        }],
     xp.createShadow
 ];
 const propDefMap = {
