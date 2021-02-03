@@ -25,12 +25,12 @@ const mainTemplate = html `
 `;
 const refs = { buttonElement: '*', spanElement: '' };
 const propActions = [
-    ({ domCache, self }) => ([
+    ({ domCache, self }) => [
         { [refs.buttonElement]: [, { click: [self.changeCount, 'dataset.d', parseInt] }] }
-    ]),
-    ({ domCache, count }) => ([
+    ],
+    ({ domCache, count }) => [
         { [refs.spanElement]: count }
-    ])
+    ]
 ];
 export class CounterMi extends X {
     constructor() {

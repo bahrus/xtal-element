@@ -718,9 +718,9 @@ But, like with the be-reflective option mentioned above, events can also be tail
 Let's take another look at one of our earlier propActions:
 
 ```JavaScript
-[({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
+({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
     this.FoundMyDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
-}]
+}
 ```
 
 As with all our examples so far, this propAction doesn't actually *return* anything.  What should the propActions Reactor orchestrator do with anything returned?
@@ -872,10 +872,10 @@ This is pretty annoying to DRYophiles:
 We can DRYphon out the wasted typing, using ditto notation:
 
 ```JavaScript
-({domCache, changeCount}: CounterRe) => ([
+({domCache, changeCount}: CounterRe) => [
     {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
     {[refs.upPart]: '"'}
-]),
+],
 ```
 
 </details>
@@ -1076,12 +1076,12 @@ const mainTemplate = html`
 `;
 const refs = {buttonElement: '*', spanElement: ''};
 const propActions = [
-  ({domCache, self}) => ([
+  ({domCache, self}) => [
     {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
-  ]),
-  ({domCache, count}) => ([
+  ],
+  ({domCache, count}) => [
     {[refs.spanElement]:  count}
-  ])
+  ]
 ];
 
 export class CounterMi extends X{

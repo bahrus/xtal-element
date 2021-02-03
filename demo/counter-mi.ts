@@ -27,12 +27,12 @@ const mainTemplate = html`
 `;
 const refs = {buttonElement: '*', spanElement: ''};
 const propActions = [
-  ({domCache, self}: CounterMi) => ([
+  ({domCache, self}: CounterMi) => [
     {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
-  ]),
-  ({domCache, count}: CounterMi) => ([
+  ],
+  ({domCache, count}: CounterMi) => [
     {[refs.spanElement]:  count}
-  ])
+  ]
 ] as PropAction[];
 
 export abstract class CounterMi extends X{
