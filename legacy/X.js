@@ -1,5 +1,6 @@
 import { XtalElement, define } from '../XtalElement.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
+export { TransformGetter } from '../types.js';
 function defProto(newClass, args) {
     const p = newClass.prototype;
     p.initTransform = args.initTransform;

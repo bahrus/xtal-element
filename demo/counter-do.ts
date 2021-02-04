@@ -33,21 +33,7 @@ const mainTemplate = html`
 </style>
 `;
 
-const nonFalsyObject: PropDef = {
-    type: Object,
-    stopReactionsIfFalsy: true
-};
-const propDefs: PropDefMap<CounterDo> = {
-    clonedTemplate: nonFalsyObject,
-    domCache: nonFalsyObject,
-    count: {
-        type: Number
-    }
-};
-
-const slicedPropDefs = getSlicedPropDefs(propDefs);
-const s = '';
-const refs = { downPart: s, upPart: s, countPart: s};
+const refs = { downPart: '', upPart: '', countPart: ''};
 
 export class CounterDo extends HTMLElement implements CounterDoProps{
     static is = 'counter-do';
@@ -73,19 +59,32 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
         ({domCache, count}: CounterDo) => {
             domCache[refs.countPart].textContent = count.toString();
         },
-        ({domCache, clonedTemplate}: CounterDo) => {
+        ({domCache}: CounterDo) => {
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
                 this.count++;
             });
-            this.shadowRoot!.appendChild(clonedTemplate!);
+            this.shadowRoot!.appendChild(this.clonedTemplate!);
             this.clonedTemplate = undefined;
         },
     ] as PropAction[];
     reactor = new Rx(this);
     
 }
+const nonFalsyObject: PropDef = {
+    type: Object,
+    stopReactionsIfFalsy: true
+};
+const propDefs: PropDefMap<CounterDo> = {
+    clonedTemplate: nonFalsyObject,
+    domCache: nonFalsyObject,
+    count: {
+        type: Number
+    }
+};
+
+const slicedPropDefs = getSlicedPropDefs(propDefs);
 letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterDo);

@@ -3,37 +3,8 @@ import { X } from './legacy/X.js';
 import { X as newX} from './lib/X.js';
 import {de} from './legacy/xtal-latx.js';
 import {IHydrate} from 'trans-render/types.d.js';
-import {RenderContext, RenderOptions, Plugins} from 'trans-render/types.d.js';
 export {RenderContext, IHydrate, Plugins, Plugin, RenderOptions, TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions, PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEUnionSettings, PEASettings, PEAUnionSettings, PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform, MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, PlugInArgs, MetaInstructions, CAT, CATMI, CATMINT, CATMINT_Conditional, InsOrRep, Na, Nap, Nappe, NappeUnion, EvaluatedAttributeProps} from 'trans-render/types.d.js';
-import {TransformValueOptions} from 'trans-render/types.d.js';
-export type SelectiveUpdate<T extends XtalElement = XtalElement>  = (t: T) => TransformValueOptions;
-export type PropDefGet<T extends XtalElement = XtalElement> = (t: T) => AttributeProps;
-export type TransformGetter<T extends XtalElement = XtalElement> = (t : T) => TransformValueOptions | TransformValueOptions[];
 export type PropAction<T extends Element = HTMLElement> = (t: T) => any;
-
-export interface AttributeProps{
-    num?: any[];
-    bool?: any[];
-    str?: any[];
-    obj?: any[];
-    reflect?: any[];
-    jsonProp?: any[];
-    notify?: any[];
-    dry?: any[];
-    log?: any[];
-    debug?: any[];
-    async?: any[];
-}
-
-export interface tendArgs<T extends X = X>{
-    name: string,
-    class?: any,
-    mixins?: any[],
-    attributeProps: PropDefGet<T>,
-    main: string,
-    initTransform: TransformGetter<T>,
-    updateTransforms?: SelectiveUpdate<T>[]
-}
 
 export interface XConfig{
     mainTemplate: HTMLTemplateElement;

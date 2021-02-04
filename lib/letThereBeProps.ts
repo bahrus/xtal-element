@@ -1,7 +1,7 @@
 import {PropDef} from '../types.js';
 import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
-export function letThereBeProps(elementClass: any, props: PropDef[], callbackMethodName?: string){
+export function letThereBeProps<T extends HTMLElement = HTMLElement>(elementClass: {new(): T}, props: PropDef[], callbackMethodName?: keyof T){
     const proto = elementClass.prototype;
     if(proto.xtalIgnore === undefined) proto.xtalIgnore = new Set<string>();
     const existingProps = Object.getOwnPropertyNames(proto);
