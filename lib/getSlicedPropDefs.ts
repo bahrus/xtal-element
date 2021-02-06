@@ -1,4 +1,4 @@
-import {PropDef, PropDefGet, SlicedPropDefs, PropDefMap} from '../types.js';
+import {PropDef, SlicedPropDefs, PropDefMap} from '../types.js';
 
 export function getSlicedPropDefs<T = any>(propLookup: PropDefMap<T>){
 

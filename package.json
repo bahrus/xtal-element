@@ -2,8 +2,8 @@
   "name": "xtal-element",
   "version": "0.0.340",
   "description": "Some opinionated web component base classes.",
-  "main": "XtalElement.js",
-  "module": "XtalElement.js",
+  "main": "lib/X.js",
+  "module": "lib/X.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node node_modules/xtal-test/serve.js",
