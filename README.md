@@ -1110,17 +1110,17 @@ const mainTemplate = html`
     }
 </style>
 `;
-const refs = {buttonElement: '*', spanElement: ''};
+const refs = {buttonElements: '', spanElement: ''};
 const propActions = [
-  ({domCache, self}) => [
-    {[refs.buttonElement]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
+  ({domCache, self}: CounterMi) => [
+    {[refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
   ],
-  ({domCache, count}) => [
+  ({domCache, count}: CounterMi) => [
     {[refs.spanElement]:  count}
   ]
-];
+] as PropAction[];
 
-export class CounterMi extends X{
+export abstract class CounterMi extends X{
     count = 0;
 
     changeCount(delta: number){
@@ -1130,7 +1130,7 @@ export class CounterMi extends X{
 
 X.tend({
     name: 'counter-mi',
-    class: CounterMi,
+    class: CounterMi as any as {new(): X},
     mainTemplate: mainTemplate,
     propActions: propActions,
     refs: refs

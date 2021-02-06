@@ -23,10 +23,10 @@ const mainTemplate = html `
     }
 </style>
 `;
-const refs = { buttonElement: '*', spanElement: '' };
+const refs = { buttonElements: '', spanElement: '' };
 const propActions = [
     ({ domCache, self }) => [
-        { [refs.buttonElement]: [, { click: [self.changeCount, 'dataset.d', parseInt] }] }
+        { [refs.buttonElements]: [, { click: [self.changeCount, 'dataset.d', parseInt] }] }
     ],
     ({ domCache, count }) => [
         { [refs.spanElement]: count }
