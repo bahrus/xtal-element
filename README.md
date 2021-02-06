@@ -507,8 +507,8 @@ The cache can then be used to retrieve the matching element(s) from the domFragm
 const myDiv = cache[refs.myDivId];
 const someParts = cache[refs.somePart];
 ```
-
-The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name ('Element'), and by Dataset ('Data'), depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.
+ 
+ 
 
 </details>
 
