@@ -43,13 +43,19 @@ export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: 
                         query = attribVal;
                         break;
                 }
-                if (isEmpty) {
+                let matches: HTMLElement[]
+                if (isSingular) {
                     const firstMatchingNode = rootNode.querySelector(query!);
-                    cache[lookup] = firstMatchingNode;
+                    cache[lookup] = firstMatchingNode;                    
                 } else {
-                    const matchingNodes = rootNode.querySelectorAll(query!);
-                    cache[lookup] = Array.from(matchingNodes).filter(el => el.matches(subQuery));
+                    let matchingNodes = Array.from(rootNode.querySelectorAll(query!));
+                    if(subQuery !== ''){
+                        matchingNodes = matchingNodes.filter(el => el.matches(subQuery))
+                    }
+                    cache[lookup] = matchingNodes;
                 }
+
+                
                 break;
             }
         }

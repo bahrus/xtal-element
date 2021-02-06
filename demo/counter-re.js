@@ -29,14 +29,14 @@ const mainTemplate = html `
     }
 </style>
 `;
-const refs = { buttonElement: '*', countPart: '' };
+const refs = { buttonElements: '', countPart: '' };
 const propActions = [
     xp.manageMainTemplate,
     ({ domCache, count }) => [{
             [refs.countPart]: count
         }],
     ({ domCache, self }) => [{
-            [refs.buttonElement]: [, { click: [self.changeCount, 'dataset.d', parseInt] }],
+            [refs.buttonElements]: [, { click: [self.changeCount, 'dataset.d', parseInt] }],
         }],
     xp.createShadow
 ];

@@ -445,17 +445,17 @@ What we will be discussing for a while will finally lead up to our rendering app
 xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references to DOM elements in a cloned template:
 
 ```html
-<waltz-es on=way to=Mass part=she-is-a-pain>Whistles on the stair</waltz-es>
+<waltz-es on=way to=Mass part=she-is-a-pain class=will-o-the-wisp>Whistles on the stair</waltz-es>
 <singing-aloud in-the-abbey part=she-is-a-pain>Late for chapel</singing-aloud>
 <moon-beam class=hand>Catching clouds</moon-beam>
-<div data-word=flibbertijibbet class=will-o-the-wisp>Maria</div>
+<div data-word=flibbertijibbet >Maria</div>
 <span data-word=clown>Riddle</span>
 
 <script>
 const refs = {
-    sheIsAPainParts: '',
-    moonbeamElement: '.hand',
-    wordDatum: '.will-o-the-wisp',
+    sheIsAPainParts: '.will-o-the-wisp',
+    moonbeamElements: '.hand',
+    wordDatum: '',
 
 }
 const cache = {};
