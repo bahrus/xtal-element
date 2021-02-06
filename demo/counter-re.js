@@ -40,13 +40,6 @@ const propActions = [
         }],
     xp.createShadow
 ];
-const propDefMap = {
-    ...xp.props,
-    count: {
-        type: Number
-    }
-};
-const slicedPropDefs = getSlicedPropDefs(propDefMap);
 export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
@@ -74,5 +67,12 @@ export class CounterRe extends HTMLElement {
     }
 }
 CounterRe.is = 'counter-re';
+const propDefMap = {
+    ...xp.props,
+    count: {
+        type: Number
+    }
+};
+const slicedPropDefs = getSlicedPropDefs(propDefMap);
 letThereBeProps(CounterRe, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterRe);

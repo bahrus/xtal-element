@@ -2,7 +2,7 @@
 
 
 <details>
-    <summary>Mission Statement</summary>
+    <summary>FROOP Programming</summary>
 
 xtal-element provides 
 
@@ -15,7 +15,7 @@ xtal-element adopts a number of "opinions" that may be best suited for some type
 
 For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
 
-xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of xtal-element's utilities, also implementing their business logic using standard OOP methodology -- methods, inheritance, etc.).  But xtal-element itself deviates considerably from standard OOP approaches in some critical ways.  
+xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of this library also implementing their business logic using standard OOP methodology -- methods, inheritance, etc.).  But xtal-element itself deviates considerably from standard OOP approaches in some critical ways.  
 
 xtal-element borrows some ideas from Rust and Python.
 
@@ -198,7 +198,7 @@ The third parameter, 'onPropChange' is optional.
 
 
 <details>
-    <summary>propUp</summary>
+    <summary>Prop hydration, part I</summary>
 
 ## Support for asynchronous loading
 
@@ -219,7 +219,7 @@ The third, optional parameter is where you can specify the default values, if no
 </details>
 
 <details>
-<summary>propActions</summary>
+<summary>Rx</summary>
 
 ## Reactive Prop Actions
 
@@ -444,22 +444,61 @@ What we will be discussing for a while will finally lead up to our rendering app
 
 xtal-element provides a function, pinTheDOMToKeys, for creating symbolic references to DOM elements in a cloned template:
 
-```JavaScript
-const s = '';
-const m = '*';
+```html
+<waltz-es on=way to=Mass part=she-is-a-pain>Whistles on the stair</waltz-es>
+<singing-aloud in-the-abbey part=she-is-a-pain>Late for chapel</singing-aloud>
+<moon-beam class=hand>Catching clouds</moon-beam>
+<div data-word=flibbertijibbet class=will-o-the-wisp>Maria</div>
+<span data-word=clown>Riddle</span>
+
+<script>
 const refs = {
-    myDivId: s,
-    myOtherId: s,
-    somePart: m,
-    someClass: m,
-    mainElement: s,
-    myDataFlagData = s
-    someOtherClass = s
-    someCustomElementElement = m
+    sheIsAPainParts: '',
+    moonbeamElement: '.hand',
+    wordDatum: '.will-o-the-wisp',
+
 }
 const cache = {};
 pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
+</script>
 ```
+
+The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name, and by dataset, depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.  The right hand expression can be used to apply filtering on the results, based on standard css matching.
+
+<table>
+    <tr>
+        <th>Ending</th><th>Example</th><th>Query that is used</th>
+    </tr>
+    <tr>
+        <td>Part</td><td>myFirstPart</td><td>.querySelector('[part="my-first"])</td>
+    </tr>
+    <tr>
+        <td>Parts</td><td>allInTheFamilyParts</td><td>.querySelectorAll('[part="all-in-the-family"])</td>
+    </tr>
+    <tr>
+        <td>Datum</td><td>bopBopBaDopDatum</td><td>.querySelector('[data-bop-bop-ba-dop]')</td>
+    </tr>
+    <tr>
+        <td>Data</td><td>balanceData</td><td>.querySelectorAll('[data-balance]')</td>
+    </tr>
+    <tr>
+        <td>Element</td><td>ironElement</td></td><td>.querySelector('iron')</td>
+    </tr>
+    <tr>
+        <td>Elements</td><td>myCustomElements</td><td>.querySelectorAll('my-custom')</td>
+    </tr>
+    <tr>
+        <td>Id</td><td>frenchEvolutionId</td><td>.querySelector('#french-evolution')</td>
+    </tr>
+    <tr>
+        <td>Class</td><td>workingClass</td><td>.querySelector('.working')</td>
+    </tr>
+    <tr>
+        <td>Classes</td><td>crabGrassClasses</td><td>.querySelectorAll('.crab-grass')</td>
+    </tr>
+</table>
+
+
 If the right-hand-side (rhs) of each refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches based on the lhs key name, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol for later reference.
 
 The cache can then be used to retrieve the matching element(s) from the domFragment:

@@ -46,16 +46,6 @@ const propActions = [
     xp.createShadow
 ] as PropAction[];
 
-
-const propDefMap: PropDefMap<CounterRe> = {
-    ...xp.props,
-    count: {
-        type: Number
-    }
-};
-const slicedPropDefs = getSlicedPropDefs(propDefMap);
-
-
 export class CounterRe extends HTMLElement implements CounterDoProps, XtalPattern{
     static is = 'counter-re';
     propActions = propActions;
@@ -85,5 +75,12 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     
 
 }
+const propDefMap: PropDefMap<CounterRe> = {
+    ...xp.props,
+    count: {
+        type: Number
+    }
+};
+const slicedPropDefs = getSlicedPropDefs(propDefMap);
 letThereBeProps(CounterRe, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterRe);
