@@ -499,16 +499,14 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 </table>
 
 
-If the right-hand-side (rhs) of each refs sub-expression is an empty string, then the first matching element will be found (via querySelector).  If the rhs is a non trivial string, then querySelectorAll is used, to find all matches based on the lhs key name, and the rhs can be used to filter out that list via element.matches(rhs). pinTheDOMToKeys will replace the rhs with a unique symbol for later reference.
+In the case of plural selections (...Elements, ...Parts, etc) the right-hand-side (rhs) of each refs sub-expression is not an empty string, it is then used to filter out that list via element.matches(rhs). pinTheDOMToKeys will always replace the rhs with a unique symbol for later reference.
 
 The cache can then be used to retrieve the matching element(s) from the domFragment:
 
 ```JavaScript
-const myDiv = cache[refs.myDivId];
-const someParts = cache[refs.somePart];
+const myDiv = cache[refs.moonBeamElements];
+const someParts = cache[refs.sheIsAPainParts];
 ```
- 
- 
 
 </details>
 
@@ -521,7 +519,7 @@ const someParts = cache[refs.somePart];
 
 This is one of the trickier aspects of this library.
 
-Frequently it arises that a number of propActions depend on a key property, and *none* of those actions make sense to execute unless that property is not falsey.  domCache is one such property, since many propActions which depend on domCache will be focused around binding elements from the domCache.  So that means lots of undefined checks in each propAction:
+Frequently it arises that a number of propActions depend on a key property, and *none* of those actions make sense to execute unless that property is not falsy.  domCache is one such property, since many propActions which depend on domCache will be focused around binding elements from the domCache.  So that means lots of undefined checks in each propAction:
 
 ```JavaScript
 ({domCache, count}: CounterDo) => {
@@ -572,21 +570,7 @@ const mainTemplate = html`
 </style>
 `;
 
-const nonFalsyObject: PropDef = {
-    type: Object,
-    stopReactionsIfFalsy: true
-};
-const propDefs: PropDefMap<CounterDo> = {
-    clonedTemplate: nonFalsyObject,
-    domCache: nonFalsyObject,
-    count: {
-        type: Number
-    }
-};
-
-const slicedPropDefs = getSlicedPropDefs(propDefs);
-const s = '';
-const refs = { downPart: s, upPart: s, countPart: s};
+const refs = { downPart: '', upPart: '', countPart: ''};
 
 export class CounterDo extends HTMLElement implements CounterDoProps{
     static is = 'counter-do';
@@ -612,20 +596,33 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
         ({domCache, count}: CounterDo) => {
             domCache[refs.countPart].textContent = count.toString();
         },
-        ({domCache, clonedTemplate}: CounterDo) => {
+        ({domCache}: CounterDo) => {
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
                 this.count--;
             });
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
                 this.count++;
             });
-            this.shadowRoot!.appendChild(clonedTemplate!);
+            this.shadowRoot!.appendChild(this.clonedTemplate!);
             this.clonedTemplate = undefined;
         },
     ] as PropAction[];
     reactor = new Rx(this);
     
 }
+const nonFalsyObject: PropDef = {
+    type: Object,
+    stopReactionsIfFalsy: true
+};
+const propDefs: PropDefMap<CounterDo> = {
+    clonedTemplate: nonFalsyObject,
+    domCache: nonFalsyObject,
+    count: {
+        type: Number
+    }
+};
+
+const slicedPropDefs = getSlicedPropDefs(propDefs);
 letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
 define(CounterDo);
 ```
