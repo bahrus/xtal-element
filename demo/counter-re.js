@@ -2,7 +2,7 @@ import { define } from '../lib/define.js';
 import { hydrate } from '../lib/hydrate.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
-import { Reactor } from '../lib/Reactor.js';
+import { RxSuppl } from '../lib/RxSuppl.js';
 import { DOMKeyPE } from '../lib/DOMKeyPE.js';
 import { xp } from '../lib/XtalPattern.js';
 import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
@@ -44,7 +44,7 @@ export class CounterRe extends HTMLElement {
     constructor() {
         super(...arguments);
         this.propActions = propActions;
-        this.reactor = new Reactor(this, [
+        this.reactor = new RxSuppl(this, [
             {
                 rhsType: Array,
                 ctor: DOMKeyPE

@@ -2,7 +2,7 @@ export {XtalPattern, PropAction, } from '../types.d.js';
 import {XtalPattern} from '../types.d.js';
 import {pinTheDOMToKeys} from './pinTheDOMToKeys.js';
 import {PropAction, PropDefMap, PropDef} from '../types.d.js';
-import {Reactor} from './Reactor.js';
+import {RxSuppl} from './RxSuppl.js';
 
 const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
     if(domCache===undefined) return;
@@ -44,4 +44,4 @@ export const props = {
     mainTemplate: common
  } as PropDefMap<XtalPattern>;
 
-export const xp = {createShadow, attachShadow, manageMainTemplate, props, appendClone, Reactor};
+export const xp = {createShadow, attachShadow, manageMainTemplate, props, appendClone, RxSuppl: Reactor};

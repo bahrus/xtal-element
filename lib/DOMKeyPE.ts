@@ -1,10 +1,10 @@
-import {Reactor} from './Reactor.js';
+import {RxSuppl} from './RxSuppl.js';
 import {applyPE} from 'trans-render/lib/applyPE.js';
 import {PEUnionSettings} from '../types.d.js';
 
 export class DOMKeyPE{
     constructor(public domCacheProp: string = 'domCache'){}
-    do(refs: any[], dependencies: string[], reactor: Reactor){
+    do(refs: any[], dependencies: string[], reactor: RxSuppl){
         const surface = reactor.surface;
         const aSurface = surface as any;
         const cache = aSurface[this.domCacheProp];

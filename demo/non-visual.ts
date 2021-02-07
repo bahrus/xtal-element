@@ -4,7 +4,7 @@ import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {propUp} from '../lib/propUp.js';
 import {attr} from '../lib/attr.js';
-import {Reactor} from '../lib/Reactor.js';
+import {RxSuppl} from '../lib/RxSuppl.js';
 
 const propDefGetter : destructPropInfo[] = [
     ({myStringProp}: NonVisualProps) => ({
@@ -36,7 +36,7 @@ export class NonVisual extends HTMLElement implements NonVisualProps, ReactiveSu
     propActions = [({myStringProp, self}: NonVisual) => {
         console.log('I am here', self, myStringProp);
     }] as PropAction[]
-    reactor = new Reactor(this);
+    reactor = new RxSuppl(this);
 
 }
 letThereBeProps(NonVisual, slicedPropDefs.propDefs, 'onPropChange');

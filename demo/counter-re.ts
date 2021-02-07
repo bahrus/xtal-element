@@ -3,7 +3,7 @@ import {PropDef, PropAction, PropDefMap} from '../types.js';
 import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
-import {Reactor} from '../lib/Reactor.js';
+import {RxSuppl} from '../lib/RxSuppl.js';
 import {CounterDoProps} from './types.d.js';
 import {DOMKeyPE} from '../lib/DOMKeyPE.js';
 import {XtalPattern, xp} from '../lib/XtalPattern.js';
@@ -50,7 +50,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     static is = 'counter-re';
     propActions = propActions;
     
-    reactor = new Reactor(this, [
+    reactor = new RxSuppl(this, [
         {
             rhsType: Array,
             ctor: DOMKeyPE

@@ -759,13 +759,17 @@ Let's take another look at one of our earlier propActions:
 }
 ```
 
-As with all our examples so far, this propAction doesn't actually *return* anything.  What should the propActions Reactor orchestrator do with anything returned?
+As with all our examples so far, this propAction doesn't actually *return* anything.  What should the propActions Rx orchestrator do with anything returned?
+
+In fact, the library xtal-element/lib/Rx.js doesn't support doing anything with what is returned.  The thinking is that the feature discussed below will primarily be used for visual components, where the developer wants to adopt declarative syntax.  Larger projects will tend to make it worthwhile to ask developers to grok this additional concept.
+
+So there is a more feature-rich reactive library:  'xtal-element/lib/RxSuppl.js' which can do something with what is returned.
 
 We can specify that using a return mapping:
 
 ```TypeScript
 import {myStringProcessor, myArrayProcessor}
-reactor = new Reactor(this, [
+reactor = new RxSuppl(this, [
     {
         rhsType: String,
         ctor: myStringProcessor
@@ -785,7 +789,7 @@ Here "rhs" stands for right-hand-side, and ctor stands for "class constructor."
 
 So if the right-hand-side of the action returns a string, pass the context to an instance of class myStringProcessor.  If it returns an array, use myArrayProcessor.  Etc.
 
-*Now* our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function of the reactor library can render a view for example, and it just needs some configuration passed in, you can specify it with an expression:
+*Now* our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function passed into RxSuppl can render a view, for example, and it just needs some configuration passed in, you can specify it with an expression:
 
 ```JavaScript
 ({prop1}) => ({
@@ -794,8 +798,6 @@ So if the right-hand-side of the action returns a string, pass the context to an
     }
 })
 ```
-
-This also allows us to use reactions as opportunities to pass declarative JSON-ish syntax to template transformers (for example), which we will see below.
 
 But we're jumping ahead of ourselves.
 
@@ -824,7 +826,7 @@ In our counter web component, let's make this code more declarative, as it is bo
 },
 ```
 
-We can replace this.count-- / this.count++ with a more powerful method capable of so much more:
+We can replace this.count-- / this.count++ with a more powerful method of our class CounterDo, capable of so much more:
 
 ```JavaScript
 changeCount(delta: number){
@@ -865,7 +867,7 @@ The first action can be replaced by:
 *if* we provide the following rxn-suppl:
 
 ```JavaScript
-reactor = new Reactor(this, [
+reactor = new RxSuppl(this, [
     {
         type: Array,
         do: doDOMKeyPEAction
@@ -1012,7 +1014,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     static is = 'counter-re';
     propActions = propActions;
     
-    reactor = new Reactor(this, [
+    reactor = new RxSuppl(this, [
         {
             rhsType: Array,
             ctor: DOMKeyPE

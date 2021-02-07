@@ -3,7 +3,7 @@ import { getSlicedPropDefs } from '../lib/getSlicedPropDefs.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { propUp } from '../lib/propUp.js';
 import { attr } from '../lib/attr.js';
-import { Reactor } from '../lib/Reactor.js';
+import { RxSuppl } from '../lib/RxSuppl.js';
 const propDefGetter = [
     ({ myStringProp }) => ({
         type: String,
@@ -19,7 +19,7 @@ export class NonVisual extends HTMLElement {
         this.propActions = [({ myStringProp, self }) => {
                 console.log('I am here', self, myStringProp);
             }];
-        this.reactor = new Reactor(this);
+        this.reactor = new RxSuppl(this);
     }
     connectedCallback() {
         const defaultValues = {};

@@ -1,5 +1,5 @@
 import { ReactiveSurface, PropAction, XtalPattern, PropDef, XConfig, PropDefMap } from '../types.js';
-import { Reactor } from './Reactor.js';
+import { RxSuppl } from './RxSuppl.js';
 import {xc} from './XtalCore.js';
 import {xp} from './XtalPattern.js';
 import {DOMKeyPE} from './DOMKeyPE.js';
@@ -14,7 +14,7 @@ export  class X extends HTMLElement {
     }
     disabled: boolean | undefined;
     domCache: any;
-    reactor: Reactor | undefined;
+    reactor: RxSuppl | undefined;
     onPropChange(name: string, prop: PropDef, nv: any){
         if(this.reactor === undefined){
             this.reactor = new xp.Reactor(this as any as ReactiveSurface, [
