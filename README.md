@@ -747,9 +747,9 @@ But, like with the be-reflective option mentioned above, events can also be tail
 </details>
 
 <details>
-    <summary>Rxn-Suppls</summary>
+    <summary>Rx-Suppls</summary>
 
-### Reusable, Declarative, Reaction-Supplements (Rxn-Suppls)
+### Reusable, Declarative, Reactor-Supplements (Rx-Suppls)
 
 Let's take another look at one of our earlier propActions:
 
@@ -789,7 +789,7 @@ Here "rhs" stands for right-hand-side, and ctor stands for "class constructor."
 
 So if the right-hand-side of the action returns a string, pass the context to an instance of class myStringProcessor.  If it returns an array, use myArrayProcessor.  Etc.
 
-*Now* our "actions" don't *have* to have a function body to do anything.  If a rxn-suppl function passed into RxSuppl can render a view, for example, and it just needs some configuration passed in, you can specify it with an expression:
+*Now* our "actions" don't *have* to have a function body to do anything.  If a rx-suppl function passed into RxSuppl can render a view, for example, and it just needs some configuration passed in, you can specify it with an expression:
 
 ```JavaScript
 ({prop1}) => ({
