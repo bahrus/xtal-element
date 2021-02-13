@@ -13,8 +13,9 @@ export class Rx implements IReactor {
     constructor(public surface: ReactiveSurface) {}
 
     async addToQueue(prop: PropDef, newVal: any) {
-        this.queue.add(prop.name!);
-        if(this.surface.disabled && propUp.name !== 'disabled') return;
+        const name = prop.name!;
+        this.queue.add(name);
+        if(this.surface.disabled && name !== 'disabled') return;
         if (prop.async) {
             //https://medium.com/ing-blog/litelement-a-deepdive-into-batched-updates-b9431509fc4f
             if (!this.requestUpdate) {
