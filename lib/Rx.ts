@@ -2,6 +2,7 @@ import { IReactor, ReactiveSurface, PropAction, PropDef, ProcessorMap, getProces
 export {ReactiveSurface} from '../types.d.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
+import { propUp } from './propUp.js';
 
 
 export class Rx implements IReactor {
@@ -13,7 +14,7 @@ export class Rx implements IReactor {
 
     async addToQueue(prop: PropDef, newVal: any) {
         this.queue.add(prop.name!);
-        if(this.surface.disabled) return;
+        if(this.surface.disabled && propUp.name !== 'disabled') return;
         if (prop.async) {
             //https://medium.com/ing-blog/litelement-a-deepdive-into-batched-updates-b9431509fc4f
             if (!this.requestUpdate) {
