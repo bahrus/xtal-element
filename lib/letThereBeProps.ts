@@ -22,7 +22,7 @@ export function letThereBeProps<T extends HTMLElement = HTMLElement>(elementClas
                     switch(prop.type){
                         case Boolean:
                             {
-                                const nameIs = 'Is' + name[0].toUpperCase() + name.substr(1);
+                                const nameIs = 'is' + name[0].toUpperCase() + name.substr(1);
                                 const isUndefined = this.dataset[nameIs] === undefined;
                                 if(nv && isUndefined){
                                     this.dataset[nameIs] = '';
