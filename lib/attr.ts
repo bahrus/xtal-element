@@ -9,7 +9,7 @@ import { SlicedPropDefs } from '../types.d.js';
 function mergeBool<T = any>(self: HTMLElement, names: string[], defaultValues: T){
     for(const name of names){
         const ctl = camelToLisp(name);
-        (<any>defaultValues)[name] = self.hasAttribute(ctl);
+        if((<any>defaultValues)[name] !== true) (<any>defaultValues)[name] = self.hasAttribute(ctl);
     }
 }
 
