@@ -1,5 +1,5 @@
 import {define} from '../lib/define.js';
-import {PropDef, PropAction, PropDefMap} from '../types.js';
+import {PropDef, PropAction, PropDefMap, PESettings} from '../types.js';
 import {hydrate} from '../lib/hydrate.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -40,8 +40,7 @@ const propActions = [
         [refs.countPart]:  count
     }],
     ({domCache, self}: CounterRe) => [{
-        [refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
-        
+        [refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}] as PESettings<CounterRe>,
     }],
     xp.createShadow
 ] as PropAction[];
