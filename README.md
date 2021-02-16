@@ -1,5 +1,7 @@
 # xtal-element
 
+<details>
+    <summary>preramble</summary>
 
 <details>
     <summary>FROOP Programming</summary>
@@ -56,6 +58,8 @@ We'll first be laboriously walking through the primitive building blocks xtal-el
 If you want to skip over the tender loving care / tedious discussion needed for developing the first type of component, skip to [the low ceremony X base class discussion](https://github.com/bahrus/xtal-element#private-low-ceremony-xtal-components).  You may then want to slowly review the first sections as needed, in order to better understand the underpinnings.
 
 </details> 
+
+</details>
 
 <details>
     <summary>Defining</summary>
