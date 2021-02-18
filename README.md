@@ -163,7 +163,7 @@ export interface PropDef{
      */
     async?: boolean;
     /**
-     * Block reactions containing this property if property is falsey
+     * Block reactions containing this property if property is falsy
      */
     stopReactionsIfFalsy?: boolean;
     /**

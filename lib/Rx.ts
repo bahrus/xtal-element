@@ -1,4 +1,4 @@
-import { IReactor, ReactiveSurface, PropAction, PropDef, ProcessorMap, getProcessor } from '../types.d.js';
+import { IReactor, ReactiveSurface, PropAction, PropDef, ProcessorMap } from '../types.d.js';
 export {ReactiveSurface} from '../types.d.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
