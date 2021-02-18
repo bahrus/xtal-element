@@ -2,8 +2,6 @@ import { IReactor, ReactiveSurface, PropAction, PropDef, ProcessorMap } from '..
 export {ReactiveSurface} from '../types.d.js';
 import {getDestructArgs} from './getDestructArgs.js';
 import {intersection} from './intersection.js';
-import { propUp } from './propUp.js';
-
 
 export class Rx implements IReactor {
 
