@@ -1,7 +1,4 @@
-import { XtalElement } from './legacy/XtalElement.js';
-import { X } from './legacy/X.js';
-import { X as newX} from './lib/X.js';
-import {de} from './legacy/xtal-latx.js';
+import { X } from './lib/X.js';
 import {IHydrate} from 'trans-render/types.d.js';
 export {RenderContext, IHydrate, Plugins, Plugin, RenderOptions, TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions, PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEUnionSettings, PEASettings, PEAUnionSettings, PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform, MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, PlugInArgs, MetaInstructions, CAT, CATMI, CATMINT, CATMINT_Conditional, InsOrRep, Na, Nap, Nappe, NappeUnion, EvaluatedAttributeProps} from 'trans-render/types.d.js';
 export type PropAction<T extends Element = HTMLElement> = (t: T) => any;

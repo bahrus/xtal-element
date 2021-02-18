@@ -1,15 +1,38 @@
 {
 	"compilerOptions": {
-		"target": "ES2020",
+		"target": "ESNext",
 		"module":"esnext",
 		"sourceMap": false,
 		"experimentalDecorators": false,
+		"skipLibCheck": true,
 		"strict": true,
 		"newLine": "LF",
 		"watch": true
 	},
+	"files":[
+		"lib/attr.ts",
+		"lib/createNestedProp.ts",
+		"lib/debounce.ts",
+		"lib/define.ts",
+		"lib/DOMKeyPE.ts",
+		"lib/getDestructArgs.ts",
+		"lib/getProcessor.ts",
+		"lib/getSlicedPropDefs.ts",
+		"lib/html.ts",
+		"lib/hydrate.ts",
+		"lib/intersection.ts",
+		"lib/letThereBeProps.ts",
+		"lib/observeCssSelector.ts",
+		"lib/passAttrToProp.ts",
+		"lib/pinTheDOMToKeys.ts",
+		"lib/propUp.ts",
+		"lib/Rx.ts",
+		"lib/RxSuppl.ts",
+		"lib/substrBefore.ts",
+		
+	],
 	"exclude":[
-		"node_modules"
+		"./node_modules/*"
 	]
 
 }
