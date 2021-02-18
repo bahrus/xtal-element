@@ -1123,7 +1123,7 @@ const propActions = [
   ]
 ] as PropAction[];
 
-export abstract class CounterMi extends X{
+export class CounterMi extends X{
     count = 0;
 
     changeCount(delta: number){
@@ -1133,10 +1133,10 @@ export abstract class CounterMi extends X{
 
 X.tend({
     name: 'counter-mi',
-    class: CounterMi as any as {new(): X},
-    mainTemplate: mainTemplate,
-    propActions: propActions,
-    refs: refs
+    class: CounterMi as {new(): X},
+    mainTemplate,
+    propActions,
+    refs
 });
 ```
 

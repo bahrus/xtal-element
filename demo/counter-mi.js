@@ -44,7 +44,7 @@ export class CounterMi extends X {
 X.tend({
     name: 'counter-mi',
     class: CounterMi,
-    mainTemplate: mainTemplate,
-    propActions: propActions,
-    refs: refs
+    mainTemplate,
+    propActions,
+    refs
 });

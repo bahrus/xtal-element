@@ -17,7 +17,7 @@ export  class X extends HTMLElement {
     reactor: RxSuppl | undefined;
     onPropChange(name: string, prop: PropDef, nv: any){
         if(this.reactor === undefined){
-            this.reactor = new xp.Reactor(this as any as ReactiveSurface, [
+            this.reactor = new xp.RxSuppl(this as any as ReactiveSurface, [
                 {
                     rhsType: Array,
                     ctor: DOMKeyPE
