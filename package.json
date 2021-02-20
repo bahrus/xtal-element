@@ -10,7 +10,7 @@
     "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open"
   },
   "dependencies": {
-    "trans-render": "0.0.276"
+    "trans-render": "0.0.277"
   },
   "devDependencies": {
     "es-dev-server": "1.57.4",

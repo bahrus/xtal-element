@@ -9,7 +9,7 @@ export interface XConfig{
     propDefs?: PropDefMap<any>;
     noShadow?: boolean;
     name: string;
-    class?: {new(): newX};
+    class?: {new(): X};
     refs: any;
 }
 //TODO look into variadic tuple types
