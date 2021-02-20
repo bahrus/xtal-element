@@ -35,10 +35,7 @@ export class Rx implements IReactor {
         this.queue = new Set<string>();
         const self = this.surface as any;
         const ignoreProps = self.constructor.prototype.xtalIgnore as Set<string>;
-        //for (const propAction of flat) {
-        
-        for(let i = 0, ii = flat.length; i < ii; i++){
-            const propAction = flat[i];
+        for (const propAction of flat) {
             let args: string[] | undefined = undefined;
             if (!this.deconstructedArgs.has(propAction)) {
                 args = getDestructArgs(propAction);
