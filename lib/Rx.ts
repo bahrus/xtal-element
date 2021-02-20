@@ -25,15 +25,20 @@ export class Rx implements IReactor {
             this.processActionQueue();
         }
     }
-    async doPS(lhs: any, rhs: any, args: string[] | undefined){}
+    doPS(lhs: any, rhs: any, args: string[] | undefined){}
     async processActionQueue() {
         if(this.surface.propActions === undefined) return;
-        const flat = this.surface.propActions.flat();
+        //reverse is done on the hopes that developes will order actions in order data flows
+        //reversing reduces duplicate calls in this conditions, when using async heavily.
+        const flat = this.surface.propActions.flat().reverse();
         const queue = this.queue;
         this.queue = new Set<string>();
         const self = this.surface as any;
         const ignoreProps = self.constructor.prototype.xtalIgnore as Set<string>;
-        for (const propAction of flat) {
+        //for (const propAction of flat) {
+        
+        for(let i = 0, ii = flat.length; i < ii; i++){
+            const propAction = flat[i];
             let args: string[] | undefined = undefined;
             if (!this.deconstructedArgs.has(propAction)) {
                 args = getDestructArgs(propAction);
@@ -54,7 +59,7 @@ export class Rx implements IReactor {
             if (intersection(queue, dependencySet).size > 0) {
                 if (this.surface.propActionsHub !== undefined) this.surface.propActionsHub(propAction);
                 const returnVal = propAction(this.surface as HTMLElement);
-                await this.doPS(this.surface, returnVal, args);
+                this.doPS(this.surface, returnVal, args);
             }
         }
         

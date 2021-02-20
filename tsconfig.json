@@ -29,7 +29,7 @@
 		"lib/Rx.ts",
 		"lib/RxSuppl.ts",
 		"lib/substrBefore.ts",
-		
+		"demo/i-bid/i-bid.ts"
 	],
 	"exclude":[
 		"./node_modules/*"
