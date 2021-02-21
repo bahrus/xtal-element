@@ -28,9 +28,7 @@ export class Rx implements IReactor {
     doPS(lhs: any, rhs: any, args: string[] | undefined){}
     async processActionQueue() {
         if(this.surface.propActions === undefined) return;
-        //reverse is done on the hopes that developes will order actions in order data flows
-        //reversing reduces duplicate calls in this conditions, when using async heavily.
-        const flat = this.surface.propActions.flat().reverse();
+        const flat = this.surface.propActions.flat();
         const queue = this.queue;
         this.queue = new Set<string>();
         const self = this.surface as any;
