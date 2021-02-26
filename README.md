@@ -862,10 +862,10 @@ We can split the action in two, separating different concerns:
 The first action can be replaced by:
 
 ```JavaScript
-({domCache, changeCount}: CounterRe) => ([
+({domCache, changeCount}: CounterRe) => [
     {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
     {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
-]),
+],
 ```
 
 *if* we provide the following rxn-suppl:
@@ -892,6 +892,39 @@ changeCount(e: Event){
     ...
 }
 ```
+
+<details>
+    <summary>doDOMKeyPEAction in detail</summary>
+
+The doDOMKeyPEAction expression:
+
+```JavaScript
+[
+    {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+    {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]}
+],
+```
+
+Is an array.  The processor expects one of two types of things inside the array:
+
+1.  Objects
+2.  Arrays
+
+In the example above, they are all objects.  In this case, the LHS is expected to be a reference to a DOM, or multiple DOM elements.  And the right hand side is a props / event tuple, as we mentioned.
+
+But you can also include an array in the expression:
+
+```JavaScript
+[
+    {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+    {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
+    [finishedSettingProps: true]
+],
+```
+
+This can act as a "post binding" prop setting of the host element itself.  This can allow us to declarative continue the processing "chain" of reactions -- "bind these elements / add event handlers, then set property "finishedSettingProps" to true, which another reaction can then, well, react to.
+
+</details>
 
 But our first changeCount method is a nice, pristine method which is UI neutral.  To allow us to bind to that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluating target.dataset.d, and applying parseInt to that value."
 
