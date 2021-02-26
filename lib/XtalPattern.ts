@@ -4,10 +4,13 @@ import {pinTheDOMToKeys} from './pinTheDOMToKeys.js';
 import {PropAction, PropDefMap, PropDef} from '../types.d.js';
 import {RxSuppl} from './RxSuppl.js';
 
-const createShadow = ({domCache, clonedTemplate, self}: XtalPattern) => {
+const createShadow = ({domCache, clonedTemplate, styleTemplate, self}: XtalPattern) => {
     if(domCache===undefined) return;
     self.attachShadow!({mode: 'open'});
     self.shadowRoot!.appendChild(clonedTemplate!);
+    if(styleTemplate !== undefined){
+        self.shadowRoot!.appendChild(styleTemplate.content.cloneNode(true));
+    }
     self.clonedTemplate = undefined;
 }
 

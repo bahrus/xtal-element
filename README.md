@@ -910,7 +910,7 @@ Is an array.  The processor expects one of two types of things inside the array:
 1.  Objects
 2.  Arrays
 
-In the example above, they are all objects.  In this case, the LHS is expected to be a reference to a DOM, or multiple DOM elements.  And the right hand side is a props / event tuple, as we mentioned.
+In the example above, both of the lines inside the outer array are objects.  In this case, the LHS is expected to be a symbolic reference to a DOM element, or multiple DOM elements (via the domCache property).  And the right hand side is a props / event tuple, as we mentioned.
 
 But you can also include an array in the expression:
 
@@ -922,7 +922,7 @@ But you can also include an array in the expression:
 ],
 ```
 
-This can act as a "post binding" prop setting of the host element itself.  This can allow us to declarative continue the processing "chain" of reactions -- "bind these elements / add event handlers, then set property "finishedSettingProps" to true, which another reaction can then, well, react to.
+This can act as a "post binding" prop setting of the host element itself.  This can allow us to declaratively continue the processing "chain" of reactions -- "bind these elements / add event handlers, then set property "finishedSettingProps" to true, which another "propAction" reaction can then, well, react to.
 
 </details>
 
@@ -965,6 +965,9 @@ Reactions can be nested:
 ```TypeScript
     propActions = [linkFoundYourDream, [linkFoundYourPlace]];
 ```
+
+This allows for a "suite" or "bundle" of reusable propAction reactions to be shared across multiple elements.
+
 </details>
 
 <details>
@@ -990,7 +993,7 @@ The action:
 self = this;
 ```
 
-2.  Now we can move the action out to a constant, and place it some common import for reduced bandwidth when developing multiple custom elements:
+2.  Now we can move the action out to a constant, and move it to some common import for reduced bandwidth when developing multiple custom elements:
 
 ```JavaScript
 const linkClonedTemplate = ({domCache, clonedTemplate, self}) => {
@@ -1003,7 +1006,7 @@ const linkClonedTemplate = ({domCache, clonedTemplate, self}) => {
 
 ### XtalPattern
 
-The library XtalPattern removes as much of the common boilerplate as possible (without using class inheritance or mixins).  It provides an interface.  Implementing the interface with Typescript will hopefully help the developer remember what needs to be done for a complete component.
+The library XtalPattern removes as much of the common boilerplate as possible (without using class inheritance or mix-ins).  It provides an interface.  Implementing the interface with Typescript will hopefully help the developer remember what needs to be done for a complete component.
 
 Using XtalPattern, our component now looks like what's shown below (after expanding).  Remember, we are still in à la carte mode.
 
