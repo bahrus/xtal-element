@@ -31,8 +31,8 @@ xtal-element's target audience is those who are looking for web component helper
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals.
 2.  Takes extensibility and separation of concerns to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
-4.  Efforts made to reap the most out of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities,  (here's to hoping this wil include import maps soon).  
-5.  Some of xtal-element's utility functions adopt the philosophy that it makes sense to be able to easily partition reactions to groups of property changes, for both internal dependency calculations, as well as visual updates.  Some reactions involve doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  Separate update processes can focus on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.  This separation of concerns could, in theory, be extended to support other processes -- including build and server component processes (to be explored.)
+4.  Takes advantage of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with one exception. Here's to hoping import maps arrives in browsers soon.  
+5.  Can easily separate, as well as group, different "concerns" as best fits the situation.  Some of xtal-element's utility functions adopt the philosophy that it makes sense to be able to easily partition properties into logical groups, and "react" when any of the grouped properties change.  This is done for both internal dependency calculations, as well as for visual updates.  Some reactions involve doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  Separate update processes can focus on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.  This separation of concerns could, in theory, be extended to support other processes -- including build and server component processes (to be explored.)
 6.  Micro FrontEnd friendly versioning support.
 
 </details>
@@ -397,7 +397,7 @@ Separating "propAction" arrow functions out of the class as an (imported) consta
 
 ### Priors
 
-The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're closer in spirit to computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings, we can create pipeline view updates with quite a bit of pinpoint accuracy.  
+The resemblance of these "propActions" to Rust trait implementations, a connection made above, is a bit superficial.  They're closer in spirit to computed values / properties with one significant difference -- they aggressively *push / notify* new values of properties, which can trigger targeted updates to the UI, rather than passively calculating them when requested (like during a repeated global render process).  And since we can partition rendering based on similar property groupings (discussed below), we can create pipeline view updates with quite a bit of pinpoint accuracy.  
 
 It's possible that libraries that don't support this kind of property change "diffraction", but rely on "template-optimized re-rendering" of the entire UI with every property change, end up also avoiding unnecessary updates, based on their clever diff-engine algorithms.  I can say as a user of a limited number of such libraries, that what is actually getting updated, when and why, has always a bit of a mystery for me, so that I end up "winging it" more often than I'd like.  This library puts the onus (and power) in the developer's hands to devise (and fully understand) their own strategy, not sparing the developer the details of the trade offs. 
 
@@ -458,8 +458,8 @@ xtal-element provides a function, pinTheDOMToKeys, for creating symbolic referen
 <script>
 const refs = {
     sheIsAPainParts: '.will-o-the-wisp',
-    moonbeamElements: '.hand',
-    wordDatum: '',
+    moonBeamElement: '.hand',
+    wordData: '',
 
 }
 const cache = {};
@@ -503,13 +503,13 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 </table>
 
 
-In the case of plural selections (...Elements, ...Parts, etc) the right-hand-side (rhs) of each refs sub-expression is not an empty string, it is then used to filter out that list via element.matches(rhs). pinTheDOMToKeys will always replace the rhs with a unique symbol for later reference.
+In the case of plural selections (...Elements, ...Parts, etc), if the right-hand-side (rhs) of each refs sub-expression is not an empty string, it is then used to filter out that list via element.matches(rhs). pinTheDOMToKeys will always replace the rhs with a unique symbol for later reference.
 
 The cache can then be used to retrieve the matching element(s) from the domFragment:
 
 ```JavaScript
-const myDiv = cache[refs.moonBeamElements];
-const someParts = cache[refs.sheIsAPainParts];
+const moonBeam = cache[refs.moonBeamElement];
+const painParts = cache[refs.sheIsAPainParts];
 ```
 
 </details>
