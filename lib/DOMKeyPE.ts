@@ -1,9 +1,12 @@
 import {RxSuppl} from './RxSuppl.js';
 import {applyPE} from 'trans-render/lib/applyPE.js';
-import {PEUnionSettings} from '../types.d.js';
+import {PEUnionSettings} from 'trans-render/lib/types.d.js';
 
 export class DOMKeyPE{
     constructor(public domCacheProp: string = 'domCache'){}
+    apply(surface: HTMLElement, el: HTMLElement, ref: any){
+        applyPE(surface, el, ref as PEUnionSettings);
+    }
     do(refs: any[], dependencies: string[], reactor: RxSuppl){
         const surface = reactor.surface;
         const aSurface = surface as any;
@@ -11,7 +14,7 @@ export class DOMKeyPE{
         let lastNonDittoVal = undefined;
         for(const ref of refs){
             if(Array.isArray(ref)){
-                applyPE(surface as HTMLElement, surface as HTMLElement, ref as PEUnionSettings);
+                this.apply(surface as HTMLElement, surface as HTMLElement, ref);
             }else{
                 const refKeys = Object.getOwnPropertySymbols(ref);
                 for(const key of refKeys){
@@ -37,18 +40,13 @@ export class DOMKeyPE{
                     const matchOrMatches = cache[key];
                     if(Array.isArray(matchOrMatches)){
                         for(var el of matchOrMatches){
-                            applyPE(surface as HTMLElement, el as HTMLElement, lastNonDittoVal);
+                            this.apply(surface as HTMLElement, el as HTMLElement, lastNonDittoVal);
                         }
                     }else{
-                        applyPE(surface as HTMLElement, matchOrMatches as HTMLElement, lastNonDittoVal);
+                        this.apply(surface as HTMLElement, matchOrMatches as HTMLElement, lastNonDittoVal);
                     }
-
-                    
                 }
             }
-            
-
-                
 
         }
     }

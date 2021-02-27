@@ -15,6 +15,7 @@
 		"lib/debounce.ts",
 		"lib/define.ts",
 		"lib/DOMKeyPE.ts",
+		"lib/DOMKeyPEA.ts",
 		"lib/getDestructArgs.ts",
 		"lib/getProcessor.ts",
 		"lib/getSlicedPropDefs.ts",
