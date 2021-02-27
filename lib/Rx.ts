@@ -15,12 +15,7 @@ export class Rx implements IReactor {
         this.queue.add(name);
         if(this.surface.disabled && name !== 'disabled') return;
         if (prop.async) {
-            //https://medium.com/ing-blog/litelement-a-deepdive-into-batched-updates-b9431509fc4f
-            if (!this.requestUpdate) {
-                this.requestUpdate = true;
-                this.requestUpdate = await false;
-                this.processActionQueue();
-            }
+            queueMicrotask(() => {this.processActionQueue()});
         } else {
             this.processActionQueue();
         }
