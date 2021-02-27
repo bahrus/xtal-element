@@ -44,7 +44,11 @@ const common = {
 export const props = {
     clonedTemplate: common,
     domCache: common,
-    mainTemplate: common
+    mainTemplate: common,
+    styleTemplate: {
+        type: Object,
+        dry: true,
+    }
  } as PropDefMap<XtalPattern>;
 
 export const xp = {createShadow, attachShadow, manageMainTemplate, props, appendClone, RxSuppl};
