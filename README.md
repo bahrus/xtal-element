@@ -830,7 +830,7 @@ In our counter web component, let's make this code more declarative, as it is bo
 },
 ```
 
-We can replace this.count-- / this.count++ with a more powerful method of our class CounterDo, capable of so much more:
+We can replace this.count-- / this.count++ with a more powerful method, defined in our class CounterDo, capable of so much more:
 
 ```JavaScript
 changeCount(delta: number){
@@ -873,8 +873,8 @@ The first action can be replaced by:
 ```JavaScript
 reactor = new RxSuppl(this, [
     {
-        type: Array,
-        do: doDOMKeyPEAction
+        rhsType: Array,
+        ctor: DOMKeyPE
     }
 ]);
 ```
@@ -893,8 +893,16 @@ changeCount(e: Event){
 }
 ```
 
+But our first changeCount method is a nice, pristine method which is UI neutral.  To allow us to bind to that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluating target.dataset.d, and applying parseInt to that value."
+
+### Setting attributes
+
+If you need to use attributes, then import the slightly larger DOMKeyPEA 'xtal-element/lib/DOMKeyPEA.js';
+
+Now the third element of the RHS array is where you can set attributes (a value of null removes the attribute).
+
 <details>
-    <summary>doDOMKeyPEAction in detail</summary>
+    <summary>DOMKeyPE[A] in detail</summary>
 
 The doDOMKeyPEAction expression:
 
@@ -922,11 +930,37 @@ But you can also include an array in the expression:
 ],
 ```
 
-This can act as a "post binding" prop setting of the host element itself.  This can allow us to declaratively continue the processing "chain" of reactions -- "bind these elements / add event handlers, then set property "finishedSettingProps" to true, which another "propAction" reaction can then, well, react to.
+This can act as a "post-binding" prop setting of the host element itself.  This can allow us to declaratively continue the processing "chain" of reactions -- "bind these elements / add event handlers, then set property "finishedSettingProps" to true, which another "propAction" reaction can then, well, react to.
+
+## Setting textContent
+
+If you just want to set the textContent property of a pinned DOM element, make the RHS a string:
+
+```JavaScript
+[
+    {[refs.countPart]: count.toString()
+],
+```
+
+## Using DOMKeyPE[A] to substitute one tag for another
+
+Much earlier, we described how xtal-element's define function dynamically sets the custom element name for multi-versioning support.  We mentioned this is only useful if the tag inside the cloned template can be replaced by the dynamically determined tag name.
+
+There are also quite a number of other scenarios where being able to substitute in a static tag name with a dynamic one is useful.  It comes up frequently when working with generic JSON structures, where polymorphism is used between different component types.
+
+Here we make use of the Symbol type for the RHS expression:
+
+```Typescript
+  ({domCache, name}: SwagTagInstance) => [
+    {[refs.placeHolderElement]: Symbol(name)}
+  ],
+```
+
+The "description" inside the Symbol function, "name" in this case, becomes the name of the replacing tag.
 
 </details>
 
-But our first changeCount method is a nice, pristine method which is UI neutral.  To allow us to bind to that, the tuple:  [changeCount, 'dataset.d', parseInt] means "call changeCount, but pass in the value you get after evaluating target.dataset.d, and applying parseInt to that value."
+
 
 </details>
 
