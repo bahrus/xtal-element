@@ -54,6 +54,10 @@ export class DOMKeyPE{
                         case 'object':
                             lastNonDittoVal = val;
                             break;
+                        case 'symbol':
+                            lastNonDittoVal = val;
+                            break;
+
                     }
                     const matchOrMatches = cacheKey;
                     if(Array.isArray(matchOrMatches)){
