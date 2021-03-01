@@ -6,18 +6,21 @@ export class DOMKeyPE{
     constructor(public domCacheProp: string = 'domCache'){}
     checkForDOMSubstitution(surface: HTMLElement, el: HTMLElement, val: any, key: symbol){
         if(typeof(val) === 'symbol' && val.description !== undefined){
-            const newEl = document.createElement(val.description);
-            //el.appendChild(newEl);
-            el.insertAdjacentElement('afterend', newEl);
-            const cache = (<any>surface)[this.domCacheProp];
-            const pinned = cache[key];
-            if(Array.isArray(pinned)){
-                const idx = pinned.findIndex(test => test === el);
-                pinned[idx] = newEl;
-            }else{
-                cache[key] = newEl;
+            //if the existing element matches the one to replace it, don't do anything
+            if(el.localName !== val.description){
+                const newEl = document.createElement(val.description);
+                el.insertAdjacentElement('afterend', newEl);
+                const cache = (<any>surface)[this.domCacheProp];
+                const pinned = cache[key];
+                if(Array.isArray(pinned)){
+                    const idx = pinned.findIndex(test => test === el);
+                    pinned[idx] = newEl;
+                }else{
+                    cache[key] = newEl;
+                }
+                el.remove();
             }
-            el.remove();
+
         }else{
             this.apply(surface, el, val);
         }
