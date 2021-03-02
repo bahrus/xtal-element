@@ -944,7 +944,7 @@ If you just want to set the textContent property of a pinned DOM element, make t
 
 ## Using DOMKeyPE[A] to substitute one tag for another
 
-Much earlier, we described how xtal-element's define function dynamically sets the custom element name for multi-versioning support.  We mentioned this is only useful if the tag inside the cloned template can be replaced by the dynamically determined tag name.
+Much earlier, we described how xtal-element's define function dynamically sets the custom element name, under certain conditions, in order to support multi-versioning.  We mentioned this is only useful if the tag inside the cloned template can be replaced by the dynamically determined tag name.
 
 There are also quite a number of other scenarios where being able to substitute in a static tag name with a dynamic one is useful.  It comes up frequently when working with generic JSON structures, where polymorphism is used between different component types.
 
