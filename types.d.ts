@@ -22,24 +22,6 @@ export type EventScope = EventScopeT | EventScopeTB | EventScopeTBC | EventScope
 
 export type EventScopes = EventScope[];
 
-export interface IXtallatXI extends IHydrate {
-
-    /**
-     * Dispatch Custom Event
-     * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
-     * @param detail Information to be passed with the event
-     * @param asIs If true, don't append event name with '-changed'
-     */
-    [de](name: string, detail: any, asIs?: boolean): CustomEvent | void;
-    /**
-     * Needed for asynchronous loading
-     * @param props Array of property names to "upgrade", without losing value set while element was Unknown
-     */
-
-     eventScopes: EventScopes | undefined;
- 
-    // static observedAttributes: string[]; 
-}
 
 export interface PropInfo{
     bool: boolean;
