@@ -185,7 +185,7 @@ const propDefMap : PropDefMap<MyFavoriteThings> = {
         type: String,
     }
 }
-const slicedPropDefs = getSlicedPropDefs(propDefs);
+const slicedPropDefs = getSlicedPropDefs(propDefMap);
 
 export class MyFavoriteThings extends HTMLElement{
     onPropChange(name, prop, newValue){
@@ -199,6 +199,33 @@ The third parameter, 'onPropChange' is optional.
 
 </details>
 
+<details>
+    <summary>Read-easily, write-obscurely properties [TODO]</summary>
+
+One sticky point with web components, and this library in particular, is how to indicate properties that are meant to be passed in from outside, vs. "private" properties that hold internal state.  (This distinction figures prominently in popular frameworks.)
+
+Perhaps the newly implemented private property support for classes can help with this, but xtal-element provides more robust support for an alternative.  We want a property to be easily read (both internally as well as externally), but whose value is only set internally.
+
+To support this, add the obfuscate setting:
+
+```JavaScript
+const propDefMap = {
+    myProp: {
+        obfuscate: true,
+    }
+};
+const slicedPropDefs = getSlicedPropDefs(propDefMap); 
+```
+
+Now to read the value of myProp, we use this.myProp or self.myProp, or $0.myProp from the DevTools console.
+
+But to set the value of myProp, we now need to do this:
+
+```JavaScript
+self[slicedPropDefs.propLookup['myProp'].alias] = newValue;
+```
+
+</details>
 
 
 <details>
