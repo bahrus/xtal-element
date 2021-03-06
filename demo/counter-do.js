@@ -79,5 +79,5 @@ const propDefs = {
     }
 };
 const slicedPropDefs = getSlicedPropDefs(propDefs);
-letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+letThereBeProps(CounterDo, slicedPropDefs, 'onPropChange');
 define(CounterDo);

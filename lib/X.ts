@@ -64,7 +64,7 @@ export  class X extends HTMLElement {
         }
         const allPropDefs = {...xp.props, ...propDefs};
         const slicedPropDefs = getSlicedPropDefs(allPropDefs);
-        xc.letThereBeProps(newClass as any as {new(): X}, slicedPropDefs.propDefs, 'onPropChange');
+        xc.letThereBeProps(newClass as any as {new(): X}, slicedPropDefs, 'onPropChange');
         xc.define(newClass);
     }
 }

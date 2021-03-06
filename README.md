@@ -192,7 +192,7 @@ export class MyFavoriteThings extends HTMLElement{
         console.log(prop);
     }
 }
-letThereBeProps(MyFavoriteThings, slickedPropDefs.propDefs, 'onPropChange');
+letThereBeProps(MyFavoriteThings, slickedPropDefs, 'onPropChange');
 ```
 
 The third parameter, 'onPropChange' is optional.
@@ -200,7 +200,7 @@ The third parameter, 'onPropChange' is optional.
 </details>
 
 <details>
-    <summary>Read-easily, write-obscurely properties [TODO]</summary>
+    <summary>Read-easily, write-obscurely properties</summary>
 
 One sticky point with web components, and this library in particular, is how to indicate properties that are meant to be passed in from outside, vs. "private" properties that hold internal state.  (This distinction figures prominently in popular frameworks.)
 
@@ -222,7 +222,7 @@ Now to read the value of myProp, we use this.myProp or self.myProp, or $0.myProp
 But to set the value of myProp, we now need to do this:
 
 ```JavaScript
-self[slicedPropDefs.propLookup['myProp'].alias] = newValue;
+self[slicedPropDefs.propLookup.myProp.alias] = newValue;
 ```
 
 </details>
@@ -654,7 +654,7 @@ const propDefs: PropDefMap<CounterDo> = {
 };
 
 const slicedPropDefs = getSlicedPropDefs(propDefs);
-letThereBeProps(CounterDo, slicedPropDefs.propDefs, 'onPropChange');
+letThereBeProps(CounterDo, slicedPropDefs, 'onPropChange');
 define(CounterDo);
 ```
 
@@ -1147,7 +1147,7 @@ const propDefMap: PropDefMap<CounterRe> = {
     }
 };
 const slicedPropDefs = getSlicedPropDefs(propDefMap);
-letThereBeProps(CounterRe, slicedPropDefs.propDefs, 'onPropChange');
+letThereBeProps(CounterRe, slicedPropDefs, 'onPropChange');
 define(CounterRe);
 ```
 </details>

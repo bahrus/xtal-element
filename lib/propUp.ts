@@ -13,6 +13,8 @@ export function propUp<T = any>(self: HTMLElement, props: string[], defaultValue
         if (self.hasOwnProperty(prop)) {
             delete (<any>self)[prop];
         }
-        (<any>self)[prop] = value;
+        //some properties are read only.
+        try{(<any>self)[prop] = value;}catch{}
+        
     });
 }

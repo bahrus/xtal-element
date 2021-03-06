@@ -86,6 +86,13 @@ export interface PropDef{
      * Copy property value to another value specified by echoTo
      */
     echoTo?: string;
+
+    /**
+     * Make property read-easily, write obscureky
+     */
+    obfuscate?: boolean;
+
+    alias?: string;
 }
 
 export type PropDefMap<T> = {

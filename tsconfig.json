@@ -30,7 +30,10 @@
 		"lib/Rx.ts",
 		"lib/RxSuppl.ts",
 		"lib/substrBefore.ts",
-		"demo/i-bid/i-bid.ts"
+		"demo/counter-do.ts",
+		"demo/counter-re.ts",
+		"demo/counter-mi.ts",
+		"demo/alias-example.ts"
 	],
 	"exclude":[
 		"./node_modules/*"

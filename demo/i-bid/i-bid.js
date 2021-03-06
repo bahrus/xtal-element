@@ -84,7 +84,7 @@ const propDefMap = {
     }
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-xc.letThereBeProps(IBid, slicedPropDefs.propDefs, 'onPropChange');
+xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
 xc.define(IBid);
 function markOwnership(self, initCount) {
     const { ownedSiblings } = self;

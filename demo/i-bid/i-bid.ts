@@ -98,7 +98,7 @@ const propDefMap : PropDefMap<IBid> = {
     }
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-xc.letThereBeProps<IBid>(IBid, slicedPropDefs.propDefs, 'onPropChange');
+xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 xc.define(IBid);
 
 function markOwnership(self: IBid, initCount: number){
