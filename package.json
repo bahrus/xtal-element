@@ -15,7 +15,7 @@
   ],
   "files": [
     "lib/*",
-    "types.d.js"
+    "types.d.ts"
   ],
   "typings": "types.d.ts",
   "exports": {
