@@ -1076,7 +1076,7 @@ First, we need to make sure the shadow root isn't created unnecessarily [TODO].
 
 Second, can we assume, in some cases, that the initially rendered shadowDOM is compatible with the initialized property values passed down as attributes (JSON-stringified when necessary)? [TODO]
 
-Alternatively/in addition, can we use Rxn-suupls to initialize (some of) the property values, so that everything is guaranteed to be in sync?[TODO]
+Alternatively/in addition, can we use Rxn-suppls to initialize (some of) the property values, so that everything is guaranteed to be in sync?[TODO]
 </details>
 
 ### XtalPattern

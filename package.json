@@ -2,17 +2,54 @@
   "name": "xtal-element",
   "version": "0.0.361",
   "description": "Some opinionated web component base classes.",
-  "main": "lib/X.js",
-  "module": "lib/X.js",
+  "main": "./lib/X.js",
+  "module": "./lib/X.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node node_modules/xtal-test/serve.js",
-    "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open"
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open",
+    "package-check": "package-check"
+  },
+  "keywords": [
+    "webcomponents"
+  ],
+  "files": [
+    "lib/*",
+    "types.d.js"
+  ],
+  "typings": "types.d.ts",
+  "exports": {
+    ".": "./lib/XtalCore.js",
+    "./lib/attr.js": "./lib/attr.js",
+    "./lib/createNestedProp.js": "./lib/createNestedProp.js",
+    "./lib/debounce.js": "./lib/debounce.js",
+    "./lib/define.js": "./lib/define.js",
+    "./lib/DOMKeyPE.js": "./lib/DOMKeyPE.js",
+    "./lib/DOMKeyPEA.js": "./lib/DOMKeyPEA.js",
+    "./lib/getDestructArgs.js": "./lib/getDestructArgs.js",
+    "./lib/getProcessor.js": "./lib/getProcessor.js",
+    "./lib/getSlicedPropDefs.js": "./lib/getSlicedPropDefs.js",
+    "./lib/html.js": "./lib/html.js",
+    "./lib/hydrate.js": "./lib/hydrate.js",
+    "./lib/intersection.js": "./lib/intersection.js",
+    "./lib/letThereBeProps.js": "./lib/letThereBeProps.js",
+    "./lib/observeCssSelector.js": "./lib/observeCssSelector.js",
+    "./lib/passAttrToProp.js": "./lib/passAttrToProp.js",
+    "./lib/pinTheDOMToKeys.js": "./lib/pinTheDOMToKeys.js",
+    "./lib/propUp.js": "./lib/propUp.js",
+    "./lib/Rx.js": "./lib/Rx.js",
+    "./lib/RxSuppl.js": "./lib/RxSuppl.js",
+    "./lib/substrBefore.js": "./lib/substrBefore.js",
+    "./lib/with-path.js": "./lib/with-path.js",
+    "./lib/X.js": "./lib/X.js",
+    "./lib/XtalCore.js": "./lib/XtalCore.js",
+    "./lib/XtalPattern.js": "./lib/XtalPattern.js"
   },
   "dependencies": {
     "trans-render": "0.0.277"
   },
   "devDependencies": {
+    "@skypack/package-check": "0.2.2",
     "es-dev-server": "1.57.4",
     "es-module-shims": "0.5.2",
     "xtal-test": "0.0.48"
