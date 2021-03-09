@@ -22,9 +22,8 @@ export class DOMKeyPE{
                 el.remove();
             }
 
-        }else{
-            this.apply(surface, el, val);
         }
+        this.apply(surface, el, val);
     }
     apply(surface: HTMLElement, el: HTMLElement, val: any){
         applyPE(surface, el, val as PEUnionSettings);
