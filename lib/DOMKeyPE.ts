@@ -5,10 +5,11 @@ import {PEUnionSettings} from 'trans-render/lib/types.d.js';
 export class DOMKeyPE{
     constructor(public domCacheProp: string = 'domCache'){}
     checkForDOMSubstitution(surface: HTMLElement, el: HTMLElement, val: any, key: symbol){
-        if(typeof(val) === 'symbol' && val.description !== undefined){
+        const localName = val[0]?.localName;
+        if(localName !== undefined){
             //if the existing element matches the one to replace it, don't do anything
-            if(el.localName !== val.description){
-                const newEl = document.createElement(val.description);
+            if(el.localName !== localName){
+                const newEl = document.createElement(localName);
                 el.insertAdjacentElement('afterend', newEl);
                 const cache = (<any>surface)[this.domCacheProp];
                 const pinned = cache[key];
@@ -58,20 +59,16 @@ export class DOMKeyPE{
                         case 'object':
                             lastNonDittoVal = val;
                             break;
-                        case 'symbol':
-                            lastNonDittoVal = val;
-                            break;
+                        
 
                     }
                     const matchOrMatches = cacheKey;
                     if(Array.isArray(matchOrMatches)){
                         for(var el of matchOrMatches){
                             this.checkForDOMSubstitution(surface as HTMLElement, el, lastNonDittoVal, key)
-                            //this.apply(surface as HTMLElement, el as HTMLElement, lastNonDittoVal);
                         }
                     }else{
                         this.checkForDOMSubstitution(surface as HTMLElement, matchOrMatches as HTMLElement, lastNonDittoVal, key);
-                        //this.apply(surface as HTMLElement, matchOrMatches as HTMLElement, lastNonDittoVal);
                     }
                 }
             }

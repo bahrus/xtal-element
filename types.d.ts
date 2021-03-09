@@ -92,6 +92,9 @@ export interface PropDef{
      */
     obfuscate?: boolean;
 
+    /**
+     * Alias for obfuscated properties
+     */
     alias?: string;
 }
 
