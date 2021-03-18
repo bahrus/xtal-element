@@ -46,7 +46,7 @@
     "./lib/XtalPattern.js": "./lib/XtalPattern.js"
   },
   "dependencies": {
-    "trans-render": "0.0.277"
+    "trans-render": "0.0.279"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
