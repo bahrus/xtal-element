@@ -1206,6 +1206,29 @@ The first solution we provide for this is "X.tend".
 
 </details>
 
+## Low ceremony web components
+
+Let's see how we can use xtal-element to generate web components as quickly as possible.
+
+### c-c and carbon-copy
+
+My favorite approach to this is using the [c-c or carbon-copy](https://github.com/bahrus/carbon-copy#c-c----codeless-web-components) web component "factory":
+
+```html
+<template id=hello-world>
+    <div>Hello, {{place}}</div>
+</template>
+<c-c copy from="/hello-world" string-props='["place"]'></c-c>
+
+<hello-world place="mars"></hello-world>
+```
+
+*carbon-copy* uses the very utility functions we've been painstakingly documenting so far, to do its thing.
+
+Unfortunately, this way of defining custom elements doesn't make such in our JS-centric world (sigh).
+
+In such a setting, the X base class, discussed below, is, I think, tolerable in both a JS-centric world, and will be much more appealing if/when standards show some sympathy to the user.
+
 ### Low ceremony X base class
 
 ```JavaScript
