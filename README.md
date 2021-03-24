@@ -1225,9 +1225,9 @@ My favorite approach to this is using the [c-c or carbon-copy](https://github.co
 
 *carbon-copy* uses the very utility functions we've been painstakingly documenting so far, to do its thing.
 
-Unfortunately, this way of defining custom elements doesn't make such in our JS-centric world (sigh).
+Unfortunately, this way of defining custom elements doesn't make sense in our JS-centric world (sigh).
 
-In such a setting, the X base class, discussed below, is, I think, tolerable in both a JS-centric world, and will be much more appealing if/when standards show some sympathy to the user.
+In such a setting, the X base class, discussed below, is, I think, tolerable in a JS-centric world, and will be much more appealing if/when standards show some sympathy to the user.
 
 ### Low ceremony X base class
 

@@ -11,7 +11,7 @@ export function passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, sli
                 parsedNewVal = newValue.includes('.') ? parseFloat(newValue) : parseInt(newValue);
                 break;
             case Boolean:
-                parsedNewVal = newValue !== '';
+                parsedNewVal = newValue !== null;
                 break;
             case Object:
                 if(!propDef.parse) return;
