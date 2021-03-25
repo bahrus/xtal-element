@@ -3,7 +3,7 @@ import { substrBefore } from './substrBefore.js';
 
 export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: { [key: string]: string | symbol }, cache: any) {
     const rootNode = fragment.getRootNode() as DocumentFragment; //can't remember why getting the root node
-    const attribs = [['id', 'ids'], ['part', 'parts'], ['class', 'classes'], ['data', 'datum'], ['element', 'elements']];
+    const attribs = [['id', 'ids'], ['part', 'parts'], ['class', 'classes'], ['attrib', 'attribs'], ['element', 'elements']];
 
     for (const key in refs) {
         let lookup = refs[key];
@@ -34,9 +34,9 @@ export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: 
                     case 'class':
                         query = `.${attribVal}`;
                         break;
-                    case 'data':
-                    case 'datum':
-                        query = `[data-${attribVal}]`;
+                    case 'attrib':
+                    case 'attribs':
+                        query = `[${attribVal}]`;
                         break;
                     case 'elements':
                     case 'element':
@@ -54,8 +54,6 @@ export function pinTheDOMToKeys(fragment: HTMLElement | DocumentFragment, refs: 
                     }
                     cache[lookup] = matchingNodes;
                 }
-
-                
                 break;
             }
         }

@@ -494,7 +494,7 @@ xtal-element provides a function, pinTheDOMToKeys, for creating symbolic referen
 const refs = {
     sheIsAPainParts: '.will-o-the-wisp',
     moonBeamElement: '.hand',
-    wordData: '',
+    dataWordAttribs: '',
 
 }
 const cache = {};
@@ -515,10 +515,10 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
         <td>Parts</td><td>allInTheFamilyParts</td><td>.querySelectorAll('[part="all-in-the-family"])</td>
     </tr>
     <tr>
-        <td>Datum</td><td>bopBopBaDopDatum</td><td>.querySelector('[data-bop-bop-ba-dop]')</td>
+        <td>Attrib</td><td>bopBopBaDopAttrib</td><td>.querySelector('[bop-bop-ba-dop]')</td>
     </tr>
     <tr>
-        <td>Data</td><td>balanceData</td><td>.querySelectorAll('[data-balance]')</td>
+        <td>Attribs</td><td>balanceDataAttribs</td><td>.querySelectorAll('[data-balance]')</td>
     </tr>
     <tr>
         <td>Element</td><td>ironElement</td></td><td>.querySelector('iron')</td>
