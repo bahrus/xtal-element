@@ -33,6 +33,7 @@
     "./lib/hydrate.js": "./lib/hydrate.js",
     "./lib/intersection.js": "./lib/intersection.js",
     "./lib/letThereBeProps.js": "./lib/letThereBeProps.js",
+    "./lib/nudge.js": "./lib/nudge.js",
     "./lib/observeCssSelector.js": "./lib/observeCssSelector.js",
     "./lib/passAttrToProp.js": "./lib/passAttrToProp.js",
     "./lib/pinTheDOMToKeys.js": "./lib/pinTheDOMToKeys.js",
@@ -43,7 +44,8 @@
     "./lib/with-path.js": "./lib/with-path.js",
     "./lib/X.js": "./lib/X.js",
     "./lib/XtalCore.js": "./lib/XtalCore.js",
-    "./lib/XtalPattern.js": "./lib/XtalPattern.js"
+    "./lib/XtalPattern.js": "./lib/XtalPattern.js",
+    "./lib/zzz.js": "./lib/zzz.js"
   },
   "dependencies": {
     "trans-render": "0.0.280"
