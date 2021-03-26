@@ -1,6 +1,6 @@
 {
   "name": "xtal-element",
-  "version": "0.0.369",
+  "version": "0.0.370",
   "description": "Some opinionated web component base classes.",
   "main": "./lib/X.js",
   "module": "./lib/X.js",
