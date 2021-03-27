@@ -14,11 +14,6 @@ function defineSet<T extends HTMLElement = HTMLElement>(self: any, name: string,
         }
     }
     self[privateKey] = nv;
-    if(prop.transience !== undefined){
-        setTimeout(() => {
-            delete self[privateKey];
-        }, prop.transience);
-    }
     if(prop.log){
         console.log(prop, nv);
     }
@@ -68,7 +63,17 @@ export function letThereBeProps<T extends HTMLElement = HTMLElement>(elementClas
         }else{
             Object.defineProperty(proto, name, {
                 get(){
-                    return this[privateKey];
+                    const returnObj = this[privateKey];
+                    const transience = prop.transience;
+                    if(transience !== undefined && returnObj !== undefined){
+                        if(transience === 0){
+                            delete this[privateKey];
+                        }
+                        setTimeout(() => {
+                            delete this[privateKey];
+                        }, transience);
+                    }
+                    return returnObj;
                 },
                 set(nv){
                     defineSet<T>(this, name, prop, privateKey, nv, callbackMethodName);
