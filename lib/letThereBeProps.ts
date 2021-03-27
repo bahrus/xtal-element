@@ -14,6 +14,11 @@ function defineSet<T extends HTMLElement = HTMLElement>(self: any, name: string,
         }
     }
     self[privateKey] = nv;
+    if(prop.transience !== undefined){
+        setTimeout(() => {
+            delete self[privateKey];
+        }, prop.transience);
+    }
     if(prop.log){
         console.log(prop, nv);
     }

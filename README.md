@@ -31,7 +31,7 @@ xtal-element's target audience is those who are looking for web component helper
 1.  Will benefit from the implementation of HTML Modules -- the rendering library is focused around HTMLTemplateElement-based UI definitions, rather than JSX or tagged-template literals.
 2.  Takes extensibility and separation of concerns to a whole other level.
 3.  Provides first-class support for progressive enhancement, low bandwidth.
-4.  Takes advantage of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with one partial exception. Import maps are now part of Chrome.  Here's to hoping import maps arrives in other browsers soon!  In the meantime, [a polyfill](https://github.com/guybedford/es-module-shims) which is compatible with the native syntax, and available [as a CDN link](https://jspm.org/import-map-cdn), is available.  
+4.  Takes advantage of TypeScript (but use is entirely optional), so as to avoid "magic strings" as much as possible.   By "optional" I mean little to no extra work is required if you choose to forgo typescript. The syntax sticks exclusively to the browser's capabilities, with one partial exception. Import maps are now part of Chrome.  Here's to hoping import maps arrive in other browsers soon!  In the meantime, [a polyfill](https://github.com/guybedford/es-module-shims) which is compatible with the native syntax, and available [as a CDN link](https://jspm.org/import-map-cdn), is available.  
 5.  Can easily separate, as well as group, different "concerns" as best fits the situation.  Some of xtal-element's utility functions adopt the philosophy that it makes sense to be able to easily partition properties into logical groups, and "react" when any of the grouped properties change.  This is done for both internal dependency calculations, as well as for visual updates.  Some reactions involve doing one-time tasks, like cloning / importing HTML Templates, and attaching event handlers.  Separate update processes can focus on passing in new data bindings as they change.  Keeping these two separate, and keeping the HTML Templates separate from binding mappings, may result in a bit more steps than other libraries, but hopefully the lack of magic /  increased flexibility(?) can pay off in some cases.  This separation of concerns could, in theory, be extended to support other processes -- including build and server component processes (to be explored.)
 6.  Micro FrontEnd friendly versioning support.
 
@@ -187,6 +187,10 @@ export interface PropDef{
      * Alias for obfuscated properties
      */
     alias?: string;
+    /**
+     * Delete this property after the specified number of milliseconds. 
+     */
+    transience?: number;
 }
 ```
 
@@ -651,7 +655,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
                 this.count++;
             });
             this.shadowRoot!.appendChild(this.clonedTemplate!);
-            this.clonedTemplate = undefined;
+            delete this.clonedTemplate;
         },
     ] as PropAction[];
     reactor = new Rx(this);

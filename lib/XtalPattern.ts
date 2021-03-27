@@ -5,14 +5,16 @@ import {PropAction, PropDefMap, PropDef} from '../types.d.js';
 import {RxSuppl} from './RxSuppl.js';
 
 const createShadow = ({domCache, clonedTemplate, styleTemplate, self}: XtalPattern) => {
-    if(domCache===undefined) return;
-    self.attachShadow!({mode: 'open'});
-    self.shadowRoot!.appendChild(clonedTemplate!);
+    if(self.shadowRoot !== null) return;
+    if(self.shadowRoot === null){
+        self.attachShadow!({mode: 'open'});
+        self.shadowRoot!.appendChild(clonedTemplate!);
+    }
     if(styleTemplate !== undefined){
         self.shadowRoot!.appendChild(styleTemplate.content.cloneNode(true));
     }
-    self.clonedTemplate = undefined;
 }
+
 
 const appendClone = ({domCache, clonedTemplate, self}: XtalPattern) => {
     if(domCache===undefined) return;
@@ -34,15 +36,19 @@ export const manageMainTemplate = [
     },
 ] as PropAction[];
 
-const common = {
+export const common : PropDef = {
     type: Object,
     stopReactionsIfFalsy: true,
     async: false,
     dry: true,
 } as PropDef;
+export const transientCommon : PropDef = {
+    ...common,
+    transience: 5000,
+}
 
 export const props = {
-    clonedTemplate: common,
+    clonedTemplate: transientCommon,
     domCache: common,
     mainTemplate: common,
     styleTemplate: {

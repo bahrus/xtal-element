@@ -50,7 +50,7 @@ export class CounterDo extends HTMLElement {
                     this.count++;
                 });
                 this.shadowRoot.appendChild(this.clonedTemplate);
-                this.clonedTemplate = undefined;
+                delete this.clonedTemplate;
             },
         ];
         this.reactor = new Rx(this);

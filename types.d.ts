@@ -96,6 +96,11 @@ export interface PropDef{
      * Alias for obfuscated properties
      */
     alias?: string;
+
+    /**
+     * Delete this property after the specified number of milliseconds. 
+     */
+    transience?: number;
 }
 
 export type PropDefMap<T> = {

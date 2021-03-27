@@ -66,7 +66,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
                 this.count++;
             });
             this.shadowRoot!.appendChild(this.clonedTemplate!);
-            this.clonedTemplate = undefined;
+            delete this.clonedTemplate;
         },
     ] as PropAction[];
     reactor = new Rx(this);
