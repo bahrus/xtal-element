@@ -592,6 +592,23 @@ domCache: {
 
 </details>
 
+<details>
+    <summary>transient properties</summary>
+
+xtal-element encourages heavy use of "reactive" properties, combined with standalone functions, in contrast to more traditional methods.  This approach in turn tends to encourage wider use of properties, even to store values for short periods of time.  To reduce memory overhead, the developer should then take steps to delete these transient properties when not needed.
+
+To make this easier to manage, transient properties can be defined declaratively:
+
+```TypeScript
+export const prop : PropDef = {
+    transience: 5000,
+}
+```
+
+The trigger for when to delete such properties happens after retrieving the value.  If the value is defined, the value will be returned that first time, but, if transience has value 0, it will be immediately deleted from memory, so the second time the property value is read, it will now be undefined.  If the value of transience is larger than 0, it will wait the specified number of milliseconds before deleting the value from memory.  Use this feature carefully.
+
+</details>
+
 Let's see what we have so far, implementing the standard increment/decrement component showcased on [webcomponents.dev](https://webcomponents.dev/).  Note that this is not an exact comparison between apples and apples.  The vanilla component showcased by webcomponents.dev, for example, has no support for passing in the count via an attribute, or asynchronously passing in the count property, or caching DOM elements, Micro Frontend parallel versions, asynchronous reactions, etc.  The example shown below (if you expand) supports all these features.  If you don't need these features, then the vanilla component showcased by webcomponents.dev is perfectly compatible with xtal-element.  Import statements are not shown, to avoid further embarrassment.  
 
 <details>
