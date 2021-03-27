@@ -506,34 +506,34 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
 
 <table>
     <tr>
-        <th>Ending</th><th>Example</th><th>Query that is used</th>
+        <th>Ending</th><th>Example</th><th>Query that is used</th><th>Notes</th>
     </tr>
     <tr>
-        <td>Part</td><td>myFirstPart</td><td>.querySelector('[part="my-first"])</td>
+        <td>Part</td><td>myFirstPart</td><td>.querySelector('[part="my-first"])</td><td>Not very effective when elements have multiple parts</td>
     </tr>
     <tr>
-        <td>Parts</td><td>allInTheFamilyParts</td><td>.querySelectorAll('[part="all-in-the-family"])</td>
+        <td>Parts</td><td>allInTheFamilyParts</td><td>.querySelectorAll('[part="all-in-the-family"])</td><td>Ibid</td>
     </tr>
     <tr>
-        <td>Attrib</td><td>bopBopBaDopAttrib</td><td>.querySelector('[bop-bop-ba-dop]')</td>
+        <td>Attrib</td><td>bopBopBaDopAttrib</td><td>.querySelector('[bop-bop-ba-dop]')</td><td>&nbsp;</td>
     </tr>
     <tr>
-        <td>Attribs</td><td>balanceDataAttribs</td><td>.querySelectorAll('[data-balance]')</td>
+        <td>Attribs</td><td>balanceDataAttribs</td><td>.querySelectorAll('[data-balance]')</td><td>&nbsp;</td>
     </tr>
     <tr>
-        <td>Element</td><td>ironElement</td></td><td>.querySelector('iron')</td>
+        <td>Element</td><td>ironElement</td></td><td>.querySelector('iron')</td><td>&nbsp;</td>
     </tr>
     <tr>
-        <td>Elements</td><td>myCustomElements</td><td>.querySelectorAll('my-custom')</td>
+        <td>Elements</td><td>myCustomElements</td><td>.querySelectorAll('my-custom')</td><td>&nbsp;</td>
     </tr>
     <tr>
-        <td>Id</td><td>frenchEvolutionId</td><td>.querySelector('#french-evolution')</td>
+        <td>Id</td><td>frenchEvolutionId</td><td>.querySelector('#french-evolution')</td><td>&nbsp;</td>
     </tr>
     <tr>
-        <td>Class</td><td>workingClass</td><td>.querySelector('.working')</td>
+        <td>Class</td><td>workingClass</td><td>.querySelector('.working')</td><td>&nbsp;</td>
     </tr>
     <tr>
-        <td>Classes</td><td>crabGrassClasses</td><td>.querySelectorAll('.crab-grass')</td>
+        <td>Classes</td><td>crabGrassClasses</td><td>.querySelectorAll('.crab-grass')</td><td>&nbsp;</td>
     </tr>
 </table>
 
