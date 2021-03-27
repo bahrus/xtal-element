@@ -84,6 +84,13 @@ define(DoReMi);
 
 Like Catalyst, you don't *have* to specify "is".  If you leave it off, there's a slight performance penalty, but the name will then be established by the lisp-case-name of the class ("do-re-me"). 
 
+```JavaScript
+import {define} from 'xtal-element/lib/define.js';
+export class DoReMi extends HTMLElement{
+}
+define(DoReMi); //this works too!
+```
+
 To support Typescript-centric frameworks like Angular, you will also need:
 
 ```Typescript
