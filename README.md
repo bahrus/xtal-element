@@ -82,6 +82,8 @@ export class DoReMi extends HTMLElement{
 define(DoReMi);
 ```
 
+Like Catalyst, you don't *have* to specify "is".  If you leave it off, there's a slight performance penalty, but the name will then be established by the lisp-case-name of the class ("do-re-me"). 
+
 To support Typescript-centric frameworks like Angular, you will also need:
 
 ```Typescript
@@ -612,7 +614,6 @@ const mainTemplate = html`
 const refs = { downPart: '', upPart: '', countPart: ''};
 
 export class CounterDo extends HTMLElement implements CounterDoProps{
-    static is = 'counter-do';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;

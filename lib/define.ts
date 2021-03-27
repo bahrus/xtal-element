@@ -1,5 +1,10 @@
-export function define(MyElementClass: any){
-    const tagName = MyElementClass.is as string;
+export async function define(MyElementClass: any){
+    let tagName = MyElementClass.is as string;
+    if(tagName === undefined){
+        const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
+        tagName= camelToLisp(MyElementClass.name);
+        MyElementClass.is = tagName;
+    }
     let n = 0;
     let name = tagName;
     while(true){

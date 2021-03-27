@@ -66,7 +66,6 @@ export class CounterDo extends HTMLElement {
         this.reactor.addToQueue(prop, nv);
     }
 }
-CounterDo.is = 'counter-do';
 const nonFalsyObject = {
     type: Object,
     stopReactionsIfFalsy: true

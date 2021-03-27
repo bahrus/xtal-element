@@ -36,7 +36,6 @@ const mainTemplate = html`
 const refs = { downPart: '', upPart: '', countPart: ''};
 
 export class CounterDo extends HTMLElement implements CounterDoProps{
-    static is = 'counter-do';
     clonedTemplate: DocumentFragment | undefined;
     domCache: any;
     count!: number;
