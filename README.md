@@ -509,10 +509,10 @@ The ending of each key is important.  pinTheDOMToKeys supports binding by id, pa
         <th>Ending</th><th>Example</th><th>Query that is used</th><th>Notes</th>
     </tr>
     <tr>
-        <td>Part</td><td>myFirstPart</td><td>.querySelector('[part="my-first"])</td><td>Not very effective when elements have multiple parts</td>
+        <td>Part</td><td>myFirstPart</td><td>.querySelector('[part*="my-first"])</td><td>May find false positives when working with multiple parts on the same element</td>
     </tr>
     <tr>
-        <td>Parts</td><td>allInTheFamilyParts</td><td>.querySelectorAll('[part="all-in-the-family"])</td><td>Ibid</td>
+        <td>Parts</td><td>allInTheFamilyParts</td><td>.querySelectorAll('[part*="all-in-the-family"])</td><td>Ibid</td>
     </tr>
     <tr>
         <td>Attrib</td><td>bopBopBaDopAttrib</td><td>.querySelector('[bop-bop-ba-dop]')</td><td>&nbsp;</td>
