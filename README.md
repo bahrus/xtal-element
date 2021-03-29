@@ -1225,6 +1225,16 @@ Again, for HTML-centric environments (such as server-centric or HTML-module base
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
+## Inversion of View [TODO]
+
+Since XtalPattern uses a public property "mainTemplate", to trigger the rendering process, this property can be passed in, rather than be supplied from within.  As long as the keys used to identify the critical UI elements are in sync, the code should work seamlessly with a potentially large number of UI varations.  If no main template is provided within, the web component will sit there, displaying the light children, until the consumer of each instance passes in a "mainTemplate" property.  "Lookless / white label components" taken to the extreme.
+
+More realistically, a web component can have a default view, which can be overriden by the consumer.  This allows the same logic to be used, but with a user supplied variation of that is desired.
+
+XtalPattern uses reserved property name "byomt" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view.
+
+XtalPattern also supports "bring your own style template", "byost" corresponding to the optional styleTemplate property.
+
 ### Jarring Segue
 
 As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
