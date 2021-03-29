@@ -1024,7 +1024,16 @@ If the first element of the RHS array has property "localName", then this will r
 
 </details>
 
+<details>
+    <summary>Named PropActions [TODO]</summary>
 
+    Two Utility functions:
+    
+1.  One takes JSON-like tree structure of PropActions, and flattens into an array.
+2.  Another that applies inheritance-like merging of an enhancing PropAction tree on top of an existing one.
+
+
+</details>
 
 </details>
 
