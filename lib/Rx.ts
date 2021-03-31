@@ -11,6 +11,7 @@ export class Rx implements IReactor {
     constructor(public surface: ReactiveSurface) {}
 
     async addToQueue(prop: PropDef, newVal: any) {
+        if(this.surface.suspendRx) return;
         const name = prop.name!;
         this.queue.add(name);
         if(this.surface.disabled && name !== 'disabled') return;

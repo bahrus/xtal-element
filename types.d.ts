@@ -23,20 +23,20 @@ export type EventScope = EventScopeT | EventScopeTB | EventScopeTBC | EventScope
 export type EventScopes = EventScope[];
 
 
-export interface PropInfo{
-    bool: boolean;
-    str: boolean;
-    num: boolean;
-    reflect: boolean;
-    notify: boolean;
-    obj: boolean;
-    jsonProp: boolean;
-    dry: boolean;
-    log: boolean;
-    debug: boolean;
-    async: boolean;
-    name: string;
-}
+// export interface PropInfo{
+//     bool: boolean;
+//     str: boolean;
+//     num: boolean;
+//     reflect: boolean;
+//     notify: boolean;
+//     obj: boolean;
+//     jsonProp: boolean;
+//     dry: boolean;
+//     log: boolean;
+//     debug: boolean;
+//     async: boolean;
+//     name: string;
+// }
 
 export interface PropDef{
     /** Name of property */
@@ -101,6 +101,12 @@ export interface PropDef{
      * Delete this property after the specified number of milliseconds. 
      */
     transience?: number;
+
+    /**
+     * Do not trigger any reactions, but merge this object into the custom element instance using object.assign.
+     * This is useful for client-side hydrating of already server-side-rendered content.
+     */
+    syncProps?: any;
 }
 
 export type PropDefMap<T> = {
@@ -123,6 +129,7 @@ export interface SlicedPropDefs<T = any>{
 
 export interface ReactiveSurface extends Partial<HTMLElement>{
     disabled?: boolean;
+    suspendRx?: boolean;
     propActions: PropAction[];
     propActionsHub?(propAction: PropAction): void;
 }

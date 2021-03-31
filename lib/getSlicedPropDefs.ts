@@ -61,6 +61,11 @@ class SlicedPropDefsImpl<T = any> implements SlicedPropDefs<T>{
         return this.memoize('_parseNames', propDef => propDef.parse === true);
     }
 
+    _syncPropNames: string[] | undefined;
+    get syncPropNames(){
+        return this.memoize('_syncPropNames', propDef => propDef.syncProps === true);
+    }
+
     _ignoreList: string[] | undefined;
     get ignoreList(){
         return this.memoize('_ignoreList', propDef => propDef.stopReactionsIfFalsy === true);

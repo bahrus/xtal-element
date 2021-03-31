@@ -191,6 +191,11 @@ export interface PropDef{
      * Delete this property after the specified number of milliseconds. 
      */
     transience?: number;
+    /**
+     * Do not trigger any reactions, but merge this object into the custom element instance using object.assign.
+     * This is useful for client-side hydrating of already server-side-rendered content.
+     */
+    syncProps?: any;
 }
 ```
 

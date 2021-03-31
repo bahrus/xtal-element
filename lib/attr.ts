@@ -1,6 +1,6 @@
 import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
-import { SlicedPropDefs } from '../types.d.js';
+import { ReactiveSurface } from '../types.d.js';
 /**
  * xtal-element doesn't think the static observedAttributes adds much value, and only makes life more difficult for web component development.
  * xtal-element's philosophy is that attributes should only be used to 1)  Pass in initial values (from the server), which overrides default values only.  
@@ -37,6 +37,17 @@ function mergeObj<T = any>(self: HTMLElement, names: string[], defaultValues: T)
     }
 }
 
+function mergeSyncProps<T = any>(self: HTMLElement, names: string[], defaultValues: T){
+    for(const name of names){
+        const ctl = camelToLisp(name);
+        if(self.hasAttribute(ctl)) {
+            const reactive = self as ReactiveSurface;
+            reactive.suspendRx = true;
+            Object.assign(self, JSON.parse(self.getAttribute(ctl)!));
+            reactive.suspendRx = false;
+        };
+    }
+}
 
 
 export const attr = {mergeBool, mergeStr, mergeObj, mergeNum};
