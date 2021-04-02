@@ -1222,6 +1222,9 @@ Our class is whittling down now, so that the core business logic (count, changeC
 XtalPattern is continuing to impose more assumptions on names of properties -- in particular, mainTemplate, clonedTemplate, self, refs, domCache.
 </details>
 
+<details>
+    <summary>Tentative Defaults</summary>
+
 ## Inversion of Props
 
 The hydrate function allows us to set initial properties in a methodical way -- giving precendence to externally set properties, then attributes, and default values as a backup.
@@ -1263,6 +1266,8 @@ More pragmatically, perhaps, a web component built with xtal-element, using the 
 For this scenario, XtalPattern uses attribute name "byo-m-t" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view, as it is expecting the mainTemplate property to be passed in.
 
 XtalPattern also supports "bring your own style template", "byo-s-t" corresponding to the optional styleTemplate property.
+
+</details>
 
 <details>
     <summary>Hydration, Part III [TODO]</summary>
