@@ -1227,7 +1227,7 @@ XtalPattern is continuing to impose more assumptions on names of properties -- i
 
 ## Inversion of Props
 
-The hydrate function allows us to set initial properties in a methodical way -- giving precendence to externally set properties, then attributes, and default values as a backup.
+The hydrate function allows us to set initial properties in a methodical way -- giving precedence to externally set properties, then attributes, and default values as a backup.
 
 But there are scenarios where we want to set the property externally, but we may not be able to do so right away.  We could just set the default value, and then allow the external property setting to take place when it's ready.  But in some cases, that could be quite expensive, especially when it comes to properties that affect rendering.
 
@@ -1261,7 +1261,7 @@ This could be achieved with old-fashioned inheritance, but there are some scenar
 
 If a XtalPattern-based web component's main template is not provided within, the web component will sit there, displaying the light children, until the consumer of each instance passes in a "mainTemplate" property of type HTMLTemplateElement.  "Lookless / white label components" taken to the extreme.
 
-More pragmatically, perhaps, a web component built with xtal-element, using the XtalPattern, can have a default view, which can be overriden by the consumer.  This allows the same logic to be used, but with a user supplied variation of what is desired.
+More pragmatically, perhaps, a web component built with xtal-element, using the XtalPattern, can have a default view, which can be overridden by the consumer.  This allows the same logic to be used, but with a user supplied variation of what is desired.
 
 For this scenario, XtalPattern uses attribute name "byo-m-t" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view, as it is expecting the mainTemplate property to be passed in.
 
@@ -1298,7 +1298,7 @@ Again, for HTML-centric environments (such as server-centric or HTML-module base
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
-## Development Secion Wrapup
+## Development Section Wrap-up
 
 As we've seen, being able to choose exactly which utility functions to use in pursuit of developing a web component means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
