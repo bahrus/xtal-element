@@ -1241,13 +1241,17 @@ Two libraries recommended as compatible with xtal-element are [iff-diff](https:/
 
 ## Inversion of View [TODO]
 
-Since XtalPattern uses a public property "mainTemplate", to trigger the rendering process, this property can be passed in, rather than be supplied from within.  As long as the keys used to identify the critical UI elements are in sync, the code should work seamlessly with a potentially large number of UI varations.  If no main template is provided within, the web component will sit there, displaying the light children, until the consumer of each instance passes in a "mainTemplate" property.  "Lookless / white label components" taken to the extreme.
+So far, xtal-element has stuck to the standard tried and true approach of defining custom elements, which, internally, define the HTML structure of the component.
 
-More realistically, a web component can have a default view, which can be overriden by the consumer.  This allows the same logic to be used, but with a user supplied variation of that is desired.
+But since XtalPattern uses a public property "mainTemplate" to trigger the rendering process, this property could be **passed in from outside**, rather than following the standard practice of internally providing the view.  As long as the keys (parts / classes / attributes / id's) used to identify the critical UI elements are in sync, the code should work seamlessly with a potentially large number of UI variations.  Likewise with the optional "styleTemplate" property.
 
-XtalPattern uses reserved property name "byomt" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view.
+If a XtalPattern-based web component's main template is not provided within, the web component will sit there, displaying the light children, until the consumer of each instance passes in a "mainTemplate" property of type HTMLTemplateElement.  "Lookless / white label components" taken to the extreme.
 
-XtalPattern also supports "bring your own style template", "byost" corresponding to the optional styleTemplate property.
+More pragmatically, perhaps, a web component built with xtal-element, using the XtalPattern, can have a default view, which can be overriden by the consumer.  This allows the same logic to be used, but with a user supplied variation of what is desired.
+
+For this scenario, XtalPattern uses reserved property/attribute name "byoMT"/"byo-m-t" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view, as it is expecting the mainTemplate property to be passed in.
+
+XtalPattern also supports "bring your own style template", "byoST/byo-s-t" corresponding to the optional styleTemplate property.
 
 ### Jarring Segue
 
