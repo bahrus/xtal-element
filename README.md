@@ -1278,7 +1278,7 @@ What about hydrating Shadow DOM, now that declarative ShadowDOM is weeks away fr
 
 First, XtalPattern ensures that the shadow root isn't created unnecessarily.
 
-Second, one or more properties can be defined with the specific task of ferrying down initial property values from the server.  If the server takes care of rendering the initial view, and that view is dependent on some properties, we want to pass down the properties in such a way that the client side component is consistent with the rendered output, without rendering.  This technique is used with [if-diff](https://github.com/bahrus/if-diff#progressive-enhancement--server-side-rendering-ssr), for example. 
+Second, one or more properties can be defined with the specific task of ferrying down initial property values from the server.  If the server takes care of rendering the initial view, and that view is dependent on some properties, we want to pass down the properties in such a way that the client-side component is consistent with the rendered output, without rendering unnecessarily, since the server took care of that.  This technique is used with [if-diff](https://github.com/bahrus/if-diff#progressive-enhancement--server-side-rendering-ssr), for example. 
 
 The prop setting which does this is called "syncProps."  Just thought you should know.
 
