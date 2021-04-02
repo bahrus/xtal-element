@@ -1270,15 +1270,18 @@ XtalPattern also supports "bring your own style template", "byo-s-t" correspondi
 </details>
 
 <details>
-    <summary>Hydration, Part III [TODO]</summary>
+    <summary>Hydration, Part III</summary>
+
+## syncProps
 
 What about hydrating Shadow DOM, now that declarative ShadowDOM is weeks away from going live in a majority of browsers (fingers crossed)?
 
 First, XtalPattern ensures that the shadow root isn't created unnecessarily.
 
-Second, can we assume, in some cases, that the initially rendered shadowDOM is compatible with the initialized property values passed down as attributes (JSON-stringified when necessary)? [TODO]
+Second, one or more properties can be defined with the specific task of ferrying down initial property values from the server.  If the server takes care of rendering the initial view, and that view is dependent on some properties, we want to pass down the properties in such a way that the client side component is consistent with the rendered output, without rendering.  This technique is used with [if-diff](https://github.com/bahrus/if-diff#progressive-enhancement--server-side-rendering-ssr), for example. 
 
-Alternatively/in addition, can we use Rxn-suppls to initialize (some of) the property values, so that everything is guaranteed to be in sync?[TODO]
+The prop setting which does this is called "syncProps."  Just thought you should know.
+
 </details>
 
 ## Whatabouts
