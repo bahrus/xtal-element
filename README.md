@@ -196,6 +196,13 @@ export interface PropDef{
      * This is useful for client-side hydrating of already server-side-rendered content.
      */
     syncProps?: any;
+
+    /**
+     * Provide a default value (if using the hydrate function) *only if* this attribute is not present.
+     * If the attrib is present, the assumption is that the property will be set externally, and the default value thrown away,
+     * so this avoids wasted effort involed in setting the initial value.
+     */
+    byoAttrib?: string;
 }
 ```
 
@@ -1116,17 +1123,7 @@ const linkClonedTemplate = ({domCache, clonedTemplate, self}) => {
 ```
 </details>
 
-<details>
-    <summary>Hydration, Part III [TODO]</summary>
 
-What about hydrating Shadow DOM, now that declarative ShadowDOM is weeks away from going live in a majority of browsers (fingers crossed)?
-
-First, we need to make sure the shadow root isn't created unnecessarily [TODO].
-
-Second, can we assume, in some cases, that the initially rendered shadowDOM is compatible with the initialized property values passed down as attributes (JSON-stringified when necessary)? [TODO]
-
-Alternatively/in addition, can we use Rxn-suppls to initialize (some of) the property values, so that everything is guaranteed to be in sync?[TODO]
-</details>
 
 ### XtalPattern
 
@@ -1225,6 +1222,60 @@ Our class is whittling down now, so that the core business logic (count, changeC
 XtalPattern is continuing to impose more assumptions on names of properties -- in particular, mainTemplate, clonedTemplate, self, refs, domCache.
 </details>
 
+## Inversion of Props
+
+The hydrate function allows us to set initial properties in a methodical way -- giving precendence to externally set properties, then attributes, and default values as a backup.
+
+But there are scenarios where we want to set the property externally, but we may not be able to do so right away.  We could just set the default value, and then allow the external property setting to take place when it's ready.  But in some cases, that could be quite expensive, especially when it comes to properties that affect rendering.
+
+To prevent the default property from getting applied, instances of the component can be prevented from adopting the default property, by specifying an attribute that blocks the default setting.  The property can specify this with the byoAttrib setting:
+
+```TypeScript
+export const props = {
+    clonedTemplate: transientCommon,
+    domCache: common,
+    mainTemplate: {
+        ...common,
+        byoAttrib: 'byo-m-t'
+    },
+    styleTemplate: {
+        type: Object,
+        dry: true,
+        byoAttrib: 'byo-s-t'
+    }
+ } as PropDefMap<XtalPattern>;
+```
+
+Which is how we achieve:
+
+### Inversion of View
+
+So far, xtal-element has stuck to the standard tried-and-true approach of defining custom elements, which, internally, define the HTML structure of the component.
+
+But since XtalPattern uses a public property "mainTemplate" to define that HTML structure, and which triggers the rendering process, this property could be **passed in from outside**, rather than following the standard practice of internally providing the view.  As long as the keys (parts / classes / attributes / id's) used to identify the critical UI elements are in sync, the code should work seamlessly with a potentially large number of UI variations.  Likewise with the optional "styleTemplate" property.
+
+This could be achieved with old-fashioned inheritance, but there are some scenarios where inheritance might not be the desired approach.
+
+If a XtalPattern-based web component's main template is not provided within, the web component will sit there, displaying the light children, until the consumer of each instance passes in a "mainTemplate" property of type HTMLTemplateElement.  "Lookless / white label components" taken to the extreme.
+
+More pragmatically, perhaps, a web component built with xtal-element, using the XtalPattern, can have a default view, which can be overriden by the consumer.  This allows the same logic to be used, but with a user supplied variation of what is desired.
+
+For this scenario, XtalPattern uses attribute name "byo-m-t" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view, as it is expecting the mainTemplate property to be passed in.
+
+XtalPattern also supports "bring your own style template", "byo-s-t" corresponding to the optional styleTemplate property.
+
+<details>
+    <summary>Hydration, Part III [TODO]</summary>
+
+What about hydrating Shadow DOM, now that declarative ShadowDOM is weeks away from going live in a majority of browsers (fingers crossed)?
+
+First, XtalPattern ensures that the shadow root isn't created unnecessarily.
+
+Second, can we assume, in some cases, that the initially rendered shadowDOM is compatible with the initialized property values passed down as attributes (JSON-stringified when necessary)? [TODO]
+
+Alternatively/in addition, can we use Rxn-suppls to initialize (some of) the property values, so that everything is guaranteed to be in sync?[TODO]
+</details>
+
 ## Whatabouts
 
 ### What about loops?
@@ -1239,27 +1290,13 @@ Again, for HTML-centric environments (such as server-centric or HTML-module base
 
 Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
-## Inversion of View [TODO]
+## Development Secion Wrapup
 
-So far, xtal-element has stuck to the standard tried and true approach of defining custom elements, which, internally, define the HTML structure of the component.
-
-But since XtalPattern uses a public property "mainTemplate" to trigger the rendering process, this property could be **passed in from outside**, rather than following the standard practice of internally providing the view.  As long as the keys (parts / classes / attributes / id's) used to identify the critical UI elements are in sync, the code should work seamlessly with a potentially large number of UI variations.  Likewise with the optional "styleTemplate" property.
-
-If a XtalPattern-based web component's main template is not provided within, the web component will sit there, displaying the light children, until the consumer of each instance passes in a "mainTemplate" property of type HTMLTemplateElement.  "Lookless / white label components" taken to the extreme.
-
-More pragmatically, perhaps, a web component built with xtal-element, using the XtalPattern, can have a default view, which can be overriden by the consumer.  This allows the same logic to be used, but with a user supplied variation of what is desired.
-
-For this scenario, XtalPattern uses reserved property/attribute name "byoMT"/"byo-m-t" -- bring your own main template, to signify this.  This property blocks passing in the internally defined template view, as it is expecting the mainTemplate property to be passed in.
-
-XtalPattern also supports "bring your own style template", "byoST/byo-s-t" corresponding to the optional styleTemplate property.
-
-### Jarring Segue
-
-As we've seen, being able to choose exactly what utility functions to aid in developing web components means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
+As we've seen, being able to choose exactly which utility functions to use in pursuit of developing a web component means a certain amount of ceremony is required for each component.  This ceremony seems worthwhile when developing long-serving web components meant to be used in a large variety of settings (highly reusable, compatible with all frameworks, capable of being loaded in different ways).
 
 But what about web components that are only meant to be used within one application, or one component?  Why bother with supporting attributes if no one will use them, for example?
 
-The first solution we provide for this is "X.tend".  
+Suggested approaches to this scenario are provided below.  
 
 </details>
 

@@ -23,21 +23,6 @@ export type EventScope = EventScopeT | EventScopeTB | EventScopeTBC | EventScope
 export type EventScopes = EventScope[];
 
 
-// export interface PropInfo{
-//     bool: boolean;
-//     str: boolean;
-//     num: boolean;
-//     reflect: boolean;
-//     notify: boolean;
-//     obj: boolean;
-//     jsonProp: boolean;
-//     dry: boolean;
-//     log: boolean;
-//     debug: boolean;
-//     async: boolean;
-//     name: string;
-// }
-
 export interface PropDef{
     /** Name of property */
     name?: string;
@@ -107,6 +92,13 @@ export interface PropDef{
      * This is useful for client-side hydrating of already server-side-rendered content.
      */
     syncProps?: any;
+
+    /**
+     * Provide a default value (if using the hydrate function) *only if* this attribute is not present.
+     * If the attrib is present, the assumption is that the property will be set externally, and the default value thrown away,
+     * so this avoids wasted effort involed in setting the initial value.
+     */
+    byoAttrib?: string;
 }
 
 export type PropDefMap<T> = {

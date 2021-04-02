@@ -50,10 +50,14 @@ export const transientCommon : PropDef = {
 export const props = {
     clonedTemplate: transientCommon,
     domCache: common,
-    mainTemplate: common,
+    mainTemplate: {
+        ...common,
+        byoAttrib: 'byo-m-t'
+    },
     styleTemplate: {
         type: Object,
         dry: true,
+        byoAttrib: 'byo-s-t'
     }
  } as PropDefMap<XtalPattern>;
 
