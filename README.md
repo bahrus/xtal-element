@@ -1296,7 +1296,7 @@ One looping web component confirmed to be compatible with xtal-element is [ib-id
 
 Again, for HTML-centric environments (such as server-centric or HTML-module based web components) why not use web components for this?
 
-Two libraries recommended as compatible with xtal-element are [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
+Three libraries recommended as compatible with xtal-element are [if-diff](https://github.com/bahrus/if-diff), [iff-diff](https://github.com/bahrus/iff-diff) and [laissez-dom](https://github.com/bahrus/laissez-dom).
 
 ## Development Section Wrap-up
 
@@ -1322,7 +1322,7 @@ My favorite approach to this is using the [c-c or carbon-copy](https://github.co
 </template>
 <c-c copy from="/hello-world" string-props='["place"]'></c-c>
 
-<hello-world place="mars"></hello-world>
+<hello-world place="Mars"></hello-world>
 ```
 
 *carbon-copy* uses the very utility functions we've been painstakingly documenting so far, to do its thing.
