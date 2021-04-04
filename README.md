@@ -203,6 +203,11 @@ export interface PropDef{
      * so this avoids wasted effort involed in setting the initial value.
      */
     byoAttrib?: string;
+
+    /**
+     * Make a deep copy of objects that are passed in.
+     */
+    clone?:  bool;
 }
 ```
 
