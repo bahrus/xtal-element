@@ -31,6 +31,7 @@
 		"lib/propUp.ts",
 		"lib/Rx.ts",
 		"lib/RxSuppl.ts",
+		"lib/structuralClone.ts",
 		"lib/substrBefore.ts",
 		"lib/with-path.ts",
 		"lib/X.ts",
