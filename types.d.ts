@@ -103,7 +103,7 @@ export interface PropDef{
     /**
      * Make a deep copy of objects that are passed in.
      */
-    clone?:  bool;
+    clone?:  boolean;
 }
 
 export type PropDefMap<T> = {
