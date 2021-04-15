@@ -28,7 +28,8 @@ export class Rx implements IReactor {
         const queue = this.queue;
         this.queue = new Set<string>();
         const self = this.surface as any;
-        const ignoreProps = self.constructor.prototype.xtalIgnore as Set<string>;
+        const ignoreFalsyProps = self.constructor.prototype.xtalIgnoreFalsy as Set<string>;
+        const ignoreTruthyProps = self.constructor.prototype.xtalIgnoreTruthy as Set<string>;
         for (const propAction of flat) {
             let args: string[] | undefined = undefined;
             if (!this.deconstructedArgs.has(propAction)) {
@@ -39,14 +40,22 @@ export class Rx implements IReactor {
             }
             const dependencySet = new Set<string>(args);
             let foundFalsy = false;
-            const ignore = intersection(ignoreProps, dependencySet);
-            for(const prop of intersection(ignore, dependencySet)){
+            let foundTruthy = false;
+            const ignoreFalsy = intersection(ignoreFalsyProps, dependencySet);
+            const ignoreTruthy = intersection(ignoreTruthyProps, dependencySet);
+            for(const prop of ignoreFalsy){
                 if(!self[prop as string]){
                     foundFalsy = true;
                     break;
                 }
             }
-            if(foundFalsy) continue;
+            for(const prop of ignoreTruthy){
+                if(self[prop as string]){
+                    foundTruthy = true;
+                    break;
+                }
+            }
+            if(foundFalsy || foundTruthy) continue;
             if (intersection(queue, dependencySet).size > 0) {
                 if (this.surface.propActionsHub !== undefined) this.surface.propActionsHub(propAction);
                 const returnVal = propAction(this.surface as HTMLElement);

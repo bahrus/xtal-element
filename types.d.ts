@@ -58,10 +58,16 @@ export interface PropDef{
      * React to property change asynchronously
      */
     async?: boolean;
+
     /**
      * Block reactions containing this property if property is falsey
      */
     stopReactionsIfFalsy?: boolean;
+
+    /**
+     * Block reactions containing this property if property is truthy
+     */
+    stopReactionsIfTruthy?: boolean;
 
     /**
      * Block notification if property is falsey

@@ -37,11 +37,13 @@ function defineSet<T extends HTMLElement = HTMLElement>(self: any, name: string,
 }
 export function letThereBeProps<T extends HTMLElement = HTMLElement>(elementClass: {new(): T}, slicedPropDefs: SlicedPropDefs, callbackMethodName?: keyof T){
     const proto = elementClass.prototype;
-    if(proto.xtalIgnore === undefined) proto.xtalIgnore = new Set<string>();
+    if(proto.xtalIgnoreFalsy === undefined) proto.xtalIgnoreFalsy = new Set<string>();
+    if(proto.xtalIgnoreTruthy === undefined) proto.xtalIgnoreTruthy = new Set<string>();
     const existingProps = Object.getOwnPropertyNames(proto);
     const props = slicedPropDefs.propDefs;
     for(const prop of props){
-        if(prop.stopReactionsIfFalsy) proto.xtalIgnore.add(prop.name);
+        if(prop.stopReactionsIfFalsy) proto.xtalIgnoreFalsy.add(prop.name);
+        if(prop.stopReactionsIfTruthy) proto.xtalIgnoreTruthy.add(prop.name);
         const name = prop.name!;
         if(existingProps.includes(name)) return;
         const privateKey = '_' + name;

@@ -176,6 +176,10 @@ export interface PropDef{
      */
     stopReactionsIfFalsy?: boolean;
     /**
+     * Block reactions containing this property if property is truthy
+     */
+    stopReactionsIfTruthy?: boolean;
+    /**
      * Copy property value to another value specified by echoTo
      */
     echoTo?: string;
@@ -582,9 +586,9 @@ const painParts = cache[refs.sheIsAPainParts];
 
 
 <details>
-    <summary>stopReactionsIfFalsy</summary>
+    <summary>stopReactionsIfFalsy/Truthy</summary>
 
-### Ignoring prop actions when one or more dependency value is falsy.
+### Ignoring prop actions when one or more dependency value is falsy/truthy.
 
 This is one of the trickier aspects of this library.
 
