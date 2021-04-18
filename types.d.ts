@@ -163,6 +163,10 @@ interface BothProcessorCtor extends ProcessorCtor, BothProcessor {}
 
 export type ProcessorMap = LHSProcessorCtor | RHSProcessorCtor | BothProcessorCtor;
 
+export interface IInternals {
+    _internals: any;
+}
+
 
 export interface XtalPattern extends ReactiveSurface{
     domCache: any,
