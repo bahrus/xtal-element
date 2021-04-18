@@ -17,5 +17,10 @@ export function hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, s
     
     attr.mergeObj<T>(self as HTMLElement, slicedDefs.parseNames, copyOfDefaultValues);
     propUp(self as HTMLElement, slicedDefs.propNames, copyOfDefaultValues);
-    self.dataset!.isHydrated = '';
+    if((<any>self)._internals !== undefined){
+        //https://wicg.github.io/custom-state-pseudo-class/#:~:text=A%20custom%20state%20pseudo%20class%20contains%20just%20one,like%20x-foo%3Ais%20%28%3A--state1%2C%20%3A--state2%29%2C%20x-foo%3Anot%20%28%3A--state2%29%2C%20and%20x-foo%3A--state1%3A--state2.
+        (<any>self)._internals.states.add('--hydrated');
+    }else{
+        self.dataset!.isHydrated = '';
+    }
 }
