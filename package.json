@@ -32,6 +32,7 @@
     "./lib/getSlicedPropDefs.js": "./lib/getSlicedPropDefs.js",
     "./lib/html.js": "./lib/html.js",
     "./lib/hydrate.js": "./lib/hydrate.js",
+    "./lib/initInternals.js": "./lib/initInternals.js",
     "./lib/intersection.js": "./lib/intersection.js",
     "./lib/letThereBeProps.js": "./lib/letThereBeProps.js",
     "./lib/nudge.js": "./lib/nudge.js",
