@@ -6,6 +6,7 @@ import {intersection} from './intersection.js';
 export class Rx implements IReactor {
 
     queue = new Set<string>();
+    subscribers: {propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void}[] = [];
     requestUpdate = false;
     deconstructedArgs = new WeakMap<PropAction, string[]>();
     constructor(public surface: ReactiveSurface) {}
@@ -62,6 +63,14 @@ export class Rx implements IReactor {
                 this.doPS(this.surface, returnVal, args);
             }
         }
-        
+        for(const subscriber of this.subscribers){
+            if(intersection(subscriber.propsOfInterest, queue).size > 0){
+                subscriber.callBack(this.surface);
+            }
+        }
+    }
+
+    subscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void){
+        this.subscribers.push({propsOfInterest, callBack});
     }
 }

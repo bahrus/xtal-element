@@ -491,6 +491,10 @@ propActionsHub(propAction){
 }
 ```
 
+### Externally subscribing to property changes
+
+The Rx class has a method, "subscribe" that allows for externally subscribing to property changes.
+
 </details>
 
 </details>
@@ -1319,7 +1323,7 @@ Suggested approaches to this scenario are provided below.
 
 ## Low ceremony web components
 
-Let's see how we can use xtal-element to generate web components as quickly as possible.
+Let's see how we can use xtal-element's utility functions, discussed in detail in the collapsed sections above, to generate web components as quickly as possible.
 
 ### c-c and carbon-copy
 
@@ -1334,11 +1338,11 @@ My favorite approach to this is using the [c-c or carbon-copy](https://github.co
 <hello-world place="Mars"></hello-world>
 ```
 
-*carbon-copy* uses the very utility functions we've been painstakingly documenting so far, to do its thing.
+*carbon-copy* uses the very utility functions we've been painstakingly documenting so far (in the collapsed sections), to do its thing.
 
 Unfortunately, this way of defining custom elements doesn't make sense in our JS-centric world (sigh).
 
-In such a setting, the X base class, discussed below, is, I think, tolerable in a JS-centric world, and will be much more appealing if/when standards show some sympathy to the user.
+In such a setting, the X base class, discussed below, is, I think, tolerable in a JS-centric world, and will be much more appealing if/when standards show some HTML love.
 
 ### Low ceremony X base class
 
