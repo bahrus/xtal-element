@@ -493,7 +493,12 @@ propActionsHub(propAction){
 
 ### Externally subscribing to property changes
 
-The Rx class has a method, "subscribe" that allows for externally subscribing to property changes.
+The Rx class has a method, "subscribe" that allows for externally subscribing to property changes.  Method "unsubscribe" does the reverse.
+
+```TypeScript
+subscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void);
+unsubscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void);
+```
 
 </details>
 
