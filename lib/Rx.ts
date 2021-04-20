@@ -73,4 +73,9 @@ export class Rx implements IReactor {
     subscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void){
         this.subscribers.push({propsOfInterest, callBack});
     }
+
+    unsubscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void){
+        const idx = this.subscribers.findIndex(s => s.propsOfInterest === propsOfInterest && s.callBack === callBack);
+        if(idx > -1) this.subscribers.splice(idx, 1);
+    }
 }
