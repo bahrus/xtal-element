@@ -135,11 +135,14 @@ export interface ReactiveSurface extends Partial<HTMLElement>{
     suspendRx?: boolean;
     propActions: PropAction[];
     propActionsHub?(propAction: PropAction): void;
+    reactor?: IReactor;
 }
 
 export interface IReactor{
-    addToQueue(prop: PropDef, newVal: any, ignoreList: string[]): void;
+    addToQueue(prop: PropDef, newVal: any, ignoreList?: string[]): void;
     requestUpdate?: boolean;
+    subscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void): void;
+    unsubscribe(propsOfInterest: Set<string>, callBack: (rs: ReactiveSurface) => void): void;
 }
 
 interface ProcessorCtor {
