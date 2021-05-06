@@ -1,5 +1,5 @@
 import {define} from '../lib/define.js';
-import {PropDef, ReactiveSurface, PropAction, PropDefMap} from '../types.js';
+import {PropDef, ReactiveSurface, PropAction, PropDefMap, IReactor} from '../types.js';
 import {getSlicedPropDefs} from '../lib/getSlicedPropDefs.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -69,7 +69,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             delete this.clonedTemplate;
         },
     ] as PropAction[];
-    reactor = new Rx(this);
+    reactor : IReactor = new Rx(this);
     
 }
 const nonFalsyObject: PropDef = {

@@ -1,7 +1,7 @@
 import {lispToCamel} from 'trans-render/lib/lispToCamel.js'; 
 import {SlicedPropDefs} from '../types.d.js';
 export function passAttrToProp<T extends HTMLElement = HTMLElement>(self: T, slicedPropDefs: SlicedPropDefs, name: string, oldValue: string, newValue: string){
-    if(self.dataset.isHydrated === undefined || ((<any>self)._internals !== undefined && (<any>self)._internals.states.has('--hydrated'))) return;
+    if(self.dataset.propsMerged === undefined || ((<any>self)._internals !== undefined && (<any>self)._internals.states.has('--props-merged'))) return;
     const camelName = lispToCamel(name);
     const propDef = slicedPropDefs.propLookup[camelName];
     if(propDef !== undefined){

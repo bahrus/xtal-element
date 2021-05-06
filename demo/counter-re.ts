@@ -1,6 +1,6 @@
 import {define} from '../lib/define.js';
 import {PropDef, PropAction, PropDefMap, PESettings} from '../types.js';
-import {hydrate} from '../lib/hydrate.js';
+import {mergeProps} from '../lib/mergeProps.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
 import {RxSuppl} from '../lib/RxSuppl.js';
@@ -58,7 +58,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     clonedTemplate: DocumentFragment | undefined; domCache: any;
     count!: number;
     connectedCallback(){
-        hydrate<CounterDoProps>(this, slicedPropDefs, {
+        mergeProps<CounterDoProps>(this, slicedPropDefs, {
             count: 0
         });
     }

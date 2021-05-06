@@ -1,5 +1,5 @@
 import { define } from '../lib/define.js';
-import { hydrate } from '../lib/hydrate.js';
+import { mergeProps } from '../lib/mergeProps.js';
 import { letThereBeProps } from '../lib/letThereBeProps.js';
 import { html } from '../lib/html.js';
 import { RxSuppl } from '../lib/RxSuppl.js';
@@ -55,7 +55,7 @@ export class CounterRe extends HTMLElement {
         this.mainTemplate = mainTemplate;
     }
     connectedCallback() {
-        hydrate(this, slicedPropDefs, {
+        mergeProps(this, slicedPropDefs, {
             count: 0
         });
     }

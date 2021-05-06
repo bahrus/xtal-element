@@ -7,6 +7,15 @@
 </head>
 <body>
     <counter-do count=20></counter-do>
-    <script type=module src=counter-do.js></script>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/"
+            }
+        }
+    </script>
+    <script type=module>
+        import './counter-do.js';
+    </script>
 </body>
 </html>

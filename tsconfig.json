@@ -21,7 +21,7 @@
 		"lib/getProcessor.ts",
 		"lib/getSlicedPropDefs.ts",
 		"lib/html.ts",
-		"lib/hydrate.ts",
+		"lib/mergeProps.ts",
 		"lib/initInternals.ts",
 		"lib/intersection.ts",
 		"lib/letThereBeProps.ts",

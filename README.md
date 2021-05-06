@@ -621,7 +621,7 @@ domCache: {
 
 ### Two special properties:  disabled and deferHydration
 
-The propActions orchestrator, Rx, recognizes two properties, which, if either is true, means to cease any "reactions" -- disabled and [deferHydration](https://github.com/webcomponents/community-protocols/issues/7)[TODO].
+The propActions orchestrator, Rx, recognizes two properties, which, if either is true, means to cease any "reactions" -- disabled and [deferHydration](https://github.com/webcomponents/community-protocols/issues/7)[TODO]. 
 
 </details>
 
@@ -735,7 +735,7 @@ For this simple "counter" web component, the code shown above (if you expand) is
 <details>
     <summary>Hydration, Part II</summary>
 
-### Property hydration, in detail
+### Property initializing, in detail
 
 Let's look at these five lines of code in our counter-do example above:
 
@@ -764,18 +764,18 @@ Translating between the code and the paragraph above requires quite a bit of int
 So let's see if we can simplify these primitives into an easy to read single line of code.
 
 ```Typescript
-hydrate<T extends Partial<HTMLElement> = HTMLElement>(self: T, propDefs: PropDef[], defaultVals: T);
+mergeProps<T extends Partial<HTMLElement> = HTMLElement>(self: T, propDefs: PropDef[], defaultVals: T);
 ```
 
 or more simply (without the ceremony of typing):
 
 ```Typescript
-hydrate(this, propDefs, defaultVals);
+mergeProps(this, propDefs, defaultVals);
 ```
 
 where "this" is the custom element instance.
 
-"hydrate" should continue to be called within the connectedCallback lifecycle event.
+"mergeProps" should continue to be called within the connectedCallback lifecycle event.
 
 </details>
 
@@ -798,7 +798,7 @@ attributeChangedCallback(name: string, oldValue: string, newValue: string){
 
 ```
 
-This function will **only work properly in combination with the hydrate function mentioned above.** 
+This function will **only work properly in combination with the mergeProps function mentioned above.** 
 
 
 But xtal-element has grown somewhat skeptical of some of the [best practices advice](https://developers.google.com/web/fundamentals/web-components/best-practices) as far as reflecting primitives by default.  In order to avoid infinite loops, they suggest making the attribute the source of truth, essentially.  But that means every time you read a numeric property, it is having to parse the string.  (Their advice on Boolean properties seems less problematic).  Regardless, it doesn't match the behavior of native-born elements.  Naturalized custom elements are already facing [enough struggles as it is](https://github.com/facebook/react/issues/11347#issuecomment-725487281), wanting to be treated the same as native-born's.  Deviations from what native-born elements do will likely lead to more recriminations, I'm sure.
