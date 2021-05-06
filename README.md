@@ -545,7 +545,7 @@ pinTheDOMToKeys(domFragment: DOMFragment | HTMLElement, refs, cache);
 </script>
 ```
 
-The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name, and by dataset, depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.  The right hand expression can be used to apply filtering on the results, based on standard css matching.
+The ending of each key is important.  pinTheDOMToKeys supports binding by id, part, class attributes, by element name, and by attribute, depending on the ending of the key.  The part before the search type (e.g. Id, Part, etc) is turned into lisp-case before searching for it.  The right hand expression can be used to apply filtering on the results, based on standard css matching.
 
 <table>
     <tr>
@@ -619,6 +619,9 @@ domCache: {
 }
 ```
 
+### Two special properties:  disabled and deferHydration
+
+The propActions orchestrator, Rx, recognizes two properties, which, if either is true, means to cease any "reactions" -- disabled and [deferHydration](https://github.com/webcomponents/community-protocols/issues/7)[TODO].
 
 </details>
 
