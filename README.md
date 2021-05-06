@@ -733,7 +733,7 @@ define(CounterDo);
 For this simple "counter" web component, the code shown above (if you expand) is a good stopping point.  Everything else we will do with this example will amount to taking at most 3 lines of code, at most reducing them to 1 line of code, and one import statement, and that import may contain a paragraph worth of code.  Meaning, if you never plan to develop a more complex web component than the one shown above, you've passed the course!
 
 <details>
-    <summary>Hydration, Part II</summary>
+    <summary>Prop Initialization, Part II</summary>
 
 ### Property initializing, in detail
 

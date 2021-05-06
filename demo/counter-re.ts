@@ -1,5 +1,5 @@
 import {define} from '../lib/define.js';
-import {PropDef, PropAction, PropDefMap, PESettings} from '../types.js';
+import {PropDef, PropAction, PropDefMap, PESettings, IReactor} from '../types.js';
 import {mergeProps} from '../lib/mergeProps.js';
 import {letThereBeProps} from '../lib/letThereBeProps.js';
 import {html} from '../lib/html.js';
@@ -49,7 +49,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     static is = 'counter-re';
     propActions = propActions;
     
-    reactor = new RxSuppl(this, [
+    reactor: IReactor = new RxSuppl(this, [
         {
             rhsType: Array,
             ctor: DOMKeyPE

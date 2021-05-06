@@ -7,6 +7,15 @@
 </head>
 <body>
     <counter-re count=20></counter-re>
-    <script type=module src=counter-re.js></script>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/"
+            }
+        }
+    </script>
+    <script type=module>
+        import './counter-re.js';
+    </script>
 </body>
 </html>
