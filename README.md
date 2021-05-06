@@ -1186,8 +1186,7 @@ const propActions = [
         [refs.countPart]:  count
     }],
     ({domCache, self}: CounterRe) => [{
-        [refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}],
-        
+        [refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}] as PESettings<CounterRe>,
     }],
     xp.createShadow
 ] as PropAction[];
@@ -1196,7 +1195,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     static is = 'counter-re';
     propActions = propActions;
     
-    reactor = new RxSuppl(this, [
+    reactor: IReactor = new RxSuppl(this, [
         {
             rhsType: Array,
             ctor: DOMKeyPE
@@ -1205,7 +1204,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     clonedTemplate: DocumentFragment | undefined; domCache: any;
     count!: number;
     connectedCallback(){
-        hydrate<CounterDoProps>(this, slicedPropDefs, {
+        mergeProps<CounterDoProps>(this, slicedPropDefs, {
             count: 0
         });
     }
