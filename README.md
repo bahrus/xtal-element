@@ -271,7 +271,7 @@ self[slicedPropDefs.propLookup.myProp.alias] = newValue;
 
 
 <details>
-    <summary>Hydration, part I</summary>
+    <summary>Prop initialization, part I</summary>
 
 ## Support for asynchronous loading
 
@@ -708,7 +708,7 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             delete this.clonedTemplate;
         },
     ] as PropAction[];
-    reactor = new Rx(this);
+    reactor : IReactor = new Rx(this);
     
 }
 const nonFalsyObject: PropDef = {
