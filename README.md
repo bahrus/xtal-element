@@ -202,9 +202,9 @@ export interface PropDef{
     syncProps?: any;
 
     /**
-     * Provide a default value (if using the hydrate function) *only if* this attribute is not present.
+     * Provide a default value (if using the mergeProps function) *only if* this attribute is not present.
      * If the attrib is present, the assumption is that the property will be set externally, and the default value thrown away,
-     * so this avoids wasted effort involed in setting the initial value.
+     * so this avoids wasted effort involved in setting the initial value.
      */
     byoAttrib?: string;
 
@@ -1247,7 +1247,7 @@ XtalPattern is continuing to impose more assumptions on names of properties -- i
 
 ## Inversion of Props
 
-The hydrate function allows us to set initial properties in a methodical way -- giving precedence to externally set properties, then attributes, and default values as a backup.
+The mergeProps function allows us to set initial properties in a methodical way -- giving precedence to externally set properties, then attributes, and default values as a backup.
 
 But there are scenarios where we want to set the property externally, but we may not be able to do so right away.  We could just set the default value, and then allow the external property setting to take place when it's ready.  But in some cases, that could be quite expensive, especially when it comes to properties that affect rendering.
 
