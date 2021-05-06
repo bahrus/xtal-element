@@ -16,6 +16,7 @@ export class Rx implements IReactor {
         const name = prop.name!;
         this.queue.add(name);
         if(this.surface.disabled && name !== 'disabled') return;
+        if(this.surface.deferHydration && name !== 'deferHydration') return;
         if (prop.async) {
             queueMicrotask(() => {this.processActionQueue()});
         } else {

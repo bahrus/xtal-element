@@ -132,6 +132,7 @@ export interface SlicedPropDefs<T = any>{
 
 export interface ReactiveSurface extends Partial<HTMLElement>{
     disabled?: boolean;
+    deferHydration?: boolean;
     suspendRx?: boolean;
     propActions: PropAction[];
     propActionsHub?(propAction: PropAction): void;
