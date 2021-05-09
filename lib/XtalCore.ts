@@ -7,5 +7,5 @@ import {Rx, ReactiveSurface} from './Rx.js';
 import {initInternals} from './initInternals.js';
 
 export const xc = {
-    define, getSlicedPropDefs, letThereBeProps, hydrate: mergeProps, Rx, initInternals
+    define, getSlicedPropDefs, letThereBeProps, mergeProps, Rx, initInternals
 };
