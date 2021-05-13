@@ -9,7 +9,7 @@
     "serve": "node node_modules/xtal-test/serve.js",
     "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open",
     "package-check": "package-check",
-    "publish": "git commit -m \"...\" && git push && npm version patch && npm publish && git pull && git push"
+    "pub": "git commit -m \"...\" && git push && npm version patch && npm publish && git pull && git push"
   },
   "keywords": [
     "webcomponents"
@@ -52,7 +52,7 @@
     "./lib/zzz.js": "./lib/zzz.js"
   },
   "dependencies": {
-    "trans-render": "0.0.287"
+    "trans-render": "0.0.288"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
