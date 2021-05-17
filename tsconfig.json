@@ -10,6 +10,7 @@
 		"watch": true
 	},
 	"files":[
+		"lib/applyMixins.ts",
 		"lib/attr.ts",
 		"lib/createNestedProp.ts",
 		"lib/debounce.ts",
@@ -20,6 +21,7 @@
 		"lib/getDestructArgs.ts",
 		"lib/getProcessor.ts",
 		"lib/getSlicedPropDefs.ts",
+		"lib/GroupedSiblings.ts",
 		"lib/html.ts",
 		"lib/mergeProps.ts",
 		"lib/initInternals.ts",

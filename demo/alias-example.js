@@ -13,7 +13,7 @@ export class AliasExample extends HTMLElement {
         this.reactor = new xc.Rx(this);
     }
     connectedCallback() {
-        xc.hydrate(this, slicedPropDefs);
+        xc.mergeProps(this, slicedPropDefs);
     }
     onPropChange(n, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);

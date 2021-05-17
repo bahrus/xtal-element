@@ -1,4 +1,4 @@
-import {PropDefMap, xc, PropDef, ReactiveSurface, PropAction} from '../lib/XtalCore.js';
+import {PropDefMap, xc, PropDef, ReactiveSurface, PropAction, IReactor} from '../lib/XtalCore.js';
 
 const linkProp2 = ({prop1, self}: AliasExample) =>{
     console.log('in linkProp2');
@@ -16,10 +16,10 @@ export class AliasExample extends HTMLElement implements ReactiveSurface{
 
     self = this;
     propActions = propActions;
-    reactor = new xc.Rx(this);
+    reactor: IReactor = new xc.Rx(this);
 
     connectedCallback(){
-        xc.hydrate(this, slicedPropDefs);
+        xc.mergeProps(this, slicedPropDefs);
     }
 
     onPropChange(n: string, propDef: PropDef, newVal: any){
