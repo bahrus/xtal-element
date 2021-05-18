@@ -23,4 +23,15 @@ export class GroupedSiblings extends HTMLElement{
         range.setEndAfter(this.lastGroupedSibling ?? this);
         return range.extractContents();
     }
+
+    getMatchingElement(cssSelector: string){
+        let nextSibling = this.nextElementSibling;
+        while(nextSibling !== null){
+            if(nextSibling.matches(cssSelector)) return nextSibling;
+            const el  = nextSibling.querySelector(cssSelector);
+            if(el !== null) return el;
+            if(nextSibling === this.lastGroupedSibling) return null;
+        }
+        return null;
+    }
 }
