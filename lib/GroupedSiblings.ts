@@ -1,3 +1,5 @@
+import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
+
 export class GroupedSiblings extends HTMLElement{
     lastGroupedSibling: Element | undefined;
     get groupedRange(){
@@ -33,5 +35,18 @@ export class GroupedSiblings extends HTMLElement{
             if(nextSibling === this.lastGroupedSibling) return null;
         }
         return null;
+    }
+
+    createRefs(fragment: DocumentFragment | HTMLElement){
+        const elementProxyEnding = '-element-proxy';
+        for(const name of this.getAttributeNames()){
+            if((name[0] === '-') && name.endsWith(elementProxyEnding)){
+                let elementName = name.substr(1, name.length - elementProxyEnding.length - 1);
+                const matchingEl = fragment.querySelector(elementName);
+                if(matchingEl !== null){
+                    (<any>this)[lispToCamel(elementName)] = matchingEl;
+                }
+            }
+        }
     }
 }
