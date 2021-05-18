@@ -38,13 +38,18 @@ export class GroupedSiblings extends HTMLElement{
     }
 
     createRefs(fragment: DocumentFragment | HTMLElement){
-        const elementProxyEnding = '-element-proxy';
+        const elementRefEnding = '-element-ref';
         for(const name of this.getAttributeNames()){
-            if((name[0] === '-') && name.endsWith(elementProxyEnding)){
-                let elementName = name.substr(1, name.length - elementProxyEnding.length - 1);
+            if((name[0] === '-') && name.endsWith(elementRefEnding)){
+                let elementName = name.substr(1, name.length - elementRefEnding.length - 1);
                 const matchingEl = fragment.querySelector(elementName);
                 if(matchingEl !== null){
-                    (<any>this)[lispToCamel(elementName)] = matchingEl;
+                    const key = lispToCamel(elementName.substr(1));
+                    const currentVal = (<any>this)[key];
+                    (<any>this)[key] = matchingEl;
+                    if(currentVal !== undefined && !(currentVal instanceof HTMLElement)){
+                        Object.assign(matchingEl, currentVal);
+                    }
                 }
             }
         }
