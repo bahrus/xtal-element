@@ -1,5 +1,3 @@
-import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
-
 export class GroupedSiblings extends HTMLElement{
     lastGroupedSibling: Element | undefined;
     get groupedRange(){
@@ -26,38 +24,16 @@ export class GroupedSiblings extends HTMLElement{
         return range.extractContents();
     }
 
-    getMatchingElement(cssSelector: string){
-        let nextSibling = this.nextElementSibling;
-        while(nextSibling !== null){
-            if(nextSibling.matches(cssSelector)) return nextSibling;
-            const el  = nextSibling.querySelector(cssSelector);
-            if(el !== null) return el;
-            if(nextSibling === this.lastGroupedSibling) return null;
-        }
-        return null;
-    }
+    // getMatchingElement(cssSelector: string){
+    //     let nextSibling = this.nextElementSibling;
+    //     while(nextSibling !== null){
+    //         if(nextSibling.matches(cssSelector)) return nextSibling;
+    //         const el  = nextSibling.querySelector(cssSelector);
+    //         if(el !== null) return el;
+    //         if(nextSibling === this.lastGroupedSibling) return null;
+    //     }
+    //     return null;
+    // }
 
-    createRefs(fragment: DocumentFragment | HTMLElement){
-        const elementRefEnding = '-element-ref';
-        for(const name of this.getAttributeNames()){
-            if((name[0] === '-') && name.endsWith(elementRefEnding)){
-                let elementName = name.substr(1, name.length - elementRefEnding.length - 1);
-                const key = lispToCamel(name.substr(1));
-                const currentVal = (<any>this)[key];
-                const matchingEl = fragment.querySelector(elementName);
-                if(matchingEl !== null){
-                    
-                    (<any>this)[key] = matchingEl;
-                    if(currentVal !== undefined && !(currentVal instanceof HTMLElement)){
-                        Object.assign(matchingEl, currentVal);
-                    }
-                }else{
-                    //release DOM element from memory
-                    if(currentVal instanceof HTMLElement){
-                        delete ((<any>this)[key]);
-                    }
-                }
-            }
-        }
-    }
+
 }
