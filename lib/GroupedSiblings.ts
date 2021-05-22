@@ -20,7 +20,11 @@ export class GroupedSiblings extends HTMLElement{
         this._doNotCleanUp = true;
         const range = document.createRange();
         range.setStartBefore(this);
-        range.setEndAfter(this.lastGroupedSibling ?? this);
+        let lastGroupedSibling = this.lastGroupedSibling;
+        while((lastGroupedSibling as GroupedSiblings).lastGroupedSibling !== undefined){
+            lastGroupedSibling = (lastGroupedSibling as GroupedSiblings).lastGroupedSibling;
+        }
+        range.setEndAfter(lastGroupedSibling ?? this);
         return range.extractContents();
     }
 
