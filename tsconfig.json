@@ -12,6 +12,7 @@
 	"files":[
 		"lib/applyMixins.ts",
 		"lib/attr.ts",
+		"lib/base-link-id.ts",
 		"lib/createNestedProp.ts",
 		"lib/debounce.ts",
 		"lib/define.ts",
