@@ -33,9 +33,10 @@ export  class X extends HTMLElement {
 
         class newClass extends (config.class || X){
             static is = config.name;
+            propActions = propActions;
             mainTemplate = config.mainTemplate;
             refs = config.refs || {};
-            propActions = propActions;
+            
 
         }
         //const nativeProps = xc.getPropDefs(xp.props);
