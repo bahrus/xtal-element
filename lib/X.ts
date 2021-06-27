@@ -36,7 +36,9 @@ export  class X extends HTMLElement {
             propActions = propActions;
             mainTemplate = config.mainTemplate;
             refs = config.refs || {};
-            
+            connectedCallback(){
+                xc.mergeProps(this, slicedPropDefs);
+            }
 
         }
         //const nativeProps = xc.getPropDefs(xp.props);
