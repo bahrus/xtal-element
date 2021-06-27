@@ -5,12 +5,12 @@ export type PropAction<T extends Element = HTMLElement> = (t: T) => any;
 
 export interface XConfig{
     mainTemplate: HTMLTemplateElement;
-    propActions: PropAction[];
+    propActions?: PropAction[];
     propDefs?: PropDefMap<any>;
     noShadow?: boolean;
     name: string;
     class?: {new(): X};
-    refs: any;
+    refs?: any;
 }
 //TODO look into variadic tuple types
 export type EventScopeT = [string | undefined];

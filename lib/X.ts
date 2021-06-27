@@ -29,12 +29,12 @@ export  class X extends HTMLElement {
 
 
     static tend(config: XConfig){
-        const propActions = [xp.manageMainTemplate, config.propActions, config.noShadow ? xp.appendClone : xp.createShadow] as PropAction[];
+        const propActions = [xp.manageMainTemplate, config.propActions || [], config.noShadow ? xp.appendClone : xp.createShadow] as PropAction[];
 
         class newClass extends (config.class || X){
             static is = config.name;
             mainTemplate = config.mainTemplate;
-            refs = config.refs;
+            refs = config.refs || {};
             propActions = propActions;
 
         }
@@ -43,7 +43,7 @@ export  class X extends HTMLElement {
         if(propDefs === undefined){
             const s = new Set<string>();
             
-            for(const propAction of config.propActions.flat()){
+            for(const propAction of (config.propActions || []).flat()){
                 const props = getDestructArgs(propAction);
                 for(const prop of props){
                     if((<any>xp.props)[prop] === undefined && prop !== 'self'){
