@@ -320,6 +320,10 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
 }
 ```
 
+**NB**:  I've recently learned that defining non-initialized class fields as shown above, will result in property values, passed asynchronously to the unknown element prior to being upgraded, being lost on the upgrade.
+
+Meaning the code, elegant as it looks, and convenient as it is for TypeScript Typing, is ultimately problematic.  Better to stick with interfaces and PropDefMap's exclusively, as outlined previously, when defining properties.
+
 <details>
     <summary>Detailed Explanation</summary>
 
@@ -332,6 +336,8 @@ export class MyCustomElement extends HTMLElement{
     myProp:string;
 }
 ```
+
+**NB**:  See previous NB for why the example above is problematic for other reasons.
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
