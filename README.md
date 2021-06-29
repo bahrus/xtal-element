@@ -1453,6 +1453,24 @@ X.tend({
 });
 ```
 
+## Rendering Flattened Views [TODO]
+
+<details>
+    <summary>The Xtal Fragment Pattern</summary>
+
+When rendering lists of items, using built-in semantic elements, such as tables or dl's, it is often useful for a custom element to render its content via siblings (setting its own style.display to 'none' in order to not run afoul of allowed children requirements (hopefully) and rendering costs).  Browser may or may not be flexible enough in some case, but not [always](https://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-elementhttps://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-element)
+
+So XtalElement, then supports three modes of rendering:
+
+1.  No to ShadowDOM, but content is nested inside.
+2.  Yes to ShadowDOM, but content is nested inside.
+3.  No to ShadowDOM, but content is rendered as contiguous grouped siblings that the element manages (including associated lifecycle events / memory cleanup). [TODO]
+
+This section is devoted to discussing the off-the-beaten-track 3rd option above.
+
+We should be prepared for a bumpy ride when deplying a web component that employs this approach.  Use of this third pattern may result in us encountering issues when mixed in with other rendering libraries that aren't privy to this artificial "nesting" of child components.
+
+</details>
 
 ## Rendering Fluid Views [TODO]
 
