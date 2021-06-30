@@ -1468,7 +1468,7 @@ So XtalElement, then supports three modes of rendering:
 
 This section is devoted to discussing the off-the-beaten-track 3rd option above.
 
-We should be prepared for a bumpy ride when deplying a web component that employs this approach.  Use of this third pattern may result in us encountering issues when mixed in with other rendering libraries that aren't privy to this artificial "nesting" of child components.
+**NB:** Be prepared for a bumpy ride when deploying a web component that uses this approach.  Use of this third pattern may result in encountering issues when mixed in with other rendering libraries that aren't privy to this artificial "nesting" of child components.
 
 </details>
 
