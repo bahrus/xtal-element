@@ -1458,7 +1458,7 @@ X.tend({
 <details>
     <summary>The Xtal Fragment Pattern</summary>
 
-When rendering lists of items, using built-in semantic elements, such as tables or dl's, it is often useful for a custom element to render its content via siblings (setting its own style.display to 'none' in order to not run afoul of allowed children requirements (hopefully) and rendering costs).  Browser may or may not be flexible enough in some case, but not [always](https://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-elementhttps://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-element)
+When rendering lists of items, using built-in semantic elements, such as tables or dl's, it is often useful for a custom element to render its content via siblings (setting its own style.display to 'none' in order to not run afoul of allowed child restrictions (hopefully) as well as rendering costs).  The browser may or may not be flexible enough in some case, to accommodate element structures that deviate from the prescribed structure, but not [always](https://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-elementhttps://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-element)
 
 So XtalElement, then supports three modes of rendering:
 
