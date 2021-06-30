@@ -1,9 +1,10 @@
 export class GroupedSiblings extends HTMLElement{
+    startingSibling: Element | undefined;
     lastGroupedSibling: Element | undefined;
     get groupedRange(){
         if(this.lastGroupedSibling !== undefined){
             const range = document.createRange();
-            range.setStartBefore(this.nextElementSibling!);
+            range.setStartBefore((this.startingSibling || this).nextElementSibling!);
             range.setEndAfter(this.lastGroupedSibling);
             return range;
         }  
@@ -19,13 +20,46 @@ export class GroupedSiblings extends HTMLElement{
     extractContents(){
         this._doNotCleanUp = true;
         const range = document.createRange();
-        range.setStartBefore(this);
+        
+        range.setStartBefore(this.startingSibling || this);
         let lastGroupedSibling = this.lastGroupedSibling;
         while((lastGroupedSibling as GroupedSiblings).lastGroupedSibling !== undefined){
             lastGroupedSibling = (lastGroupedSibling as GroupedSiblings).lastGroupedSibling;
         }
         range.setEndAfter(lastGroupedSibling ?? this);
         return range.extractContents();
+    }
+
+    setStartingSibling(retryCount: number){
+        if(this.renderTo === undefined){
+            this.startingSibling = this;
+            return;
+        }
+        let relativeTo = this.nextElementSibling;
+        if(this.applyToNext !== undefined){
+            while(relativeTo !== null){
+                if(relativeTo.matches(this.applyToNext)){
+                    break;
+                }
+                relativeTo = relativeTo.nextElementSibling
+            }
+
+        }
+        if(relativeTo === null){
+            if(retryCount === 0){
+                setTimeout(() => {
+                    this.setStartingSibling(retryCount + 1);
+                }, 100);
+                return;
+            }else{
+                console.error("Unable to find matching element.");
+                return;
+            }
+        }
+        const target = relativeTo.querySelector(this.renderTo);
+        if(target !== null){
+            this.startingSibling = target;
+        }
     }
 
     // getMatchingElement(cssSelector: string){
@@ -39,5 +73,7 @@ export class GroupedSiblings extends HTMLElement{
     //     return null;
     // }
 
+    applyToNext: string | undefined;
 
+    renderTo: string | undefined;
 }
