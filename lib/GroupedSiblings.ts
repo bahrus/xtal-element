@@ -31,7 +31,7 @@ export class GroupedSiblings extends HTMLElement{
     }
 
     setStartingSibling(retryCount: number){
-        if(this.renderTo === undefined){
+        if(this.renderAfter === undefined){
             this.startingSibling = this;
             return;
         }
@@ -56,7 +56,7 @@ export class GroupedSiblings extends HTMLElement{
                 return;
             }
         }
-        const target = relativeTo.querySelector(this.renderTo);
+        const target = relativeTo.querySelector(this.renderAfter);
         if(target !== null){
             this.startingSibling = target;
         }
@@ -75,5 +75,5 @@ export class GroupedSiblings extends HTMLElement{
 
     applyToNext: string | undefined;
 
-    renderTo: string | undefined;
+    renderAfter: string | undefined;
 }
