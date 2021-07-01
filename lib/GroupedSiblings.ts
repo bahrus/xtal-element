@@ -36,9 +36,9 @@ export class GroupedSiblings extends HTMLElement{
             return;
         }
         let relativeTo = this.nextElementSibling;
-        if(this.applyToNext !== undefined){
+        if(this.matchClosest !== undefined){
             while(relativeTo !== null){
-                if(relativeTo.matches(this.applyToNext)){
+                if(relativeTo.matches(this.matchClosest)){
                     break;
                 }
                 relativeTo = relativeTo.nextElementSibling
@@ -73,7 +73,7 @@ export class GroupedSiblings extends HTMLElement{
     //     return null;
     // }
 
-    applyToNext: string | undefined;
+    matchClosest: string | undefined;
 
     renderAfter: string | undefined;
 }
