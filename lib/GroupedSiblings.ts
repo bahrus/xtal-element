@@ -1,6 +1,6 @@
 export class GroupedSiblings extends HTMLElement{
     previousUngroupedSibling: Element | undefined;  //TODO:  Make this a weak ref?
-    parentToBeRenderedTo: Element | undefined;
+    parentToBeRenderTo: Element | undefined;
     firstGroupedSibling: Element | undefined;
     lastGroupedSibling: Element | undefined;
     get groupedRange(){
@@ -98,7 +98,7 @@ export class GroupedSiblings extends HTMLElement{
         }
         const target = relativeTo.querySelector(this.renderAtStartOf);
         if(target !== null){
-            this.parentToBeRenderedTo = target;
+            this.parentToBeRenderTo = target;
         }else{
             if(retryCount === 0){
                 setTimeout(() => {
