@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"module":"esnext",
+		"module":"ESNext",
 		"sourceMap": false,
 		"experimentalDecorators": false,
 		"skipLibCheck": true,

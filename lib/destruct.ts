@@ -16,6 +16,7 @@ export function destruct(target: any, prop: string, megaProp: string = '_input')
             return this[symb];
         },
         set: function (val) {
+            if(this[symb] === val) return;
             this[symb] = val;
             if(this[megaProp]) {
                 this[megaProp][prop] = val;
