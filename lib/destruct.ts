@@ -1,4 +1,5 @@
 import {debounce} from './debounce.js';
+import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
 
 export function destruct(target: any, prop: string, megaProp: string = '_input'){
     let debouncers = (<any>target)._debouncers;
@@ -10,7 +11,13 @@ export function destruct(target: any, prop: string, megaProp: string = '_input')
         }, 10);  //use task sceduler?
     }
     const symb = Symbol(prop);
-    const origVal = target[prop];
+    let origVal = target[prop];
+    if(origVal === undefined){
+        const attrVal = target.getAttribute(camelToLisp(prop));
+        if(attrVal !== null){
+            origVal = JSON.parse(attrVal);
+        }
+    }
     Object.defineProperty(target, prop, {
         get: function () {
             return this[symb];
