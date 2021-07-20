@@ -1,5 +1,6 @@
 import {debounce} from './debounce.js';
 import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
+import { attr } from './attr.js';
 
 export function destruct(target: any, prop: string, megaProp: string = '_input'){
     let debouncers = (<any>target)._debouncers;
@@ -15,7 +16,12 @@ export function destruct(target: any, prop: string, megaProp: string = '_input')
     if(origVal === undefined){
         const attrVal = target.getAttribute(camelToLisp(prop));
         if(attrVal !== null){
-            origVal = JSON.parse(attrVal);
+            try{
+                origVal = JSON.parse(attrVal);
+            }catch(e){
+                origVal = attrVal;//TODO:  use default values with destructuring to guess the type?
+            }
+            
         }
     }
     Object.defineProperty(target, prop, {
