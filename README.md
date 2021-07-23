@@ -1340,15 +1340,44 @@ Let's see how we can use xtal-element's utility functions, discussed in detail i
 
 ### c-c and carbon-copy
 
-My favorite approach to this is using the [c-c or carbon-copy](https://github.com/bahrus/carbon-copy#c-c----codeless-web-components) web component "factory":
+My favorite approach to this is using the [c-c or carbon-copy](https://github.com/bahrus/carbon-copy#c-c----codeless-web-components) web component "factory", combined with a few web components from the [p-et-alia framework](https://github.com/bahrus/p-et-alia):
 
 ```html
-<template id=hello-world>
-    <div>Hello, {{place}}</div>
-</template>
-<c-c copy from="/hello-world" string-props='["place"]'></c-c>
+<template id=counter-fa>
+  <button disabled part=down data-d=-1>-</button>
+  <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <span part=count>{{count}}</span>
+  <button disabled part=up data-d=1>+</button>
+  <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <ag-fn -d><script nomodule>
+      ({d, host}) => {
+          host.count += d;
+      }
+  </script></ag-fn>
+  <style>
+      * {
+        font-size: 200%;
+      }
 
-<hello-world place="Mars"></hello-world>
+      span {
+        width: 4rem;
+        display: inline-block;
+        text-align: center;
+      }
+
+      button {
+        width: 4rem;
+        height: 4rem;
+        border: none;
+        border-radius: 10px;
+        background-color: seagreen;
+        color: white;
+      }
+  </style>
+</template>
+<c-c copy from="/counter-fa" num-props='["count=30]'></c-c>
+
+<counter-fa></counter-fa>
 ```
 
 *carbon-copy* uses the very utility functions we've been painstakingly documenting so far (in the collapsed sections), to do its thing.
