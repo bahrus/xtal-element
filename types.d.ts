@@ -130,7 +130,7 @@ export interface SlicedPropDefs<T = any>{
 
 //export type destructPropInfo<T = any> = (x: T) => PropDef | destructPropInfo<T>[];
 
-export interface ReactiveSurface extends Partial<HTMLElement>{
+export interface ReactiveSurface extends HTMLElement{
     disabled?: boolean;
     deferHydration?: boolean;
     suspendRx?: boolean;
