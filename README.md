@@ -1031,7 +1031,7 @@ But you can also include an array in the expression:
 [
     {[refs.downPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
     {[refs.upPart]: [,{click:[changeCount, 'dataset.d', parseInt]}]},
-    [finishedSettingProps: true]
+    [{finishedSettingProps: true}]
 ],
 ```
 
