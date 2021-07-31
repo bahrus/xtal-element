@@ -1345,15 +1345,15 @@ My favorite approach to this is using the [d-fine library](https://github.com/ba
 ```html
 <d-fine from-child-template num-props='["count=30]'><template>
   <button disabled part=down data-d=-1>-</button>
-  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></pass-down>
   <span part=count>{{count}}</span>
   <button disabled part=up data-d=1>+</button>
-  <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
-  <ag-fn -d><script nomodule>
+  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></pass-down>
+  <aggregator-fn -d><script nomodule>
       ({d, host}) => {
           host.count += d;
       }
-  </script></ag-fn>
+  </script></aggregator-fn>
   <style>
       * {
         font-size: 200%;
@@ -1387,15 +1387,15 @@ In such a setting, the d-fine web component is a thin wrapper around an api, whi
 ```JavaScript
 def(html`
   <button disabled part=down data-d=-1>-</button>
-  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></pass-down>
   <span part=count>{{count}}</span>
   <button disabled part=up data-d=1>+</button>
-  <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
-  <ag-fn -d><script nomodule>
+  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></pass-down>
+  <aggregator-fn -d><script nomodule>
       ({d, host}) => {
           host.count += d;
       }
-  </script></ag-fn>
+  </script></aggregator-fn>
   <style>
       * {
         font-size: 200%;
@@ -1416,6 +1416,7 @@ def(html`
         color: white;
       }
   </style>
+
 `, {
     as: 'counter-fa',
     numProps: ['counter']
