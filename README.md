@@ -1338,14 +1338,14 @@ Suggested approaches to this scenario are provided below.
 
 Let's see how we can use xtal-element's utility functions, discussed in detail in the collapsed sections above, to generate web components as quickly as possible.
 
-### c-c and carbon-copy
+### d-fine
 
-My favorite approach to this is using the [c-c or carbon-copy](https://github.com/bahrus/carbon-copy#c-c----codeless-web-components) web component "factory", combined with a few web components from the [p-et-alia framework](https://github.com/bahrus/p-et-alia):
+My favorite approach to this is using the [d-fine library](https://github.com/bahrus/d-fine) web component "factory".  It provides an api and a web component, both of which rely heavily on the utility functions described above.  Let's first see use of the web component combined with a few web components from the [p-et-alia framework](https://github.com/bahrus/p-et-alia):
 
 ```html
-<template id=counter-fa>
+<d-fine from-child-template num-props='["count=30]'><template>
   <button disabled part=down data-d=-1>-</button>
-  <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
   <span part=count>{{count}}</span>
   <button disabled part=up data-d=1>+</button>
   <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
@@ -1374,132 +1374,52 @@ My favorite approach to this is using the [c-c or carbon-copy](https://github.co
         color: white;
       }
   </style>
-</template>
-<c-c copy from="/counter-fa" num-props='["count=30]'></c-c>
+</template></d-fine>
 
 <counter-fa></counter-fa>
 ```
 
-*carbon-copy* uses the very utility functions we've been painstakingly documenting so far (in the collapsed sections), to do its thing.
-
 Unfortunately, this way of defining custom elements doesn't make sense in our JS-centric world (sigh).
 
-In such a setting, the X base class, discussed below, is, I think, tolerable in a JS-centric world, and will be much more appealing if/when standards show some HTML love.
+In such a setting, the d-fine web component is a thin wrapper around an api, which is probably a better entry point for a web component definition, since the platform supports importing such web components:
 
-### Low ceremony X base class
 
 ```JavaScript
-const mainTemplate = html`
-<button data-d=-1>-</button><span></span><button data-d=1>+</button>
-<style>
-    * {
-      font-size: 200%;
-    }
+def(html`
+  <button disabled part=down data-d=-1>-</button>
+  <pass-down on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <span part=count>{{count}}</span>
+  <button disabled part=up data-d=1>+</button>
+  <p-d on=click to=[-d] m=1 val=target.dataset.d parse-val-as=int></p-d>
+  <ag-fn -d><script nomodule>
+      ({d, host}) => {
+          host.count += d;
+      }
+  </script></ag-fn>
+  <style>
+      * {
+        font-size: 200%;
+      }
 
-    span {
-      width: 4rem;
-      display: inline-block;
-      text-align: center;
-    }
+      span {
+        width: 4rem;
+        display: inline-block;
+        text-align: center;
+      }
 
-    button {
-      width: 4rem;
-      height: 4rem;
-      border: none;
-      border-radius: 10px;
-      background-color: seagreen;
-      color: white;
-    }
-</style>
-`;
-const refs = {buttonElements: '', spanElement: ''};
-const propActions = [
-  ({domCache, self}: CounterMi) => [
-    {[refs.buttonElements]: [,{click:[self.changeCount, 'dataset.d', parseInt]}]}
-  ],
-  ({domCache, count}: CounterMi) => [
-    {[refs.spanElement]:  count}
-  ]
-] as PropAction[];
-
-export class CounterMi extends X{
-    count = 0;
-
-    changeCount(delta: number){
-        this.count += delta;
-    }
-}
-
-X.tend({
-    name: 'counter-mi',
-    class: CounterMi as {new(): X},
-    mainTemplate,
-    propActions,
-    refs
+      button {
+        width: 4rem;
+        height: 4rem;
+        border: none;
+        border-radius: 10px;
+        background-color: seagreen;
+        color: white;
+      }
+  </style>
+`, {
+    as: 'counter-fa',
+    numProps: ['counter']
 });
 ```
 
-<details>
-    <summary>Talking points</summary>
-
-1.  Note that the class CounterMi is fairly library neutral.  With the exception of extending class X, none of the logic within is library specific.
-2.  For true library agnostic classes, use [mix-ins](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#mix-ins).
-</details>
-
-
-<!--Missing features of low-ceremony Xtal components:
-[TODO]
-hydrating properties support, attributes.-->
-
-<details>
-    <summary>Custom property settings</summary>
-
-In the low ceremony example above, note that we didn't have to define the properties supported by the web component.  X infers the properties based on the PropAction signatures.  This should be sufficient for rapid web component development.
-
-But what if you are developing a more nuanced web component, and need to fine tune the properties?
-
-You can specify the propDefs explicitly:
-
-```JavaScript
-X.tend({
-    name: 'counter-mi',
-    ...
-    propDefs: {
-        ...
-    },
-    ...
-});
-```
-
-To specify not to use ShadowDOM:
-
-```JavaScript
-X.tend({
-    name: 'counter-mi',
-    ...
-    noShadow: true,
-    ...
-});
-```
-
-## Rendering Flattened Views [TODO]
-
-<details>
-    <summary>The Xtal Fragment Pattern</summary>
-
-When rendering lists of items, using built-in semantic elements, such as tables or dl's, it is often useful for a custom element to render its content via siblings (setting its own style.display to 'none' in order to not run afoul of allowed child restrictions (hopefully) as well as rendering costs).  The browser may or may not be flexible enough in some case, to accommodate element structures that deviate from the prescribed structure, but not [always](https://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-elementhttps://stackoverflow.com/questions/53083606/how-to-make-custom-table-in-custom-element)
-
-So XtalElement, then supports three modes of rendering:
-
-1.  No to ShadowDOM, but content is nested inside.
-2.  Yes to ShadowDOM, but content is nested inside.
-3.  No to ShadowDOM, but content is rendered as contiguous grouped siblings that the element manages (including associated lifecycle events / memory cleanup). [TODO]
-
-This section is devoted to discussing the off-the-beaten-track 3rd option above.
-
-**NB:** Be prepared for a bumpy ride when deploying a web component that uses this approach.  Use of this third pattern may result in encountering issues when mixed in with other rendering libraries that aren't privy to this artificial "nesting" of child components.
-
-</details>
-
-## Rendering Fluid Views [TODO]
 
