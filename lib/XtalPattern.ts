@@ -13,7 +13,12 @@ const createShadow = ({domCache, clonedTemplate, styleTemplate, self}: XtalPatte
     if(styleTemplate !== undefined){
         self.shadowRoot!.appendChild(styleTemplate.content.cloneNode(true));
     }
+    if(self.styleImport !== undefined){
+        (<any>self.shadowRoot!).adoptedStyleSheets = [self.styleImport];
+    }
 }
+
+
 
 
 const appendClone = ({domCache, clonedTemplate, self}: XtalPattern) => {
@@ -58,6 +63,11 @@ export const props = {
         type: Object,
         dry: true,
         byoAttrib: 'byo-s-t'
+    },
+    styleImport: {
+        type: Object,
+        dry: true,
+        byoAttrib: 'byo-s-i',
     }
  } as PropDefMap<XtalPattern>;
 

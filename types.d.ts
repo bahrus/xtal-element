@@ -176,6 +176,7 @@ export interface XtalPattern extends ReactiveSurface{
     domCache: any,
     mainTemplate: HTMLTemplateElement;
     styleTemplate?: HTMLTemplateElement | undefined;
+    styleImport?: any;
     clonedTemplate: DocumentFragment | undefined;
     refs: any;
     self: this,
