@@ -277,16 +277,19 @@ self[slicedPropDefs.propLookup.myProp.alias] = newValue;
 
 If prop values might be passed to an element before the [element becomes registered](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties) (always best to be prepared for this to happen), then you can account for this by utilizing the "propUp" function:
 
-```JavaScript
+```TypeScript
 import {propUp} from 'xtal-element/lib/propUp.js';
 export class SixteenGoingOnSeventeen extends HTMLElement{
-    foodAndWine: Offerings;
     connectedCallback(){
         propUp(this, ['foodAndWine'], {
             foodAndWine: 'appleStrudel'
         });
     }
 }
+export interface SixteenGoingOnSeventeenProps extends HTMLElement{
+    foodAndWine: Offerings;
+}
+export interface SixteenGoingOnSeventeen extends SixteenGoingOnSeventeenProps{}
 ```
 The third, optional parameter is where you can specify the default values, if nothing was passed in yet.
 </details>
@@ -298,19 +301,16 @@ The third, optional parameter is where you can specify the default values, if no
 
 ```TypeScript
 import {Rx} from 'xtal-element/lib/Rx.js';
-import {ReactiveSurface} from 'xtal-element/lib/types.d.js';
+import {ReactiveSurface, IReactor} from 'xtal-element/lib/types.d.js';
 export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
-    ClimbedEveryMountain: boolean;
-    SearchedHighAndLow: boolean;
-    FollowedEveryHighway: boolean;
-    FoundYourDream: boolean;
+
 
 
     //ReactiveSurface implementation
     propActions = [({ClimbedEveryMountain, SearchedHighAndLow, FollowedEveryHighway}: ClimbEveryMountain) => {
         this.FoundYourDream = ClimbedEveryMountain && SearchedHighAndLow && FollowedEveryHighway;
     }] as PropAction[];
-    reactor = new Rx(this);
+    reactor: IReactor = new Rx(this);
 
     onPropChange(name: string, prop: PropDef, newVal: any){
         console.log("Been there, done that.");
@@ -318,11 +318,17 @@ export class ClimbEveryMountain extends HTMLElement implements ReactiveSurface{
     }
 
 }
+
+export interface ClimbEveryMountainProps extends HTMLElement{
+    ClimbedEveryMountain: boolean;
+    SearchedHighAndLow: boolean;
+    FollowedEveryHighway: boolean;
+    FoundYourDream: boolean;
+}
+
+export interface ClimbEveryMountain extends ClimbEveryMountainProps{}
+
 ```
-
-**NB**:  I've recently learned that defining non-initialized class fields as shown above, will result in property values, passed asynchronously to the unknown element prior to being upgraded, being lost on the upgrade.
-
-Meaning the code, elegant as it looks, and convenient as it is for TypeScript Typing, is ultimately problematic.  Better to stick with interfaces and PropDefMap's exclusively, as outlined previously, when defining properties.
 
 <details>
     <summary>Detailed Explanation</summary>
@@ -333,11 +339,15 @@ Defining a new property is, by design, meant to be as easy as possible:
 
 ```Typescript
 export class MyCustomElement extends HTMLElement{
+    
+}
+export interface MyCustomElementProps {
     myProp:string;
 }
+
+export interface MyCustomElement extends MyCustomElementProps{}
 ```
 
-**NB**:  See previous NB for why the example above is problematic for other reasons.
 
 The problem arises when something special needs to happen when myProp's value is set.  
 
@@ -428,6 +438,8 @@ export class MyCustomElement extends HTMLElement  implements ReactiveSurface{
     ...
 }
 ```
+
+**NB:** This way of defining default property values is problematic when components are loading asynchronously.  More on that later.
 
 The Reactor class/object will invoke this action anytime prop1, prop2 and/or prop3 change.
 
