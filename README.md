@@ -680,14 +680,12 @@ const mainTemplate = html`
 
 const refs = { downPart: '', upPart: '', countPart: ''};
 
-export class CounterDo extends HTMLElement implements CounterDoProps{
-    clonedTemplate: DocumentFragment | undefined;
-    domCache: any;
-    count!: number;
+export class CounterDo extends HTMLElement{
+
     connectedCallback(){
         this.attachShadow({mode: 'open'});
-        const defaultValues: CounterDoProps = { count: 0};
-        attr.mergeStr<CounterDoProps>(this, slicedPropDefs.numNames, defaultValues);
+        const defaultValues: Partial<CounterDoProps> = {count: 0};
+        attr.mergeStr<Partial<CounterDoProps>>(this, slicedPropDefs.numNames, defaultValues);
         propUp(this, slicedPropDefs.propNames, defaultValues);
         this.clonedTemplate = mainTemplate.content.cloneNode(true) as DocumentFragment;
     }
@@ -701,14 +699,14 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
             this.domCache = cache;
         },
         ({domCache, count}: CounterDo) => {
-            domCache[refs.countPart].textContent = count.toString();
+            domCache[refs.countPart].textContent = count!.toString();
         },
         ({domCache}: CounterDo) => {
             domCache[refs.downPart].addEventListener('click', (e: Event) => {
-                this.count--;
+                this.count!--;
             });
             domCache[refs.upPart].addEventListener('click', (e: Event) => {
-                this.count++;
+                this.count!++;
             });
             this.shadowRoot!.appendChild(this.clonedTemplate!);
             delete this.clonedTemplate;
@@ -717,6 +715,13 @@ export class CounterDo extends HTMLElement implements CounterDoProps{
     reactor : IReactor = new Rx(this);
     
 }
+export interface CounterDoProps extends HTMLElement {
+    clonedTemplate?: DocumentFragment | undefined;
+    domCache?: any;
+    count?: number;
+}
+export interface CounterDo extends CounterDoProps{}
+
 const nonFalsyObject: PropDef = {
     type: Object,
     stopReactionsIfFalsy: true
