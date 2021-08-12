@@ -58,7 +58,7 @@ export class CounterRe extends HTMLElement implements CounterDoProps, XtalPatter
     clonedTemplate: DocumentFragment | undefined; domCache: any;
     count!: number;
     connectedCallback(){
-        mergeProps<CounterDoProps>(this, slicedPropDefs, {
+        mergeProps<Partial<CounterDoProps>>(this, slicedPropDefs, {
             count: 0
         });
     }
