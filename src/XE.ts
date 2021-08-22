@@ -1,8 +1,8 @@
 import {CE, PropInfo} from 'trans-render/lib/CE.js';
-import {ListOfLogicalExpressions, LogicOp, LogicEvalContext} from 'trans-render/lib/types.js';
-import {XAction, } from './types.js';
+import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, PropChangeInfo, PropChangeMoment} from 'trans-render/lib/types.js';
+import {XAction, PropInfoExt} from './types.js';
 
-export class XE<MCProps = any, MCActions = MCProps, TPropInfo = PropInfo, TAction extends XAction<MCProps> = XAction<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction>{
+export class XE<MCProps = any, MCActions = MCProps, TPropInfo extends PropInfoExt<MCProps> = PropInfoExt<MCProps>, TAction extends XAction<MCProps> = XAction<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction>{
     override pq(self: this, expr: LogicOp<any>, src: MCProps, ctx: LogicEvalContext = {op: 'and'}): boolean {
         const {op} = ctx;
         let answer = op === 'and' ? true : false;
@@ -64,7 +64,10 @@ export class XE<MCProps = any, MCActions = MCProps, TPropInfo = PropInfo, TActio
                     break;
                 case 'eq':
                     if(isFirst){
-                        lastVal = subA
+                        lastVal = subAnswer;
+                        isFirst = false;
+                    }else{
+                        if(lastVal !== subAnswer) return false;
                     }
             }
         }
@@ -82,5 +85,39 @@ export class XE<MCProps = any, MCActions = MCProps, TPropInfo = PropInfo, TActio
             default:
                 throw 'NI'; //Not Implemented
         }
+    }
+
+    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): boolean{ 
+        //PropInfoExt<MCProps>
+        const {toLisp} = self;
+        const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
+        const {notify} = prop;
+        if(notify !== undefined && (m === '+a' || m === '+qr')){
+            const {dispatch, echoTo, toggleTo, echoDelay} = notify;
+            if(dispatch){
+                src.dispatchEvent(new CustomEvent(toLisp(key) + '-changed', {
+                    detail:{
+                        oldValue: ov,
+                        value: nv,
+                    }
+                }));
+            }
+            if(echoTo !== undefined){
+                if(echoDelay){
+                    let echoDelayNum: number = typeof(echoDelay) === 'number' ? echoDelay : (<any>self)[echoDelay];
+                    setTimeout(() => {
+                        (<any>self)[echoTo] = nv;
+                    }, echoDelayNum);
+                }else{
+                    (<any>self)[echoTo] = nv;
+                }
+                
+            }
+            if(toggleTo !== undefined){
+                (<any>self)[toggleTo] = nv;
+            }
+        }
+
+        return super.doPA(self, src, pci, m);
     }
 } 
