@@ -15,3 +15,4 @@ export interface XAction<MCProps = any> extends Action<MCProps>{
      andIfEquals?: LogicOpProp<MCProps>,
      orIfEquals?: LogicOpProp<MCProps>,
 }
+
