@@ -1,5 +1,5 @@
 export interface IBaseLinkContainer{
-    baseLinkId: string | undefined;
+    baseLinkId?: string | undefined;
 }
 
 export function getFullURL(baseLinkContainer: IBaseLinkContainer, tail: string){
