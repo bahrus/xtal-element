@@ -5,21 +5,16 @@ export class XE extends CE {
         let answer = op === 'and' ? true : false;
         for (const logicalOp in expr) {
             const rhs = expr[logicalOp];
-            if (logicalOp.endsWith('LeastOneOf')) {
-                ctx.op = 'or';
+            let foundMatch = false;
+            for (const logicalOpsOption of logicalOpsLookup) {
+                if (logicalOp.endsWith(logicalOpsOption[0])) {
+                    ctx.op = logicalOpsOption[1];
+                    foundMatch = true;
+                    break;
+                }
             }
-            else if (logicalOp.endsWith('AllOf')) {
-                ctx.op = 'and';
-            }
-            else if (logicalOp.endsWith('NoneOf')) {
-                ctx.op = 'nor';
-            }
-            else if (logicalOp.endsWith('Equals')) {
-                ctx.op = 'eq';
-            }
-            else {
+            if (!foundMatch)
                 continue;
-            }
             if (!Array.isArray(rhs))
                 throw 'NI'; //Not Implemented
             const subAnswer = self.pqs(self, rhs, src, ctx);
@@ -124,4 +119,27 @@ export class XE extends CE {
         }
         return super.doPA(self, src, pci, m);
     }
+    getProps(self, expr, s = new Set()) {
+        for (const logicalOp in expr) {
+            const rhs = expr[logicalOp];
+            if (!Array.isArray(rhs))
+                continue;
+            for (const logicalOpsOption of logicalOpsLookup) {
+                if (logicalOp.endsWith(logicalOpsOption[0])) {
+                    for (const rhsElement of rhs) {
+                        switch (typeof rhsElement) {
+                            case 'string':
+                                s.add(rhsElement);
+                                break;
+                            case 'object':
+                                self.getProps(self, rhsElement, s);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        return s;
+    }
 }
+const logicalOpsLookup = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq']];

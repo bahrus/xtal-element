@@ -1,29 +1,28 @@
 import {CE, PropInfo} from 'trans-render/lib/CE.js';
-import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, PropChangeInfo, PropChangeMoment} from 'trans-render/lib/types.js';
+import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, PropChangeInfo, PropChangeMoment, OpOptions, Action} from 'trans-render/lib/types.js';
 import {XAction, PropInfoExt} from './types.js';
 
 export class XE<
     MCProps = any, MCActions = MCProps, 
     TPropInfo extends PropInfoExt<MCProps> = PropInfoExt<MCProps>, 
-    TAction extends XAction<MCProps> = XAction<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction>{
+    TAction extends XAction<MCProps> = XAction<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction
+>{
 
     pq(self: this, expr: LogicOp<any>, src: MCProps, ctx: LogicEvalContext = {op: 'and'}): boolean {
         const {op} = ctx;
         let answer = op === 'and' ? true : false;
         for(const logicalOp in expr){
             const rhs: any = (<any>expr)[logicalOp];
-            
-            if(logicalOp.endsWith('LeastOneOf')) {
-                ctx.op = 'or';
-            }else if(logicalOp.endsWith('AllOf')){
-                ctx.op = 'and';
-            }else if(logicalOp.endsWith('NoneOf')){
-                ctx.op = 'nor';
-            }else if(logicalOp.endsWith('Equals')){
-                ctx.op = 'eq';
-            }else{
-                continue;
+            let foundMatch = false;
+            for(const logicalOpsOption of logicalOpsLookup){
+                if(logicalOp.endsWith(logicalOpsOption[0])){
+                    ctx.op = logicalOpsOption[1];
+                    foundMatch = true;
+                    break;
+                }
             }
+            if(!foundMatch) continue;
+
             
             if(!Array.isArray(rhs)) throw 'NI'; //Not Implemented
             const subAnswer = self.pqs(self, rhs, src, ctx);
@@ -124,4 +123,29 @@ export class XE<
 
         return super.doPA(self, src, pci, m);
     }
+
+    getProps(self: this,  expr: Action<any>, s: Set<string> = new Set<string>()): Set<string>{
+        for(const logicalOp in expr){
+            const rhs: any = (<any>expr)[logicalOp];
+            if(!Array.isArray(rhs)) continue;
+            for(const logicalOpsOption of logicalOpsLookup){
+                if(logicalOp.endsWith(logicalOpsOption[0])){
+                    for(const rhsElement of rhs){
+                        switch(typeof rhsElement){
+                            case 'string':
+                                s.add(rhsElement);
+                                break;
+                            case 'object':
+                                self.getProps(self, rhsElement, s);
+                                break;
+                        }
+
+                    }
+                }
+            }
+        }
+        return s;
+    }
 } 
+
+const logicalOpsLookup : [string, OpOptions][] = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq']];
