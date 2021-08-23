@@ -19,6 +19,8 @@ export interface XAction<MCProps = any> extends Action<MCProps>{
      orIfEquals?: LogicOpProp<MCProps>,
 }
 
+export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
+
 export interface PropInfoExt<MCProps = any> extends PropInfo{
      notify?: {
           dispatch?: boolean,

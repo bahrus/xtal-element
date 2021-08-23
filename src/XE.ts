@@ -1,5 +1,5 @@
 import {CE, PropInfo} from 'trans-render/lib/CE.js';
-import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, PropChangeInfo, PropChangeMoment, OpOptions, Action} from 'trans-render/lib/types.js';
+import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChangeInfo, PropChangeMoment, Action} from 'trans-render/lib/types.js';
 import {XAction, PropInfoExt} from './types.js';
 
 export class XE<
