@@ -19,6 +19,10 @@ export interface XAction<MCProps = any> extends Action<MCProps>{
      orIfEquals?: LogicOpProp<MCProps>,
 }
 
+export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends XAction<MCProps>{
+     preAction?: keyof MCActions;
+     arg?: any;
+}
 
 export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
 
@@ -55,7 +59,7 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
      */
      byoAttrib?: string;
 
-     updatedBy?: Partial<{[key in keyof MCActions]: XAction<MCProps>}>;
+     updatedBy?: Partial<{[key in keyof MCActions]: DeclarativeBinder<MCProps, MCActions>}>[];
 
 }
 

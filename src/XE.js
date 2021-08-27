@@ -1,4 +1,6 @@
 import { CE } from 'trans-render/lib/CE.js';
+import { applyP } from 'trans-render/lib/applyP.js';
+import { applyPEA } from 'trans-render/lib/applyPEA.js';
 export class XE extends CE {
     pq(self, expr, src, ctx = { op: 'and' }) {
         const { op } = ctx;
@@ -140,6 +142,37 @@ export class XE extends CE {
             }
         }
         return s;
+    }
+    postHoc(self, action, target, returnVal) {
+        if (action.target !== undefined) {
+            let newTarget = target[action.target];
+            if (newTarget === undefined)
+                return;
+            if (newTarget instanceof NodeList) {
+                newTarget = Array.from(newTarget);
+            }
+            if (Array.isArray(newTarget)) {
+                for (const subTarget of newTarget) {
+                    if (subTarget instanceof HTMLElement) {
+                        if (Array.isArray(returnVal)) {
+                            applyPEA(subTarget, subTarget, returnVal);
+                        }
+                        else {
+                            applyP(subTarget, [returnVal]);
+                        }
+                    }
+                    else {
+                        Object.assign(subTarget, returnVal);
+                    }
+                }
+            }
+            else {
+                Object.assign(target, returnVal);
+            }
+        }
+        else {
+            Object.assign(target, returnVal);
+        }
     }
 }
 const logicalOpsLookup = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq']];

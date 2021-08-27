@@ -1,5 +1,7 @@
 import {CE, PropInfo} from 'trans-render/lib/CE.js';
-import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChangeInfo, PropChangeMoment, Action} from 'trans-render/lib/types.js';
+import {applyP} from 'trans-render/lib/applyP.js';
+import {applyPEA} from 'trans-render/lib/applyPEA.js';
+import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';
 import {XAction, PropInfoExt} from './types.js';
 
 export class XE<
@@ -8,7 +10,7 @@ export class XE<
     TAction extends XAction<MCProps> = XAction<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction
 >{
 
-    pq(self: this, expr: LogicOp<any>, src: MCProps, ctx: LogicEvalContext = {op: 'and'}): boolean {
+    override pq(self: this, expr: LogicOp<any>, src: MCProps, ctx: LogicEvalContext = {op: 'and'}): boolean {
         const {op} = ctx;
         let answer = op === 'and' ? true : false;
         for(const logicalOp in expr){
@@ -38,7 +40,7 @@ export class XE<
         return answer;
     }
 
-    pqs(self: this, expr: ListOfLogicalExpressions, src: MCProps, ctx: LogicEvalContext) : boolean {
+    override pqs(self: this, expr: ListOfLogicalExpressions, src: MCProps, ctx: LogicEvalContext) : boolean {
         const {op} = ctx;
         let answer: boolean = false;
         switch(op){
@@ -77,7 +79,7 @@ export class XE<
         return answer;    
     }
 
-    pqsv(self: this, src: any, subExpr: string | number | symbol | LogicOp<any>, ctx: LogicEvalContext): boolean{
+    override pqsv(self: this, src: any, subExpr: string | number | symbol | LogicOp<any>, ctx: LogicEvalContext): boolean{
         switch(typeof subExpr){
             case 'string':
                 if(ctx.op === 'eq') return src[subExpr];
@@ -90,7 +92,7 @@ export class XE<
         }
     }
 
-    doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): boolean{ 
+    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): boolean{ 
         //PropInfoExt<MCProps>
         const {toLisp} = self;
         const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
@@ -124,7 +126,7 @@ export class XE<
         return super.doPA(self, src, pci, m);
     }
 
-    getProps(self: this,  expr: Action<any>, s: Set<string> = new Set<string>()): Set<string>{
+    override getProps(self: this,  expr: Action<any>, s: Set<string> = new Set<string>()): Set<string>{
         for(const logicalOp in expr){
             const rhs: any = (<any>expr)[logicalOp];
             if(!Array.isArray(rhs)) continue;
@@ -145,6 +147,36 @@ export class XE<
             }
         }
         return s;
+    }
+
+
+
+    postHoc(self: this, action: Action, target: any, returnVal: any){
+        if(action.target !== undefined){
+            let newTarget = target[action.target];
+            if(newTarget === undefined) return;
+            if(newTarget instanceof NodeList){
+                newTarget = Array.from(newTarget);
+            }
+            if(Array.isArray(newTarget)){
+                for(const subTarget of newTarget){
+                    if(subTarget instanceof HTMLElement){
+                        if(Array.isArray(returnVal)){
+                            applyPEA(subTarget, subTarget, returnVal as PEAUnionSettings);
+                        }else{
+                            applyP(subTarget, [returnVal]);
+                        }
+                    }else{
+                        Object.assign(subTarget, returnVal);
+                    }
+                }
+            }else{
+                Object.assign(target, returnVal);
+            }
+        }else{
+            Object.assign(target, returnVal);
+        }
+        
     }
 } 
 
