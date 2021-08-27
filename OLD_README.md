@@ -15,7 +15,7 @@ The great thing about web components is that they are the web equivalent of Mart
 
 xtal-element adopts a number of "opinions" that may be best suited for some types of components / scenarios / developer preferences, but not necessarily everything.  
 
-For example, an interesting duality paradox that has existed for a number of years has been between OOP vs functional programming.  Efforts to "embrace the duality paradox" like Scala and F# always appealed to me.  The "hooks" initiative adds an interesting twist to the debate, and might strike the right balance for some types of components.  Evidently, the result has been less boilerplate code, which can only be good.  Perhaps the learning curve is lower as well, and that's great.
+
 
 xtal-element, though, embraces the duality paradox in a slightly different way.  It promotes sticking with classes as far as holding state (and has no issues with users of this library also implementing their business logic using standard OOP methodology -- methods, inheritance, etc.).  But xtal-element itself deviates considerably from standard OOP approaches in some critical ways.  
 
