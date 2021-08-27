@@ -41,6 +41,8 @@ export class XE extends CE {
             case 'and':
                 answer = true;
                 break;
+            case 'na':
+                return true;
         }
         let lastVal;
         let isFirst = true;

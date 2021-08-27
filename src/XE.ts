@@ -48,7 +48,8 @@ export class XE<
             case 'and':
                 answer = true;
                 break;
-            
+            case 'na':
+                return true;
         }
         let lastVal: any;
         let isFirst = true;
