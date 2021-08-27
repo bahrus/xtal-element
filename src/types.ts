@@ -19,9 +19,10 @@ export interface XAction<MCProps = any> extends Action<MCProps>{
      orIfEquals?: LogicOpProp<MCProps>,
 }
 
+
 export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
 
-export interface PropInfoExt<MCProps = any> extends PropInfo{
+export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
      notify?: {
           dispatch?: boolean,
           echoTo?: keyof MCProps,
@@ -53,6 +54,8 @@ export interface PropInfoExt<MCProps = any> extends PropInfo{
      * so this avoids wasted effort involved in setting the initial value.
      */
      byoAttrib?: string;
+
+     updatedBy?: Partial<{[key in keyof MCActions]: XAction<MCProps>}>;
 
 }
 
