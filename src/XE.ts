@@ -162,7 +162,7 @@ export class XE<
             }
             if(Array.isArray(newTarget)){
                 for(const subTarget of newTarget){
-                    if(subTarget instanceof HTMLElement){
+                    if(subTarget instanceof Element){
                         if(Array.isArray(returnVal)){
                             applyPEA(subTarget, subTarget, returnVal as PEAUnionSettings);
                         }else{
