@@ -175,4 +175,4 @@ export class XE extends CE {
         }
     }
 }
-const logicalOpsLookup = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq']];
+const logicalOpsLookup = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq'], ['KeyIn', 'na']];

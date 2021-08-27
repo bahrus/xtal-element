@@ -74,6 +74,7 @@ export class XE<
                     }else{
                         if(lastVal !== subAnswer) return false;
                     }
+                
             }
         }
         return answer;    
@@ -180,4 +181,4 @@ export class XE<
     }
 } 
 
-const logicalOpsLookup : [string, OpOptions][] = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq']];
+const logicalOpsLookup : [string, OpOptions][] = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq'], ['KeyIn', 'na']];
