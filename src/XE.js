@@ -161,8 +161,10 @@ export class XE extends CE {
     postHoc(self, action, target, returnVal) {
         if (action.target !== undefined) {
             let newTarget = target[action.target];
-            if (newTarget === undefined)
+            if (newTarget === undefined) {
+                console.warn('No target found');
                 return;
+            }
             if (newTarget instanceof NodeList) {
                 newTarget = Array.from(newTarget);
             }

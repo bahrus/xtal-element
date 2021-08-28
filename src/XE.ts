@@ -166,7 +166,10 @@ export class XE<
     postHoc(self: this, action: Action, target: any, returnVal: any){
         if(action.target !== undefined){
             let newTarget = target[action.target];
-            if(newTarget === undefined) return;
+            if(newTarget === undefined) {
+                console.warn('No target found');
+                return;
+            }
             if(newTarget instanceof NodeList){
                 newTarget = Array.from(newTarget);
             }
