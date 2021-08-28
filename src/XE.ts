@@ -151,10 +151,10 @@ export class XE<
         return s;
     }
 
-    apply(target: any, returnVal: any){
+    apply(host: Element, target: any, returnVal: any){
         if(target instanceof Element){
             if(Array.isArray(returnVal)){
-                applyPEA(target, target, returnVal as PEAUnionSettings);
+                applyPEA(host, target, returnVal as PEAUnionSettings);
             }else{
                 applyP(target, [returnVal]);
             }
@@ -163,9 +163,9 @@ export class XE<
         }
     }
 
-    postHoc(self: this, action: Action, target: any, returnVal: any){
+    postHoc(self: this, action: Action, host: Element, returnVal: any){
         if(action.target !== undefined){
-            let newTarget = target[action.target];
+            let newTarget = (<any>host)[action.target];
             if(newTarget === undefined) {
                 console.warn('No target found');
                 return;
@@ -175,13 +175,13 @@ export class XE<
             }
             if(Array.isArray(newTarget)){
                 for(const subTarget of newTarget){
-                    self.apply(subTarget, returnVal);
+                    self.apply(host, subTarget, returnVal);
                 }
             }else{
-                self.apply(target, returnVal);
+                self.apply(host, newTarget, returnVal);
             }
         }else{
-            self.apply(target, returnVal);
+            self.apply(host, host, returnVal);
         }
         
     }

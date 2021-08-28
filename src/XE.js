@@ -145,10 +145,10 @@ export class XE extends CE {
         }
         return s;
     }
-    apply(target, returnVal) {
+    apply(host, target, returnVal) {
         if (target instanceof Element) {
             if (Array.isArray(returnVal)) {
-                applyPEA(target, target, returnVal);
+                applyPEA(host, target, returnVal);
             }
             else {
                 applyP(target, [returnVal]);
@@ -158,9 +158,9 @@ export class XE extends CE {
             Object.assign(target, returnVal);
         }
     }
-    postHoc(self, action, target, returnVal) {
+    postHoc(self, action, host, returnVal) {
         if (action.target !== undefined) {
-            let newTarget = target[action.target];
+            let newTarget = host[action.target];
             if (newTarget === undefined) {
                 console.warn('No target found');
                 return;
@@ -170,15 +170,15 @@ export class XE extends CE {
             }
             if (Array.isArray(newTarget)) {
                 for (const subTarget of newTarget) {
-                    self.apply(subTarget, returnVal);
+                    self.apply(host, subTarget, returnVal);
                 }
             }
             else {
-                self.apply(target, returnVal);
+                self.apply(host, newTarget, returnVal);
             }
         }
         else {
-            self.apply(target, returnVal);
+            self.apply(host, host, returnVal);
         }
     }
 }
