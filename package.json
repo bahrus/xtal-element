@@ -22,6 +22,7 @@
   "typings": "types.d.ts",
   "exports": {
     ".": "./lib/XtalCore.js",
+    "./src/XE.js": "./src/XE.js",
     "./lib/applyMixins.js": "./lib/applyMixins.js",
     "./lib/attr.js": "./lib/attr.js",
     "./lib/base-link-id.js": "./lib/base-link-id.js",
