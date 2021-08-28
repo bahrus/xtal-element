@@ -145,6 +145,19 @@ export class XE extends CE {
         }
         return s;
     }
+    apply(target, returnVal) {
+        if (target instanceof Element) {
+            if (Array.isArray(returnVal)) {
+                applyPEA(target, target, returnVal);
+            }
+            else {
+                applyP(target, [returnVal]);
+            }
+        }
+        else {
+            Object.assign(target, returnVal);
+        }
+    }
     postHoc(self, action, target, returnVal) {
         if (action.target !== undefined) {
             let newTarget = target[action.target];
@@ -155,25 +168,15 @@ export class XE extends CE {
             }
             if (Array.isArray(newTarget)) {
                 for (const subTarget of newTarget) {
-                    if (subTarget instanceof Element) {
-                        if (Array.isArray(returnVal)) {
-                            applyPEA(subTarget, subTarget, returnVal);
-                        }
-                        else {
-                            applyP(subTarget, [returnVal]);
-                        }
-                    }
-                    else {
-                        Object.assign(subTarget, returnVal);
-                    }
+                    self.apply(subTarget, returnVal);
                 }
             }
             else {
-                Object.assign(target, returnVal);
+                self.apply(target, returnVal);
             }
         }
         else {
-            Object.assign(target, returnVal);
+            self.apply(target, returnVal);
         }
     }
 }

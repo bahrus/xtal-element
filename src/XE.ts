@@ -151,7 +151,17 @@ export class XE<
         return s;
     }
 
-
+    apply(target: any, returnVal: any){
+        if(target instanceof Element){
+            if(Array.isArray(returnVal)){
+                applyPEA(target, target, returnVal as PEAUnionSettings);
+            }else{
+                applyP(target, [returnVal]);
+            }
+        }else{
+            Object.assign(target, returnVal);
+        }
+    }
 
     postHoc(self: this, action: Action, target: any, returnVal: any){
         if(action.target !== undefined){
@@ -162,21 +172,13 @@ export class XE<
             }
             if(Array.isArray(newTarget)){
                 for(const subTarget of newTarget){
-                    if(subTarget instanceof Element){
-                        if(Array.isArray(returnVal)){
-                            applyPEA(subTarget, subTarget, returnVal as PEAUnionSettings);
-                        }else{
-                            applyP(subTarget, [returnVal]);
-                        }
-                    }else{
-                        Object.assign(subTarget, returnVal);
-                    }
+                    self.apply(subTarget, returnVal);
                 }
             }else{
-                Object.assign(target, returnVal);
+                self.apply(target, returnVal);
             }
         }else{
-            Object.assign(target, returnVal);
+            self.apply(target, returnVal);
         }
         
     }
