@@ -22,6 +22,9 @@ xtal-element takes the view that classes are a great addition to the JavaScript 
 </details>
 <details>
     <summary>I am FROOP<summary>
+    https://javascriptweblog.wordpress.com/2015/11/02/of-classes-and-arrow-functions-a-cautionary-tale/
+    https://www.charpeni.com/blog/arrow-functions-in-class-properties-might-not-be-as-great-as-we-think
+    https://www.charpeni.com/blog/arrow-functions-in-class-properties-might-not-be-as-great-as-we-think
 </details>
 
 
