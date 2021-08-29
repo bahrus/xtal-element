@@ -100,7 +100,7 @@ export class XE<
         const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
         const {notify} = prop;
         if(notify !== undefined && (m === '+a' || m === '+qr')){
-            const {dispatch, echoTo, toggleTo, echoDelay} = notify;
+            const {dispatch, echoTo, toggleTo, echoDelay, reflect} = notify;
             if(dispatch){
                 src.dispatchEvent(new CustomEvent(toLisp(key) + '-changed', {
                     detail:{
@@ -123,6 +123,32 @@ export class XE<
             if(toggleTo !== undefined){
                 (<any>self)[toggleTo] = nv;
             }
+            if(reflect !== undefined){
+                if(reflect.asAttr){
+                    this.inReflectMode = true;
+                    let val = propChange.nv;
+                    switch(propChange.prop.type){
+                        case 'Number':
+                            val = val.toString();
+                            break;
+                        case 'Boolean':
+                            if(val){
+                                val = ''
+                            }else{
+                                this.removeAttribute(lispName);
+                                return true; //dangerous!!!!!!
+                            }
+                            break;
+                        case 'Object':
+                            val = JSON.stringify(val);
+                            break;
+                    }
+                    this.setAttribute(camelToLisp(propChange.key), val);
+                    this.inReflectMode = false;
+                }
+            }
+            return true;
+        }
         }
 
         return super.doPA(self, src, pci, m);
