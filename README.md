@@ -106,13 +106,15 @@ class MyCustomElement extends HTMLElement{
             myProp4
         } as Partial<MyCustomElement>;
     }
-    myOutOfBodyDeclarativeActionMethod = myOutOfBodyDeclarativeActionMethod;
-    myAsyncOutOfBodyActionMethod = myAsyncOutOfBodyActionMethod;
+    myOutOfBodyDeclarativeActionMethod = myOutOfBodyDeclarativeActionMethod; 
+    myAsyncOutOfBodyActionMethod = myAsyncOutOfBodyActionMethod; // this is a property, and could utilize the FROOP orchestrator to activate content progressively
 }
 
 ```
 
-What all these action methods have in common, is they don't directly have any side effects.  Ideally, they would be generally, self contained "nano-methods".  The FROOP orchestrator centralizes the pain and blame for causing side effects.
+What all these action methods have in common, is they don't directly have any side effects.  Ideally, they would generally all be self contained "nano-methods".  The FROOP orchestrator centralizes the pain and blame for causing side effects.
+
+However, that's just the ideal.  As mentioned initially, the only hard rule for action methods, is they can take as the first argument, an instance of the class (custom element). 
 
 Further reading that is useful:
 
