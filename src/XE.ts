@@ -101,8 +101,9 @@ export class XE<
         const {notify} = prop;
         if(notify !== undefined && (m === '+a' || m === '+qr')){
             const {dispatch, echoTo, toggleTo, echoDelay, reflect} = notify;
+            const lispName = toLisp(key);
             if(dispatch){
-                src.dispatchEvent(new CustomEvent(toLisp(key) + '-changed', {
+                src.dispatchEvent(new CustomEvent(lispName + '-changed', {
                     detail:{
                         oldValue: ov,
                         value: nv,
@@ -125,9 +126,10 @@ export class XE<
             }
             if(reflect !== undefined){
                 if(reflect.asAttr){
-                    this.inReflectMode = true;
-                    let val = propChange.nv;
-                    switch(propChange.prop.type){
+                    (<any>src).inReflectMode = true;
+                    let val = pci.nv;
+                    let remAttr = false;
+                    switch(pci.prop.type){
                         case 'Number':
                             val = val.toString();
                             break;
@@ -135,20 +137,23 @@ export class XE<
                             if(val){
                                 val = ''
                             }else{
-                                this.removeAttribute(lispName);
-                                return true; //dangerous!!!!!!
+                                remAttr = true;
+                                
                             }
                             break;
                         case 'Object':
                             val = JSON.stringify(val);
                             break;
                     }
-                    this.setAttribute(camelToLisp(propChange.key), val);
-                    this.inReflectMode = false;
+                    if(remAttr){
+                        (<any>src).removeAttribute(lispName);
+                    }else{
+                        (<any>src).setAttribute(lispName, val);
+                    }
+                    (<any>src).inReflectMode = false;
                 }
             }
             return true;
-        }
         }
 
         return super.doPA(self, src, pci, m);

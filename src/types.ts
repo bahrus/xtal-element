@@ -35,7 +35,9 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
           /**
           * Reflect property changes to data-*
           */
-          reflect?: boolean; 
+          reflect?: {
+               asAttr: boolean,
+          } 
       },
      
      /**

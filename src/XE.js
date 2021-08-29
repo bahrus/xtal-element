@@ -98,8 +98,9 @@ export class XE extends CE {
         const { notify } = prop;
         if (notify !== undefined && (m === '+a' || m === '+qr')) {
             const { dispatch, echoTo, toggleTo, echoDelay, reflect } = notify;
+            const lispName = toLisp(key);
             if (dispatch) {
-                src.dispatchEvent(new CustomEvent(toLisp(key) + '-changed', {
+                src.dispatchEvent(new CustomEvent(lispName + '-changed', {
                     detail: {
                         oldValue: ov,
                         value: nv,
@@ -122,9 +123,10 @@ export class XE extends CE {
             }
             if (reflect !== undefined) {
                 if (reflect.asAttr) {
-                    this.inReflectMode = true;
-                    let val = propChange.nv;
-                    switch (propChange.prop.type) {
+                    src.inReflectMode = true;
+                    let val = pci.nv;
+                    let remAttr = false;
+                    switch (pci.prop.type) {
                         case 'Number':
                             val = val.toString();
                             break;
@@ -133,84 +135,83 @@ export class XE extends CE {
                                 val = '';
                             }
                             else {
-                                this.removeAttribute(lispName);
-                                return true; //dangerous!!!!!!
+                                remAttr = true;
                             }
                             break;
                         case 'Object':
                             val = JSON.stringify(val);
                             break;
                     }
-                    this.setAttribute(camelToLisp(propChange.key), val);
-                    this.inReflectMode = false;
+                    if (remAttr) {
+                        src.removeAttribute(lispName);
+                    }
+                    else {
+                        src.setAttribute(lispName, val);
+                    }
+                    src.inReflectMode = false;
                 }
             }
             return true;
         }
+        return super.doPA(self, src, pci, m);
     }
-}
-return super.doPA(self, src, pci, m);
-override;
-getProps(self, this, expr, Action < any > , s, Set < string > , new Set());
-Set < string > {
-    for(, logicalOp) { }, in: expr
-};
-{
-    const rhs = expr[logicalOp];
-    if (!Array.isArray(rhs))
-        continue;
-    for (const logicalOpsOption of logicalOpsLookup) {
-        if (logicalOp.endsWith(logicalOpsOption[0])) {
-            for (const rhsElement of rhs) {
-                switch (typeof rhsElement) {
-                    case 'string':
-                        s.add(rhsElement);
-                        break;
-                    case 'object':
-                        self.getProps(self, rhsElement, s);
-                        break;
+    getProps(self, expr, s = new Set()) {
+        for (const logicalOp in expr) {
+            const rhs = expr[logicalOp];
+            if (!Array.isArray(rhs))
+                continue;
+            for (const logicalOpsOption of logicalOpsLookup) {
+                if (logicalOp.endsWith(logicalOpsOption[0])) {
+                    for (const rhsElement of rhs) {
+                        switch (typeof rhsElement) {
+                            case 'string':
+                                s.add(rhsElement);
+                                break;
+                            case 'object':
+                                self.getProps(self, rhsElement, s);
+                                break;
+                        }
+                    }
                 }
             }
         }
+        return s;
     }
-}
-return s;
-apply(host, Element, target, any, returnVal, any);
-{
-    if (target instanceof Element) {
-        if (Array.isArray(returnVal)) {
-            applyPEA(host, target, returnVal);
-        }
-        else {
-            applyP(target, [returnVal]);
-        }
-    }
-    else {
-        Object.assign(target, returnVal);
-    }
-}
-postHoc(self, this, action, Action, host, Element, returnVal, any);
-{
-    if (action.target !== undefined) {
-        let newTarget = host[action.target];
-        if (newTarget === undefined) {
-            console.warn('No target found');
-            return;
-        }
-        if (newTarget instanceof NodeList) {
-            newTarget = Array.from(newTarget);
-        }
-        if (Array.isArray(newTarget)) {
-            for (const subTarget of newTarget) {
-                self.apply(host, subTarget, returnVal);
+    apply(host, target, returnVal) {
+        if (target instanceof Element) {
+            if (Array.isArray(returnVal)) {
+                applyPEA(host, target, returnVal);
+            }
+            else {
+                applyP(target, [returnVal]);
             }
         }
         else {
-            self.apply(host, newTarget, returnVal);
+            Object.assign(target, returnVal);
         }
     }
-    else {
-        self.apply(host, host, returnVal);
+    postHoc(self, action, host, returnVal) {
+        if (action.target !== undefined) {
+            let newTarget = host[action.target];
+            if (newTarget === undefined) {
+                console.warn('No target found');
+                return;
+            }
+            if (newTarget instanceof NodeList) {
+                newTarget = Array.from(newTarget);
+            }
+            if (Array.isArray(newTarget)) {
+                for (const subTarget of newTarget) {
+                    self.apply(host, subTarget, returnVal);
+                }
+            }
+            else {
+                self.apply(host, newTarget, returnVal);
+            }
+        }
+        else {
+            self.apply(host, host, returnVal);
+        }
     }
 }
 const logicalOpsLookup = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq'], ['KeyIn', 'na']];
