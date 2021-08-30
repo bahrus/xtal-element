@@ -117,12 +117,12 @@ export class XE<
                         (<any>self)[echoTo] = nv;
                     }, echoDelayNum);
                 }else{
-                    (<any>self)[echoTo] = nv;
+                    (<any>src)[echoTo] = nv;
                 }
                 
             }
             if(toggleTo !== undefined){
-                (<any>self)[toggleTo] = nv;
+                (<any>src)[toggleTo] = nv;
             }
             if(reflect !== undefined){
                 if(reflect.asAttr){

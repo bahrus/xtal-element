@@ -115,11 +115,11 @@ export class XE extends CE {
                     }, echoDelayNum);
                 }
                 else {
-                    self[echoTo] = nv;
+                    src[echoTo] = nv;
                 }
             }
             if (toggleTo !== undefined) {
-                self[toggleTo] = nv;
+                src[toggleTo] = nv;
             }
             if (reflect !== undefined) {
                 if (reflect.asAttr) {
