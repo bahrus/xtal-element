@@ -114,7 +114,7 @@ export class XE<
                 if(echoDelay){
                     let echoDelayNum: number = typeof(echoDelay) === 'number' ? echoDelay : (<any>self)[echoDelay];
                     setTimeout(() => {
-                        (<any>self)[echoTo] = nv;
+                        (<any>src)[echoTo] = nv;
                     }, echoDelayNum);
                 }else{
                     (<any>src)[echoTo] = nv;

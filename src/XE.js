@@ -111,7 +111,7 @@ export class XE extends CE {
                 if (echoDelay) {
                     let echoDelayNum = typeof (echoDelay) === 'number' ? echoDelay : self[echoDelay];
                     setTimeout(() => {
-                        self[echoTo] = nv;
+                        src[echoTo] = nv;
                     }, echoDelayNum);
                 }
                 else {
