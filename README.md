@@ -41,11 +41,11 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 </details>
 
 <details>
-    <summary>JSON and HTML Modules will land on Planet Earth someday</summary>
+    <summary>2.  JSON and HTML Modules will land on Planet Earth someday</summary>
 </details>
 
 <details>
-    <summary>2.  I am FROOP</summary>
+    <summary>3.  I am FROOP</summary>
 
     
 xtal-element embraces the duality paradox between Functional and OOP by following a pattern we shall refer to as FROOP:  Functional reactive object-oriented preening.
