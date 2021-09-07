@@ -102,7 +102,7 @@ export class XE<
         const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
         const {notify} = prop;
         if(notify !== undefined && (m === '+a' || m === '+qr')){
-            const {dispatch, echoTo, toggleTo, echoDelay, reflect} = notify;
+            const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect} = notify;
             const lispName = toLisp(key);
             if(dispatch){
                 src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -124,7 +124,14 @@ export class XE<
                 
             }
             if(toggleTo !== undefined){
-                (<any>src)[toggleTo] = nv;
+                if(toggleDelay){
+                    const toggleDelayNum: number = typeof(toggleDelay) === 'number' ? toggleDelay : (<any>self)[toggleDelay];
+                    setTimeout(() => {
+                        (<any>src)[toggleTo] = !nv;
+                    }, toggleDelayNum);
+                }else{
+                    (<any>src)[toggleTo] = !nv;
+                }
             }
             if(reflect !== undefined){
                 if(reflect.asAttr){

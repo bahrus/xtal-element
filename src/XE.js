@@ -97,7 +97,7 @@ export class XE extends CE {
         const { prop, key, ov, nv } = pci;
         const { notify } = prop;
         if (notify !== undefined && (m === '+a' || m === '+qr')) {
-            const { dispatch, echoTo, toggleTo, echoDelay, reflect } = notify;
+            const { dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect } = notify;
             const lispName = toLisp(key);
             if (dispatch) {
                 src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -119,7 +119,15 @@ export class XE extends CE {
                 }
             }
             if (toggleTo !== undefined) {
-                src[toggleTo] = nv;
+                if (toggleDelay) {
+                    const toggleDelayNum = typeof (toggleDelay) === 'number' ? toggleDelay : self[toggleDelay];
+                    setTimeout(() => {
+                        src[toggleTo] = !nv;
+                    }, toggleDelayNum);
+                }
+                else {
+                    src[toggleTo] = !nv;
+                }
             }
             if (reflect !== undefined) {
                 if (reflect.asAttr) {

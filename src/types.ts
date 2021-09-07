@@ -32,6 +32,7 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
           echoTo?: keyof MCProps,
           echoDelay?: number | (keyof MCProps),
           toggleTo?: keyof MCProps,
+          toggleDelay?: number | (keyof MCProps),
           /**
           * Reflect property changes to data-*
           */
@@ -40,12 +41,9 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
           } 
       },
      
-     /**
-     * Delete this property after the specified number of milliseconds. 
-     */
-     transience?: number;
 
-          /**
+
+     /**
      * Console.log when property changes
      */
     log?: boolean;
@@ -61,7 +59,7 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
      */
      byoAttrib?: string;
 
-     updatedBy?: Partial<{[key in keyof MCActions]: DeclarativeBinder<MCProps, MCActions>}>[];
+     //updatedBy?: Partial<{[key in keyof MCActions]: DeclarativeBinder<MCProps, MCActions>}>[];
 
 }
 
