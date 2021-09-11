@@ -44,6 +44,7 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
     <summary>Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.
 
 Attribute defer-hydration is supported.
+</details>
 <details>
     <summary>2.  JSON and HTML Modules will land on Planet Earth someday</summary>
 </details>
