@@ -2,7 +2,7 @@
 <details>
     <summary>preramble</summary>
 
-When, in the Course of web development, it becomes necessary to migrate to a new way of building and connecting components together, and to dissolve the tight coupling which has heretofore made this far more difficult than what developers should be entitled to, a decent respect for the excellent, opinionated Web Component Libraries that already exist, requires that a lengthy explanation for the kinds of Separation of Concern type problems xtal-element assumes to solve well, and why this requires the introduction of yet another web component helper library, and we declaratively describe the Nature of this Separation.
+When, in the Course of web development, it becomes necessary to migrate to a new way of building and connecting components together, and to dissolve the tight coupling which has heretofore made this far more difficult than what developers should be entitled to, a decent respect for the excellent, opinionated Web Component Libraries that already exist, impels a lengthy explanation of the Separation of Concern approach xtal-element assumes to solve this well, and why this requires the introduction of yet another web component helper library, and so we declaratively describe the Nature of this Separation.
 
 We hold these truths to be self-evident, after bumbling around for months and months:
 
