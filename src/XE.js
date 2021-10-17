@@ -185,20 +185,21 @@ export class XE extends CE {
         }
         return s;
     }
-    apply(host, target, returnVal) {
-        if (target instanceof Element) {
+    apply(host, target, returnVal, proxy) {
+        const dest = proxy !== undefined ? proxy : target;
+        if (dest instanceof Element) {
             if (Array.isArray(returnVal)) {
-                applyPEA(host, target, returnVal);
+                applyPEA(host, dest, returnVal);
             }
             else {
-                applyP(target, [returnVal]);
+                applyP(dest, [returnVal]);
             }
         }
         else {
-            Object.assign(target, returnVal);
+            Object.assign(dest, returnVal);
         }
     }
-    postHoc(self, action, host, returnVal) {
+    postHoc(self, action, host, returnVal, proxy) {
         if (action.target !== undefined) {
             let newTarget = host[action.target];
             if (newTarget === undefined) {
@@ -210,15 +211,15 @@ export class XE extends CE {
             }
             if (Array.isArray(newTarget)) {
                 for (const subTarget of newTarget) {
-                    self.apply(host, subTarget, returnVal);
+                    self.apply(host, subTarget, returnVal, proxy);
                 }
             }
             else {
-                self.apply(host, newTarget, returnVal);
+                self.apply(host, newTarget, returnVal, proxy);
             }
         }
         else {
-            self.apply(host, host, returnVal);
+            self.apply(host, host, returnVal, proxy);
         }
     }
 }
