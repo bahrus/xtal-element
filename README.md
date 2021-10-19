@@ -64,7 +64,7 @@ This configuration is extended by trans-render's/xtal-element's "FROOP Orchestra
 
 ```TypeScript
 class MyCustomElement extends HTMLElement{
-    myActionMethod({myProp1, myProp2}: this) => {
+    myActionMethod({myProp1, myProp2}: this){
         ...
         return {
             myProp3,
@@ -72,7 +72,7 @@ class MyCustomElement extends HTMLElement{
         } as Partial<this>;
     }
 
-    async myAsyncActionMethod({myProp1, myProp2}: this) => {
+    async myAsyncActionMethod({myProp1, myProp2}: this){
         ...
         return {
             myProp3,
