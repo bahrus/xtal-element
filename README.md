@@ -1,6 +1,6 @@
 
 <details>
-    <summary>preramble</summary>
+    <summary>Preramble</summary>
 
 When, in the Course of web development, it becomes necessary to migrate to a new way of building and connecting components together, and to dissolve the tight coupling which has heretofore made this far more difficult than what developers should be entitled to, a decent respect for the excellent, opinionated Web Component Libraries that already exist, impels a lengthy explanation of the Separation of Concern approach xtal-element assumes to solve this well, and why this requires the introduction of yet another web component helper library, and so we declaratively describe the Nature of this Separation.
 
@@ -36,15 +36,16 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 1.  Support for easily tweaking one custom element with another (method overriding).
 2.  Taking advantage of the nice way classes can help organize data and functionality together.
     
-</details>
+</details> <!-- Personal Journey -->
 
-</details>
+</details> <!-- All Ui Libraries Equal -->
 
 <details>
-    <summary>Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.
+    <summary>Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
 
 Attribute defer-hydration is supported.
 </details>
+
 <details>
     <summary>2.  JSON and HTML Modules will land on Planet Earth someday</summary>
 </details>
