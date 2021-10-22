@@ -7,13 +7,14 @@ declare global{
 }
 
 const eventNames = ["animationstart", "MSAnimationStart", "webkitAnimationStart"];
+const boundListeners = new WeakMap<Element, any>();
 
-export function addCSSListener(id: string, self: any, targetSelector: string, insertListener: any, customStyles: string = '', ){
+export function addCSSListener(id: string, self: any, targetSelector: string, insertListener: any, customStyles: string = '', addToSelf = false){
         // See https://davidwalsh.name/detect-node-insertion
-        if(self._boundInsertListeners === undefined){
-            self._boundInsertListeners = {};
+        if(!boundListeners.has(self as Element)){
+            boundListeners.set(self, {});
         }
-        const boundInsertListeners = self._boundInsertListeners;
+        const boundInsertListeners = boundListeners.get(self as Element);
         if(boundInsertListeners[targetSelector] !== undefined) return;
         const styleInner = /* css */`
         @keyframes ${id} {
@@ -33,22 +34,22 @@ export function addCSSListener(id: string, self: any, targetSelector: string, in
         ${customStyles}`;
         const style = document.createElement('style');
         style.innerHTML = styleInner;
-        self._host = self.getRootNode();//experimental  <any>getShadowContainer((<any>this as HTMLElement));
-        if(self._host.nodeType === 9){
-            self._host = document.firstElementChild;
-        }
-        const hostIsShadow = self._host.localName !== 'html';
         boundInsertListeners[targetSelector] = insertListener.bind(self);
-        const container = hostIsShadow ? self._host : document;
+        let host = self.getRootNode();
+        let hostIsShadow = true;
+        if(!(<any>host).host){
+            host = document.head;
+            hostIsShadow = false;
+        }
+        const container = hostIsShadow ? host : document;
         eventNames.forEach(name =>{
             container.addEventListener(name, boundInsertListeners[targetSelector], false);
         })
-        if(hostIsShadow){
-            self._host.appendChild(style);
+        if(addToSelf){
+            self.appendChild(style);
         }else{
-            document.head.appendChild(style);
+            host.appendChild(style);
         }
-
 }
 
 
