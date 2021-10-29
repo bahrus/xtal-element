@@ -41,17 +41,17 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 </details> <!-- All Ui Libraries Equal -->
 
 <details>
-    <summary>Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
+    <summary>2.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
 
 Attribute defer-hydration is supported.
 </details>
 
 <details>
-    <summary>2.  JSON and HTML Modules will land on Planet Earth someday</summary>
+    <summary>3.  JSON and HTML Modules will land on Planet Earth someday</summary>
 </details>
 
 <details>
-    <summary>3.  This is FROOP</summary>
+    <summary>4.  This is FROOP</summary>
 
     
 xtal-element embraces the duality paradox between Functional and OOP by following a pattern we shall refer to as FROOP:  Functional reactive object-oriented preening.
