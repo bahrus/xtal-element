@@ -58,11 +58,11 @@
     "./lib/zzz.js": "./lib/zzz.js"
   },
   "dependencies": {
-    "trans-render": "0.0.427"
+    "trans-render": "0.0.431"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
-    "xtal-test": "0.0.51"
+    "xtal-test": "0.0.52"
   },
   "repository": {
     "type": "git",
