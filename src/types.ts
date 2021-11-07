@@ -1,4 +1,4 @@
-import {Action, LogicOp, LogicOpProp, PropInfo} from 'trans-render/lib/types.js';
+import {Action, LogicOp, LogicOpProp, PropInfo, WCConfig} from 'trans-render/lib/types.js';
 
 export interface XAction<MCProps = any> extends Action<MCProps>{
 
@@ -62,4 +62,15 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
      //updatedBy?: Partial<{[key in keyof MCActions]: DeclarativeBinder<MCProps, MCActions>}>[];
 
 }
+
+export interface DefineArgs<MixinCompositeProps = any, MixinCompositeActions = MixinCompositeProps, TPropInfo = PropInfoExt<MixinCompositeProps, MixinCompositeActions>, TAction extends XAction = XAction<MixinCompositeProps>>{
+     superclass?: {new(): any},
+     mixins?: any[],
+     mainTemplate?: HTMLTemplateElement;
+     /** use this only for defaults that can't be JSON serialized in config */
+     complexPropDefaults?: Partial<MixinCompositeProps>;
+     /** Config should be 100% JSON serializable */
+     config: WCConfig<MixinCompositeProps, MixinCompositeActions, TPropInfo, TAction>;
+     
+ }
 
