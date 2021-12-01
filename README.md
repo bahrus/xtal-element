@@ -140,7 +140,7 @@ Further reading that is useful:
 </details>
 
 <details>
-    <summary>Looks aren't everything</summary>
+    <summary>5.  Looks aren't everything</summary>
 
 The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these two scenarios:
 
