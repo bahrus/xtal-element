@@ -48,12 +48,14 @@ Attribute defer-hydration is supported.
 
 <details>
     <summary>3.  JSON and HTML Modules will land on Planet Earth someday</summary>
+
+    xta-element subscribes to the [rule of least power philosophy philosophy](https://www.w3.org/2001/tag/doc/leastPower.html).  It is designed as a natural segue into declarative custom elements.  As much logic as possible is made truly declarative with JSON.  It even encourages developers to apply a little extra ceremony to demonstrate commitment to true declarative syntax, separating settings that are JSON serializable from those that are not (such as function / class references).  While the developer can still use the easier to edit typescript / javascript when configuring web components, the potential is there to utilize JSON imports, and gain from lower parsing times, and perhaps more low-risk / ui-driven development.
 </details>
 
 <details>
     <summary>4.  This is FROOP</summary>
 
-    
+  
 xtal-element embraces the duality paradox between Functional and OOP by following a pattern we shall refer to as FROOP:  Functional reactive object-oriented preening.
 
 Properties are entirely defined and configured via JSON-serializable configurations.  The properties are there on the custom element prototype, but they are created dynamically by the trans-render / xtal-element library from the configurations provided by the developer.
@@ -136,5 +138,14 @@ Further reading that is useful:
 
 </details>
 
+<details>
+    <summary>Looks aren't everything</summary>
+
+The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these two scenarios:
+
+1.  Providing a timer component or some other non visual functionality.  "Component as a service".
+2.  Providing a wrapper around a third-party library that does its own rendering.  Like a charting library. 
+
+</details>
 
 </details>
