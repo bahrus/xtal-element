@@ -155,7 +155,7 @@ The core functionality of xtal-element is not centered around rendering content.
 <details>
 <summary>The constitution of a xtal-element</summary>
 
-Development of xtal-element consists of checks and balances between these mental "branches" of development:
+Development of a xtal-element consists of checks and balances between these mental "branches" of development:
 
 1.  The "Majestic Judicial branch".   An mjs file that is only used by node.js (or deno) to build a JSON file. True, 100% declarative JSON-serializable configuration.  Can contain HTML via tagged template literals, which gets turned into a template during runtime.  If HTML Modules come into being, the build process could be enhanced to auto generate the HTML file.  So xtal-element does use a light-touch, one line "compiler" via console.log, that may grow in scope should HTML Modules become a thing. Imported via JSON Modules.
 2.  The "Concessional Branch":  CSS styling, imported via CSS Modules.
