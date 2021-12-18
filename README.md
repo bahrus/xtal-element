@@ -153,7 +153,7 @@ The core functionality of xtal-element is not centered around rendering content.
 </details>
 
 <details>
-<summary>The constitution of an xtal-element</summary>
+<summary>The constitution of a xtal-element</summary>
 
 Development of xtal-element consists of checks and balances between these mental "branches" of development:
 
