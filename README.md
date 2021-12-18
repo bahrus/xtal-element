@@ -49,7 +49,7 @@ Attribute defer-hydration is supported.
 <details>
     <summary>3.  JSON and HTML Modules will land on Planet Earth someday</summary>
 
-xtal-element subscribes to the [rule of least power philosophy philosophy](https://www.w3.org/2001/tag/doc/leastPower.html).  It is designed as a natural segue into declarative custom elements.  As much logic as possible is made truly declarative with JSON.  It even encourages developers to apply a little extra ceremony to demonstrate commitment to true declarative syntax, separating settings that are JSON serializable from those that are not (such as function / class references).  While the developer can still use the easier to edit typescript / javascript when configuring web components, the potential is there to utilize JSON imports, and gain from lower parsing times, and perhaps more low-risk / ui-driven development.
+xtal-element subscribes to the [rule of least power philosophy](https://www.w3.org/2001/tag/doc/leastPower.html).  It is designed as a natural segue into declarative custom elements.  As much logic as possible is made truly declarative with JSON.  It even encourages developers to apply a little extra ceremony to demonstrate commitment to true declarative syntax, separating settings that are JSON serializable from those that are not (such as function / class references).  While the developer can still use the easier to edit typescript / javascript when configuring web components, the potential is there to utilize JSON imports, and gain from lower parsing times, and perhaps more low-risk / ui-driven development.
 
 </details>
 
