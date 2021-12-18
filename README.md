@@ -157,15 +157,15 @@ The core functionality of xtal-element is not centered around rendering content.
 
 Development of xtal-element consists of checks and balances between these mental "branches" of development:
 
-1.  The "Majestic Judicial branch".   A mjs file that is only used by node.js (or deno) to build a JSON file. True, 100% declarative JSON-serializable configuration.  Can contain HTML via tagged template literals, which gets turned into a template during runtime.  If HTML Modules come into being, the build process could be enhanced to auto generate the HTML file.  So xtal-element does use a light-touch, one line "compiler" via console.log, that may grow in scope should HTML Modules become a thing. Imported via JSON Modules.
+1.  The "Majestic Judicial branch".   An mjs file that is only used by node.js (or deno) to build a JSON file. True, 100% declarative JSON-serializable configuration.  Can contain HTML via tagged template literals, which gets turned into a template during runtime.  If HTML Modules come into being, the build process could be enhanced to auto generate the HTML file.  So xtal-element does use a light-touch, one line "compiler" via console.log, that may grow in scope should HTML Modules become a thing. Imported via JSON Modules.
 2.  The "Concessional Branch":  CSS styling, imported via CSS Modules.
-3.  "The "Executive Branch".  Minimal JS boilerplate to "tie the knot" as far as registering the custom element, and coding as a last resort.  If github autopilot is accurately guessing all your next moves when writing JS, maybe it's time to encapsulate that as a declarative web component or behavior/decorator.  With current standards, we are forced to make this file serve as the entry point for our custom element.  The JS file can then import the other two files in parallel.
+3.  "The "Executive Branch".  Minimal JS boilerplate to "tie the knot" as far as registering the custom element, and specialized methods made avilable to a class, as a last resort.  If github autopilot is accurately guessing all your next moves when writing JS, maybe it's time to encapsulate that as a declarative web component or behavior/decorator.  With current standards, we are forced to make this file serve as the entry point for our custom element.  The JS file can then import the other two files in parallel.
 
 The JSON and CSS files can be replaced with alternative files for ultimate flexibility / customizability / extensibility, with no additional payload.  This is configured via optional (but highly encouraged) link rel=preload tags.
 
 Additional files that are optional, but definitely helpful / expected for an xtal-element-based custom element:
 
-1.  A TypeScript type file.
+1.  A TypeScript types file.
 2.  A custom element manifest file (auto-generated.)
 
 </details>
