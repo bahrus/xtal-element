@@ -161,7 +161,7 @@ Development of a xtal-element consists of checks and balances between these ment
 2.  The "Concessional Branch":  CSS styling, imported via CSS Modules.
 3.  "The "Executive Branch".  Minimal JS boilerplate to "tie the knot" as far as registering the custom element, and specialized methods made available to a class, as a last resort.  If github autopilot is accurately guessing all your next moves when writing JS, maybe it's time to encapsulate that as a declarative web component or behavior/decorator.  With current standards, we are forced to make this file serve as the entry point for our custom element.  The JS file can then import the other two files in parallel (especially if link rel=preload is used).
 
-The JSON and CSS files can be replaced with alternative files for ultimate flexibility / customizability / extensibility, with no additional payload.  This is configured via optional (but highly encouraged) link rel=preload tags.
+The JSON and CSS files can be replaced with alternative custom files for ultimate flexibility / customizability / extensibility, with no additional payload.  This is configured via optional (but highly encouraged) link rel=preload tags.
 
 Additional files that are optional, but definitely helpful / expected for an xtal-element-based custom element:
 
