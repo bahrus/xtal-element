@@ -58,7 +58,7 @@
     "./lib/zzz.js": "./lib/zzz.js"
   },
   "dependencies": {
-    "trans-render": "0.0.431"
+    "trans-render": "0.0.438"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
