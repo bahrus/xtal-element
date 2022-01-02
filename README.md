@@ -54,13 +54,13 @@ Some of the scenarios listed below can happen in combination, some are mutually 
 
 1.  No server-side rendering.  Server only creates an instance of the tag, and sets some attributes.
 2.  Server-side rendering, but limited to pasting in the ShadowDOM defined in the static html file, without any attempt to do any of the binding defined within, of which there are some beyond slot mapping.
-3.  Server-side rendering, but the ShadowDOM requires no dynamic adjustements.
-4.  A fullblown server-side rendering solution of only one initial instance, complete with applying the binding instructions. 
-5.  A fullblown server-side rendering solution of all instances of the component.
+3.  Server-side rendering, but the ShadowDOM requires no dynamic adjustments.
+4.  A full-blown server-side rendering solution of only one initial instance, complete with applying the binding instructions. 
+5.  A full-blown server-side rendering solution of all instances of the component.
 6.  The full state needed for rendering is provided as a combination of JSON-serialized attributes and light children.
-7.  Less than the full state is defined within the geographical boundaries of the element.  Instead, some separate elements are used to integrate part of the state, including non-JSON serializable settings.
+7.  Less than the full state is defined within the geographical boundaries of the element.  Instead, some separate elements (sibling or parent) are used to integrate part of the state, including non-JSON serializable settings.
 
-Only scenarios 3, 4 and 5 do not require an initial render on the client-side.  We need a way for the server to indicate this clearly to the client side instance.
+Only scenarios 3, 4 (first instance) and 5 do not require an initial render on the client-side.  We need a way for the server to indicate this clearly to the client side instance.
 
 Scenario 7 makes things complicated, as it becomes difficult to know *when* to do the first render.  The safe thing would be rerender each time pieces of the state are passed in.  But that isn't optimal.  This is the use-case that is central to the defer-hydration proposal (I think).
 
