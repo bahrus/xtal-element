@@ -43,7 +43,25 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 <details>
     <summary>2.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
 
-Attribute defer-hydration is supported.
+[WIP]:
+
+This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
+
+xtal-element is fully committed to providing support for server side rendering, based on static html files containing binding instructions that is compatible with streaming solutions like Cloudflares HTMLRewriting, but also compatible with client-side rendering using DOM API's.  So this raises a number of scenarios an xtal-element needs to consider.
+
+Some of the scenarios listed below can happen in combination, some are mutually exclusive.  It would make for a complex Venn diagram:
+
+
+1.  No server-side rendering.  Server only creates an instance of the tag, and sets some attributes.
+2.  Server-side rendering, but limited to pasting in the ShadowDOM defined in the static html file, without any attempt to do any of the binding defined within.
+3.  A fullblown server-side rendering solution of only one initial instance, complete with applying the binding instructions. 
+4.  A fullblown server-side rendering solution of all instances of the component.
+5.  The full state needed for rendering is provided as a combination of JSON-serialized attributes and light children.
+6.  Less than the full state is defined within the geographical boundaries of the element.  Instead, some separate elements are used to integrate part of the state, including non-JSON serializable settings.
+
+
+
+
 </details>
 
 <details>
