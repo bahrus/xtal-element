@@ -83,12 +83,12 @@ xtal-element creates a clear division between initial rendering, which involves 
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, no binding</td>
-            <td>ssr-included</td>
+            <td>ssr-static</td>
             <td>Do Init Render, Update Render</td>
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, with binding</td>
-            <td>ssr-transformed</td>
+            <td>ssr-dynamic</td>
             <td>Do Init Render</td>
         </tr>
     </tbody>
