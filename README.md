@@ -47,12 +47,12 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 
 This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
 
-xtal-element is fully committed to providing support for server side rendering, based on static html files containing binding instructions that is compatible with streaming solutions like Cloudflares HTMLRewriting, but also compatible with client-side rendering using DOM API's.  So this raises a number of scenarios an xtal-element needs to consider.
+xtal-element is fully committed to providing support for server side rendering, based on static html files containing binding instructions that are compatible with streaming solutions like Cloudflare's HTMLRewriting, but also compatible with client-side rendering using DOM API's.  So this raises a number of scenarios a xtal element needs to consider.
 
 Some of the scenarios listed below can happen in combination, some are mutually exclusive.  It would make for a complex Venn diagram:
 
 
-1.  No server-side rendering.  Server only creates an instance of the tag, and sets some attributes.
+1.  No server-side rendering.  Server only creates an instance of the tag, and sets some attributes, and the light children.
 2.  Server-side rendering, but limited to pasting in the ShadowDOM defined in the static html file, without any attempt to do any of the binding defined within, of which there are some beyond slot mapping.
 3.  Server-side rendering, but the ShadowDOM requires no dynamic adjustments.
 4.  A full-blown server-side rendering solution of only one initial instance, complete with applying the binding instructions. 
@@ -63,6 +63,36 @@ Some of the scenarios listed below can happen in combination, some are mutually 
 Only scenarios 3, 4 (first instance) and 5 do not require an initial render on the client-side.  We need a way for the server to indicate this clearly to the client side instance.
 
 Scenario 7 makes things complicated, as it becomes difficult to know *when* to do the first render.  The safe thing would be rerender each time pieces of the state are passed in.  But that isn't optimal.  This is the use-case that is central to the defer-hydration proposal (I think).
+
+xtal-element creates a clear division between initial rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
+
+<table>
+    <caption>Indications</caption>
+    <thead>
+        <tr>
+            <th>Scenario</th>
+            <th>Server-side attribute</th>
+            <th>Interpretation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>No server-side rendering</td>
+            <td>None</td>
+            <td>Do Init Render, Update Render</td>
+        </tr>
+        <tr>
+            <td>Server-side rendering, copy-paste, no binding</td>
+            <td>ssr-included</td>
+            <td>Do Init Render, Update Render</td>
+        </tr>
+        <tr>
+            <td>Server-side rendering, copy-paste, with binding</td>
+            <td>ssr-transformed</td>
+            <td>Do Init Render</td>
+        </tr>
+    </tbody>
+</table>
 
 
 </details>
