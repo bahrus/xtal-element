@@ -81,13 +81,13 @@ xtal-element creates a clear division between main template cloning,  initial re
 
 <table>
     <caption>Indications</caption>
-    <thead>
+    <!-- <thead>
         <tr>
             <th>Scenario</th>
             <th>Server-side attribute</th>
             <th>Actions performed</th>
         </tr>
-    </thead>
+    </thead> -->
     <tbody>
         <tr>
             <td>No server-side rendering, no planning defer-hydration hints</td>
@@ -104,8 +104,8 @@ xtal-element creates a clear division between main template cloning,  initial re
             <td>sd-dynamic, defer-hydration=[Number of External Setters + 1]</td>
             <td>Only do Init Render, update transform after defer-hydration attribute removed, but decrement defer-hydration by one each skipped turn</td>
         </tr>
-        
     </tbody>
+
 </table>
 
 
