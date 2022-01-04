@@ -52,19 +52,19 @@ xtal-element is fully committed to providing support for server side rendering, 
 Some of the scenarios listed below can happen in combination, some are mutually exclusive.  It would make for a complex Venn diagram:
 
 
-1.  No server-side rendering.  Server only creates an instance of the tag, and sets some attributes, and the light children.
-2.  Server-side rendering, but limited to pasting in the ShadowDOM defined in the static html file, without any attempt to do any of the binding defined within, of which there are some beyond slot mapping.
-3.  Server-side rendering, but the ShadowDOM requires no dynamic adjustments.
+1.  Minimal server-side rendering.  Server only creates an instance of the tag, and sets some attributes, and the light children.
+2.  Limited Shadow Dom Server-side rendering, limited to pasting in the ShadowDOM defined in the static html file, without any attempt to do any of the binding defined within, of which there are some beyond slot mapping.
+3.  Limited Shadow Dom Server-side rendering, but the ShadowDOM requires no dynamic adjustments.
 4.  A full-blown server-side rendering solution of only one initial instance, complete with applying the binding instructions. 
 5.  A full-blown server-side rendering solution of all instances of the component.
 6.  The full state needed for rendering is provided as a combination of JSON-serialized attributes and light children.
 7.  Less than the full state is defined within the geographical boundaries of the element.  Instead, some separate elements (sibling or parent) are used to integrate part of the state, including non-JSON serializable settings.
 
-Only scenarios 3, 4 (first instance) and 5 do not require an initial render on the client-side.  We need a way for the server to indicate this clearly to the client side instance.
+Only scenarios 3, 4 (first instance) and 5 do not require a first pass update render on the client-side.  We need a way for the server to indicate this clearly to the client side instance.
 
-Scenario 7 makes things complicated, as it becomes difficult to know *when* to do the first render.  The safe thing would be rerender each time pieces of the state are passed in.  But that isn't optimal.  This is the use-case that is central to the defer-hydration proposal (I think).
+Scenario 7 makes things complicated, as it becomes difficult to know *when* to do the first update render.  The safe thing would be rerender each time pieces of the state are passed in.  But that isn't optimal.  This is the use-case that is central to the defer-hydration proposal (I think).
 
-xtal-element creates a clear division between initial rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
+xtal-element creates a clear division between main template cloning,  initial rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
 
 <table>
     <caption>Indications</caption>
@@ -72,25 +72,29 @@ xtal-element creates a clear division between initial rendering, which involves 
         <tr>
             <th>Scenario</th>
             <th>Server-side attribute</th>
-            <th>Interpretation</th>
+            <th>Actions performed</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>No server-side rendering</td>
             <td>None</td>
-            <td>Do Init Render, Update Render</td>
+            <td>Do main template cloning, Do Init Render, Update Render</td>
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, no binding</td>
-            <td>ssr-static</td>
+            <td>sd-static</td>
             <td>Do Init Render, Update Render</td>
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, with binding</td>
-            <td>ssr-dynamic</td>
-            <td>Do Init Render</td>
+            <td>sd-dynamic, defer-hydration+=1</td>
+            <td>Do Init Render, defer-hydration-=1</td>
         </tr>
+        <tr>
+            <td>External Prop Setting</td>
+            <td>defer-hydration=[Number of External Setters]</td>
+            <td>Only do update render after defer-hydration attribute removed</td>
     </tbody>
 </table>
 
