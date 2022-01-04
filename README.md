@@ -47,27 +47,26 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 
 This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
 
-As mentioned earlier, the core functionality of an xtal-element is rendering free, so this whole question is moot.  However, there are some core mixins xtal-element provides, that do provide rendering capabilities.
+As mentioned earlier, the core functionality of an xtal-element is free from any required rendering dependency, so this whole question becomes moot when rendering isn't performed.  However, there are some core mixins xtal-element provides, that do provide rendering capabilities.
 
-They can be broken down into the following steps:
+The functionality those mixins provide can be broken down into the following steps:
 
 1.  If needed, create ShadowDOM.
 2.  If needed, clone the main template.
-3.  If needed, attach event handlers to the cloned template.  This is done via an "initTransform".
+3.  If needed, attach event handlers to the cloned template.  This is done via an optional user-defined "initTransform".
 4.  If needed, before appending the cloned template into the live ShadowDOM tree (or directly in the element if forgoing shadow DOM), perform the first "updateTransform" where the props are passed in.
 5.  If needed, append the cloned template into the shadowDOM or element itself.
 6.  Reactively (re)perform the updateTransform as props change.
 
 Many of the "if needed"'s are there because xtal-element supports server-side rendering, so not all those steps are really needed in that case.
 
-xtal-element is fully committed to providing support for server side rendering, based on static html files containing binding instructions that are compatible with streaming solutions like Cloudflare's HTMLRewriting, but also compatible with client-side rendering using DOM API's.  So this raises a number of scenarios a xtal element needs to consider.
+xtal-element is fully committed to providing support for server-side rendering.  It specifically targets SSR that is based on optionally weaving dynamic data into static html files via Cloudflare's HTMLRewrite API, but is also compatible with client-side rendering using DOM API's.  So this raises a number of scenarios an xtal element needs to consider.
 
 Some of the scenarios listed below can happen in combination, some are mutually exclusive.  It would make for a complex Venn diagram:
 
-
 1.  Minimal server-side rendering.  Server only creates an instance of the tag, and sets some attributes, and the light children.
-2.  Limited Shadow Dom Server-side rendering, limited to pasting in the ShadowDOM defined in the static html file, without any attempt to do any of the binding defined within, of which there are some beyond slot mapping.
-3.  Limited Shadow Dom Server-side rendering, but the ShadowDOM requires no dynamic adjustments.
+2.  Limited Shadow DOM server-side rendering, limited to pasting in the Shadow DOM defined in the static html file, without any attempt to do any of the binding defined within, of which there are some beyond slot mapping.
+3.  Limited Shadow DOM server-side rendering, but the Shadow DOM requires no dynamic adjustments.
 4.  A full-blown server-side rendering solution of only one initial instance, complete with applying the binding instructions. 
 5.  A full-blown server-side rendering solution of all instances of the component.
 6.  The full state needed for rendering is provided as a combination of JSON-serialized attributes and light children.
