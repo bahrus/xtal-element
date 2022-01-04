@@ -26,7 +26,7 @@ I think one factor that needs to be considered when weighing the pro's and con's
 
 Are we:
 
-1.  Creating, with tender loving care, a component meant to have a minimum footprint, while being highly reusable, leverageable in multiple frameworks / no frameworks, loading synchronously / asynchronously, bundled / not bundled, etc?
+1.  Creating, with tender loving care, a component meant to have a minimum footprint, while being highly reusable, leverageable in multiple frameworks / no frameworks, server-side-rendered / not-server-side-rendered, loaded synchronously / asynchronously, bundled / not bundled, ShadowDOM / noShadowDOM, etc?
 2.  Engaging in RAD-style creation of a local component only to be used in a specific way by one application or one component?
 
 xtal-element is a bit more biased towards the former, but strives not to sacrifice the second goal as much as possible.  Judge for yourself, I guess.
@@ -46,6 +46,19 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 [WIP]:
 
 This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
+
+As mentioned earlier, the core functionality of an xtal-element is rendering free, so this whole question is moot.  However, there are some core mixins xtal-element provides, that do provide rendering capabilities.
+
+They can be broken down into the following steps:
+
+1.  If needed, create ShadowDOM.
+2.  If needed, clone the main template.
+3.  If needed, attach event handlers to the cloned template.  This is done via an "initTransform".
+4.  If needed, before appending the cloned template into the live ShadowDOM tree (or directly in the element if forgoing shadow DOM), perform the first "updateTransform" where the props are passed in.
+5.  If needed, append the cloned template into the shadowDOM or element itself.
+6.  Reactively (re)perform the updateTransform as props change.
+
+Many of the "if needed"'s are there because xtal-element supports server-side rendering, so not all those steps are really needed in that case.
 
 xtal-element is fully committed to providing support for server side rendering, based on static html files containing binding instructions that are compatible with streaming solutions like Cloudflare's HTMLRewriting, but also compatible with client-side rendering using DOM API's.  So this raises a number of scenarios a xtal element needs to consider.
 
