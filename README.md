@@ -84,7 +84,7 @@ xtal-element creates a clear division between main template cloning,  initial re
     <thead>
         <tr>
             <th>Scenario</th>
-            <th>Server-side attribute</th>
+            <th>Server-side attributes</th>
             <th>Actions performed</th>
         </tr>
     </thead>
