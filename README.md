@@ -81,13 +81,13 @@ xtal-element creates a clear division between main template cloning,  initial re
 
 <table>
     <caption>Indications</caption>
-    <!-- <thead>
+    <thead>
         <tr>
             <th>Scenario</th>
             <th>Server-side attribute</th>
             <th>Actions performed</th>
         </tr>
-    </thead> -->
+    </thead>
     <tbody>
         <tr>
             <td>No server-side rendering, no planning-ahead defer-hydration hints</td>
