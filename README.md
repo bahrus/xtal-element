@@ -96,12 +96,12 @@ xtal-element creates a clear division between main template cloning,  initial re
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, no binding</td>
-            <td>sd-static, defer-hydration=['' if one external setter, number of External Setters if > 1, no attribute if none]</td>
-            <td>Do Init Render, Update Render</td>
+            <td>defer-hydration=['' if 1 external setter, number of External Setters if > 1, no attribute if none]</td>
+            <td>Only do Init Render, update transform after defer-hydration attribute removed, but decrement defer-hydration by one each skipped turn</td>
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, with binding</td>
-            <td>sd-dynamic, defer-hydration=[Same as above, but + 1]</td>
+            <td>defer-hydration=[Same as above, but + 1]</td>
             <td>Only do Init Render, update transform after defer-hydration attribute removed, but decrement defer-hydration by one each skipped turn</td>
         </tr>
     </tbody>
