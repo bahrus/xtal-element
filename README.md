@@ -117,7 +117,7 @@ xtal-element creates a clear division between main template cloning,  initial re
 </table>
 
 
-</details> <!-- SSR ==>
+</details> <!-- SSR -->
 
 <details>
     <summary>4.  JSON and HTML Modules will land on Planet Earth someday</summary>
