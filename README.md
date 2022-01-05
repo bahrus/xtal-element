@@ -41,13 +41,22 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 </details> <!-- All Ui Libraries Equal -->
 
 <details>
-    <summary>2.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
+    <summary>2.  Looks aren't everything</summary>
 
-[WIP]:
+The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these three scenarios:
+
+1.  Providing a timer component or some other non visual functionality.  "Component as a service".
+2.  Providing a wrapper around a third-party client-side library that does its own rendering.  Like a charting library. 
+3.  Providing a wrapper around server-rendered content.
+
+</details>
+
+<details>
+    <summary>3.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
 
 This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
 
-As mentioned earlier, the core functionality of an xtal-element is free from any required rendering dependency, so this whole question becomes moot when rendering isn't performed.  However, there are some core mixins xtal-element provides, that do provide rendering capabilities.
+As mentioned earlier, the core functionality of a xtal-element doesn't address rendering.  However, there are some core mixins xtal-element provides, that do provide rendering capabilities.
 
 The functionality those mixins provide can be broken down into the following steps:
 
@@ -96,29 +105,31 @@ xtal-element creates a clear division between main template cloning,  initial re
         <tr>
             <td>Server-side rendering, copy-paste, no binding</td>
             <td>defer-hydration=['' if 1 external setter, number of external setters if > 1, no attribute if none]</td>
-            <td>Only do Init Render, update transform after defer-hydration attribute removed, but decrement defer-hydration by one each skipped turn</td>
+            <td>Only do Init Render, update transform after defer-hydration attribute removed.</td>
         </tr>
         <tr>
             <td>Server-side rendering, copy-paste, with binding</td>
             <td>defer-hydration=[Same as above], defer-rendering</td>
-            <td>Only do Init Render, update transform after defer-hydration attribute removed, but decrement defer-hydration by one each skipped turn</td>
+            <td>Only do Init Render after defer-hydration attribute removed, skip update transform but remove defer-rendering the first time.</td>
         </tr>
     </tbody>
 
 </table>
 
 
-</details>
+</details> <!-- SSR ==>
 
 <details>
-    <summary>3.  JSON and HTML Modules will land on Planet Earth someday</summary>
+    <summary>4.  JSON and HTML Modules will land on Planet Earth someday</summary>
 
 xtal-element subscribes to the [rule of least power philosophy](https://www.w3.org/2001/tag/doc/leastPower.html).  It is designed as a natural segue into declarative custom elements.  As much logic as possible is made truly declarative with JSON.  It even encourages developers to apply a little extra ceremony to demonstrate commitment to true declarative syntax, separating settings that are JSON serializable from those that are not (such as function / class references).  While the developer can still use the easier to edit typescript / javascript when configuring web components, the xtal-element approach encourages us to utilize JSON imports, and gain from lower parsing times, and perhaps more low-risk / ui-driven development.
 
 </details>
 
+
+
 <details>
-    <summary>4.  This is FROOP</summary>
+    <summary>5.  This is FROOP</summary>
 
   
 xtal-element embraces the duality paradox between Functional and OOP by following a pattern we shall refer to as FROOP:  Functional reactive object-oriented preening.
@@ -203,16 +214,7 @@ Further reading that is useful:
 
 </details>
 
-<details>
-    <summary>5.  Looks aren't everything</summary>
 
-The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these three scenarios:
-
-1.  Providing a timer component or some other non visual functionality.  "Component as a service".
-2.  Providing a wrapper around a third-party client-side library that does its own rendering.  Like a charting library. 
-3.  Providing a wrapper around server-rendered content.
-
-</details>
 
 </details>
 
