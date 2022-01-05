@@ -6,8 +6,8 @@ When, in the Course of web development, it becomes necessary to migrate to a new
 
 We hold these truths to be self-evident, after bumbling around for months and months:
 
-<details style="margin-left:40px">
-    <summary>1.  All UI Libraries Are Created Equal</summary>
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.  All UI Libraries Are Created Equal</summary>
 
 The great thing about web components is that little web components built with tagged template literals can connect with little web components built with Elm, and web components will be judged by the content they provide, rather than superficial internal technical library choices. 
 
