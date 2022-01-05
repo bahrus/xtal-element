@@ -40,8 +40,8 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 
 </details> <!-- All Ui Libraries Equal -->
 
-<details style="margin-left:40px">
-    <summary>2.  Looks aren't everything</summary>
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.  Looks aren't everything</summary>
 
 The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these three scenarios:
 
@@ -51,8 +51,8 @@ The core functionality of xtal-element is not centered around rendering content.
 
 </details>
 
-<details style="margin-left:40px">
-    <summary>3.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
 
 This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
 
@@ -119,8 +119,8 @@ xtal-element creates a clear division between main template cloning,  initial re
 
 </details> <!-- SSR -->
 
-<details style="margin-left:40px">
-    <summary>4.  JSON and HTML Modules will land on Planet Earth someday</summary>
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.  JSON and HTML Modules will land on Planet Earth someday</summary>
 
 xtal-element subscribes to the [rule of least power philosophy](https://www.w3.org/2001/tag/doc/leastPower.html).  It is designed as a natural segue into declarative custom elements.  As much logic as possible is made truly declarative with JSON.  It even encourages developers to apply a little extra ceremony to demonstrate commitment to true declarative syntax, separating settings that are JSON serializable from those that are not (such as function / class references).  While the developer can still use the easier to edit typescript / javascript when configuring web components, the xtal-element approach encourages us to utilize JSON imports, and gain from lower parsing times, and perhaps more low-risk / ui-driven development.
 
@@ -128,8 +128,8 @@ xtal-element subscribes to the [rule of least power philosophy](https://www.w3.o
 
 
 
-<details style="margin-left:40px">
-    <summary>5.  This is FROOP</summary>
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.  This is FROOP</summary>
 
   
 xtal-element embraces the duality paradox between Functional and OOP by following a pattern we shall refer to as FROOP:  Functional reactive object-oriented preening.
