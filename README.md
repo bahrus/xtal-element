@@ -52,7 +52,14 @@ The core functionality of xtal-element is not centered around rendering content.
 </details>
 
 <details>
-    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.  The pursuit of happiness is achieved when Web Components that can be opened directly as an HTML page.</summary>
+
+Web components built with xtal-element provide an HTML output option that allows the web component to provide its own demo directly by opening the HTML file in a browser.  It can still be embedded in a web stream / page as a standard web component.  Demo'ing such a web component couldn't be easier.
+
+</details> 
+
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.  Content coming from the server is entitled to be displayed, free from client-side JavaScript meddling, as long as it best represents what the user wants to view.</summary>
 
 This is a tricky one.  What is absolutely clear is we want to keep the number of renders low (and changes made during a render to be as minimal as possible).
 
@@ -120,7 +127,7 @@ xtal-element creates a clear division between main template cloning,  initial re
 </details> <!-- SSR -->
 
 <details>
-    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.  JSON and HTML Modules will land on Planet Earth someday</summary>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.  JSON and HTML Modules will land on Planet Earth someday</summary>
 
 xtal-element subscribes to the [rule of least power philosophy](https://www.w3.org/2001/tag/doc/leastPower.html).  It is designed as a natural segue into declarative custom elements.  As much logic as possible is made truly declarative with JSON.  It even encourages developers to apply a little extra ceremony to demonstrate commitment to true declarative syntax, separating settings that are JSON serializable from those that are not (such as function / class references).  While the developer can still use the easier to edit typescript / javascript when configuring web components, the xtal-element approach encourages us to utilize JSON imports, and gain from lower parsing times, and HTML modules/imports, w3c willing, which allows us to render as content streams, and also benefit, perhaps from more low-risk / ui-driven development.
 
@@ -129,7 +136,7 @@ xtal-element subscribes to the [rule of least power philosophy](https://www.w3.o
 
 
 <details>
-    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.  This is FROOP</summary>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.  This is FROOP</summary>
 
   
 xtal-element embraces the duality paradox between Functional and OOP by following a pattern we shall refer to as FROOP:  Functional reactive object-oriented preening.
