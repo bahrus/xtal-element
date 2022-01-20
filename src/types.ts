@@ -64,7 +64,7 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
 }
 
 export interface DefineArgs<MixinCompositeProps = any, MixinCompositeActions = MixinCompositeProps, TPropInfo = PropInfoExt<MixinCompositeProps, MixinCompositeActions>, TAction extends XAction = XAction<MixinCompositeProps>>{
-     superclass?: {new(): any},
+     superclass?: {new(): any} | string,
      mixins?: any[],
      mainTemplate?: HTMLTemplateElement;
      /** use this only for defaults that can't be JSON serialized in config */
