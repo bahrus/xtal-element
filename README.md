@@ -221,6 +221,14 @@ Further reading that is useful:
 
 </details>
 
+<details>
+    <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.  To withdraw into obscurity is the way of Heaven</summary>
+
+xtal-element strives to impose as little custom syntax as possible, providing an avenue for extending / replacing the HTML vocabulary as immediately as possible.
+
+This way the syntax can evolve, piece by piece, over time, based on usage, with no central authority in charge of it.
+
+</details>
 
 
 </details>
