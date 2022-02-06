@@ -228,7 +228,7 @@ xtal-element strives to impose as little custom syntax as possible, providing an
 
 This way the syntax can evolve, piece by piece, over time, based on usage, with no central authority in charge of it.
 
-The core transform syntax xtal-element relies on, DTR, does it's job well, but is limited to providing property value distributing.
+The core transform syntax xtal-element relies on, [DTR](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-plugins), does its job well, but is limited to providing property value distributing.
 
 It stops there, and doesn't even provide support for conditional or looping, which most other UI libraries provide.
 
