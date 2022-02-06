@@ -254,3 +254,115 @@ Additional files that are optional, but definitely helpful / expected for an xta
 2.  A custom element manifest file (auto-generated.)
 
 </details>
+
+# Part I -- Non Visual Components
+
+Let's take a look at the xtal-element way to define a "component as a service" such as this [timer component](https://github.com/bahrus/time-ticker/blob/baseline/time-ticker.ts). 
+
+```TypeScript
+import {TimeTickerProps, TimeTickerActions} from './types';
+import {XE} from 'xtal-element/src/XE.js';
+import {animationInterval} from './animationInterval.js';
+
+export class TimeTicker extends HTMLElement implements TimeTickerActions{
+
+    start({duration}: this) {
+        const controller = new AbortController();
+        animationInterval(duration, controller.signal, time => {
+            this.ticks++;
+        });
+        return {
+            controller,
+            ticks: this.ticks++,
+        }
+    }
+
+    onDisabled({}: this) {
+        return {
+            controller: undefined,
+        }
+    }
+
+    onItems({items}: this){
+        return {
+            repeat: items.length,
+        }
+    }
+
+    onTicks({idx, repeat, loop, wait, items}: this){
+        if(idx >= repeat - 1){
+            if(loop){
+                idx = -1;
+            }else{
+                return {
+                    disabled: true,
+                }
+            }
+        }
+        idx++;
+        return {
+            idx,
+            disabled: wait,
+            value: {
+                idx,
+                item: (items && items.length > idx) ? items[idx] : undefined,
+            }
+        }
+    }
+}
+
+export interface TimeTicker extends TimeTickerProps{}
+
+const xe = new XE<TimeTickerProps, TimeTickerActions>({
+    config:{
+        tagName: 'time-ticker',
+        propDefaults: {
+            wait: false,
+            ticks: 0,
+            idx: -1,
+            duration: 1_000,
+            repeat: Infinity,
+            enabled: true,
+            disabled: false,
+            loop: false,
+        },
+        propInfo:{
+            enabled:{
+                dry: false,
+                notify: {
+                    toggleTo: 'disabled',
+                }
+            },
+            value: {
+                notify: {
+                    dispatch: true,
+                },
+                parse: false,
+            },
+        },
+        style: {
+            display: 'none',
+        },
+        actions: {
+            onDisabled:'disabled',
+            onItems:'items',
+            start:{
+                ifAllOf: ['duration'],
+                ifNoneOf: ['disabled'],
+            },
+            onTicks: {
+                ifAllOf: ['ticks'],
+                ifKeyIn: ['repeat', 'loop', 'items'],
+                ifNoneOf: ['disabled'],
+            }
+        }
+    },
+    superclass: TimeTicker,
+});
+```
+
+Some things to note:
+
+1.  The methods within the class are virtually all side-effect free.  It is the orchestrator, defined within the "actions" configuration, that routes method calls from prop changes.  For example, onDisabled: 'disabled' means "when disabled is true, call onDisabled()".
+2.  It is quite rare to see "this" in the class.
+3.  Approximately 50% of the lines are JSON serializable.  As browsers add support for JSON modules, we can cut the JS size in half by moving all the JSON configuration to a JSON import, which is kinder to the browser's cpu.
