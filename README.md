@@ -257,6 +257,8 @@ Additional files that are optional, but definitely helpful / expected for an xta
 
 # Part I -- Non Visual Components
 
+For non visual components, it makes sense that the definition for the component should be JS-first.
+
 Let's take a look at the xtal-element way to define a "component as a service" such as this [timer component](https://github.com/bahrus/time-ticker/blob/baseline/time-ticker.ts). 
 
 ```TypeScript
@@ -266,18 +268,19 @@ import {animationInterval} from './animationInterval.js';
 
 export class TimeTicker extends HTMLElement implements TimeTickerActions{
 
-    start({duration}: this) {
+    start({duration, ticks, wait}: this) {
         const controller = new AbortController();
         animationInterval(duration, controller.signal, time => {
             this.ticks++;
         });
         return {
             controller,
-            ticks: this.ticks++,
+            ticks: wait ? ticks : ticks + 1,
         }
     }
 
-    onDisabled({}: this) {
+    onDisabled({controller}: this) {
+        controller.abort();
         return {
             controller: undefined,
         }
@@ -289,7 +292,7 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
         }
     }
 
-    onTicks({idx, repeat, loop, wait, items}: this){
+    onTicks({idx, repeat, loop, items}: this){
         if(idx >= repeat - 1){
             if(loop){
                 idx = -1;
@@ -302,7 +305,6 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
         idx++;
         return {
             idx,
-            disabled: wait,
             value: {
                 idx,
                 item: (items && items.length > idx) ? items[idx] : undefined,
@@ -317,7 +319,6 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
     config:{
         tagName: 'time-ticker',
         propDefaults: {
-            wait: false,
             ticks: 0,
             idx: -1,
             duration: 1_000,
@@ -325,6 +326,7 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
             enabled: true,
             disabled: false,
             loop: false,
+            wait: false,
         },
         propInfo:{
             enabled:{
@@ -344,7 +346,9 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
             display: 'none',
         },
         actions: {
-            onDisabled:'disabled',
+            onDisabled:{
+                ifAllOf: ['disabled', 'controller']
+            },
             onItems:'items',
             start:{
                 ifAllOf: ['duration'],
@@ -361,8 +365,10 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
 });
 ```
 
-Some things to note:
+Talking Points
 
-1.  The methods within the class are virtually all side-effect free.  It is the orchestrator, defined within the "actions" configuration, that routes method calls from prop changes.  For example, onDisabled: 'disabled' means "when disabled is true, call onDisabled()".
-2.  It is quite rare to see "this" in the class.
-3.  Approximately 50% of the lines are JSON serializable.  As browsers add support for JSON modules, we can cut the JS size in half by moving all the JSON configuration to a JSON import, which is kinder to the browser's cpu.
+1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.  For example, onItems: 'items' means "when property 'items' is truthy, call onItems(this)".
+2.  "this" is used sparingly in the class (aside from the convenient, optional Typescript "type" in all the method destructuring).  In particular, if the "actions" that are orchestrated by the xtal-element configuration return properties, they are automatically assigned into the class.  However, if you like "this", use it, if you prefer.  
+3.  Approximately 50% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size in half by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
+4.  The ability to filter when methods are called using the "ifAllOf", "ifKeyIn", "ifNoneOf" means our actual code can avoid much of the clutter of checking if properties are undefined.
+5.  The class where the logic goes is library neutral.
