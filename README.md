@@ -371,7 +371,7 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
 
 Talking Points
 
-1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.  For example, onItems: 'items' means "when property 'items' is truthy, call onItems(this)".
+1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.  For example, rotateItems: 'items' means "when property 'items' is truthy, call rotateItems(this)".
 2.  "this" is used sparingly in the class (aside from the convenient, optional Typescript "type" in all the method destructuring).  In particular, if the "actions" that are orchestrated by the xtal-element configuration return properties, they are automatically assigned into the class instance (DOM element).  However, if you like "this", use it, if you prefer.  
 3.  Approximately 50% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size in half by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
 4.  The ability to filter when methods are called using the "ifAllOf", "ifKeyIn", "ifNoneOf" means our actual code can avoid much of the clutter of checking if properties are undefined.
