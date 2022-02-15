@@ -1,6 +1,6 @@
 import {SlicedPropDefs, PropDef} from '../types.js';
 import {camelToLisp} from 'trans-render/lib/camelToLisp.js';
-import {structuralClone} from './structuralClone.js';
+//import {structuralClone} from './structuralClone.js';
 
 let count = 0;
 const base = 'H9Yse71zmEGbnOXN8KNMJw';
@@ -21,7 +21,7 @@ function defineSet<T extends HTMLElement = HTMLElement>(self: any, name: string,
         }
     }
     let nv2 = nv;
-    if(prop.clone) nv2 = structuralClone(nv);
+    if(prop.clone) nv2 = structuredClone(nv);
     self[privateKey] = nv2;
     if(prop.log){
         console.log(prop, nv2);
