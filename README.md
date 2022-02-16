@@ -439,12 +439,13 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 ##  Spin Zone, Part II
 
-1.  What we would like to impress upon you is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
-2.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
+1.  We have kept the binding syntax separate from the markup syntax, similar to CSS.  This is based on DTR syntax.  This means migrating to something else should be easier, as the library dependencies aren't all tangled up with the actual presentation structure.  Okay, maybe not such a big deal, but just saying. 
+2.  What I would like to impress upon you is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
+3.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
 
 Now before you run away, justifiably repelled by the notion of editing JSON, I hear you.  You and I are cut from the same cloth.
 
-A light-touch "compiler" (or "transpiler"?) is provided by the [may-it-be](https://github.com/bahrus/may-it-be) package.  So we can edit *.mts files, and benefit from all the typing goodness TypeScript provides, or *.mjs files, and the may-it-be transpiler can format the source file into the tightly constrained format that JSON requires.  (The may-it-be transpiler also supports another output option -- HTML with declarative ShadowDOM, discussed later.)  
+A light-touch "compiler" (or "transpiler"?) is provided by the [may-it-be](https://github.com/bahrus/may-it-be) package.  So we can edit *.mts files, and benefit from all the typing goodness TypeScript provides, or *.mjs files, and the may-it-be transpiler can output to a file for distribution, that formats the source file into the tightly constrained format that JSON requires.  (The may-it-be transpiler also supports another output option -- HTML with declarative ShadowDOM, discussed later.)  
 
 Note that, unlike the previous example, we didn't use any libraries from this xtal-element package, in particular "XE".    The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, CE (for Custom Element) that covers enough ground to provide a declarative, JS-free web component that meets the requirements for this component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
 
