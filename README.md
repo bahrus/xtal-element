@@ -480,6 +480,6 @@ When combined with trans-render plugins and [be-*](https://github.com/bahrus?tab
 
 ## Hybrid Mode [TODO]
 
-Going back to our first example (the timer web component), were were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is the whole idea behind xenia-based web components).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way.  It appears to provide "primitive" functionality missing from the platform.  But providing an easy way to move the JSON serializable data to a separate file seems worthwhile.
+Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is the whole idea behind xenia-based web components).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way.  It appears to provide "primitive" functionality missing from the platform.  But providing an easy way to move the JSON serializable data to a separate file seems worthwhile.
 
 For that purpose if CE (or XE) encounters a function rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.

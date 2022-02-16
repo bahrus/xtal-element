@@ -41,7 +41,6 @@
     "./lib/html.js": "./lib/html.js",
     "./lib/initInternals.js": "./lib/initInternals.js",
     "./lib/intersection.js": "./lib/intersection.js",
-    "./lib/letThereBeProps.js": "./lib/letThereBeProps.js",
     "./lib/mergeProps.js": "./lib/mergeProps.js",
     "./lib/nudge.js": "./lib/nudge.js",
     "./lib/observeCssSelector.js": "./lib/observeCssSelector.js",
@@ -53,13 +52,11 @@
     "./lib/structuralClone.js": "./lib/structuralClone.js",
     "./lib/substrBefore.js": "./lib/substrBefore.js",
     "./lib/with-path.js": "./lib/with-path.js",
-    "./lib/X.js": "./lib/X.js",
-    "./lib/XtalCore.js": "./lib/XtalCore.js",
     "./lib/XtalPattern.js": "./lib/XtalPattern.js",
     "./lib/zzz.js": "./lib/zzz.js"
   },
   "dependencies": {
-    "trans-render": "0.0.478"
+    "trans-render": "0.0.479"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
