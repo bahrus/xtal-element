@@ -464,8 +464,12 @@ So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can 
 import {XENON} from 'xtal-element/src/XENON.js';
 ...
 
-xenon.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
+XENON.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
 ```
+
+**NB**:  TIL that JSON imports abide by import maps!
+
+XENON stands for "**x**tal-**e**lement **n**ée of **object** **n**otation." 
 
 [Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features).
 
