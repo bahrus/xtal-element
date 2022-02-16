@@ -445,6 +445,13 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 1.  What we would like you to please notice is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
 2.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
-3.  Note that we haven't actually used any libraries from this xtal-element package.  The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, that covers enough ground to provide a declarative, JS-free web component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
+
+
+Note that, unlike the previous example, we didn't use any libraries from this xtal-element package.    The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, CE (for Custom Element) that covers enough ground to provide a declarative, JS-free web component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
 
 The first value-add that xtal-element provides is a way to use JSON modules to define 100% declarative web components: [TODO]
+
+```TypeScript
+import {xenon} from 'xtal-element/src/XENON.js';
+xenon.define(x => await import('./dtr-counter.json', {assert: {type: 'json'}}));
+```
