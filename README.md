@@ -469,6 +469,8 @@ XENON.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'j
 
 **NB**:  TIL that JSON imports abide by import maps!
 
+So to reference a JSON based web component, two references are needed -- one-time reference for XENON, but once that is done, single references per JSON file / custom element.  Not too bad!
+
 XENON stands for "**x**tal-**e**lement **n**ée of **object** **n**otation." 
 
 [Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features).
