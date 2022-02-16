@@ -4,7 +4,6 @@ import {CE} from 'trans-render/lib/CE.js';
 export interface DTRCounterProps {
     count: number;
 } 
-
 const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
     config:  {
         tagName:'dtr-counter',

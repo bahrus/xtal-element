@@ -439,7 +439,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 ##  Spin Zone, Part II
 
-1.  What we would like you to please notice is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
+1.  What we would like to impress upon you is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
 2.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
 
 Now before you run away, justifiably repelled by the notion of editing JSON, I hear you.  You and I are cut from the same cloth.
@@ -458,13 +458,15 @@ As for the "FROOP Action Orchestrator"™, XE supports more logical checks.  CE 
 
 ## XENON [TODO]
 
-So if we use the may-it-be compiler to JSON-ify out nice declarative JS, we can import the JSON file, and automatically register the JSON file as a web component, via the XENON api:
+So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can import the JSON file, and automatically register the JSON file as a web component, via the XENON api:
 
 ```TypeScript
 import {XENON} from 'xtal-element/src/XENON.js';
 ...
 
-xenon.define(x => await import('./dtr-counter.json', {assert: {type: 'json'}}));
+xenon.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
 ```
 
 [Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features).
+
+When combined with trans-render plugins and be-* decorators, both of which adhere to pure 100% declarative JSON syntax ultimately, a rather large variety of web components can be developed, JS (in the client) free! (Of course we do need to download and execute these plugins, but once downloaded, the declarative syntax can scale rapidly to large, more complex applications, while the client-side JS remains tightly constrained).
