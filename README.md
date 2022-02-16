@@ -465,7 +465,7 @@ So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can 
 import {XENON} from 'xtal-element/src/XENON.js';
 ...
 
-XENON.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
+XENON.define(async x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
 ```
 
 **NB**:  TIL that JSON imports abide by import maps!
@@ -477,3 +477,9 @@ XENON stands for "**x**tal-**e**lement **n**ée of **object** **n**otation."
 [Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features).
 
 When combined with trans-render plugins and [be-*](https://github.com/bahrus?tab=repositories&q=be-&type=&language=&sort=) decorators, both of which adhere to pure 100% declarative JSON syntax ultimately, a rather large variety of web components can be developed, JS (in the client browser) free! Of course we do need to download and execute these plugins, but once downloaded, the declarative syntax can scale rapidly to large, more complex applications, while the client-side JS remains tightly constrained in size.
+
+## Hybrid Mode [TODO]
+
+Going back to our first example (the timer web component), were were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is the whole idea behind xenia-based web components).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way.  It appears to provide "primitive" functionality missing from the platform.  But providing an easy way to move the JSON serializable data to a separate file seems worthwhile.
+
+For that purpose if CE (or XE) encounters a function rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.
