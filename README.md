@@ -369,6 +369,8 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
 });
 ```
 
+Note that "XE" stands for "xtal-element".
+
 ## Talking Points
 
 1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.  For example, rotateItems: 'items' means "when property 'items' is truthy, call rotateItems(this)".
@@ -399,18 +401,12 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
             count: 30,
             transform: [
                 {
-                    buttonElements: [{}, {click:{
-                        prop:'count',
-                        vft: 'dataset.d',
-                        plusEq: true,
-                        parseValAs: 'int',
-                    }}]
+                    buttonElements: [{}, {click:{prop:'count', plusEq: true, vft: 'dataset.d',  parseValAs: 'int'}}]
                 },
                 {
                     countParts: 'count'
                 }
             ],
-            
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
             styles: String.raw `
 <style>
@@ -446,12 +442,29 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 1.  What we would like you to please notice is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
 2.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
 
+Now before you run away, justifiably repelled by the notion of editing JSON, I hear you.  You and I are cut from the same cloth.
 
-Note that, unlike the previous example, we didn't use any libraries from this xtal-element package.    The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, CE (for Custom Element) that covers enough ground to provide a declarative, JS-free web component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
+A light-touch "compiler" (or "transpiler"?) is provided by the [may-it-be](https://github.com/bahrus/may-it-be) package.  So we can edit *.mts files, and benefit from all the typing goodness TypeScript provides, or *.mjs files, and the may-it-be transpiler can format the source file into the tightly constrained format that JSON requires.  (The may-it-be transpiler also supports another output option -- HTML with declarative ShadowDOM, discussed later.)  
 
-The first value-add that xtal-element provides is a way to use JSON modules to define 100% declarative web components: [TODO]
+Note that, unlike the previous example, we didn't use any libraries from this xtal-element package, in particular "XE".    The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, CE (for Custom Element) that covers enough ground to provide a declarative, JS-free web component that meets the requirements for this component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
+
+## CE vs XE
+
+So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide?
+
+In this case, it provides considerably more nuance when it comes to the "FROOP" orchestrator, and to declarative property creation.  XE supports declaratively indicating which properties should dispatch events and having one property toggle to other properties.  None of which was required in the counter example.
+
+As for the "FROOP Action Orchestrator"™, XE supports more logical checks.  CE only supports "ifAllOf" and "ifKeyIn", whereas XE also supports "ifNoneOf", "ifEquals", "ifOneOf".
+
+## XENON [TODO]
+
+So if we use the may-it-be compiler to JSON-ify out nice declarative JS, we can import the JSON file, and automatically register the JSON file as a web component, via the XENON api:
 
 ```TypeScript
-import {xenon} from 'xtal-element/src/XENON.js';
+import {XENON} from 'xtal-element/src/XENON.js';
+...
+
 xenon.define(x => await import('./dtr-counter.json', {assert: {type: 'json'}}));
 ```
+
+[Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features).

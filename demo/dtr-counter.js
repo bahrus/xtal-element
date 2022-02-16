@@ -10,12 +10,7 @@ const ce = new CE({
             count: 30,
             transform: [
                 {
-                    buttonElements: [{}, { click: {
-                                prop: 'count',
-                                vft: 'dataset.d',
-                                plusEq: true,
-                                parseValAs: 'int',
-                            } }]
+                    buttonElements: [{}, { click: { prop: 'count', plusEq: true, vft: 'dataset.d', parseValAs: 'int' } }]
                 },
                 {
                     countParts: 'count'
