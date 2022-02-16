@@ -264,12 +264,12 @@ Let's take a look at the xtal-element way to define a "component as a service" s
 ```TypeScript
 import {TimeTickerProps, TimeTickerActions} from './types';
 import {XE} from 'xtal-element/src/XE.js';
-import {animationInterval} from './animationInterval.js';
 
 export class TimeTicker extends HTMLElement implements TimeTickerActions{
 
-    start({duration, ticks, wait}: this) {
+    async start({duration, ticks, wait}: this) {
         const controller = new AbortController();
+        const {animationInterval} = await import('./animationInterval.js');
         animationInterval(duration, controller.signal, time => {
             this.ticks++;
             this.wait
