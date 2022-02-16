@@ -23,6 +23,7 @@
   "exports": {
     ".": "./lib/XtalCore.js",
     "./src/XE.js": "./src/XE.js",
+    "./src/XENON.js": "./src/XENON.js",
     "./lib/applyMixins.js": "./lib/applyMixins.js",
     "./lib/attr.js": "./lib/attr.js",
     "./lib/base-link-id.js": "./lib/base-link-id.js",
