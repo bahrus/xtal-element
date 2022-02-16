@@ -1,5 +1,5 @@
 import {CE, PropInfo} from 'trans-render/lib/CE.js';
-export {PropInfo} from 'trans-render/lib/types';
+export {PropInfo, TemplMgmtProps} from 'trans-render/lib/types';
 import {applyP} from 'trans-render/lib/applyP.js';
 import {applyPEA} from 'trans-render/lib/applyPEA.js';
 import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';

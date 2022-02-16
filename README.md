@@ -369,10 +369,82 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
 });
 ```
 
-Talking Points
+## Talking Points
 
 1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.  For example, rotateItems: 'items' means "when property 'items' is truthy, call rotateItems(this)".
 2.  "this" is used sparingly in the class (aside from the convenient, optional Typescript "type" in all the method destructuring).  In particular, if the "actions" that are orchestrated by the xtal-element configuration return properties, they are automatically assigned into the class instance (DOM element).  However, if you like "this", use it, if you prefer.  
 3.  Approximately 50% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size in half by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
 4.  The ability to filter when methods are called using the "ifAllOf", "ifKeyIn", "ifNoneOf" means our actual code can avoid much of the clutter of checking if properties are undefined.
 5.  The class where the logic goes is library neutral.
+
+# Part II -- Counting
+
+Let's move on now to what has become the *sine qua non* example for web components.  The [counter](https://webcomponents.dev/edit/W1J2NL0rQKSWDSwLScsm/src/index.js?p=stories).  Now we have a rudimentary UI, so we can see how xtal-element approaches this.  As always we show the optional TypeScript version.  The JS version isn't that different, just remove a little sugar here and there:
+
+```TypeScript
+import {TemplMgmt, TemplMgmtProps, TemplMgmtActions, beTransformed} from 'trans-render/lib/mixins/TemplMgmt.js';
+import {CE} from 'trans-render/lib/CE.js';
+
+export interface DTRCounterProps {
+    count: number;
+} 
+
+const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
+    config:  {
+        tagName:'dtr-counter',
+        actions:{
+            ...beTransformed,
+        },
+        propDefaults:{
+            count: 30,
+            transform: [
+                {
+                    buttonElements: [{}, {click:{
+                        prop:'count',
+                        vft: 'dataset.d',
+                        plusEq: true,
+                        parseValAs: 'int',
+                    }}]
+                },
+                {
+                    countParts: 'count'
+                }
+            ],
+            
+            mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
+            styles: String.raw `
+<style>
+    * {
+      font-size: 200%;
+    }
+
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
+</style>
+`
+        },
+        
+    },
+    mixins: [TemplMgmt],
+});
+```
+
+##  Spin Zone, Part II
+
+1.  What we would like you to please notice is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
+2.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
+3.  Note that we haven't actually used any libraries from this xtal-element package.  The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, that covers enough ground to provide a declarative, JS-free web component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
+
+The first value-add that xtal-element provides is a way to use JSON modules to define 100% declarative web components: [TODO]

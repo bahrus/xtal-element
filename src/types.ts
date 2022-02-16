@@ -1,4 +1,5 @@
-import {Action, LogicOp, LogicOpProp, PropInfo, WCConfig} from 'trans-render/lib/types.js';
+import {Action, LogicOp, LogicOpProp, PropInfo, WCConfig} from 'trans-render/lib/types';
+
 
 export interface XAction<MCProps = any> extends Action<MCProps>{
 

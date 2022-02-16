@@ -11,7 +11,8 @@
 	},
 	"include":[
 		"src/*",
-		"lib/*"
+		"lib/*",
+		"demo/*"
 	],
 	"exclude":[
 		"./node_modules/*"

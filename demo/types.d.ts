@@ -1,5 +1,4 @@
-export interface CounterDoProps extends HTMLElement {
-    clonedTemplate?: DocumentFragment | undefined;
-    domCache?: any;
+
+export interface XtalCounterProps {
     count?: number;
 }

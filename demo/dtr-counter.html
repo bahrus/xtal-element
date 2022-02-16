@@ -7,7 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    <alias-example></alias-example>
-    <script type=module src=alias-example.js></script>
+    <dtr-counter count="13"></dtr-counter>
+    <script type=importmap>{
+        "imports":{
+            "trans-render/": "../node_modules/trans-render/"
+        }
+    }</script>
+    <script type=module>
+        import './dtr-counter.js';
+    </script>
 </body>
 </html>
