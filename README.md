@@ -610,3 +610,5 @@ const da: DefineArgs<TimeTickerProps, TimeTickerActions> = {
 
 console.log(JSON.stringify(da.config));
 ```
+
+##NB:##  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet. 
