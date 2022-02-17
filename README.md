@@ -465,7 +465,7 @@ So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can 
 import {XENON} from 'xtal-element/src/XENON.js';
 ...
 
-XENON.define(async x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
+XENON.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
 ```
 
 **NB**:  JSON imports abide by import maps!
