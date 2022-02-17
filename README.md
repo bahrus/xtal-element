@@ -478,8 +478,135 @@ XENON stands for "**x**tal-**e**lement **n**ée of **object** **n**otation."
 
 When combined with trans-render plugins and [be-*](https://github.com/bahrus?tab=repositories&q=be-&type=&language=&sort=) decorators, both of which adhere to pure 100% declarative JSON syntax ultimately, a rather large variety of web components can be developed, JS (in the client browser) free! Of course we do need to download and execute these plugins, but once downloaded, the declarative syntax can scale rapidly to large, more complex applications, while the client-side JS remains tightly constrained in size.
 
-## Hybrid Mode [TODO]
+## Hybrid Mode
 
-Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is the whole idea behind xenia-based web components).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way.  It appears to provide "primitive" functionality missing from the platform.  But providing an easy way to move the JSON serializable data to a separate file seems worthwhile.
+Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is the whole idea behind xenia-based web components).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way -- providing some generic functionality captured by JSON settings.  
 
-For that purpose if CE (or XE) encounters a function rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.
+But providing an easy way to move the remaining JSON serializable data to a separate file, which the browser can more easily digest, seems worthwhile.
+
+For that purpose if CE (or XE) encounters a *function* rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.
+
+So here we present the timer component, take 2.  It is now split into two files:
+
+The EcmaScript file:
+
+```TypeScript
+import {TimeTickerProps, TimeTickerActions} from './types';
+import {XE} from 'xtal-element/src/XE.js';
+
+export class TimeTicker extends HTMLElement implements TimeTickerActions{
+
+    async start({duration, ticks, wait}: this) {
+        const controller = new AbortController();
+        const {animationInterval} = await import('./animationInterval.js');
+        animationInterval(duration, controller.signal, time => {
+            this.ticks++;
+            this.wait
+        });
+        return {
+            controller,
+            ticks: wait ? ticks : ticks + 1,
+        };
+    }
+
+    stop({controller}: this) {
+        controller.abort();
+        return {
+            controller: undefined,
+        };
+    }
+
+    rotateItems({items}: this){
+        return {
+            repeat: items.length,
+        };
+    }
+
+    onTicks({idx, repeat, loop, items}: this){
+        if(idx >= repeat - 1){
+            if(loop){
+                idx = -1;
+            }else{
+                return {
+                    disabled: true,
+                };
+            }
+        }
+        idx++;
+        return {
+            idx,
+            value: {
+                idx,
+                item: (items && items.length > idx) ? items[idx] : undefined,
+            }
+        };
+    }
+}
+
+export interface TimeTicker extends TimeTickerProps{}
+
+const xe = new XE<TimeTickerProps, TimeTickerActions>({
+    config: () => import('./tt-config.json', {assert: {type: 'json'}}),
+    superclass: TimeTicker,
+});
+```
+
+and the MJS/MTS file used to generate the JSON file tt-config.json:
+
+```TypeScript
+import {DefineArgs} from 'xtal-element/src/types';
+import {TimeTickerProps, TimeTickerActions} from './types';
+
+const da: DefineArgs<TimeTickerProps, TimeTickerActions> = {
+    config:{
+        tagName: 'time-ticker',
+        propDefaults: {
+            ticks: 0,
+            idx: -1,
+            duration: 1_000,
+            repeat: Infinity,
+            enabled: true,
+            disabled: false,
+            loop: false,
+            wait: false,
+        },
+        propInfo:{
+            enabled:{
+                dry: false,
+                notify: {
+                    toggleTo: 'disabled',
+                }
+            },
+            repeat: {
+                dry: false,
+            },
+            value: {
+                notify: {
+                    dispatch: true,
+                },
+                parse: false,
+            },
+        },
+        style: {
+            display: 'none',
+        },
+        actions: {
+            stop:{
+                ifAllOf: ['disabled', 'controller']
+            },
+            rotateItems:'items',
+            start:{
+                ifAllOf: ['duration'],
+                ifNoneOf: ['disabled'],
+            },
+            onTicks: {
+                ifAllOf: ['ticks'],
+                ifKeyIn: ['repeat', 'loop'],
+                ifNoneOf: ['disabled'],
+            }
+        }
+    },
+};
+
+console.log(JSON.stringify(da.config));
+```
