@@ -457,7 +457,7 @@ In this case, it provides considerably more nuance when it comes to the "FROOP" 
 
 As for the "FROOP Action Orchestrator"™, XE supports more logical checks.  CE only supports "ifAllOf" and "ifKeyIn", whereas XE also supports "ifNoneOf", "ifEquals", "ifOneOf".
 
-## XENON [TODO]
+## XENON
 
 So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can import the JSON file, and automatically register the JSON file as a web component, via the XENON api:
 
@@ -465,7 +465,7 @@ So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can 
 import {XENON} from 'xtal-element/src/XENON.js';
 ...
 
-XENON.define(x => await import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
+XENON.define(x => import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
 ```
 
 **NB**:  JSON imports abide by import maps!
