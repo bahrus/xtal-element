@@ -49,7 +49,6 @@
     "./lib/propUp.js": "./lib/propUp.js",
     "./lib/Rx.js": "./lib/Rx.js",
     "./lib/RxSuppl.js": "./lib/RxSuppl.js",
-    "./lib/structuralClone.js": "./lib/structuralClone.js",
     "./lib/substrBefore.js": "./lib/substrBefore.js",
     "./lib/with-path.js": "./lib/with-path.js",
     "./lib/XtalPattern.js": "./lib/XtalPattern.js",
