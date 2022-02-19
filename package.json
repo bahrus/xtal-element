@@ -47,15 +47,12 @@
     "./lib/passAttrToProp.js": "./lib/passAttrToProp.js",
     "./lib/pinTheDOMToKeys.js": "./lib/pinTheDOMToKeys.js",
     "./lib/propUp.js": "./lib/propUp.js",
-    "./lib/Rx.js": "./lib/Rx.js",
-    "./lib/RxSuppl.js": "./lib/RxSuppl.js",
     "./lib/substrBefore.js": "./lib/substrBefore.js",
     "./lib/with-path.js": "./lib/with-path.js",
-    "./lib/XtalPattern.js": "./lib/XtalPattern.js",
     "./lib/zzz.js": "./lib/zzz.js"
   },
   "dependencies": {
-    "trans-render": "0.0.484"
+    "trans-render": "0.0.485"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
