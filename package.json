@@ -31,8 +31,6 @@
     "./lib/debounce.js": "./lib/debounce.js",
     "./lib/define.js": "./lib/define.js",
     "./lib/destruct.js": "./lib/destruct.js",
-    "./lib/DOMKeyPE.js": "./lib/DOMKeyPE.js",
-    "./lib/DOMKeyPEA.js": "./lib/DOMKeyPEA.js",
     "./lib/getDestructArgs.js": "./lib/getDestructArgs.js",
     "./lib/getProcessor.js": "./lib/getProcessor.js",
     "./lib/getSlicedPropDefs.js": "./lib/getSlicedPropDefs.js",
