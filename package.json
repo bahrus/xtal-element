@@ -46,11 +46,10 @@
     "./lib/pinTheDOMToKeys.js": "./lib/pinTheDOMToKeys.js",
     "./lib/propUp.js": "./lib/propUp.js",
     "./lib/substrBefore.js": "./lib/substrBefore.js",
-    "./lib/with-path.js": "./lib/with-path.js",
-    "./lib/zzz.js": "./lib/zzz.js"
+    "./lib/with-path.js": "./lib/with-path.js"
   },
   "dependencies": {
-    "trans-render": "0.0.486"
+    "trans-render": "0.0.489"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
