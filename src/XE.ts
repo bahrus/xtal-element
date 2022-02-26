@@ -6,6 +6,8 @@ import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChan
 import {XAction, PropInfoExt} from './types.js';
 export {PropInfoExt} from './types.js';
 
+declare function structuredClone(inp: any): any;
+
 export class XE<
     MCProps = any, MCActions = MCProps, 
     TPropInfo extends PropInfoExt<MCProps> = PropInfoExt<MCProps>, 
@@ -102,7 +104,7 @@ export class XE<
         const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
         const {notify} = prop;
         if(notify !== undefined && (m === '+a' || m === '+qr')){
-            const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect} = notify;
+            const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo} = notify;
             const lispName = toLisp(key);
             if(dispatch){
                 src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -122,6 +124,9 @@ export class XE<
                     (<any>src)[echoTo] = nv;
                 }
                 
+            }
+            if(cloneTo !== undefined){
+                (<any>src)[cloneTo] = structuredClone(nv);
             }
             if(toggleTo !== undefined){
                 if(toggleDelay){
@@ -169,6 +174,10 @@ export class XE<
     }
 
     override getProps(self: this,  expr: Action<any>, s: Set<string> = new Set<string>()): Set<string>{
+        if(typeof(expr) === 'string'){
+            s.add(expr);
+            return s;
+        }
         for(const logicalOp in expr){
             const rhs: any = (<any>expr)[logicalOp];
             if(!Array.isArray(rhs)) continue;

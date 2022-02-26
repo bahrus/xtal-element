@@ -30,6 +30,7 @@ export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
      notify?: {
           dispatch?: boolean,
+          cloneTo?: keyof MCProps,
           echoTo?: keyof MCProps,
           echoDelay?: number | (keyof MCProps),
           toggleTo?: keyof MCProps,

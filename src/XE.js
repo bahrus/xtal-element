@@ -97,7 +97,7 @@ export class XE extends CE {
         const { prop, key, ov, nv } = pci;
         const { notify } = prop;
         if (notify !== undefined && (m === '+a' || m === '+qr')) {
-            const { dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect } = notify;
+            const { dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo } = notify;
             const lispName = toLisp(key);
             if (dispatch) {
                 src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -117,6 +117,9 @@ export class XE extends CE {
                 else {
                     src[echoTo] = nv;
                 }
+            }
+            if (cloneTo !== undefined) {
+                src[cloneTo] = structuredClone(nv);
             }
             if (toggleTo !== undefined) {
                 if (toggleDelay) {
@@ -164,6 +167,10 @@ export class XE extends CE {
         return super.doPA(self, src, pci, m);
     }
     getProps(self, expr, s = new Set()) {
+        if (typeof (expr) === 'string') {
+            s.add(expr);
+            return s;
+        }
         for (const logicalOp in expr) {
             const rhs = expr[logicalOp];
             if (!Array.isArray(rhs))
