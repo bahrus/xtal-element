@@ -118,7 +118,7 @@ export class XE extends CE {
                     src[echoTo] = nv;
                 }
             }
-            if (cloneTo !== undefined) {
+            if (nv !== undefined && cloneTo !== undefined) {
                 src[cloneTo] = structuredClone(nv);
             }
             if (toggleTo !== undefined) {

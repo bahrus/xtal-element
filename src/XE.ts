@@ -125,7 +125,7 @@ export class XE<
                 }
                 
             }
-            if(cloneTo !== undefined){
+            if(nv !== undefined && cloneTo !== undefined){
                 (<any>src)[cloneTo] = structuredClone(nv);
             }
             if(toggleTo !== undefined){
