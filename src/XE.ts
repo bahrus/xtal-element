@@ -50,6 +50,7 @@ export class XE<
         switch(op){
             case 'nor':
             case 'and':
+            case 'eq':
                 answer = true;
                 break;
             case 'na':

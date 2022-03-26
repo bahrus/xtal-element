@@ -39,6 +39,7 @@ export class XE extends CE {
         switch (op) {
             case 'nor':
             case 'and':
+            case 'eq':
                 answer = true;
                 break;
             case 'na':
