@@ -27,6 +27,7 @@ const xe = new XE<TestEqualsProps, TestEqualsActions>({
         actions:{
             doSynch: {
                 ifEquals: ['updateCount', 'updateCountEcho'],
+                ifAllOf: ['updateCount', 'updateCountEcho'],
             }
         }
     },

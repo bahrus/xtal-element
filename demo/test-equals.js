@@ -22,6 +22,7 @@ const xe = new XE({
         actions: {
             doSynch: {
                 ifEquals: ['updateCount', 'updateCountEcho'],
+                ifAllOf: ['updateCount', 'updateCountEcho'],
             }
         }
     },
