@@ -49,11 +49,11 @@
     "./lib/with-path.js": "./lib/with-path.js"
   },
   "dependencies": {
-    "trans-render": "0.0.518"
+    "trans-render": "0.0.524"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
-    "xtal-test": "0.0.55"
+    "xtal-test": "0.0.56"
   },
   "repository": {
     "type": "git",
