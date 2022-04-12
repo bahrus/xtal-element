@@ -1,4 +1,6 @@
 
+[![Actions Status](https://github.com/bahrus/xtal-element/workflows/CI/badge.svg)](https://github.com/bahrus/xtal-element/actions?query=workflow%3ACI)
+
 <details>
     <summary>Preramble</summary>
 
