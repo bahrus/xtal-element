@@ -1,5 +1,5 @@
 
-[![Actions Status](https://github.com/bahrus/xtal-element/workflows/CI/badge.svg)](https://github.com/bahrus/xtal-element/actions?query=workflow%3ACI)
+[![Playwright Tests](https://github.com/bahrus/xtal-element/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/xtal-element/actions/workflows/CI.yml)
 
 <details>
     <summary>Preramble</summary>
