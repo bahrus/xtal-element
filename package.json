@@ -5,7 +5,7 @@
   "main": "./src/XE.js",
   "module": "./src/XE.js",
   "scripts": {
-    "test": "node test/test-all.js",
+    "test": "playwright test",
     "serve": "node node_modules/may-it-serve/serve.js",
     "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open",
     "package-check": "package-check",
@@ -49,9 +49,10 @@
     "./lib/with-path.js": "./lib/with-path.js"
   },
   "dependencies": {
-    "trans-render": "0.0.535"
+    "trans-render": "0.0.536"
   },
   "devDependencies": {
+    "@playwright/test": "1.21.1",
     "@skypack/package-check": "0.2.2",
     "may-it-serve": "0.0.0",
     "xtal-editor": "0.0.168",
