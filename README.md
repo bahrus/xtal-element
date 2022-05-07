@@ -257,7 +257,7 @@ Additional files that are optional, but definitely helpful / expected for an xta
 1.  A TypeScript types file.
 2.  A custom element manifest file (auto-generated.)
 
-A potentially fourth branch of development involves JavaScript that influences the HTML markup of the declarative HTML web component -- either in a HTMLRewriter (supported by Cloudflare), and or in a service worker, which will hopefully have a similar api in the future, [w3c willing](https://discourse.wicg.io/t/proposal-support-cloudflares-htmlrewriter-api-in-workers/5721). 
+A potentially fourth branch of development involves JavaScript that influences the HTML markup of the declarative HTML web component -- either in an HTMLRewriter (supported by Cloudflare), and/or in a service worker, which, [w3c willing](https://discourse.wicg.io/t/proposal-support-cloudflares-htmlrewriter-api-in-workers/5721), could have a similar api, which would make [life good](https://dev.to/thepassle/service-worker-side-rendering-swsr-cb1). 
 
 </details>
 
