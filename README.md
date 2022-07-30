@@ -94,7 +94,14 @@ Only scenarios 3, 4 (first instance) and 5 do not require a first pass update re
 
 Scenario 7 makes things complicated, as it becomes difficult to know *when* to do the first update render.  The safe thing would be rerender each time pieces of the state are passed in.  But that isn't optimal.  This is the use-case that is central to the defer-hydration proposal (I think).
 
-xtal-element creates a clear division between main template cloning,  initial rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
+xtal-element makes a clear division between main template cloning,  initial rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
+
+<details>
+  <summary>Actually</summary>
+  Originally, there was a placeholder for "initTransform" vs "updateTransforms".  
+  
+  But this has been switched to an array of transforms, as the transform logic is pretty good at skipping over transforms now based on property settings.  So the developer should think about this, and typically group all event handling logic in one transform. It is tempting to switch back, and remain on the fence about this.  But anyway, for the discussion below, assume the developer has planned this out properly, between the Init Render and the Update Renders.
+</details>>
 
 <table>
     <caption>Indications</caption>
@@ -486,9 +493,9 @@ When combined with trans-render plugins and [be-*](https://github.com/bahrus?tab
 
 ## Hybrid Mode
 
-Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is the whole idea behind xenia-based web components).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way -- providing some generic functionality captured by JSON settings.  
+Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is a benefit of any code reuse).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way -- providing some generic functionality captured by JSON settings.  
 
-But providing an easy way to move the remaining JSON serializable data to a separate file, which the browser can more easily digest, seems worthwhile.
+But providing an easy way to move the remaining JSON serializable data to a separate file, which the browser can more easily digest, and safely replace with alternative settings, seems worthwhile.
 
 For that purpose if CE (or XE) encounters a *function* rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.
 
