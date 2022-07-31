@@ -45,11 +45,12 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 <details>
     <summary>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.  Looks aren't everything</summary>
 
-The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these three scenarios:
+The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these four scenarios and counting:
 
 1.  Providing a timer component or some other non visual functionality.  "Component as a service".
 2.  Providing a wrapper around a third-party client-side library that does its own rendering.  Like a charting library. 
 3.  Providing a wrapper around server-rendered content.
+4.  Providing a viewModel from the raw data.
 
 </details>
 
@@ -514,7 +515,6 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
         const {animationInterval} = await import('./animationInterval.js');
         animationInterval(duration, controller.signal, time => {
             this.ticks++;
-            this.wait
         });
         return {
             controller,
