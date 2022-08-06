@@ -621,3 +621,75 @@ console.log(JSON.stringify(da.config));
 ```
 
 **NB:**  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet.  However, [be-loaded/importJSON.js(https://github.com/bahrus/be-loaded/blob/baseline/importJSON.ts) may provide an interim solution.
+
+# Part III  Documentation by Example
+
+In the following sections, we point to working examples of web components built with xtal-element, to demonstrate features not yet (fully) documented
+
+## Example I  xtal-fig
+
+Take a look at [xtal-fig-diamond.ts](https://github.com/bahrus/xtal-fig/blob/baseline/xtal-fig-diamond.ts)
+
+What this demonstrates:
+
+1.  Ability to work with SVG markup
+2.  Ability to pin weak ref references from the host to the host:
+
+```JavaScript
+config:{
+    tagName: 'xtal-fig-diamond',
+    propDefaults:{
+        width:800, height:300, innerWidth:200, strokeWidth:5, innerHeight:100, innerX:300, innerY:100,
+        hydratingTransform: {
+            svgElement: true,
+            pathElements: true,
+            diamondBorderParts: true,
+            innerPart: true,
+        }
+    },
+    ...
+}
+```
+
+Ability to reactively call declarative [out-of-class] arrow properties when the dependencies change, that don't get applied to the target host element (which is the default), but rather to the referenced property (via the target setting):
+
+```JavaScript
+const setOwnDimensions = ({width, height}: X) => ({
+    style: {width:`${width}px`, height:`${height}px`}
+});
+const setSVGDimensions = ({width, height}: X) => [,,{width, height}];
+const setPaths = ({width, strokeWidth, height}: X) => [,, {d: `M ${width / 2},${strokeWidth} L ${strokeWidth},${height / 2} L ${width / 2},${height-strokeWidth} L ${width - strokeWidth},${height / 2} L ${width / 2},${strokeWidth} z`,}];
+const setDiamondBorder = ({strokeWidth}: X) => ({
+    style: {strokeWidth: strokeWidth.toString()}
+});
+const setInnerDimensions = ({innerHeight, innerWidth, innerX, innerY}: X) => [,,{width: innerWidth, height: innerHeight, x: innerX, y: innerY}];
+...
+
+actions:{
+    ...,
+    setOwnDimensions:{
+        ifKeyIn: ['width', 'height']
+    },
+    setSVGDimensions:{
+        ifKeyIn: ['width', 'height'],
+        ifAllOf: ['svgElement'],
+        target: 'svgElement'
+    },
+    setPaths:{
+        ifKeyIn: ['width', 'strokeWidth', 'height'],
+        ifAllOf: ['pathElements'],
+        target: 'pathElements'
+    },
+    setDiamondBorder:{
+        ifKeyIn: ['strokeWidth'],
+        ifAllOf: ['diamondBorderParts'],
+        target: 'diamondBorderParts'
+    },
+    setInnerDimensions:{
+        ifKeyIn: ['innerHeight', 'innerWidth', 'innerX', 'innerY'],
+        ifAllOf: ['innerPart'],
+        target: 'innerPart'
+    }
+}
+
+```
