@@ -226,6 +226,7 @@ export class XE<
             }
             if(Array.isArray(newTarget)){
                 for(const subTarget of newTarget){
+                    const subTargetDeref = subTarget.deref();
                     self.apply(host, subTarget, returnVal, proxy);
                 }
             }else{
