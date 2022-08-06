@@ -219,8 +219,11 @@ export class XE extends CE {
             }
             if (Array.isArray(newTarget)) {
                 for (const subTarget of newTarget) {
-                    const subTargetDeref = subTarget.deref();
-                    self.apply(host, subTarget, returnVal, proxy);
+                    let subTargetRef = subTarget;
+                    if (subTargetRef.deref) {
+                        subTargetRef = subTargetRef.deref();
+                    }
+                    self.apply(host, subTargetRef, returnVal, proxy);
                 }
             }
             else {
