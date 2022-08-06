@@ -72,7 +72,7 @@ The functionality those mixins provide can be broken down into the following ste
 
 1.  If needed, create ShadowDOM.
 2.  If needed, clone the main template.
-3.  If needed, attach event handlers to the cloned template.  This is done via an optional user-defined "initTransform".
+3.  If needed, attach event handlers to the cloned template.  This is done via an optional user-defined "hydratingTransform".
 4.  If needed, before appending the cloned template into the live ShadowDOM tree (or directly in the element if forgoing shadow DOM), perform the first "updateTransform" where the props are passed in.
 5.  If needed, append the cloned template into the shadowDOM or element itself.
 6.  Reactively (re)perform the updateTransform as props change.
@@ -95,14 +95,7 @@ Only scenarios 3, 4 (first instance) and 5 do not require a first pass update re
 
 Scenario 7 makes things complicated, as it becomes difficult to know *when* to do the first update render.  The safe thing would be rerender each time pieces of the state are passed in.  But that isn't optimal.  This is the use-case that is central to the defer-hydration proposal (I think).
 
-xtal-element makes a clear division between main template cloning,  initial rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
-
-<details>
-  <summary>Actually</summary>
-  Originally, there was a placeholder for "initTransform" vs "updateTransforms".  
-  
-  But this has been switched to an array of transforms, as the transform logic is pretty good at skipping over transforms now based on property settings.  So the developer should think about this, and typically group all event handling logic in one transform. It is tempting to switch back, and remain on the fence about this.  But anyway, for the discussion below, assume the developer has planned this out properly, between the Init Render and the Update Renders.
-</details>>
+xtal-element makes a clear division between main template cloning,  hydrating rendering, which involves adding event handlers, pulling in templates, vs update handling, reacting to prop changes.
 
 <table>
     <caption>Indications</caption>
