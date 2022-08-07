@@ -5,7 +5,7 @@ import {PropChangeInfo} from 'trans-render/lib/types';
 export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropChangeInfo, notify: INotify){
     const {toLisp} = self;
     const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
-    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo} = notify;
+    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo} = notify;
     const lispName = toLisp(key);
     if(dispatch){
         src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -39,10 +39,26 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
             (<any>src)[toggleTo] = !nv;
         }
     }
+    if(parseTo !== undefined){
+        const {as, key} = parseTo;
+        let nnv = nv;
+        switch(as){
+            case 'date':
+                nnv = new Date(nv);
+                break;
+            case 'number':
+                nnv = Number(nv);
+                break;
+            case 'obj':
+                nnv = JSON.parse(nv);
+        }
+        (<any>src)[key] = nnv;
+    }
     if(localeStringTo !== undefined){
         const {key, locale, localeOptions} = localeStringTo;
-        (<any>src)[key] = (<any>src).toLocale(locale, localeOptions);
+        (<any>src)[key] = nv.toLocale(locale, localeOptions);
     }
+    
     if(reflect !== undefined){
         if(reflect.asAttr){
             (<any>src).inReflectMode = true;

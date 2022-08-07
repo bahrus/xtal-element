@@ -33,6 +33,11 @@ export interface IFormat<MCProps = any>{
      localeOptions?: any,
 }
 
+export interface IParse<MCProps = any>{
+     key: keyof MCProps,
+     as: 'number' | 'date' | 'obj'
+}
+
 export interface INotify<MCProps = any>{
      dispatch?: boolean,
      cloneTo?: keyof MCProps,
@@ -47,7 +52,9 @@ export interface INotify<MCProps = any>{
           asAttr: boolean,
      }
 
-     localeStringTo?: IFormat,
+     localeStringTo?: IFormat<MCProps>,
+
+     parseTo?: IParse<MCProps>,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
