@@ -27,7 +27,7 @@ export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends X
 
 export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
 
-export type IFormat<MCProps = any>{
+export interface IFormat<MCProps = any>{
      key: keyof MCProps,
      locale?: string,
      localeOptions?: any,

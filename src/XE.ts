@@ -102,7 +102,7 @@ export class XE<
         
         const {prop}: {prop: PropInfoExt<MCProps>} = pci;
         const {notify} = prop;
-        if((notify !== undefined && (m === '+a' || m === '+qr')){
+        if(notify !== undefined && (m === '+a' || m === '+qr')){
             const {doNotify} = await import('./doNotify.js');
             return await doNotify<MCProps>(self, src, pci, notify);             
         }

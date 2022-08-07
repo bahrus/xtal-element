@@ -95,7 +95,7 @@ export class XE extends CE {
     async doPA(self, src, pci, m) {
         const { prop } = pci;
         const { notify } = prop;
-        if ((notify !== undefined && (m === '+a' || m === '+qr'))) {
+        if (notify !== undefined && (m === '+a' || m === '+qr')) {
             const { doNotify } = await import('./doNotify.js');
             return await doNotify(self, src, pci, notify);
         }
