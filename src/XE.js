@@ -101,6 +101,20 @@ export class XE extends CE {
         }
         return await super.doPA(self, src, pci, m);
     }
+    async api(args, props) {
+        const propsWithNotifications = [];
+        for (const key in props) {
+            const propInfoExt = props[key];
+            if (propInfoExt.notify !== undefined) {
+                propsWithNotifications.push([key, propInfoExt]);
+            }
+        }
+        if (propsWithNotifications.length === 0)
+            return;
+        const { getPropInfos } = await import('./doNotify.js');
+        getPropInfos(props, propsWithNotifications);
+    }
+    //better name:  getPropsFromActions
     getProps(self, expr, s = new Set()) {
         if (typeof (expr) === 'string') {
             s.add(expr);

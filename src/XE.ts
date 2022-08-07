@@ -3,7 +3,7 @@ export {PropInfo, TemplMgmtProps} from 'trans-render/lib/types';
 import {applyP} from 'trans-render/lib/applyP.js';
 import {applyPEA} from 'trans-render/lib/applyPEA.js';
 import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';
-import {XAction, PropInfoExt} from './types.js';
+import {XAction, PropInfoExt, DefineArgs} from './types.js';
 export {PropInfoExt} from './types.js';
 
 declare function structuredClone(inp: any): any;
@@ -110,6 +110,20 @@ export class XE<
         return await super.doPA(self, src, pci, m);
     }
 
+    override async api(args: DefineArgs, props: {[key: string]: PropInfoExt}){
+        const propsWithNotifications: [string, PropInfoExt][] = [];
+        for(const key in props){
+            const propInfoExt = props[key];
+            if(propInfoExt.notify !== undefined){
+                propsWithNotifications.push([key, propInfoExt]);
+            }
+        }
+        if(propsWithNotifications.length === 0) return;
+        const {getPropInfos} = await import('./doNotify.js');
+        getPropInfos(props, propsWithNotifications);
+    }
+
+    //better name:  getPropsFromActions
     override getProps(self: this,  expr: Action<any>, s: Set<string> = new Set<string>()): Set<string>{
         if(typeof(expr) === 'string'){
             s.add(expr);

@@ -72,3 +72,25 @@ export async function doNotify(self, src, pci, notify) {
     }
     return true;
 }
+export function getPropInfos(props, propsWithNotifications) {
+    for (const keyAndpropInfoExt of propsWithNotifications) {
+        const key = keyAndpropInfoExt[0];
+        //if(props[key] !== undefined) continue;  shouldn't happen
+        const prop = props[key];
+        const propInfoExt = keyAndpropInfoExt[1];
+        const { notify } = propInfoExt;
+        const keys = ['cloneTo', 'echoTo', 'toggleTo', 'localeStringTo'];
+        for (const k of keys) {
+            makeProp(prop, notify[k], k === 'localeStringTo', props);
+        }
+    }
+}
+function makeProp(from, name, makeString = false, props) {
+    if (name === undefined)
+        return;
+    const newProp = {
+        type: makeString ? 'String' : from.type,
+        parse: false,
+    };
+    props[name] = newProp;
+}

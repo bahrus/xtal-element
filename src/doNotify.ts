@@ -74,3 +74,26 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
     }
     return true;
 }
+
+export function getPropInfos(props: {[key: string]: PropInfoExt}, propsWithNotifications: [string, PropInfoExt][]){
+    for(const keyAndpropInfoExt of propsWithNotifications){
+        const key = keyAndpropInfoExt[0];
+        //if(props[key] !== undefined) continue;  shouldn't happen
+        const prop = props[key];
+        const propInfoExt = keyAndpropInfoExt[1];
+        const {notify} = propInfoExt;
+        const keys: (keyof INotify & string)[] = ['cloneTo', 'echoTo', 'toggleTo', 'localeStringTo']
+        for(const k of keys){
+            makeProp(prop, (notify as any)[k], k === 'localeStringTo', props);
+        }
+    }
+}
+
+function makeProp(from: PropInfoExt, name: string | undefined, makeString = false, props: {[key: string]: PropInfoExt}){
+    if(name === undefined) return;
+    const newProp = {
+        type: makeString ? 'String' : from.type,
+        parse: false,
+    } as PropInfoExt;
+    props[name] = newProp;
+}
