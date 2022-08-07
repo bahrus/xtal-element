@@ -282,6 +282,8 @@ An example of this is the [xtal-editor](https://github.com/bahrus/xtal-editor) t
 
 So xtal-element provides support for both extremes -- it makes it as simple as possible to define computed properties, and doesn't require any rendering footprint if that's the type of component being built.  That's suitable for the non visual view model component.  And it provides support for defining the largely visual side of things, with JSON and futuristic 22nd century HTML when the browser vendors get around to it.  But it does push us quite a bit to choose one or the other for each component, depending on what we are building.
 
+But when a component does land in-between xtal-element does generally fall on the disciplined, constrained side.  If this doesn't fit your style, looking forward to connecting to your components, following whatever style appeals to you.  Happy shopping! 
+
 </details>
 
 # Part I -- Non Visual Components
