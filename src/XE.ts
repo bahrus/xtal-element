@@ -29,7 +29,6 @@ export class XE<
             }
             if(!foundMatch) continue;
 
-            
             if(!Array.isArray(rhs)) throw 'NI'; //Not Implemented
             const subAnswer = self.pqs(self, rhs, src, ctx);
             switch(op){

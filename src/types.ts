@@ -27,6 +27,12 @@ export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends X
 
 export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
 
+export type IFormat<MCProps = any>{
+     key: keyof MCProps,
+     locale?: string,
+     localeOptions?: any,
+}
+
 export interface INotify<MCProps = any>{
      dispatch?: boolean,
      cloneTo?: keyof MCProps,
@@ -39,7 +45,9 @@ export interface INotify<MCProps = any>{
      */
      reflect?: {
           asAttr: boolean,
-     } 
+     }
+
+     localeStringTo?: IFormat,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
