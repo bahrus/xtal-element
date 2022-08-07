@@ -276,7 +276,7 @@ However, the developer is pushed to adopt the far more disciplined declarative s
 
 So in the extreme, xtal-element likes visual components to provide a rather simple api, passing in simple properties.  "Body" elements.  The logic behind the outer visual component can be thin to non existent.  Just lots of declarative markup, with some simple transforms as needed.
 
-Inside the component will be a non-visual "brain" web component -- that houses the view model, as well as logic to update the view model as things change inside.  Other components or declarative be-decorated behaviors / decorates broadcast messages from the "brain" to all the peripheral display components.
+Inside the component will be a non-visual "brain" web component -- that houses the view model, as well as logic to update the view model as things change inside.  Other components or declarative be-decorated behaviors / decorators broadcast messages from the "brain" to all the peripheral display components.
 
 An example of this is the [xtal-editor](https://github.com/bahrus/xtal-editor) that allows editing any (large) JavaScript object.  The component is (or can be, w3c willing) [pure HTML](https://github.com/bahrus/xtal-editor/blob/baseline/xtal-editor.html)!  The brains for this component is the [xtal-tree](https://github.com/bahrus/xtal-tree) component, which turns the nested object into a flat array that can be quickly displayed / edited in a virtual list.
 
