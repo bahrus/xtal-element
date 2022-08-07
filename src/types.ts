@@ -27,23 +27,24 @@ export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends X
 
 export type OpOptions = 'and' | 'or' | 'nand' | 'nor' | 'eq';
 
-export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
-     notify?: {
-          dispatch?: boolean,
-          cloneTo?: keyof MCProps,
-          echoTo?: keyof MCProps,
-          echoDelay?: number | (keyof MCProps),
-          toggleTo?: keyof MCProps,
-          toggleDelay?: number | (keyof MCProps),
-          /**
-          * Reflect property changes to data-*
-          */
-          reflect?: {
-               asAttr: boolean,
-          } 
-      },
-     
+export interface INotify<MCProps = any>{
+     dispatch?: boolean,
+     cloneTo?: keyof MCProps,
+     echoTo?: keyof MCProps,
+     echoDelay?: number | (keyof MCProps),
+     toggleTo?: keyof MCProps,
+     toggleDelay?: number | (keyof MCProps),
+     /**
+     * Reflect property changes to data-*
+     */
+     reflect?: {
+          asAttr: boolean,
+     } 
+}
 
+export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
+
+     notify?: INotify<MCProps>;
 
      /**
      * Console.log when property changes
