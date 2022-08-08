@@ -268,9 +268,9 @@ Where does xtal-element stand on this most explosive of issues?
 
 xtal-element's approach is a bit of a mix, but ultimately provides more tender loving care to developers who prefer to follow the disciplined / constrained side.  First of all, like css, the transform logic is separate from the markup (except it also supports adding declarative element behaviors that can be used both during template instantiation and/or on the live DOM tree).  It is built on trans-rendering.
 
-Now, the nice thing, perhaps about trans-rendering, is that at its base, it [imposes no constraints](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-json-serializable-rhs-expressions-with-libdtrjs) on the transform syntax.  JavaScript away!  
+Now, the nice thing, perhaps, about trans-rendering, is that at its base, it [imposes no constraints](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-json-serializable-rhs-expressions-with-libdtrjs) on the transform syntax.  JavaScript away!  
 
-If the developer chooses to forgo declarative DTR, in favor of hands-on TR, the foot print of the library does become smaller.  So there's that.  But the other thing is the developer will need to define *when* to perform the transform. There is an easy way the developer to can do that [TODO:  document how].  With great power comes great resonsibility.
+If the developer chooses to forgo declarative DTR, in favor of hands-on TR, the foot print of the library does become smaller.  So there's that.  But the other thing is the developer will need to define *when* to perform the transform. There is an easy way the developer to can do that [TODO:  document how].  With great power comes great responsibility.
 
 If the developer sticks with pure declarative DTR, yes, the library enlarges, but the benefits are:
 
