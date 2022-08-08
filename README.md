@@ -409,6 +409,7 @@ Note that "XE" stands for "xtal-element".
 3.  Approximately 50% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size in half by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
 4.  The ability to filter when methods are called using the "ifAllOf", "ifKeyIn", "ifNoneOf" means our actual code can avoid much of the clutter of checking if properties are undefined.
 5.  The class where the logic goes is library neutral.
+6.  Since all the non-library-neutral definition is ultimately represented as JSON / HTML, it is as easy as pie to convert the "proprietary" stuff to some other proprietary stuff.
 
 # Part II -- Counting
 
