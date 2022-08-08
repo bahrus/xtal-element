@@ -92,14 +92,16 @@ export class XE extends CE {
                 throw 'NI'; //Not Implemented
         }
     }
-    async doPA(self, src, pci, m) {
+    doPA(self, src, pci, m) {
         const { prop } = pci;
         const { notify } = prop;
         if (notify !== undefined && (m === '+a' || m === '+qr')) {
-            const { doNotify } = await import('./doNotify.js');
-            return await doNotify(self, src, pci, notify);
+            (async () => {
+                const { doNotify } = await import('./doNotify.js');
+                return await doNotify(self, src, pci, notify);
+            })();
         }
-        return await super.doPA(self, src, pci, m);
+        return super.doPA(self, src, pci, m);
     }
     async api(args, props) {
         const propsWithNotifications = [];

@@ -98,17 +98,21 @@ export class XE<
         }
     }
 
-    override async doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): Promise<boolean>{ 
+    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): Promise<boolean>{ 
         
         const {prop}: {prop: PropInfoExt<MCProps>} = pci;
         const {notify} = prop;
         if(notify !== undefined && (m === '+a' || m === '+qr')){
-            const {doNotify} = await import('./doNotify.js');
-            return await doNotify<MCProps>(self, src, pci, notify);             
+            (async () => {
+                const {doNotify} = await import('./doNotify.js');
+                return await doNotify<MCProps>(self, src, pci, notify);
+            })(); 
+                         
         }
 
-        return await super.doPA(self, src, pci, m);
+        return super.doPA(self, src, pci, m);
     }
+
 
     override async api(args: DefineArgs, props: {[key: string]: PropInfoExt}){
         const propsWithNotifications: [string, PropInfoExt][] = [];
