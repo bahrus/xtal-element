@@ -5,7 +5,7 @@ import {PropChangeInfo} from 'trans-render/lib/types';
 export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropChangeInfo, notify: INotify){
     const {toLisp} = self;
     const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
-    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo} = notify;
+    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo, incTo} = notify;
     const lispName = toLisp(key);
     if(dispatch){
         src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -25,6 +25,13 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
             (<any>src)[echoTo] = nv;
         }
         
+    }
+    if(incTo !== undefined){
+        const {by, key} = incTo;
+        const byVal: number = typeof(by) === undefined ? 1 :
+            typeof(by) === 'number' ? by :
+            (<any>self)[by];
+        (<any>src)[key] += byVal;
     }
     if(nv !== undefined && cloneTo !== undefined){
         (<any>src)[cloneTo] = structuredClone(nv);
