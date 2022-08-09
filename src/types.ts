@@ -43,6 +43,10 @@ export interface IInc<MCProps = any>{
      by: number | (keyof MCProps),
 }
 
+export interface IMeasure<MCProps = any>{
+     key: keyof MCProps,
+}
+
 export interface INotify<MCProps = any>{
      dispatch?: boolean,
      cloneTo?: keyof MCProps,
@@ -61,7 +65,8 @@ export interface INotify<MCProps = any>{
 
      parseTo?: IParse<MCProps>,
 
-     incTo?: IInc<MCProps>
+     incTo?: IInc<MCProps>,
+     measureTo?: IMeasure<MCProps>,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
