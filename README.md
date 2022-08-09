@@ -47,10 +47,10 @@ So xtal-element encourages use of classes in a way that might avoid some of the 
 
 The core functionality of xtal-element is not centered around rendering content.  There are numerous scenarios where we want to build a component and not impose any rendering library performance penalty.  They generally fall into one of these four scenarios and counting:
 
-1.  Providing a timer component or some other non visual functionality.  "Component as a service".
+1.  "Web Components as a Service":  Providing a timer component or some other non visual functionality.
 2.  Providing a wrapper around a third-party client-side library that does its own rendering.  Like a charting library. 
 3.  Providing a wrapper around server-rendered content.
-4.  Providing a viewModel from the raw data.  Kind of the same as 1, but added for emphasis, because people remember best what comes first and last :-).
+4.  "Web Components as an Organism".  Providing a viewModel from raw data that serves as a non-visual "brain" component that handles all the difficult JavaScript logic, and that is all.  Other non-visual components transmit updates from the brain to peripheral visual components, and dispatch updates back up to the "brain" component.  All contained within a large single web component (the body).  Kind of the same as 1, but with a little more context.
 
 </details>
 

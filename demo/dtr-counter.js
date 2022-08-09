@@ -12,6 +12,11 @@ const ce = new CE({
                 buttonElements: [{}, { click: { prop: 'count', plusEq: true, vft: 'dataset.d', parseValAs: 'int' } }]
             },
             transform: { countParts: 'count' },
+            unsafeTransform: {
+                countParts: ({ target }) => {
+                    console.log(target);
+                }
+            },
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
             styles: String.raw `
 <style>
@@ -36,6 +41,7 @@ const ce = new CE({
 </style>
 `
         },
+        propInfo: 
     },
     mixins: [TemplMgmt],
 });
