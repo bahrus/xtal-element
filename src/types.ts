@@ -66,7 +66,7 @@ export interface INotify<MCProps = any>{
      parseTo?: IParse<MCProps>,
 
      incTo?: IInc<MCProps>,
-     measureTo?: IMeasure<MCProps>,
+     lengthTo?: string,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
