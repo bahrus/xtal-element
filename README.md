@@ -1,4 +1,6 @@
 
+[![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/xtal-element/status-light?style=for-the-badge)](https://bundlephobia.com/result?p=xtal-element)
+
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/xtal-element?compression=gzip">
 
 [![Playwright Tests](https://github.com/bahrus/xtal-element/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/xtal-element/actions/workflows/CI.yml)
