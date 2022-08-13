@@ -281,26 +281,20 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
         const {animationInterval} = await import('./animationInterval.js');
         animationInterval(duration, controller.signal, time => {
             this.ticks++;
-            this.wait
         });
         return {
             controller,
             ticks: wait ? ticks : ticks + 1,
-        }
+        };
     }
 
     stop({controller}: this) {
         controller.abort();
         return {
             controller: undefined,
-        }
+        };
     }
 
-    rotateItems({items}: this){
-        return {
-            repeat: items.length,
-        }
-    }
 
     onTicks({idx, repeat, loop, items}: this){
         if(idx >= repeat - 1){
@@ -309,7 +303,7 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
             }else{
                 return {
                     disabled: true,
-                }
+                };
             }
         }
         idx++;
@@ -319,7 +313,7 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
                 idx,
                 item: (items && items.length > idx) ? items[idx] : undefined,
             }
-        }
+        };
     }
 }
 
@@ -354,6 +348,11 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
                 },
                 parse: false,
             },
+            items: {
+                notify:{
+                    lengthTo:'repeat'
+                }
+            }
         },
         style: {
             display: 'none',
@@ -362,7 +361,6 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
             stop:{
                 ifAllOf: ['disabled', 'controller']
             },
-            rotateItems:'items',
             start:{
                 ifAllOf: ['duration'],
                 ifNoneOf: ['disabled'],
@@ -376,6 +374,7 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
     },
     superclass: TimeTicker,
 });
+
 ```
 
 Note that "XE" stands for "xtal-element".
