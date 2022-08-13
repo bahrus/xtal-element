@@ -67,6 +67,7 @@ export interface INotify<MCProps = any>{
 
      incTo?: IInc<MCProps>,
      lengthTo?: string,
+     toFormValue?: boolean,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{

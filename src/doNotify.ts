@@ -5,7 +5,7 @@ import {PropChangeInfo} from 'trans-render/lib/types';
 export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropChangeInfo, notify: INotify){
     const {toLisp} = self;
     const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
-    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo, incTo, lengthTo} = notify;
+    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue} = notify;
     const lispName = toLisp(key);
     if(dispatch){
         src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -72,6 +72,10 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
         }
         (<any>src)[lengthTo] = nnv;
     }
+    if(toFormValue){
+        let nnv: string = typeof nv === 'object' ? JSON.stringify(nv) : nv.toString();
+        (<any>src).internals_.setFormValue(nnv);
+    }
     
     if(reflect !== undefined){
         if(reflect.asAttr){
@@ -102,6 +106,7 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
             (<any>src).inReflectMode = false;
         }
     }
+
     return true;
 }
 

@@ -98,7 +98,7 @@ export class XE<
         }
     }
 
-    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): Promise<boolean>{ 
+    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): boolean{ 
         
         const {prop}: {prop: PropInfoExt<MCProps>} = pci;
         const {notify} = prop;

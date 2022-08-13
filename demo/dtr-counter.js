@@ -41,7 +41,6 @@ const ce = new CE({
 </style>
 `
         },
-        propInfo: 
     },
     mixins: [TemplMgmt],
 });

@@ -45,7 +45,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 </style>
 `
         },
-        propInfo:
+        
     },
     mixins: [TemplMgmt],
 });
