@@ -262,38 +262,6 @@ Additional files that are optional, but definitely helpful / expected for an xta
 
 A potentially fourth branch of development involves JavaScript that influences the HTML markup of the declarative HTML web component -- either in an HTMLRewriter (supported by Cloudflare), and/or in a service worker, which, [w3c willing](https://discourse.wicg.io/t/proposal-support-cloudflares-htmlrewriter-api-in-workers/5721), could have a similar api, which would make [life good](https://dev.to/thepassle/service-worker-side-rendering-swsr-cb1). 
 
-##  The social contract
-
-Another duality paradox developers confront when choosing a UI library, is "how much access to the JavaScript runtime will I have when rendering"?  Many developers prefer not to be constrained by hard and fast rules, and like the template syntax they use to have the full robustness of JavaScript at their disposal.  So in this setting, there's no hesitation in filtering lists while rendering, responding to events inline, etc.  Many other developers (perhaps skewing towards developers of larger enterprise sites) think the disciplined effort to separate concerns is worth it, and prefer having classes (or similar structures) that support computed properties which the template syntax binds too -- that is their approach towards custom visualization logic exemplified above.
-
-Where does xtal-element stand on this most explosive of issues?
-
-xtal-element's approach is a bit of a mix, but ultimately provides more tender loving care to developers who prefer to follow the disciplined / constrained side.  First of all, like css, the transform logic is separate from the markup (except it also supports adding declarative element behaviors that can be used both during template instantiation and/or on the live DOM tree).  It is built on trans-rendering.
-
-Now, the nice thing, perhaps, about trans-rendering, is that at its base, it [imposes no constraints](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-json-serializable-rhs-expressions-with-libdtrjs) on the transform syntax.  JavaScript away!  
-
-If the developer chooses to forgo declarative DTR, in favor of hands-on TR, the foot print of the library does become smaller.  So there's that.  But the other thing is the developer will need to define *when* to perform the transform. There is an easy way the developer to can do that [TODO:  document how].  With great power comes great responsibility.
-
-If the developer sticks with pure declarative DTR, yes, the library enlarges, but the benefits are:
-
-1.  xtal-element knows precisely what to update, and when to update it.
-2.  Moving gobs of logic to JSON makes it easier to parse.
-3.  Alternative JSON transforms can be substituted in, relatively safely (even updated on a database).
-
-##  xtal-element as an organism
-
-A particular model of a component that makes xtal-element beamish is a "web component as an organism":
-
-xtal-element likes the **visual** components to provide a rather simple api, passing in simple properties.  "Body" elements.  The logic behind the outer visual component can be thin to non existent.  Just lots of declarative markup, with some simple transforms as needed.
-
-Inside the component sits a non-visual "brain" web component -- that houses the view model, as well as logic to update the view model as things change inside.  Other components or declarative be-decorated behaviors / decorators broadcast messages from the "brain" to all the peripheral display components.
-
-An example of this is the [xtal-editor](https://github.com/bahrus/xtal-editor) that allows editing any (large) JavaScript object.  The component is (or can be, w3c willing) [pure HTML](https://github.com/bahrus/xtal-editor/blob/baseline/xtal-editor.html)!  The brains for this component is the [xtal-tree](https://github.com/bahrus/xtal-tree) component, which turns the nested object into a flat array that can be quickly displayed / edited in a virtual list.  And guess what?  Having gone through that effort, the "brain" component *can* now be reused, cloned and inserted into lots of bodies, HAHAHAHAHAHAHAHAHAHA!!!!!!! 
-
-So xtal-element provides support for both extremes -- it makes it as simple as possible to define computed properties, and doesn't require any rendering footprint if that's the type of component being built.  That's suitable for the non visual view model component.  And it provides support for defining the largely visual side of things, with JSON and futuristic 22nd century HTML when the browser vendors get around to it.  But it does push us quite a bit to choose one or the other for each component, depending on what we are building.
-
-But when a component does land in-between, xtal-element does cater all its energy to help those who subscribe to a disciplined, virtuous, constrained approach.  But it does provide an official pathway for the code-centric.  At a minimum, this pathway can help a developer to clarify their thoughts, before data-fying it.  Or maybe not.  Whatever.
-
 </details>
 
 # Part I -- Non Visual Components
