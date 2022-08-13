@@ -50,7 +50,7 @@ The core functionality of xtal-element is not centered around rendering content.
 1.  "Web Components as a Service":  Providing a timer component or some other non visual functionality.
 2.  Providing a wrapper around a third-party client-side library that does its own rendering.  Like a charting library. 
 3.  Providing a wrapper around server-rendered content.
-4.  "Web Components as an Organism".  Providing a viewModel from raw data that serves as a non-visual "brain" component that handles all the difficult JavaScript logic, and that is all.  Other non-visual components transmit updates from the brain to peripheral visual components, and dispatch updates back up to the "brain" component.  All contained within a large single web component (the body).  Kind of the same as 1, but with a little more context.
+4.  "Web Components as an Organism".  Providing a viewModel from raw data that serves as a non-visual "brain" component that handles all the difficult JavaScript logic, and that is all.  Other non-visual components transmit updates from the 'brain" component to peripheral visual components, and dispatch updates back up to the "brain" component.  All contained within a large single web component (the body).  Kind of the same as 1, but with a little more context.
 
 </details>
 
@@ -655,7 +655,93 @@ console.log(JSON.stringify(da.config));
 
 **NB:**  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet.  However, [be-loaded/importJSON.js(https://github.com/bahrus/be-loaded/blob/baseline/importJSON.ts) may provide an interim solution.
 
-# Part III  Documentation by Example
+# Part III Support for the non declarative, script in the binding syntax
+
+Our counter example above showcased use of Declarative Trans Rendering (DTR), where there is no JavaScript, only JSON/HTML.
+
+But some developers like a more hands-on approach, and don't want to be so constrained.  Or maybe early on in a web component development, before the component is mature, a developer wants to be able to play around with code before following a more disciplined approach.
+
+If you expand the section below, you will see a modified counter, where we define an "unsafeTransform", meaning full access to the JavaScript runtime engine is made available.  xtal-element makes no effort to glean what is happening in that transform, hence it won't automatically trigger the transfer when the dependencies in the transform change.  So in this situation, the *developer* has to trigger the call to the "unsafeTransform", by incrementing the following property name:  unsafeTCount.
+
+
+
+<details>
+    <summary>Code sample with active script in the binding</summary>
+
+```TypeScript
+import {TemplMgmt, TemplMgmtProps, TemplMgmtActions, beTransformed} from 'trans-render/lib/mixins/TemplMgmt.js';
+import {CE} from 'trans-render/lib/CE.js';
+import { RenderContext } from 'trans-render/lib/types.js';
+
+export interface DTRCounterProps {
+    count: number;
+} 
+
+
+const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
+    config:  {
+        tagName:'dtr-counter',
+        actions:{
+            ...beTransformed,
+        },
+        propDefaults:{
+            count: 30,
+            hydratingTransform: {
+                buttonElements: [{}, {click:{
+                    prop:'count',
+                    vft: 'dataset.d',
+                    plusEq: true,
+                    parseValAs: 'int',
+                }}],
+                span:[{}, {click:{
+                    prop:'unsafeTCount',
+                    vft: 'dataset.d',
+                    plusEq: true,
+                    parseValAs: 'int'
+                }}]
+            },
+            transform: {
+                countPart: 'count'
+            },
+            unsafeTransform: {
+                span: ({target, host}: RenderContext) => {
+                    console.log({target, host});
+                }
+            },
+            mainTemplate: String.raw `<button part=down data-d=-1>-</button><span data-d=1 part=count></span><button part=up data-d=1>+</button>`,
+            styles: String.raw `
+<style>
+    * {
+      font-size: 200%;
+    }
+
+    span {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+    }
+</style>
+`
+        },
+        
+    },
+    mixins: [TemplMgmt],
+});
+```
+<details>
+
+Note that if the developer only defines an unsafeTransform, and stays clear of the hydratingTransform and of the transform (for reactive updates), then the user will benefit in the sense that the supporting library that supports the declarative syntax isn't downloaded.
+
+# Part IV  Documentation by Example
 
 In the following sections, we point to working examples of web components built with xtal-element, to demonstrate features not yet (fully) documented
 
