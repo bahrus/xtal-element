@@ -1,4 +1,6 @@
 
+<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/xtal-element?compression=gzip">
+
 [![Playwright Tests](https://github.com/bahrus/xtal-element/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/xtal-element/actions/workflows/CI.yml)
 
 <details>
