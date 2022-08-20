@@ -155,20 +155,20 @@ export class XE<
         return s;
     }
 
-    apply(host: Element, target: any, returnVal: any, proxy: any){
+    async apply(host: Element, target: any, returnVal: any, proxy: any){
         const dest = proxy !== undefined ? proxy : target;
         if(dest instanceof Element){
             if(Array.isArray(returnVal)){
-                applyPEA(host, dest, returnVal as PEAUnionSettings);
+                await applyPEA(host, dest, returnVal as PEAUnionSettings);
             }else{
-                applyP(dest, [returnVal]);
+                await applyP(dest, [returnVal]);
             }
         }else{
             Object.assign(dest, returnVal);
         }
     }
 
-    postHoc(self: this, action: Action, host: Element, returnVal: any, proxy: any){
+    async postHoc(self: this, action: Action, host: Element, returnVal: any, proxy: any){
         if(action.target !== undefined){
             let newTarget = (<any>host)[action.target];
             if(newTarget === undefined) {
@@ -184,13 +184,13 @@ export class XE<
                     if(subTargetRef.deref){
                         subTargetRef = subTargetRef.deref();
                     }
-                    self.apply(host, subTargetRef, returnVal, proxy);
+                    await self.apply(host, subTargetRef, returnVal, proxy);
                 }
             }else{
-                self.apply(host, newTarget, returnVal, proxy);
+                await self.apply(host, newTarget, returnVal, proxy);
             }
         }else{
-            self.apply(host, host, returnVal, proxy);
+            await self.apply(host, host, returnVal, proxy);
         }
         
     }
