@@ -21,6 +21,7 @@ export async function doIncTo<MCProps = any>(self: XE, src: EventTarget, pci: Pr
         if((lt !== undefined && nv >= ubound) || nv > ubound){
             //exceeded the max
             if(loopVal){
+                const minVal = min === undefined ? 0 : typeof(min) === 'number' ? min : (<any>src)[min];
                 nv = min;
             }else if(notifyWhenMax === undefined){
                 return;

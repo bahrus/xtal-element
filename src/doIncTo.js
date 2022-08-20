@@ -17,6 +17,7 @@ export async function doIncTo(self, src, pci, notify, incTo) {
         if ((lt !== undefined && nv >= ubound) || nv > ubound) {
             //exceeded the max
             if (loopVal) {
+                const minVal = min === undefined ? 0 : typeof (min) === 'number' ? min : src[min];
                 nv = min;
             }
             else if (notifyWhenMax === undefined) {
