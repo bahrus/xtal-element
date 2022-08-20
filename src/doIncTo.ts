@@ -17,7 +17,7 @@ export async function doIncTo<MCProps = any>(self: XE, src: EventTarget, pci: Pr
     const hasUBound = lt !== undefined || ltOrEq !== undefined;
     if(hasUBound){
         const ltUnion = lt || ltOrEq;
-        const ubound = typeof(ltUnion) === 'number' ? ltUnion : (<any>self)[ltUnion];
+        const ubound = typeof(ltUnion) === 'number' ? ltUnion : (<any>src)[ltUnion];
         if((lt !== undefined && nv >= ubound) || nv > ubound){
             //exceeded the max
             if(loopVal){
