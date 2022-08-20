@@ -41,6 +41,10 @@ export interface IParse<MCProps = any>{
 export interface IInc<MCProps = any>{
      key: keyof MCProps,
      by: number | (keyof MCProps),
+     max: number | (keyof MCProps),
+     min: number | (keyof MCProps),
+     loop: boolean | (keyof MCProps),
+     notifyWhenMax: INotify<MCProps>
 }
 
 export interface IMeasure<MCProps = any>{
