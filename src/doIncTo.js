@@ -1,4 +1,4 @@
-import { doNotify } from 'doNotify.js';
+import { doNotify } from './doNotify.js';
 export async function doIncTo(self, src, pci, notify, incTo) {
     if (typeof incTo === 'string') {
         src[incTo] += 1;

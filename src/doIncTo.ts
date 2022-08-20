@@ -1,7 +1,7 @@
 import { INotify, IInc } from "./types";
 import { XE, PropInfoExt } from './XE.js';
 import {PropChangeInfo} from 'trans-render/lib/types';
-import {doNotify} from 'doNotify.js';
+import {doNotify} from './doNotify.js';
 
 export async function doIncTo<MCProps = any>(self: XE, src: EventTarget, pci: PropChangeInfo, notify: INotify, incTo: string | IInc<MCProps>){
     if(typeof incTo === 'string'){
