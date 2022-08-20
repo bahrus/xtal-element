@@ -40,12 +40,12 @@ export interface IParse<MCProps = any>{
 
 export interface IInc<MCProps = any>{
      key: keyof MCProps,
-     step: number | (keyof MCProps),
-     ltOrEq: number | (keyof MCProps),
-     lt: number | (keyof MCProps),
-     min: number | (keyof MCProps),
-     loop: boolean | (keyof MCProps),
-     notifyWhenMax: INotify<MCProps>
+     step?: number | (keyof MCProps),
+     ltOrEq?: number | (keyof MCProps),
+     lt?: number | (keyof MCProps),
+     min?: number | (keyof MCProps),
+     loop?: boolean | (keyof MCProps),
+     notifyWhenMax?: INotify<MCProps>
 }
 
 

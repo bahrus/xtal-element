@@ -13,13 +13,14 @@ export async function doIncTo<MCProps = any>(self: XE, src: EventTarget, pci: Pr
         typeof(step) === 'number' ? step : 
             (<any>self)[step];
     let nv = (<any>src)[key];
+    const loopVal = typeof(loop) === 'boolean' ? loop : (<any>src)[loop];
     const hasUBound = lt !== undefined || ltOrEq !== undefined;
     if(hasUBound){
         const ltUnion = lt || ltOrEq;
         const ubound = typeof(ltUnion) === 'number' ? ltUnion : (<any>self)[ltUnion];
         if((lt !== undefined && nv >= ubound) || nv > ubound){
             //exceeded the max
-            if(loop){
+            if(loopVal){
                 nv = min;
             }else if(notifyWhenMax === undefined){
                 return;

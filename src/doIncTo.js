@@ -9,13 +9,14 @@ export async function doIncTo(self, src, pci, notify, incTo) {
         typeof (step) === 'number' ? step :
             self[step];
     let nv = src[key];
+    const loopVal = typeof (loop) === 'boolean' ? loop : src[loop];
     const hasUBound = lt !== undefined || ltOrEq !== undefined;
     if (hasUBound) {
         const ltUnion = lt || ltOrEq;
         const ubound = typeof (ltUnion) === 'number' ? ltUnion : self[ltUnion];
         if ((lt !== undefined && nv >= ubound) || nv > ubound) {
             //exceeded the max
-            if (loop) {
+            if (loopVal) {
                 nv = min;
             }
             else if (notifyWhenMax === undefined) {
