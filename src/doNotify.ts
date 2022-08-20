@@ -27,11 +27,8 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
         
     }
     if(incTo !== undefined){
-        const {by, key} = incTo;
-        const byVal: number = typeof(by) === undefined ? 1 :
-            typeof(by) === 'number' ? by :
-            (<any>self)[by];
-        (<any>src)[key] += byVal;
+        const {doIncTo} = await import('./doIncTo.js');
+        doIncTo(self, src, pci, notify, incTo);
     }
     if(nv !== undefined && cloneTo !== undefined){
         (<any>src)[cloneTo] = structuredClone(nv);

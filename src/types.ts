@@ -40,12 +40,15 @@ export interface IParse<MCProps = any>{
 
 export interface IInc<MCProps = any>{
      key: keyof MCProps,
-     by: number | (keyof MCProps),
-     max: number | (keyof MCProps),
+     step: number | (keyof MCProps),
+     ltOrEq: number | (keyof MCProps),
+     lt: number | (keyof MCProps),
      min: number | (keyof MCProps),
      loop: boolean | (keyof MCProps),
      notifyWhenMax: INotify<MCProps>
 }
+
+
 
 export interface IMeasure<MCProps = any>{
      key: keyof MCProps,
@@ -69,7 +72,7 @@ export interface INotify<MCProps = any>{
 
      parseTo?: IParse<MCProps>,
 
-     incTo?: IInc<MCProps>,
+     incTo?: string | IInc<MCProps>,
      lengthTo?: string,
      toFormValue?: boolean,
 }

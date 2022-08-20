@@ -23,11 +23,8 @@ export async function doNotify(self, src, pci, notify) {
         }
     }
     if (incTo !== undefined) {
-        const { by, key } = incTo;
-        const byVal = typeof (by) === undefined ? 1 :
-            typeof (by) === 'number' ? by :
-                self[by];
-        src[key] += byVal;
+        const { doIncTo } = await import('./doIncTo.js');
+        doIncTo(self, src, pci, notify, incTo);
     }
     if (nv !== undefined && cloneTo !== undefined) {
         src[cloneTo] = structuredClone(nv);
