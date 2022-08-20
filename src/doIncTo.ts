@@ -9,10 +9,10 @@ export async function doIncTo<MCProps = any>(self: XE, src: EventTarget, pci: Pr
         return;
     }
     const {step, key, lt, ltOrEq, loop, min, notifyWhenMax} = incTo;
-    const byVal: number = typeof(step) === undefined ? 1 :
+    const byVal: number = typeof(step) === 'undefined' ? 1 :
         typeof(step) === 'number' ? step : 
             (<any>self)[step];
-    let nv = (<any>src)[key];
+    let nv = (<any>src)[key] + byVal;
     const loopVal = typeof(loop) === 'boolean' ? loop : (<any>src)[loop];
     const hasUBound = lt !== undefined || ltOrEq !== undefined;
     if(hasUBound){

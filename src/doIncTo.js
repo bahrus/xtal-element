@@ -5,10 +5,10 @@ export async function doIncTo(self, src, pci, notify, incTo) {
         return;
     }
     const { step, key, lt, ltOrEq, loop, min, notifyWhenMax } = incTo;
-    const byVal = typeof (step) === undefined ? 1 :
+    const byVal = typeof (step) === 'undefined' ? 1 :
         typeof (step) === 'number' ? step :
             self[step];
-    let nv = src[key];
+    let nv = src[key] + byVal;
     const loopVal = typeof (loop) === 'boolean' ? loop : src[loop];
     const hasUBound = lt !== undefined || ltOrEq !== undefined;
     if (hasUBound) {
