@@ -49,9 +49,9 @@ export interface IInc<MCProps = any>{
 }
 
 
-
-export interface IMeasure<MCProps = any>{
-     key: keyof MCProps,
+export interface ISetTo<MCProps = any>{
+     key: string,
+     val: any,
 }
 
 export interface INotify<MCProps = any>{
@@ -75,6 +75,7 @@ export interface INotify<MCProps = any>{
      incTo?: string | IInc<MCProps>,
      lengthTo?: string,
      toFormValue?: boolean,
+     setTo?: ISetTo
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
