@@ -275,17 +275,21 @@ Let's take a look at the xtal-element way to define a "component as a service" s
 ```TypeScript
 import {TimeTickerProps, TimeTickerActions} from './types';
 import {XE} from 'xtal-element/src/XE.js';
+import {animationInterval} from './animationInterval.js';
 
 export class TimeTicker extends HTMLElement implements TimeTickerActions{
 
-    async start({duration, ticks, wait}: this) {
-        const controller = new AbortController();
-        const {animationInterval} = await import('./animationInterval.js');
-        animationInterval(duration, controller.signal, time => {
+    async start({duration, ticks, wait, controller}: this) {
+        if(controller !== undefined){
+            ticks = 0;
+            controller.abort();
+        }
+        const newController = new AbortController();
+        animationInterval(duration, newController.signal, time => {
             this.ticks++;
         });
         return {
-            controller,
+            controller: newController,
             ticks: wait ? ticks : ticks + 1,
         };
     }
@@ -299,18 +303,7 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
 
 
     onTicks({idx, repeat, loop, items}: this){
-        if(idx >= repeat - 1){
-            if(loop){
-                idx = -1;
-            }else{
-                return {
-                    disabled: true,
-                };
-            }
-        }
-        idx++;
         return {
-            idx,
             value: {
                 idx,
                 item: (items && items.length > idx) ? items[idx] : undefined,
@@ -332,7 +325,7 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
             enabled: true,
             disabled: false,
             loop: false,
-            wait: false,
+            wait: true,
         },
         propInfo:{
             enabled:{
@@ -354,6 +347,21 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
                 notify:{
                     lengthTo:'repeat'
                 }
+            },
+            ticks: {
+                notify: {
+                    incTo: {
+                        key: 'idx',
+                        lt: 'repeat',
+                        loop: 'loop',
+                        notifyWhenMax: {
+                            setTo: {
+                                key: 'disabled',
+                                val: true,
+                            },
+                        }
+                    }
+                }
             }
         },
         style: {
@@ -368,8 +376,7 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
                 ifNoneOf: ['disabled'],
             },
             onTicks: {
-                ifAllOf: ['ticks'],
-                ifKeyIn: ['repeat', 'loop'],
+                ifKeyIn: ['repeat', 'loop', 'idx'],
                 ifNoneOf: ['disabled'],
             }
         }
@@ -377,15 +384,16 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
     superclass: TimeTicker,
 });
 
+
 ```
 
 Note that "XE" stands for "xtal-element".
 
 ## Talking Points
 
-1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.  For example, rotateItems: 'items' means "when property 'items' is truthy, call rotateItems(this)".
+1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.
 2.  "this" is used sparingly in the class (aside from the convenient, optional Typescript "type" in all the method destructuring).  In particular, if the "actions" that are orchestrated by the xtal-element configuration return properties, they are automatically assigned into the class instance (DOM element).  However, if you like "this", use it, if you prefer.  
-3.  Approximately 50% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size in half by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
+3.  Approximately 70% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size by 2/3rds by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
 4.  The ability to filter when methods are called using the "ifAllOf", "ifKeyIn", "ifNoneOf" means our actual code can avoid much of the clutter of checking if properties are undefined.
 5.  The class where the logic goes is library neutral.
 6.  Since all the non-library-neutral definition is ultimately represented as JSON / HTML, it is as easy as pie to convert the "proprietary" stuff to some other proprietary stuff.
