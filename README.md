@@ -634,13 +634,13 @@ console.log(JSON.stringify(da.config));
 
 **NB:**  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet.  However, [be-loaded/importJSON.js(https://github.com/bahrus/be-loaded/blob/baseline/importJSON.ts) may provide an interim solution.
 
-# Part III Support for the non declarative, script in the binding syntax
+# Part III Support for the non declarative script in the binding syntax
 
 Our counter example above showcased use of Declarative Trans Rendering (DTR), where there is no JavaScript, only JSON/HTML.
 
-But some developers like a more hands-on approach, and don't want to be so constrained.  Or maybe early on in a web component development, before the component is mature, a developer wants to be able to play around with code before following a more disciplined approach.
+But some developers like a more hands-on approach, and don't want to be so constrained.  Or maybe early on in a web component development, before the component is mature, a developer wants to be able to play around with code before following a more disciplined approach.  Avoiding use of JavaScript in the template 
 
-If you expand the section below, you will see a modified counter, where we define an "unsafeTransform", meaning full access to the JavaScript runtime engine is made available.  xtal-element makes no effort to glean what is happening in that transform, hence it won't automatically trigger the transfer when the dependencies in the transform change.  So in this situation, the *developer* has to trigger the call to the "unsafeTransform", by incrementing the following property name:  unsafeTCount.
+If you expand the section below, you will see a modified counter, where we define an "unsafeTransform", meaning full access to the JavaScript runtime engine is made available.  xtal-element makes no effort to glean what is happening in that transform, hence it won't automatically trigger the transform when the dependencies in the transform change.  So in this situation, the *developer* has to trigger the call to the "unsafeTransform", by incrementing the following property name:  unsafeTCount.
 
 
 
