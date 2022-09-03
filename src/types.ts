@@ -66,11 +66,13 @@ export interface IToggleTo<MCProps = any>{
 
 export interface IReflectTo<MCProps = any>{
      dataAttr?: boolean,
-     customState?: string | {
-          truthy?: string,
-          falsy?: string,
-          nameValue?: string
-     }
+     customState?: string | ICustomState<MCProps>
+}
+
+export interface ICustomState<MCProps = any>{
+     truthy?: string,
+     falsy?: string,
+     nameValue?: string
 }
 
 export interface INotify<MCProps = any>{
