@@ -54,19 +54,31 @@ export interface ISetTo<MCProps = any>{
      val: any,
 }
 
+export interface IEchoTo<MCProps = any>{
+     key: string,
+     delay?: number | (keyof MCProps)
+}
+
+export interface IToggleTo<MCProps = any>{
+     key: string,
+     delay?: number | (keyof MCProps)
+}
+
+export interface IReflectTo<MCProps = any>{
+     dataAttr?: boolean,
+     customState?: string | {
+          truthy?: string,
+          falsy?: string,
+          nameValue?: string
+     }
+}
+
 export interface INotify<MCProps = any>{
      dispatch?: boolean,
      cloneTo?: keyof MCProps,
-     echoTo?: keyof MCProps,
-     echoDelay?: number | (keyof MCProps),
-     toggleTo?: keyof MCProps,
-     toggleDelay?: number | (keyof MCProps),
-     /**
-     * Reflect property changes to data-*
-     */
-     reflect?: {
-          asAttr: boolean,
-     }
+     echoTo?: keyof MCProps | IEchoTo<MCProps>,
+     toggleTo?: keyof MCProps | IToggleTo<MCProps>,
+     reflectTo?: string | IReflectTo<MCProps>
 
      localeStringTo?: IFormat<MCProps>,
 

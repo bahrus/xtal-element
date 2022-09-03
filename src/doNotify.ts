@@ -79,33 +79,9 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
     }
     
     if(reflect !== undefined){
-        if(reflect.asAttr){
-            (<any>src).inReflectMode = true;
-            let val = pci.nv;
-            let remAttr = false;
-            switch(pci.prop.type){
-                case 'Number':
-                    val = val.toString();
-                    break;
-                case 'Boolean':
-                    if(val){
-                        val = ''
-                    }else{
-                        remAttr = true;
-                        
-                    }
-                    break;
-                case 'Object':
-                    val = JSON.stringify(val);
-                    break;
-            }
-            if(remAttr){
-                (<any>src).removeAttribute(lispName);
-            }else{
-                (<any>src).setAttribute(lispName, val);
-            }
-            (<any>src).inReflectMode = false;
-        }
+        const {doReflect} = await import('./doReflectTo.js');
+        doReflect(self, src, pci, notify, reflect);
+        
     }
 
     return true;
