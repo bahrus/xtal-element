@@ -1,7 +1,7 @@
 export async function doNotify(self, src, pci, notify) {
     const { toLisp } = self;
     const { prop, key, ov, nv } = pci;
-    const { dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo } = notify;
+    const { dispatch, echoTo, toggleTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo } = notify;
     const lispName = toLisp(key);
     if (dispatch) {
         src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -12,14 +12,20 @@ export async function doNotify(self, src, pci, notify) {
         }));
     }
     if (echoTo !== undefined) {
-        if (echoDelay) {
-            let echoDelayNum = typeof (echoDelay) === 'number' ? echoDelay : self[echoDelay];
-            setTimeout(() => {
-                src[echoTo] = nv;
-            }, echoDelayNum);
+        if (typeof echoTo === 'string') {
+            src[echoTo] = nv;
         }
         else {
-            src[echoTo] = nv;
+            const { delay, key } = echoTo;
+            if (delay) {
+                let echoDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+                setTimeout(() => {
+                    src[key] = nv;
+                }, echoDelayNum);
+            }
+            else {
+                src[key] = nv;
+            }
         }
     }
     if (incTo !== undefined) {
@@ -30,14 +36,20 @@ export async function doNotify(self, src, pci, notify) {
         src[cloneTo] = structuredClone(nv);
     }
     if (toggleTo !== undefined) {
-        if (toggleDelay) {
-            const toggleDelayNum = typeof (toggleDelay) === 'number' ? toggleDelay : self[toggleDelay];
-            setTimeout(() => {
-                src[toggleTo] = !nv;
-            }, toggleDelayNum);
+        if (typeof toggleTo === 'string') {
+            src[toggleTo] = !nv;
         }
         else {
-            src[toggleTo] = !nv;
+            const { delay, key } = toggleTo;
+            if (delay) {
+                const toggleDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+                setTimeout(() => {
+                    src[key] = !nv;
+                }, toggleDelayNum);
+            }
+            else {
+                src[key] = !nv;
+            }
         }
     }
     if (parseTo !== undefined) {
@@ -74,35 +86,9 @@ export async function doNotify(self, src, pci, notify) {
         const { key, val } = setTo;
         src[key] = val;
     }
-    if (reflect !== undefined) {
-        if (reflect.asAttr) {
-            src.inReflectMode = true;
-            let val = pci.nv;
-            let remAttr = false;
-            switch (pci.prop.type) {
-                case 'Number':
-                    val = val.toString();
-                    break;
-                case 'Boolean':
-                    if (val) {
-                        val = '';
-                    }
-                    else {
-                        remAttr = true;
-                    }
-                    break;
-                case 'Object':
-                    val = JSON.stringify(val);
-                    break;
-            }
-            if (remAttr) {
-                src.removeAttribute(lispName);
-            }
-            else {
-                src.setAttribute(lispName, val);
-            }
-            src.inReflectMode = false;
-        }
+    if (reflectTo !== undefined) {
+        const { doReflectTo } = await import('./doReflectTo.js');
+        doReflectTo(self, src, pci, notify, reflectTo, lispName);
     }
     return true;
 }

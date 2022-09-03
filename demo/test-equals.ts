@@ -19,8 +19,10 @@ const xe = new XE<TestEqualsProps, TestEqualsActions>({
         propInfo: {
             updateCount: {
                 notify: {
-                    echoTo: 'updateCountEcho',
-                    echoDelay: 200,
+                    echoTo: {
+                        key: 'updateCountEcho',
+                        delay: 200,
+                    }
                 }
             }
         },

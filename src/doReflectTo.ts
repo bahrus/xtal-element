@@ -9,7 +9,7 @@ export async function doReflectTo<MCProps = any>(self: XE, src: EventTarget, pci
             nameValue: reflectTo
         }
     } : reflectTo;
-    if(reflectToObj.dataAttr !== undefined){
+    if(reflectToObj.dataAttr){
         (<any>src).inReflectMode = true;
         let val = pci.nv;
         let remAttr = false;
@@ -36,4 +36,5 @@ export async function doReflectTo<MCProps = any>(self: XE, src: EventTarget, pci
         }
         (<any>src).inReflectMode = false;
     }
+    
 }

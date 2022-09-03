@@ -5,7 +5,7 @@ import {PropChangeInfo} from 'trans-render/lib/types';
 export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropChangeInfo, notify: INotify){
     const {toLisp} = self;
     const {prop, key, ov, nv}: {prop: PropInfoExt<MCProps>, key: string, ov: any, nv: any} = pci;
-    const {dispatch, echoTo, toggleTo, toggleDelay, echoDelay, reflect, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo} = notify;
+    const {dispatch, echoTo, toggleTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo} = notify;
     const lispName = toLisp(key);
     if(dispatch){
         src.dispatchEvent(new CustomEvent(lispName + '-changed', {
@@ -16,15 +16,19 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
         }));
     }
     if(echoTo !== undefined){
-        if(echoDelay){
-            let echoDelayNum: number = typeof(echoDelay) === 'number' ? echoDelay : (<any>self)[echoDelay];
-            setTimeout(() => {
-                (<any>src)[echoTo] = nv;
-            }, echoDelayNum);
-        }else{
+        if(typeof echoTo === 'string'){
             (<any>src)[echoTo] = nv;
+        }else{
+            const {delay, key} = echoTo;
+            if(delay){
+                let echoDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
+                setTimeout(() => {
+                    (<any>src)[key] = nv;
+                }, echoDelayNum);
+            }else{
+                (<any>src)[key] = nv;
+            }
         }
-        
     }
     if(incTo !== undefined){
         const {doIncTo} = await import('./doIncTo.js');
@@ -33,15 +37,22 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
     if(nv !== undefined && cloneTo !== undefined){
         (<any>src)[cloneTo] = structuredClone(nv);
     }
+
     if(toggleTo !== undefined){
-        if(toggleDelay){
-            const toggleDelayNum: number = typeof(toggleDelay) === 'number' ? toggleDelay : (<any>self)[toggleDelay];
-            setTimeout(() => {
-                (<any>src)[toggleTo] = !nv;
-            }, toggleDelayNum);
-        }else{
+        if(typeof toggleTo === 'string'){
             (<any>src)[toggleTo] = !nv;
+        }else{
+            const {delay, key} = toggleTo;
+            if(delay){
+                const toggleDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
+                setTimeout(() => {
+                    (<any>src)[key] = !nv;
+                }, toggleDelayNum);
+            }else{
+                (<any>src)[key] = !nv;
+            }
         }
+
     }
     if(parseTo !== undefined){
         const {as, key} = parseTo;
@@ -78,9 +89,9 @@ export async function doNotify<MCProps>(self: XE, src: EventTarget, pci: PropCha
         (<any>src)[key] = val;
     }
     
-    if(reflect !== undefined){
-        const {doReflect} = await import('./doReflectTo.js');
-        doReflect(self, src, pci, notify, reflect);
+    if(reflectTo !== undefined){
+        const {doReflectTo} = await import('./doReflectTo.js');
+        doReflectTo(self, src, pci, notify, reflectTo, lispName);
         
     }
 
