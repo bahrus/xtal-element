@@ -720,7 +720,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 Note that if the developer only defines an unsafeTransform, and stays clear of the hydratingTransform and of the transform (for reactive updates), then the user will benefit in the sense that the supporting library that supports the declarative syntax isn't downloaded.
 
-# Part IV The class-based answer to functional hooks? - subTransforms [TODO]
+# Part IV The class-based answer to functional hooks? - compositions [TODO]
 
 The thing I find most  appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, its own state, or (my favorite) state mechanisms built into the platform, like history/navigation state,  IndexedDB stores ... things that will be around for decades to come, using one syntax, in a (relatively) non-confusing way.
 
@@ -735,20 +735,22 @@ propDefaults: {
     transform: [] | {},
     unsafeTransform: {},
     transformPlugins:{}
-    subTransforms: {
+    compositions: {
         prop1: {
             hydratingTransform: [],
             transform: [],
             unsafeTransform: {},
             transformPlugins: {},
-            triggeringEvents: []
+            triggeringEvents: [],
+            instrument: true,
         },
         "prop2.subProp3.subSubProp4": {
             hydratingTransform: [],
             transform: [],
             unsafeTransform: {},
             transformPlugins: {},
-            triggeringEvents: []
+            triggeringEvents: [],
+            instrument: false,
         }
     }
 }
@@ -758,7 +760,7 @@ For each of these transforms, the referenced prop becomes the "host" of the tran
 
 If the prop points to a class instance which extends EventTarget, we can subscribe to events to know when to run the transform.  hydratingTransform is run once on property connecting for the first time.
 
-
+In addition, if instrument is set to true, the setters of the class will be subscribed to.
 
 # Part V  Documentation by Example
 
