@@ -742,7 +742,7 @@ propDefaults: {
             unsafeTransform: {},
             transformPlugins: {},
             triggeringEvents: [],
-            instrument: true,
+            subscribe: true,
         },
         "prop2.subProp3.subSubProp4": {
             hydratingTransform: [],
@@ -750,13 +750,13 @@ propDefaults: {
             unsafeTransform: {},
             transformPlugins: {},
             triggeringEvents: [],
-            instrument: false,
+            subscribe: false,
         }
     }
 }
 ```
 
-For each of these transforms, the referenced prop becomes the "host" of the transform.
+For each of these transforms, the referenced prop becomes the "host" (or model) of the transform, referenced in ctx.host.
 
 If the prop points to a class instance which extends EventTarget, we can subscribe to events to know when to run the transform.  hydratingTransform is run once on property connecting for the first time.
 
