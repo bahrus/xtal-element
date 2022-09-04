@@ -741,16 +741,24 @@ propDefaults: {
             transform: [],
             unsafeTransform: {},
             transformPlugins: {},
+            triggeringEvents: []
         },
         "prop2.subProp3.subSubProp4": {
             hydratingTransform: [],
             transform: [],
             unsafeTransform: {},
             transformPlugins: {},
+            triggeringEvents: []
         }
     }
 }
 ```
+
+For each of these transforms, the referenced prop becomes the "host" of the transform.
+
+If the prop points to a class instance which extends EventTarget, we can subscribe to events to know when to run the transform.  hydratingTransform is run once on property connecting for the first time.
+
+
 
 # Part V  Documentation by Example
 
