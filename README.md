@@ -722,9 +722,11 @@ Note that if the developer only defines an unsafeTransform, and stays clear of t
 
 # Part IV The class-based answer to functional hooks? - sub-transforms [TODO]
 
-The thing I find most  appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, its own state, or (my favorite) state mechanisms built in the platform, like history/navigation state,  IndexedDB stores ... things that will be around for decades to come, using one syntax, in a (relatively) non-confusing way.
+The thing I find most  appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, its own state, or (my favorite) state mechanisms built into the platform, like history/navigation state,  IndexedDB stores ... things that will be around for decades to come, using one syntax, in a (relatively) non-confusing way.
 
 But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns.
+
+xtal-element allows each of these transforms to be performed only when each of the dependencies is loaded.
 
 # Part V  Documentation by Example
 
