@@ -720,13 +720,37 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 Note that if the developer only defines an unsafeTransform, and stays clear of the hydratingTransform and of the transform (for reactive updates), then the user will benefit in the sense that the supporting library that supports the declarative syntax isn't downloaded.
 
-# Part IV The class-based answer to functional hooks? - sub-transforms [TODO]
+# Part IV The class-based answer to functional hooks? - subTransforms [TODO]
 
 The thing I find most  appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, its own state, or (my favorite) state mechanisms built into the platform, like history/navigation state,  IndexedDB stores ... things that will be around for decades to come, using one syntax, in a (relatively) non-confusing way.
 
 But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns.
 
 xtal-element allows each of these transforms to be performed only when each of the dependencies is loaded.
+
+```JavaScript
+propDefaults: {
+    mainTransform: '',
+    hydratingTransform: [],
+    transform: [] | {},
+    unsafeTransform: {},
+    transformPlugins:{}
+    subTransforms: {
+        prop1: {
+            hydratingTransform: [],
+            transform: [],
+            unsafeTransform: {},
+            transformPlugins: {},
+        },
+        "prop2.subProp3.subSubProp4": {
+            hydratingTransform: [],
+            transform: [],
+            unsafeTransform: {},
+            transformPlugins: {},
+        }
+    }
+}
+```
 
 # Part V  Documentation by Example
 
