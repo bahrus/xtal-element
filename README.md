@@ -720,47 +720,78 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 Note that if the developer only defines an unsafeTransform, and stays clear of the hydratingTransform and of the transform (for reactive updates), then the user will benefit in the sense that the supporting library that supports the declarative syntax isn't downloaded.
 
-# Part IV The class-based answer to functional hooks? - compositions [TODO]
+# Part IV The class-based answer to functional hooks? - yesAnd's [TODO]
 
-The thing I find most  appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, its own state, or (my favorite) state mechanisms built into the platform, like history/navigation state,  IndexedDB stores ... things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way.
+The thing I find most appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state mangement system. Yes, and my favorite state mechanisms built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
 
-But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns.
+But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns, perhaps.  Less atomic, but perhaps it entails a bit less busy work.
 
-xtal-element allows each of these transforms to be performed only when each of the dependencies is loaded.
+We make the assumption that it makes sense that integration with such "stores" will be defined in separate classes, linked to via a property of the main class, via "class composition".
+
+xtal-element allows each of these linked properties to have an associated transform that is performed on the main template.  The transform can be performed only when the dependency is loaded.
 
 ```JavaScript
-propDefaults: {
-    mainTransform: '',
-    hydratingTransform: [],
-    transform: [] | {},
-    unsafeTransform: {},
-    transformPlugins:{}
-    compositions: {
-        prop1: {
-            hydratingTransform: [],
-            transform: [],
-            unsafeTransform: {},
-            transformPlugins: {},
-            triggeringEvents: [],
-            subscribe: true,
-        },
-        "prop2.subProp3.subSubProp4": {
-            hydratingTransform: [],
-            transform: [],
-            unsafeTransform: {},
-            transformPlugins: {},
-            triggeringEvents: [],
-            subscribe: false,
+class MyAllInclusiveWebComponent {
+    async onReadyToCreateMobXStore({toDoListID}: self){
+        const {ToDoMobXStore} = await import('./toDoMobXStore.js');
+        const toDoList = new ToDoMobXStore(toDoListID);
+        await toDoList.retrieve();
+        return {
+            toDoList
         }
     }
 }
+
+class ToDoMobStore extends EventTarget{
+    async retrieve(){
+        ...
+    }
+
+    async addItem(){
+        ...
+        this.dispatchEvent(new CustomEvent('item-added'));
+    }
+}
+define({
+    config: {
+        tagName: 'my-all-inclusive-web-component',
+        propDefaults: {
+            mainTemplate: '<div>...</div>',
+            //each of these is optional
+            hydratingTransform: [],
+            transform: [] | {},
+            unsafeTransform: {},
+            transformPlugins:{}
+            yesAnd: {
+                toDoList: {
+                    //each of these is optional
+                    hydratingTransform: [], 
+                    transform: [],
+                    unsafeTransform: {},
+                    updateOn: ['item-added'],
+                    subscribe: true,
+                },
+                "reduxStore.subProp3.subSubProp4": {
+                    //each of these is optional
+                    hydratingTransform: [],
+                    transform: [],
+                    unsafeTransform: {},
+                    updateOn: [],
+                    subscribe: false,
+                }
+            }
+        },
+        
+    }
+});
+
 ```
 
 For each of these transforms, the referenced prop becomes the "host" (or model) of the transform, referenced in ctx.host.
 
 If the prop points to a class instance which extends EventTarget, we can subscribe to events to know when to run the transform.  hydratingTransform is run once on property connecting for the first time.
 
-In addition, if instrument is set to true, the setters of the class will be subscribed to.
+In addition, if "subscribe" is set to true, the setters of the class will be subscribed to (which is a bit intrusive, and assumes getters/setters for all the properties).
 
 # Part V  Documentation by Example
 
