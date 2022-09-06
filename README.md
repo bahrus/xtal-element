@@ -722,27 +722,38 @@ Note that if the developer only defines an unsafeTransform, and stays clear of t
 
 # Part IV The class-based answer to functional hooks? - homeIn's [TODO]
 
-The thing I find most appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state management system. Yes, and my favorite state mechanisms built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
+The thing I find most appealing about hooks (especially "signals") is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state management system. Or, my favorite, state mechanisms built on state apparatuses built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
 
-But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns, perhaps.  
+But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns, perhaps. Most importantly each transform can provide its own "host", different from the main web component host.  Each of these "hosts" are linked to the main host via property that points to a class reference.
+
+In the word of HTML-first solutions that xtal-element partakes in, there's a complimentary way to achieve something similar, and that's via inline attribute based element decorators / behaviors, like [be-observant](https://github.com/bahrus/be-observant).  But our focus here is on the less intrusive, stylesheet binding that trans-rendering supports.
 
 We make the assumption that it makes sense that integration with such "stores" will be defined in separate classes, linked to via a property of the main class, via "class composition". Less atomic than hooks, perhaps, but perhaps it also entails a bit less busy work.
 
 xtal-element allows each of these linked properties to have an associated transform that is performed on the main template.  The transform(s) can start being performed only when the dependency is loaded.
 
+So, if the store has property count: we can bind to it thusly:
+
 ```JavaScript
-class MyAllInclusiveWebComponent {
+class MyAllInclusiveWebComponent extends HTMLElement {
     async onReadyToCreateMobXStore({toDoListID}: self){
         const {ToDoMobXStore} = await import('./toDoMobXStore.js');
         const toDoList = new ToDoMobXStore(toDoListID);
         await toDoList.retrieve();
         return {
-            toDoList
+            toDoList // the Froop orchestrator sets property toDoList to this class instance
         }
     }
 }
 
-class ToDoMobStore extends EventTarget{
+class ToDoMobStore extends EventTarget{ //allows the binding to be notified of updates
+    #count;
+    get count(){
+        return this.#count;
+    }
+    set count(nv){
+        this.#count = nv;
+    }
     async retrieve(){
         ...
     }
@@ -756,28 +767,30 @@ define({
     config: {
         tagName: 'my-all-inclusive-web-component',
         propDefaults: {
-            mainTemplate: '<div>...</div>',
+            mainTemplate: '<div><span></span></div>',
             //each of these is optional
-            hydratingTransform: [],
-            transform: [] | {},
-            unsafeTransform: {},
-            transformPlugins:{}
+            //hydratingTransform: [],
+            //transform: [] | {},
+            //unsafeTransform: {},
+            //transformPlugins:{}
             homeInOn: {
                 toDoList: {
                     //each of these is optional
-                    hydratingTransform: [], 
-                    transform: [],
-                    unsafeTransform: {},
+                    //hydratingTransform: [], 
+                    transform: {
+                        span: count //here's our binding!
+                    },
+                    //unsafeTransform: {},
                     updateOn: ['item-added'],
                     subscribe: true,
                 },
                 "reduxStore.subProp3.subSubProp4": {
                     //each of these is optional
-                    hydratingTransform: [],
-                    transform: [],
-                    unsafeTransform: {},
-                    updateOn: [],
-                    subscribe: false,
+                    //hydratingTransform: [],
+                    //transform: [],
+                    //unsafeTransform: {},
+                    //updateOn: [],
+                    //subscribe: false,
                 }
             }
         },
@@ -791,7 +804,7 @@ For each of these transforms, the referenced prop becomes the "host" (or model) 
 
 If the prop points to a class instance which extends EventTarget, we can subscribe to events to know when to run the transform.  hydratingTransform is run once on property connecting for the first time.
 
-In addition, if "subscribe" is set to true, the setters of the class will be subscribed to (which is a bit intrusive, and assumes getters/setters for all the properties).
+In addition, if "subscribe" is set to true, the setters of the class will be subscribed to (which is a bit intrusive, and assumes getters/setters for all the properties), which may be autogenerated by a decorator, but this example is avoiding anything fancy for illustrative purposes.
 
 # Part V  Documentation by Example
 
