@@ -98,7 +98,7 @@ export class XE<
         }
     }
 
-    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment): boolean{ 
+    override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment){ 
         
         const {prop}: {prop: PropInfoExt<MCProps>} = pci;
         const {notify} = prop;
@@ -110,11 +110,10 @@ export class XE<
                          
         }
 
-        return super.doPA(self, src, pci, m);
     }
 
 
-    override async api(args: DefineArgs, props: {[key: string]: PropInfoExt}){
+    override async api<MCProps, MCActions, TPropInfo>(args: DefineArgs<MCProps, MCActions, TPropInfo>, props: {[key: string]: PropInfoExt}){
         const propsWithNotifications: [string, PropInfoExt][] = [];
         for(const key in props){
             const propInfoExt = props[key];

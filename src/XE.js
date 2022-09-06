@@ -101,7 +101,6 @@ export class XE extends CE {
                 return await doNotify(self, src, pci, notify);
             })();
         }
-        return super.doPA(self, src, pci, m);
     }
     async api(args, props) {
         const propsWithNotifications = [];

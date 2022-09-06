@@ -722,13 +722,13 @@ Note that if the developer only defines an unsafeTransform, and stays clear of t
 
 # Part IV The class-based answer to functional hooks? - yesAnd's [TODO]
 
-The thing I find most appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state mangement system. Yes, and my favorite state mechanisms built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
+The thing I find most appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state management system. Yes, and my favorite state mechanisms built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
 
-But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns, perhaps.  Less atomic, but perhaps it entails a bit less busy work.
+But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns, perhaps.  
 
-We make the assumption that it makes sense that integration with such "stores" will be defined in separate classes, linked to via a property of the main class, via "class composition".
+We make the assumption that it makes sense that integration with such "stores" will be defined in separate classes, linked to via a property of the main class, via "class composition". Less atomic than hooks, perhaps, but perhaps it also entails a bit less busy work.
 
-xtal-element allows each of these linked properties to have an associated transform that is performed on the main template.  The transform can be performed only when the dependency is loaded.
+xtal-element allows each of these linked properties to have an associated transform that is performed on the main template.  The transform(s) can start being performed only when the dependency is loaded.
 
 ```JavaScript
 class MyAllInclusiveWebComponent {
