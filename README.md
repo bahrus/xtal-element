@@ -720,7 +720,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 Note that if the developer only defines an unsafeTransform, and stays clear of the hydratingTransform and of the transform (for reactive updates), then the user will benefit in the sense that the supporting library that supports the declarative syntax isn't downloaded.
 
-# Part IV The class-based answer to functional hooks? - yesAnd's [TODO]
+# Part IV The class-based answer to functional hooks? - homeIn's [TODO]
 
 The thing I find most appealing about hooks is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state management system. Yes, and my favorite state mechanisms built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
 
@@ -762,7 +762,7 @@ define({
             transform: [] | {},
             unsafeTransform: {},
             transformPlugins:{}
-            yesAnd: {
+            homeInOn: {
                 toDoList: {
                     //each of these is optional
                     hydratingTransform: [], 
