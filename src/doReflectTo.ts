@@ -9,7 +9,7 @@ export async function doReflectTo<MCProps = any>(self: XE, src: EventTarget, pci
             nameValue: reflectTo
         }
     } : reflectTo;
-    const {dataAttr, customState} = reflectToObj;
+    const {attr: dataAttr, customState} = reflectToObj;
     let val = pci.nv;
     if(dataAttr){
         (<any>src).inReflectMode = true;

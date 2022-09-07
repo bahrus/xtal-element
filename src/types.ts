@@ -65,7 +65,7 @@ export interface IToggleTo<MCProps = any>{
 }
 
 export interface IReflectTo<MCProps = any>{
-     dataAttr?: boolean,
+     attr?: boolean,
      customState?: string | ICustomState<MCProps>
 }
 

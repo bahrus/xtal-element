@@ -5,7 +5,7 @@ export async function doReflectTo(self, src, pci, notify, reflectTo, lispName) {
             nameValue: reflectTo
         }
     } : reflectTo;
-    const { dataAttr, customState } = reflectToObj;
+    const { attr: dataAttr, customState } = reflectToObj;
     let val = pci.nv;
     if (dataAttr) {
         src.inReflectMode = true;
