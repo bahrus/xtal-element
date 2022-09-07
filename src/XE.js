@@ -2,7 +2,7 @@ import { CE } from 'trans-render/lib/CE.js';
 import { applyP } from 'trans-render/lib/applyP.js';
 import { applyPEA } from 'trans-render/lib/applyPEA.js';
 export class XE extends CE {
-    pq(self, expr, src, ctx = { op: 'and' }) {
+    async pq(self, expr, src, ctx = { op: 'and' }) {
         const { op } = ctx;
         let answer = op === 'and' ? true : false;
         for (const logicalOp in expr) {
@@ -19,7 +19,7 @@ export class XE extends CE {
                 continue;
             if (!Array.isArray(rhs))
                 throw 'NI'; //Not Implemented
-            const subAnswer = self.pqs(self, rhs, src, ctx);
+            const subAnswer = await self.pqs(self, rhs, src, ctx);
             switch (op) {
                 case 'and':
                     if (!subAnswer)
@@ -33,7 +33,7 @@ export class XE extends CE {
         }
         return answer;
     }
-    pqs(self, expr, src, ctx) {
+    async pqs(self, expr, src, ctx) {
         const { op } = ctx;
         let answer = false;
         switch (op) {
@@ -48,7 +48,7 @@ export class XE extends CE {
         let lastVal;
         let isFirst = true;
         for (const subExpr of expr) {
-            const subAnswer = self.pqsv(self, src, subExpr, ctx);
+            const subAnswer = await self.pqsv(self, src, subExpr, ctx);
             switch (op) {
                 case 'and':
                     if (!subAnswer)
@@ -79,14 +79,14 @@ export class XE extends CE {
         }
         return answer;
     }
-    pqsv(self, src, subExpr, ctx) {
+    async pqsv(self, src, subExpr, ctx) {
         switch (typeof subExpr) {
             case 'string':
                 if (ctx.op === 'eq')
                     return src[subExpr];
                 return !!src[subExpr];
             case 'object':
-                return self.pq(self, subExpr, src, ctx);
+                return await self.pq(self, subExpr, src, ctx);
                 break;
             default:
                 throw 'NI'; //Not Implemented
