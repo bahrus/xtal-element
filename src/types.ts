@@ -1,26 +1,21 @@
 import {Action, LogicOp, LogicOpProp, PropInfo, WCConfig} from 'trans-render/lib/types';
 
 
-export interface XAction<MCProps = any> extends Action<MCProps>{
-
-     andAllOf?: LogicOpProp<MCProps>,
-     orAllOf?: LogicOpProp<MCProps>,
+// export interface XAction<MCProps = any> extends Action<MCProps>{
 
 
-     ifAtLeastOneOf?: LogicOpProp<MCProps>
-     atLeastOneOf?: LogicOpProp<MCProps>,
-     orAtLeastOneOf?: LogicOpProp<MCProps>,
+//      ifAtLeastOneOf?: LogicOpProp<MCProps>
+//      atLeastOneOf?: LogicOpProp<MCProps>,
+//      orAtLeastOneOf?: LogicOpProp<MCProps>,
 
-     ifNoneOf?: LogicOpProp<MCProps>,
-     andNoneOf?: LogicOpProp<MCProps>,
-     orNoneOf?: LogicOpProp<MCProps>,
+
      
-     ifEquals?: LogicOpProp<MCProps>,
-     andIfEquals?: LogicOpProp<MCProps>,
-     orIfEquals?: LogicOpProp<MCProps>,
-}
+//      // ifEquals?: LogicOpProp<MCProps>,
+//      // andIfEquals?: LogicOpProp<MCProps>,
+//      // orIfEquals?: LogicOpProp<MCProps>,
+// }
 
-export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends XAction<MCProps>{
+export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends Action<MCProps>{
      preAction?: keyof MCActions;
      arg?: any;
 }
@@ -116,7 +111,7 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
 
 }
 
-export interface DefineArgs<MixinCompositeProps = any, MixinCompositeActions = MixinCompositeProps, TPropInfo = PropInfoExt<MixinCompositeProps, MixinCompositeActions>, TAction extends XAction = XAction<MixinCompositeProps>>{
+export interface DefineArgs<MixinCompositeProps = any, MixinCompositeActions = MixinCompositeProps, TPropInfo = PropInfoExt<MixinCompositeProps, MixinCompositeActions>, TAction extends Action = Action<MixinCompositeProps>>{
      superclass?: {new(): any} | string,
      mixins?: any[],
      mainTemplate?: HTMLTemplateElement;

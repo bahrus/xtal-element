@@ -1,9 +1,9 @@
 import {CE, PropInfo} from 'trans-render/lib/CE.js';
-export {PropInfo, TemplMgmtProps} from 'trans-render/lib/types';
+export {PropInfo, TemplMgmtProps, Action} from 'trans-render/lib/types';
 import {applyP} from 'trans-render/lib/applyP.js';
 import {applyPEA} from 'trans-render/lib/applyPEA.js';
-import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, OpOptions, PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';
-import {XAction, PropInfoExt, DefineArgs} from './types.js';
+import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';
+import {PropInfoExt, DefineArgs} from './types.js';
 export {PropInfoExt} from './types.js';
 
 declare function structuredClone(inp: any): any;
@@ -11,92 +11,8 @@ declare function structuredClone(inp: any): any;
 export class XE<
     MCProps = any, MCActions = MCProps, 
     TPropInfo extends PropInfoExt<MCProps> = PropInfoExt<MCProps>, 
-    TAction extends XAction<MCProps> = XAction<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction
+    TAction extends Action<MCProps> = Action<MCProps>> extends CE<MCProps, MCActions, TPropInfo, TAction
 >{
-
-    override async pq(self: this, expr: LogicOp<any>, src: MCProps, ctx: LogicEvalContext = {op: 'and'}): Promise<boolean> {
-        const {op} = ctx;
-        let answer = op === 'and' ? true : false;
-        for(const logicalOp in expr){
-            const rhs: any = (<any>expr)[logicalOp];
-            let foundMatch = false;
-            for(const logicalOpsOption of logicalOpsLookup){
-                if(logicalOp.endsWith(logicalOpsOption[0])){
-                    ctx.op = logicalOpsOption[1];
-                    foundMatch = true;
-                    break;
-                }
-            }
-            if(!foundMatch) continue;
-
-            if(!Array.isArray(rhs)) throw 'NI'; //Not Implemented
-            const subAnswer = await self.pqs(self, rhs, src, ctx);
-            switch(op){
-                case 'and':
-                    if(!subAnswer) return false;
-                    break;
-                case 'or':
-                    if(subAnswer) return true;
-                    break;
-            }
-        }
-        return answer;
-    }
-
-    override async pqs(self: this, expr: ListOfLogicalExpressions, src: MCProps, ctx: LogicEvalContext) : Promise<boolean> {
-        const {op} = ctx;
-        let answer: boolean = false;
-        switch(op){
-            case 'nor':
-            case 'and':
-            case 'eq':
-                answer = true;
-                break;
-            case 'na':
-                return true;
-        }
-        let lastVal: any;
-        let isFirst = true;
-        for (const subExpr of expr) {
-            const subAnswer = await self.pqsv(self, src, subExpr, ctx);
-            switch(op){
-                case 'and':
-                    if(!subAnswer) return false;
-                    break;
-                case 'or':
-                    if(subAnswer) return true;
-                    break;
-                case 'nor':
-                    if(subAnswer) return false;
-                    break;
-                case 'nand':
-                    if(!subAnswer) return true;
-                    break;
-                case 'eq':
-                    if(isFirst){
-                        lastVal = subAnswer;
-                        isFirst = false;
-                    }else{
-                        if(lastVal !== subAnswer) return false;
-                    }
-                
-            }
-        }
-        return answer;    
-    }
-
-    override async pqsv(self: this, src: any, subExpr: string | number | symbol | LogicOp<any>, ctx: LogicEvalContext): Promise<boolean>{
-        switch(typeof subExpr){
-            case 'string':
-                if(ctx.op === 'eq') return src[subExpr];
-                return !!src[subExpr];
-            case 'object':
-                return await self.pq(self, subExpr, src, ctx);
-                break;
-            default:
-                throw 'NI'; //Not Implemented
-        }
-    }
 
     override doPA(self: this, src: EventTarget, pci: PropChangeInfo , m: PropChangeMoment){ 
         
@@ -124,34 +40,6 @@ export class XE<
         if(propsWithNotifications.length === 0) return;
         const {getPropInfos} = await import('./doNotify.js');
         getPropInfos(props, propsWithNotifications);
-    }
-
-    //better name:  getPropsFromActions
-    override getProps(self: this,  expr: Action<any>, s: Set<string> = new Set<string>()): Set<string>{
-        if(typeof(expr) === 'string'){
-            s.add(expr);
-            return s;
-        }
-        for(const logicalOp in expr){
-            const rhs: any = (<any>expr)[logicalOp];
-            if(!Array.isArray(rhs)) continue;
-            for(const logicalOpsOption of logicalOpsLookup){
-                if(logicalOp.endsWith(logicalOpsOption[0])){
-                    for(const rhsElement of rhs){
-                        switch(typeof rhsElement){
-                            case 'string':
-                                s.add(rhsElement);
-                                break;
-                            case 'object':
-                                self.getProps(self, rhsElement, s);
-                                break;
-                        }
-
-                    }
-                }
-            }
-        }
-        return s;
     }
 
     async apply(host: Element, target: any, returnVal: any, proxy: any){
@@ -194,5 +82,3 @@ export class XE<
         
     }
 } 
-
-const logicalOpsLookup : [string, OpOptions][] = [['LeastOneOf', 'or'], ['AllOf', 'and'], ['NoneOf', 'nor'], ['Equals', 'eq'], ['KeyIn', 'na']];
