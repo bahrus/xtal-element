@@ -49,10 +49,10 @@
     "./lib/with-path.js": "./lib/with-path.js"
   },
   "dependencies": {
-    "trans-render": "0.0.601"
+    "trans-render": "0.0.602"
   },
   "devDependencies": {
-    "@playwright/test": "1.25.1",
+    "@playwright/test": "1.25.2",
     "@skypack/package-check": "0.2.2",
     "may-it-serve": "0.0.2",
     "xtal-editor": "0.0.196",
