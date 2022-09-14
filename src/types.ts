@@ -1,20 +1,6 @@
 import {Action, LogicOp, LogicOpProp, PropInfo, WCConfig} from 'trans-render/lib/types';
 
 
-// export interface XAction<MCProps = any> extends Action<MCProps>{
-
-
-//      ifAtLeastOneOf?: LogicOpProp<MCProps>
-//      atLeastOneOf?: LogicOpProp<MCProps>,
-//      orAtLeastOneOf?: LogicOpProp<MCProps>,
-
-
-     
-//      // ifEquals?: LogicOpProp<MCProps>,
-//      // andIfEquals?: LogicOpProp<MCProps>,
-//      // orIfEquals?: LogicOpProp<MCProps>,
-// }
-
 export interface DeclarativeBinder<MCProps = any, MCActions = MCProps> extends Action<MCProps>{
      preAction?: keyof MCActions;
      arg?: any;

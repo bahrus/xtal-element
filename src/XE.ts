@@ -2,7 +2,7 @@ import {CE, PropInfo} from 'trans-render/lib/CE.js';
 export {PropInfo, TemplMgmtProps, Action} from 'trans-render/lib/types';
 import {applyP} from 'trans-render/lib/applyP.js';
 import {applyPEA} from 'trans-render/lib/applyPEA.js';
-import {ListOfLogicalExpressions, LogicOp, LogicEvalContext, PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';
+import {PropChangeInfo, PropChangeMoment, Action, PEAUnionSettings} from 'trans-render/lib/types.js';
 import {PropInfoExt, DefineArgs} from './types.js';
 export {PropInfoExt} from './types.js';
 

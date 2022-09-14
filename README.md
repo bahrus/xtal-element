@@ -720,13 +720,13 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 Note that if the developer only defines an unsafeTransform, and stays clear of the hydratingTransform and of the transform (for reactive updates), then the user will benefit in the sense that the supporting library that supports the declarative syntax isn't downloaded.
 
-# Part IV The class-based answer to functional hooks? - homeIn's [TODO]
+# Part IV The class-based answer to functional hooks? - homeIn's [Untested]
 
-The thing I find most appealing about hooks (especially "signals") is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state management system. Or, my favorite, state mechanisms built on state apparatuses built into the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
+The thing I find most appealing about hooks (especially "signals") is the way it allows a single component to bind to multiple data sources -- Redux, Mobx, and/or its own state management system. Or, my favorite, state mechanisms built on stateful apparatuses of the platform -- like history/navigation state,  IndexedDB stores -- things that will be around for decades to come.  This binding is done  using one "template" syntax, in a (relatively) non-confusing way, where each binding is spelled out just before the template syntax begins, on an atomic level.
 
 But with trans-rendering, we can have multiple, targeted transforms applied to the same base template, allowing for a much cleaner separation of concerns, perhaps. Most importantly each transform can provide its own "host", different from the main web component host.  Each of these "hosts" are linked to the main host via property that points to a class reference.
 
-In the word of HTML-first solutions that xtal-element partakes in, there's a complimentary way to achieve something similar, and that's via inline attribute based element decorators / behaviors, like [be-observant](https://github.com/bahrus/be-observant).  But our focus here is on the less intrusive, stylesheet binding that trans-rendering supports.
+In the world of HTML-first solutions that xtal-element partakes in, there's a complimentary way to achieve something similar, and that's via inline attribute based element decorators / behaviors, like [be-observant](https://github.com/bahrus/be-observant).  But our focus here is on the less intrusive, stylesheet-like binding that trans-rendering supports.
 
 We make the assumption that it makes sense that integration with such "stores" will be defined in separate classes, linked to via a property of the main class, via "class composition". Less atomic than hooks, perhaps, but perhaps it also entails a bit less busy work.
 
