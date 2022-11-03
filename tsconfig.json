@@ -9,6 +9,9 @@
 		"newLine": "LF",
 		"watch": true
 	},
+	"files": [
+		"XE.ts"
+	],
 	"include":[
 		"src/*",
 		"lib/*",

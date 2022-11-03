@@ -1,6 +1,6 @@
 import { XtalElement, define } from '../XtalElement.js';
 import { createTemplate } from 'trans-render/createTemplate.js';
-export { TransformGetter } from '../types.js';
+export { TransformGetter, TransformValueOptions } from '../types.js';
 function defProto(newClass, args) {
     const p = newClass.prototype;
     p.initTransform = args.initTransform;
@@ -11,14 +11,11 @@ function defProto(newClass, args) {
 export class X extends XtalElement {
     static tend(args) {
         class newClass extends args.class {
-            constructor() {
-                super(...arguments);
-                this.readyToInit = true;
-                this.readyToRender = true;
-            }
+            static is = args.name;
+            static attributeProps = args.attributeProps;
+            readyToInit = true;
+            readyToRender = true;
         }
-        newClass.is = args.name;
-        newClass.attributeProps = args.attributeProps;
         defProto(newClass, args);
     }
     static cessorize(args) {
@@ -27,14 +24,11 @@ export class X extends XtalElement {
             base = mixin(base);
         });
         class newClass extends base {
-            constructor() {
-                super(...arguments);
-                this.readyToInit = true;
-                this.readyToRender = true;
-            }
+            static is = args.name;
+            static attributeProps = args.attributeProps;
+            readyToInit = true;
+            readyToRender = true;
         }
-        newClass.is = args.name;
-        newClass.attributeProps = args.attributeProps;
         defProto(newClass, args);
     }
 }

@@ -8,23 +8,21 @@ const deconstructed = Symbol();
 const _transformDebouncer = Symbol();
 const transformDebouncer = Symbol();
 export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
-    constructor() {
-        super(...arguments);
-        /**
-         * @private
-         */
-        this.noShadow = false;
-        this._renderOptions = {};
-        this._mainTemplateProp = 'mainTemplate';
-        this.__initRCIP = false;
-        this._propChangeQueue = new Set();
-    }
+    /**
+     * @private
+     */
+    noShadow = false;
+    _renderOptions = {};
     /**
      * @private
      */
     get renderOptions() {
         return this._renderOptions;
     }
+    /**
+     * @private
+     */
+    updateTransforms;
     initRenderCallback(ctx, target) { }
     /**
      * @private
@@ -39,6 +37,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
     }
     afterInitRenderCallback(ctx, target, renderOptions) { }
     afterUpdateRenderCallback(ctx, target, renderOptions) { }
+    __initTransformArgs;
     async initRenderContext() {
         const plugins = await this.plugins();
         this.transformHub(this.initTransform);
@@ -56,6 +55,8 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         ctx.ctx = ctx;
         return ctx;
     }
+    _renderContext;
+    _mainTemplateProp = 'mainTemplate';
     async plugins() {
         const { doObjectMatch, repeateth, interpolateSym, interpolatePlugin, templStampSym, templStampPlugin } = await import('trans-render/standardPlugins.js');
         return {
@@ -65,6 +66,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             [templStampSym]: templStampPlugin
         };
     }
+    [_transformDebouncer];
     get [transformDebouncer]() {
         if (this[_transformDebouncer] === undefined) {
             this[_transformDebouncer] = debounce((getNew = false) => {
@@ -73,6 +75,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
         }
         return this[_transformDebouncer];
     }
+    __initRCIP = false;
     transformHub(transform) {
     }
     async transform() {
@@ -140,6 +143,7 @@ export class XtalElement extends XtallatX(hydrate(HTMLElement)) {
             this.root.appendChild(target);
         }
     }
+    _propChangeQueue = new Set();
     async onPropsChange(name, skipTransform = false) {
         super.onPropsChange(name);
         this._propChangeQueue.add(name);

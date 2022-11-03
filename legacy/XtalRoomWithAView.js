@@ -1,14 +1,19 @@
 import { XtalElement } from '../XtalElement.js';
 import { deconstruct, de } from '../xtal-latx.js';
-export { SelectiveUpdate, PropDefGet, TransformGetter, AttributeProps, tendArgs } from '../types.js';
+export { SelectiveUpdate, PropDefGet, TransformGetter, AttributeProps, tendArgs, IXtallatXI, PropInfo, RenderContext, IHydrate, Plugins, Plugin, RenderOptions, TransformMatch, NextStep, TransformValueOptions, TransformValueObjectOptions, TransformValueArrayOptions, PropSettings, EventSettings, AttribsSettings, PSettings, PESettings, PEASettings, PEAUnionSettings, PEATSettings, PEAT$ettings, PEATUnionSettings, ArraySlot, Range, InitTransform, UpdateTransform, MetaSettings, TemplateOrTag, TemplateTagGetter, ToTOrFnToTot, AT, ATR, ATRI, ATRIU, ATRIUM, ATRIUM_Loop, EvaluatedAttributeProps } from '../types.js';
 export { XtallatX, camelToLisp, de, intersection, define, lispToCamel, mergeProps, p, symbolize } from '../xtal-latx.js';
 export class XtalRoomWithAView extends XtalElement {
+    /**
+     * @private
+     */
+    refreshViewModel;
     constructor() {
         super();
         this._state = 'constructed';
         this.__controller = new AbortController();
         this.__signal = this.__controller.signal;
     }
+    _viewModel;
     get viewModel() {
         return this._viewModel;
     }
@@ -22,6 +27,9 @@ export class XtalRoomWithAView extends XtalElement {
         });
         this.onPropsChange('viewModel');
     }
+    _state;
+    __controller;
+    __signal;
     async onPropsChange(name, skipTransform = false) {
         await super.onPropsChange(name, this.viewModel === undefined);
         if (super.disabled || !this._xlConnected || !this.readyToInit)

@@ -7,18 +7,20 @@ function $(str) {
 }
 export function refract(name, fn, adjustClass = null) {
     class newClass extends XtallatX(hydrate(HTMLElement)) {
-        constructor() {
-            super();
-            this._connected = false;
-            this.style.display = "none";
-        }
         static get is() {
             return name;
         }
+        constructor() {
+            super();
+            this.style.display = "none";
+        }
+        _connected = false;
+        value;
         connectedCallback() {
             this.propUp(["input", "disabled"]);
             this._connected = true;
         }
+        _input;
         get input() {
             return this._input;
         }

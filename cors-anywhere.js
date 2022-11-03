@@ -6,11 +6,7 @@ const fetch_in_progress = 'fetch-in-progress';
 const fetch_complete = 'fetch-complete';
 const title = 'title';
 export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
-    constructor() {
-        super(...arguments);
-        this._serviceUrl = 'https://cors-anywhere.herokuapp.com/';
-        this._connected = false;
-    }
+    _serviceUrl = 'https://cors-anywhere.herokuapp.com/';
     // _serviceUrl: string = 'https://crossorigin.me/';
     /** @type {string} Url of service that gets preview.
     *
@@ -21,6 +17,7 @@ export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
     set serviceUrl(val) {
         this.attr('service-url', val);
     }
+    _href;
     /** @type {string} Url to preview
     *
     */
@@ -30,6 +27,7 @@ export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
     set href(val) {
         this.attr('href', val);
     }
+    _fetchInProgress;
     get fetchInProgress() {
         return this._fetchInProgress;
     }
@@ -40,6 +38,7 @@ export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
             value: val
         });
     }
+    _fetchComplete;
     get fetchComplete() {
         return this._fetchComplete;
     }
@@ -50,6 +49,7 @@ export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
             value: val
         });
     }
+    _title;
     get title() {
         return this._title;
     }
@@ -76,6 +76,7 @@ export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
         }
         this.onPropsChange();
     }
+    _connected = false;
     connectedCallback() {
         this.propUp(['disabled', href, 'serviceUrl']);
         this._connected = true;
@@ -84,6 +85,8 @@ export class CorsAnywhere extends XtallatX(hydrate(HTMLElement)) {
         });
         this.onPropsChange();
     }
+    _previousURL;
+    _controller;
     set abort(val) {
         if (this._controller && val)
             this._controller.abort();

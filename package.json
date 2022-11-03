@@ -2,8 +2,8 @@
   "name": "xtal-element",
   "version": "0.0.532",
   "description": "Some opinionated web component base classes.",
-  "main": "./src/XE.js",
-  "module": "./src/XE.js",
+  "main": "XE.js",
+  "module": "XE.js",
   "scripts": {
     "test": "playwright test",
     "serve": "node node_modules/may-it-serve/serve.js",
@@ -21,7 +21,8 @@
   ],
   "typings": "types.d.ts",
   "exports": {
-    ".": "./lib/XtalCore.js",
+    ".": "./XE.js",
+    "./XE.js": "./XE.js",
     "./src/XE.js": "./src/XE.js",
     "./src/XENON.js": "./src/XENON.js",
     "./lib/applyMixins.js": "./lib/applyMixins.js",
@@ -49,7 +50,7 @@
     "./lib/with-path.js": "./lib/with-path.js"
   },
   "dependencies": {
-    "trans-render": "0.0.631"
+    "trans-render": "0.0.634"
   },
   "devDependencies": {
     "@playwright/test": "1.27.1",
