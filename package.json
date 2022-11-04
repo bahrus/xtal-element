@@ -50,7 +50,7 @@
     "./lib/with-path.js": "./lib/with-path.js"
   },
   "dependencies": {
-    "trans-render": "0.0.634"
+    "trans-render": "0.0.635"
   },
   "devDependencies": {
     "@playwright/test": "1.27.1",
