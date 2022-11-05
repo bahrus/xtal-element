@@ -1,27 +1,29 @@
-import {InstResSvc} from 'trans-render/froop/InstResSvc.js';
+import {InstSvc} from 'trans-render/froop/InstSvc.js';
 import {XEArgs} from './types';
 import {mse, npb} from 'trans-render/froop/const.js';
-import { INewPropBag } from 'trans-render/froop/types';
+import { INewPropagator } from 'trans-render/froop/types';
 
-export class NotifySvc extends InstResSvc{
+export class NotifySvc extends InstSvc{
     constructor(public args: XEArgs){
         super();
-        args.main!.addEventListener(mse, () => {
+        args.definer!.addEventListener(mse, () => {
             this.#do(args);
         }, {once: true});
     }
 
     async #do(args: XEArgs){
         const {services} = args;
-        const {addProps} = services!
-        await addProps.resolve();
-        addProps.addEventListener(npb, async e => {
-            const propBagEvent = (e as CustomEvent).detail as INewPropBag;
-            const {instance, propBag} = propBagEvent;
-            const {hookupNotifications} = await import('./hookupNotifications.js');
-            hookupNotifications(instance, propBag, args);
+        const {propper} = services!
+        propper.addEventListener(npb, async e => {
+            const propEvent = (e as CustomEvent).detail as INewPropagator;
+            const {instance, propagator} = propEvent;
+            if(propagator.eth === undefined) propagator.eth = new Map();
+            if(propagator.tth === undefined) propagator.tth = new Map();
+            const {notarize} = await import('./notarize.js');
+            notarize(instance, propagator, args);
             this.instanceResolved = instance;
         });
+        await propper.resolve();
         this.resolved = true;
     }
 } 
