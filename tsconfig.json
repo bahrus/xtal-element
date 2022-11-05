@@ -13,10 +13,8 @@
 		"XE.ts"
 	],
 	"include":[
-		"src/*",
-		"lib/*",
 		"demo/*"
-	],
+, "XENON.ts"	],
 	"exclude":[
 		"./node_modules/*"
 	]

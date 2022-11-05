@@ -1,7 +1,7 @@
 import {IPropagator, IPropChg} from 'trans-render/froop/types';
 import {pc} from 'trans-render/froop/const.js';
 import {XEArgs} from './types';
-import {INotify, PropInfoExt, IReflectTo, ICustomState} from './src/types';
+import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
 import { PropInfo, } from 'trans-render/lib/types';
 
 export function notarize(instance: EventTarget, propagator: IPropagator, args: XEArgs){

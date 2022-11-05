@@ -1,4 +1,4 @@
-import { XE } from '../src/XE.js';
+import { XE } from '../XE.js';
 export class TestEquals extends HTMLElement {
     doSynch({ updateCount, updateCountEcho }) {
         console.log({ updateCount, updateCountEcho });

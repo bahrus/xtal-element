@@ -1,7 +1,7 @@
 import {CE} from 'trans-render/froop/CE.js';
 import {CEArgs} from 'trans-render/froop/types';
 import {Action, WCConfig} from 'trans-render/lib/types';
-import {PropInfoExt} from './src/types';
+import {PropInfoExt} from './types';
 import {XEArgs} from './types';
 
 export class XE<

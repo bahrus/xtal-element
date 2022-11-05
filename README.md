@@ -481,7 +481,9 @@ Note that, unlike the previous example, we didn't use any libraries from this xt
 
 So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide?
 
-CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things lie setting css pseudo state and form  support.  None of which was required in the counter example.
+CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things like setting css pseudo state and form  support.  None of which was required in the counter example.
+
+It is also illustrative of how it is possible to add functionality (services) to the core base class.
 
 ## XENON
 
