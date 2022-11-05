@@ -52,7 +52,7 @@ export async function ifENI(instance: EventTarget, propagator: IPropagator, key:
         const byVal: number = typeof(step) === 'undefined' ? 1 :
             typeof(step) === 'number' ? step : 
                 (<any>instance)[step];
-        let nv = (<any>instance)[key] + byVal;
+        let nv = (<any>instance)[toKey] + byVal;
         const loopVal = typeof(loop) === 'boolean' ? loop : (<any>instance)[loop!];
         const hasUBound = lt !== undefined || ltOrEq !== undefined;
         if(hasUBound){

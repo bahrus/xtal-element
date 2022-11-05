@@ -1,4 +1,5 @@
 export async function noteIf(instance, propagator, key, oldValue, value, notify, propInfo) {
+    console.log({ instance, propagator, key, oldValue, value, notify, propInfo });
     const { dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo } = notify;
     if (dispatch !== undefined) {
         const { camelToLisp } = await import('trans-render/lib/camelToLisp.js');
