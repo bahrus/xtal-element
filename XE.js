@@ -6,7 +6,6 @@ export class XE extends CE {
         const { propInfo } = config;
         if (propInfo === undefined)
             return;
-        let foundNotify = false;
         for (const prop in propInfo) {
             const propInfoExt = propInfo[prop];
             if (propInfoExt.notify !== undefined) {

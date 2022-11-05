@@ -16,7 +16,6 @@ export class XE<
         const config = args.config as WCConfig;
         const {propInfo} = config;
         if(propInfo === undefined) return;
-        let foundNotify = false;
         for(const prop in propInfo){
             const propInfoExt = propInfo[prop] as PropInfoExt;
             if(propInfoExt.notify !== undefined){
