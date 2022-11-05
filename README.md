@@ -275,11 +275,10 @@ For non visual components, it makes sense that the definition for the component 
 Let's take a look at the xtal-element way to define a "component as a service" such as this [timer component](https://github.com/bahrus/time-ticker/blob/baseline/time-ticker.ts). 
 
 ```TypeScript
-import {TimeTickerProps, TimeTickerActions} from './types';
-import {XE} from 'xtal-element/src/XE.js';
-import {animationInterval} from './animationInterval.js';
+import {EndUserProps, Actions, AllProps} from './types';
+import {XE, ActionOnEventConfigs} from 'xtal-element/XE.js';
 
-export class TimeTicker extends HTMLElement implements TimeTickerActions{
+export class TimeTicker extends HTMLElement implements Actions{
 
     async start({duration, ticks, wait, controller}: this) {
         if(controller !== undefined){
@@ -287,13 +286,18 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
             controller.abort();
         }
         const newController = new AbortController();
-        animationInterval(duration, newController.signal, time => {
-            this.ticks++;
-        });
-        return {
+        const {TimeEmitter} = await import('./TimeEmitter.js');
+        const timeEmitter = new TimeEmitter(duration, newController.signal);
+        return [{
             controller: newController,
             ticks: wait ? ticks : ticks + 1,
-        };
+        } as Partial<AllProps>, {incTicks: {on: timeEmitter.emits, of: timeEmitter}} as ActionOnEventConfigs<AllProps, Actions>];
+    }
+
+    incTicks({ticks}: this){
+        return {
+            ticks: ticks + 1
+        }
     }
 
     stop({controller}: this) {
@@ -314,9 +318,9 @@ export class TimeTicker extends HTMLElement implements TimeTickerActions{
     }
 }
 
-export interface TimeTicker extends TimeTickerProps{}
+export interface TimeTicker extends AllProps{}
 
-const xe = new XE<TimeTickerProps, TimeTickerActions>({
+const xe = new XE<AllProps, Actions>({
     config:{
         tagName: 'time-ticker',
         propDefaults: {
@@ -333,7 +337,7 @@ const xe = new XE<TimeTickerProps, TimeTickerActions>({
             enabled:{
                 dry: false,
                 notify: {
-                    toggleTo: 'disabled',
+                    negateTo: 'disabled',
                 }
             },
             repeat: {
@@ -393,9 +397,9 @@ Note that "XE" stands for "xtal-element".
 
 ## Talking Points
 
-1.  The methods within the class are virtually all side-effect free.  It is the "reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.
+1.  The methods within the class are 100% all side-effect free.  It is the "FROOP reactive orchestrator", defined within the "actions" configuration, that routes method calls from prop changes, and causes side effects.
 2.  "this" is used sparingly in the class (aside from the convenient, optional Typescript "type" in all the method destructuring).  In particular, if the "actions" that are orchestrated by the xtal-element configuration return properties, they are automatically assigned into the class instance (DOM element).  However, if you like "this", use it, if you prefer.  
-3.  Approximately 70% of the lines of "code" in this class are JSON serializable.  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size by 2/3rds by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
+3.  Approximately 70% of the lines of "code" in this class are JSON serializable (not counting a generic helper library which the web component is essentially wrapping).  In particular, everything inside the "config" section.  As browsers add support for JSON modules, we can cut the JS size by 2/3rds by moving all that JSON configuration to a JSON import, which is kinder to the browser's cpu.
 4.  The ability to filter when methods are called using the "ifAllOf", "ifKeyIn", "ifNoneOf" means our actual code can avoid much of the clutter of checking if properties are undefined.
 5.  The class where the logic goes is library neutral.
 6.  Since all the non-library-neutral definition is ultimately represented as JSON / HTML, it is as easy as pie to convert the "proprietary" stuff to some other proprietary stuff.
@@ -477,9 +481,7 @@ Note that, unlike the previous example, we didn't use any libraries from this xt
 
 So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide?
 
-In this case, it provides considerably more nuance when it comes to the "FROOP" orchestrator, and to declarative property creation.  XE supports declaratively indicating which properties should dispatch events and having one property toggle to other properties.  None of which was required in the counter example.
-
-As for the "FROOP Action Orchestrator"™, XE supports more logical checks.  CE only supports "ifAllOf" and "ifKeyIn", whereas XE also supports "ifNoneOf", "ifEquals", "ifOneOf".
+CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things lie setting css pseudo state and form  support.  None of which was required in the counter example.
 
 ## XENON
 
