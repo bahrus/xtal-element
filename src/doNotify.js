@@ -1,7 +1,7 @@
 export async function doNotify(self, src, pci, notify) {
     const { toLisp } = self;
     const { prop, key, ov, nv } = pci;
-    const { dispatch, echoTo, toggleTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo } = notify;
+    const { dispatch, echoTo, negateTo: toggleTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo } = notify;
     const lispName = toLisp(key);
     if (dispatch) {
         src.dispatchEvent(new CustomEvent(lispName + '-changed', {

@@ -60,7 +60,8 @@ export interface INotify<MCProps = any>{
      dispatch?: boolean,
      cloneTo?: keyof MCProps,
      echoTo?: (keyof MCProps & string) | IEchoTo<MCProps>,
-     toggleTo?: (keyof MCProps & string) | IToggleTo<MCProps>,
+     negateTo?: (keyof MCProps & string) | IToggleTo<MCProps>,
+     toggleTo?: string,
      reflectTo?: string | IReflectTo<MCProps>
 
      localeStringTo?: IFormat<MCProps>,
