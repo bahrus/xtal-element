@@ -6,6 +6,7 @@ export class NotifySvc extends InstSvc {
         super();
         this.args = args;
         args.definer.addEventListener(mse, () => {
+            console.log('call #do');
             this.#do(args);
         }, { once: true });
     }
@@ -13,6 +14,7 @@ export class NotifySvc extends InstSvc {
         const { services } = args;
         const { propper } = services;
         propper.addEventListener(npb, async (e) => {
+            console.log({ npb });
             const propEvent = e.detail;
             const { instance, propagator } = propEvent;
             if (propagator.eth === undefined)
@@ -24,6 +26,7 @@ export class NotifySvc extends InstSvc {
             this.instanceResolved = instance;
         });
         await propper.resolve();
+        console.log('resolved');
         this.resolved = true;
     }
 }

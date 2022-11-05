@@ -1,17 +1,21 @@
 import { CE } from 'trans-render/froop/CE.js';
 export class XE extends CE {
     async addSvcClasses(args) {
-        super.addSvcClasses(args);
-        const xeArgs = args;
-        const { serviceClasses } = xeArgs;
-        const { NotifySvc } = await import('./NotifySvc.js');
-        serviceClasses.notify = NotifySvc;
-    }
-    async addSvcs(args) {
-        super.addSvcs(args);
-        const xeArgs = args;
-        const { services, serviceClasses } = xeArgs;
-        const { notify } = serviceClasses;
-        services.notify = new notify(xeArgs);
+        await super.addSvcClasses(args);
+        const config = args.config;
+        const { propInfo } = config;
+        if (propInfo === undefined)
+            return;
+        let foundNotify = false;
+        for (const prop in propInfo) {
+            const propInfoExt = propInfo[prop];
+            if (propInfoExt.notify !== undefined) {
+                const xeArgs = args;
+                const { servers } = xeArgs;
+                const { NotifySvc } = await import('./NotifySvc.js');
+                servers.notify = NotifySvc;
+                break;
+            }
+        }
     }
 }

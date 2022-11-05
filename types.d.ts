@@ -11,6 +11,6 @@ export interface XEServices extends CEServices{
 }
 
 export interface XEArgs<TProps = any, TAciopns = TProps> extends CEArgs<TProps, TActions> {
-    serviceClasses: XEServiceClasses,
+    servers: XEServiceClasses,
     services: XEServices,
 }
