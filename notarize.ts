@@ -1,8 +1,8 @@
 import {IPropagator, IPropChg} from 'trans-render/froop/types';
 import {pc} from 'trans-render/froop/const.js';
 import {XEArgs} from './types';
-import {INotify, PropInfoExt, IReflectTo} from './src/types';
-import { PropInfo } from './src/XE';
+import {INotify, PropInfoExt, IReflectTo, ICustomState} from './src/types';
+import { PropInfo, } from 'trans-render/lib/types';
 
 export function notarize(instance: EventTarget, propagator: IPropagator, args: XEArgs){
     propagator.addEventListener(pc, async e => {
@@ -113,13 +113,14 @@ export async function noteIf(instance: EventTarget, propagator: IPropagator, key
     
     if(reflectTo !== undefined){
         const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
+        const lispName = camelToLisp(key);
         let reflectToObj: IReflectTo = typeof reflectTo === 'string' ? {
             customState: {
                 nameValue: reflectTo
             }
         } : reflectTo;
         const {attr, customState} = reflectToObj;
-        
+        let val = value;
         if(attr){
             //(<any>in).inReflectMode = true;
             
@@ -133,7 +134,6 @@ export async function noteIf(instance: EventTarget, propagator: IPropagator, key
                         val = ''
                     }else{
                         remAttr = true;
-                        
                     }
                     break;
                 case 'Object':
@@ -141,21 +141,21 @@ export async function noteIf(instance: EventTarget, propagator: IPropagator, key
                     break;
             }
             if(remAttr){
-                (<any>src).removeAttribute(lispName);
+                (<any>instance).removeAttribute(lispName);
             }else{
-                (<any>src).setAttribute(lispName, val);
+                (<any>instance).setAttribute(lispName, val);
             }
-            (<any>src).inReflectMode = false;
+            //(<any>src).inReflectMode = false;
         }
         if(customState !== undefined){
-            const internals = (<any>src).internals_;
+            const internals = (<any>instance).internals_;
             if(internals === undefined) return;
-            const customStateObj: ICustomState<MCProps> = typeof customState === 'string' ? {
+            const customStateObj: ICustomState = typeof customState === 'string' ? {
                 nameValue: customState,
             } : customState;
             const {nameValue, falsy, truthy} = customStateObj;
             if(nameValue !== undefined){
-                const valAsLisp = toLisp(val.toString());
+                const valAsLisp = camelToLisp(val.toString());
                 internals.states.add(`--${lispName}-${valAsLisp}`);
             }
             if(truthy){
