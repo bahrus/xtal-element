@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <dtr-counter count="13"></dtr-counter>
+    <div id=target></div>
+    <script type=importmap>{
+        "imports":{
+            "trans-render/": "../node_modules/trans-render/"
+        }
+    }</script>
+    <script type=module>
+        import '../demo/dtr-counter.js';
+    </script>
+    <script>
+        function runTest(){
+            document.querySelector('dtr-counter').shadowRoot.querySelector('button[part="up"]').click();
+            setTimeout(() => {
+                if(document.querySelector('dtr-counter').shadowRoot.querySelector('span').textContent === '14'){
+                    target.setAttribute('mark', 'good');
+                }
+            }, 106);
+        }
+        setTimeout(() => {
+            runTest();
+        }, 2000);
+    </script>
+</body>
+</html>

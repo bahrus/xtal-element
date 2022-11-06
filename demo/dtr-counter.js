@@ -1,5 +1,5 @@
 import { TemplMgmt, beTransformed } from 'trans-render/lib/mixins/TemplMgmt.js';
-import { CE } from 'trans-render/lib/CE.js';
+import { CE } from 'trans-render/froop/CE.js';
 const ce = new CE({
     config: {
         tagName: 'dtr-counter',
