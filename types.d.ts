@@ -1,5 +1,5 @@
 import {CEArgs, IResolvableService, CEServiceClasses, CEServices} from 'trans-render/froop/types';
-import {PropInfo} from '/trans-render/lib/types';
+import {PropInfo} from 'trans-render/lib/types';
 
 export interface INotifySvc extends IResolvableService{}
 
@@ -70,7 +70,7 @@ export interface INotify<MCProps = any>{
     setTo?: ISetTo
 }
 
-export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo{
+export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo {
 
     notify?: INotify<MCProps>;
 

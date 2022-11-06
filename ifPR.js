@@ -12,6 +12,7 @@ export async function ifPR(instance, propagator, key, oldValue, value, notify, p
                 break;
             case 'obj':
                 nnv = JSON.parse(value);
+                break;
         }
         instance[key] = nnv;
     }

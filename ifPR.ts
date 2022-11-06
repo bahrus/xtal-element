@@ -16,6 +16,7 @@ export async function ifPR(instance: EventTarget, propagator: IPropagator, key: 
                 break;
             case 'obj':
                 nnv = JSON.parse(value);
+                break;
         }
         (<any>instance)[key] = nnv;
     }
