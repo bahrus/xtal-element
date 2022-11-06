@@ -272,10 +272,10 @@ A potentially fourth branch of development involves JavaScript that influences t
 
 For non visual components, it makes sense that the definition for the component should be JS-first.
 
-Let's take a look at the xtal-element way to define a "component as a service" such as this [timer component](https://github.com/bahrus/time-ticker/blob/baseline/time-ticker.ts). 
+Let's take a look at the xtal-element way to define a "web component as a service" such as this [timer component](https://github.com/bahrus/time-ticker/blob/baseline/time-ticker.ts). 
 
 ```TypeScript
-import {EndUserProps, Actions, AllProps} from './types';
+import {Actions, AllProps, PPE} from './types';
 import {XE, ActionOnEventConfigs} from 'xtal-element/XE.js';
 
 export class TimeTicker extends HTMLElement implements Actions{
@@ -288,10 +288,15 @@ export class TimeTicker extends HTMLElement implements Actions{
         const newController = new AbortController();
         const {TimeEmitter} = await import('./TimeEmitter.js');
         const timeEmitter = new TimeEmitter(duration, newController.signal);
-        return [{
-            controller: newController,
-            ticks: wait ? ticks : ticks + 1,
-        } as Partial<AllProps>, {incTicks: {on: timeEmitter.emits, of: timeEmitter}} as ActionOnEventConfigs<AllProps, Actions>];
+        return [
+            {
+                controller: newController,
+                ticks: wait ? ticks : ticks + 1,
+            }, 
+            {
+                incTicks: {on: timeEmitter.emits, of: timeEmitter}
+            }
+        ] as PPE;
     }
 
     incTicks({ticks}: this){
@@ -389,6 +394,7 @@ const xe = new XE<AllProps, Actions>({
     },
     superclass: TimeTicker,
 });
+
 
 
 ```
