@@ -4,6 +4,6 @@ export class XENON {
         config.mixins = config.mixins || [];
         const { XE } = await import('./XE.js');
         const xe = new XE(config);
-        return xe.classDef;
+        return xe.custElClass;
     }
 }

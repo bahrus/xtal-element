@@ -7,6 +7,6 @@ export class XENON<Props = any, Actions = Props> {
         config.mixins = config.mixins || [];
         const {XE} = await import('./XE.js');
         const xe = new XE(config);
-        return xe.classDef;
+        return xe.custElClass;
     }
 }
