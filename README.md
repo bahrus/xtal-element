@@ -479,11 +479,13 @@ Note that, unlike the previous example, we didn't use any libraries from this xt
 
 ## CE vs XE
 
-So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide?
+So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide over it's only dependency, the trans-render package?
 
 CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things like setting css pseudo state and form  support.  None of which was required in the counter example.
 
-It is also illustrative of how it is possible to add functionality (services) to the core base class.
+But an amazing benefit of dynamic imports is that they allow us to always just use the more powerful library (XE).  The extra services XE supports are only loaded if they are relevant.  But it seems important to "prove" that it is possible to "scale up" from a basic web component ergonomic layer, to a more powerful one, in a seamless way, without incurring a penalty from unused features.  So bottom line, just use XE, unless you really need to shave a few bytes.
+
+
 
 ## XENON
 
