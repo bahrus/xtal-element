@@ -481,7 +481,7 @@ What the second element of the array:
 
 is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) on timeEmitter class instance.  When the event is trigger, pass the event object to action method "incTicks".
 
-The amount of code writing that doing this entails isn't huge, this is just a convenient shortcut.  But is utilizing something lie this library neutral?
+The amount of code writing that doing this entails isn't huge, but it is kind of unpleasant boilerplat. This is just a convenient shortcut.  But is utilizing something like this library neutral?
 
 </details>
 
