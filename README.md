@@ -479,7 +479,7 @@ What the second element of the array:
 }
 ```
 
-is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) on timeEmitter class instance.  When the event is trigger, pass the event object to action method "incTicks".
+...is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) on timeEmitter class instance.  When the event is triggered, pass the event object to action method "incTicks".
 
 The amount of code writing that doing this entails isn't huge, but it is kind of unpleasant boilerplate, full of parenthesis and arrows, not to mention cleanup code if needed. This is just a convenient shortcut.  But is utilizing something like this library neutral?
 
