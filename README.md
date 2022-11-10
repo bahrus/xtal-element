@@ -410,6 +410,81 @@ Note that "XE" stands for "xtal-element".
 5.  The class where the logic goes is library neutral.
 6.  Since all the non-library-neutral definition is ultimately represented as JSON / HTML, it is as easy as pie to convert the "proprietary" stuff to some other proprietary stuff.
 
+## Counterpoints
+
+<details>
+    <summary>Is the code above really library neutral?</summary>
+
+It seems to me that code like this:
+
+```TypeScript
+rotateItem({idx, items}: this){
+    return {
+        value: {
+            idx,
+            item: (items && items.length > idx) ? items[idx] : undefined,
+        }
+    };
+}
+```
+
+Can be fairly effectively described as library neutral.  True, we are depending on something also modifying the value of the custom element.  But this code could still be useful in any framework, it will simply always require some companion code / engine that does something with it.  The code above captures the essence of the calculation, in other words.
+
+This argument weakens somewhat when we start to use an additional feature the FROOP engine supports, all in the name of making each method easy to test and loosely coupled:
+
+Action methods can return an array of objects -  tuple, and the FROOP orchestrator knows exactly what to do with it.  
+
+The acronym for the tuple an action method can return is currently "MAD".  "M" stands for "merge", so the first element of the array is interpreted, again, as things that should be merged into the host.
+
+So the code above is equivalent to the slightly more verbose:
+
+```TypeScript
+rotateItem({idx, items}: this){
+    return [{
+        value: {
+            idx,
+            item: (items && items.length > idx) ? items[idx] : undefined,
+        }
+    }];
+}
+```
+
+...as far as the FROOP orchestrator is concerned.
+
+The second element of the array, if there is one, is referred to as "A", stands for "add event listeners".  After spending years (literally) playing with custom elements / behaviors, a clear pattern emerges that often need to add event handlers to things -- elements within the shadow DOM, or any class instance that extends the EventTarget.
+
+We also saw an example of this two-element array in the counter example:
+
+```TypeScript
+
+async start({duration, ticks, wait, controller}: this) {
+    ...
+    return [
+        {
+            controller: newController,
+            ticks: wait ? ticks : ticks + 1,
+        }, 
+        {
+            incTicks: {on: timeEmitter.emits, of: timeEmitter}
+        }
+    ] as PPE; //rename to MA
+}
+```
+
+What the second element of the array:
+
+```JavaScript
+{
+    incTicks: {on: timeEmitter.emits, of: timeEmitter}
+}
+```
+
+is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) on timeEmitter class instance.  When the event is trigger, pass the event object to action method "incTicks".
+
+The amount of code writing that doing this entails isn't huge, this is just a convenient shortcut.  But is utilizing something lie this library neutral?
+
+</details>
+
 # Part II -- Counting
 
 Let's move on now to what has become the *sine qua non* example for web components.  The [counter](https://webcomponents.dev/edit/W1J2NL0rQKSWDSwLScsm/src/index.js?p=stories).  Now we have a rudimentary UI, so we can see how xtal-element approaches this.  As always we show the optional TypeScript version.  The JS version isn't that different, just remove a little sugar here and there:
