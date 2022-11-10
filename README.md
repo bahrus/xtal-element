@@ -428,13 +428,13 @@ rotateItem({idx, items}: this){
 }
 ```
 
-Can be fairly effectively described as library neutral.  True, we are depending on something also modifying the value of the custom element.  But this code could still be useful in any framework, it will simply always require some companion code / engine that does something with it.  The code above captures the essence of the calculation, in other words.
+... can be fairly effectively described as library neutral.  True, we are depending on something also modifying the value of the custom element.  But this code could still be useful in any framework, it will simply always require some companion code / engine that does something with it.  The code above captures the essence of the calculation, in other words.
 
 This argument weakens somewhat when we start to use an additional feature the FROOP engine supports, all in the name of making each method easy to test and loosely coupled:
 
-Action methods can return an array of objects -  tuple, and the FROOP orchestrator knows exactly what to do with it.  
+Action methods can return an array of objects - a tuple - and the FROOP orchestrator knows exactly what to do with it.  
 
-The acronym for the tuple an action method can return is currently "MAD".  "M" stands for "merge", so the first element of the array is interpreted, again, as things that should be merged into the host.
+The acronym for the tuple an action method can return is currently "M[A[D]]".  "M" stands for "(shallow) merge", so the first element of the array is interpreted, again, as things that should be shallow merged into the host via Object.assign.
 
 So the code above is equivalent to the slightly more verbose:
 
@@ -451,7 +451,7 @@ rotateItem({idx, items}: this){
 
 ...as far as the FROOP orchestrator is concerned.
 
-The second element of the array, if there is one, is referred to as "A", stands for "add event listeners".  After spending years (literally) playing with custom elements / behaviors, a clear pattern emerges that often need to add event handlers to things -- elements within the shadow DOM, or any class instance that extends the EventTarget.
+The second element of the array, if there is one, the "A" element, stands for "add event listeners".  After spending years (literally) playing with custom elements / behaviors, a clear pattern emerges that often we need to add event handlers to things -- elements within the shadow DOM, or any class instance that extends the EventTarget.
 
 We also saw an example of this two-element array in the counter example:
 
@@ -479,9 +479,11 @@ What the second element of the array:
 }
 ```
 
-...is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) on timeEmitter class instance.  When the event is triggered, pass the event object to action method "incTicks".
+...is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) to the timeEmitter class instance.  When the event is triggered, pass the event object to action method "incTicks".
 
 The amount of code writing that doing this entails isn't huge, but it is kind of unpleasant boilerplate, full of parenthesis and arrows, not to mention cleanup code if needed. This is just a convenient shortcut.  But is utilizing something like this library neutral?
+
+Migrating the code to some other "framework / library" would either mean unraveling the short cut and writing out the code explicitly in each instance or finding some mechanism in the new framework / library that can support the same shortcut(s).  Judge for yourself how deeply entangled utilizing this feature is, if this [falling into](https://en.wikipedia.org/wiki/Vendor_lock-in) the ["vendor lock-in"](https://www.cloudflare.com/learning/cloud/what-is-vendor-lock-in/) trap that seems some prevalent in IT (*cough*react*cough*).
 
 </details>
 
