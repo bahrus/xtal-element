@@ -441,7 +441,10 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
             transform: {
                     countParts: 'count'
             },
-            mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
+            mainTemplate: String.raw `
+                <button part=down data-d=-1>-</button>
+                <span part=count></span>
+                <button part=up data-d=1>+</button>`,
             styles: String.raw `
 <style>
     * {
@@ -475,7 +478,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
 
 1.  We have kept the binding syntax separate from the markup syntax, similar to CSS.  This is based on DTR syntax.  This means migrating to something else should be easier, as the library dependencies aren't all tangled up with the actual presentation structure.  Okay, maybe not such a big deal, but just saying. 
 2.  What I would like to impress upon you is there isn't any code!  All but the second to last line is JSON serializable, making it truly declarative.
-3.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob of HTML, and a clob of CSS.
+3.  So using this technique, we can envision a large number of web components that can already be made declarative, even without HTML Modules -- using JSON modules, where the JSON module contains a clob or two of HTML, and a clob of CSS.
 
 Now before you run away, justifiably repelled by the notion of editing JSON, I hear you.  You and I are cut from the same cloth.
 
@@ -489,8 +492,9 @@ So why did the first example we present require the use of xtal-element?  What v
 
 CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things like setting css pseudo state and form  support.  None of which was required in the counter example.
 
-But an amazing benefit of dynamic imports is that they allow us to always just use the more powerful library (XE).  The extra services XE supports are only loaded if they are relevant.  But it seems important to "prove" that it is possible to "scale up" from a basic web component ergonomic layer, to a more powerful one, in a seamless way, without incurring a penalty from unused features.  So bottom line, just use XE, unless you really need to shave a few bytes.
+But an amazing benefit of dynamic imports is that they allow us to always just use the more powerful library (XE).  The extra services XE supports are only loaded if they are relevant.  It seems important for us to "prove" that it is possible to "scale up" from a basic web component ergonomic layer (CE), to a more powerful one (XE), in a seamless way, without incurring a penalty from unused features, and that has been accomplished.  
 
+Bottom line, just use XE, unless you really need to shave a few bytes (containing the dynamic import statement).
 
 
 ## XENON
@@ -648,7 +652,41 @@ console.log(JSON.stringify(da.config));
 
 **NB:**  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet.  However, [be-loaded/importJSON.js(https://github.com/bahrus/be-loaded/blob/baseline/importJSON.ts) may provide an interim solution.
 
-# Part III Support for the non declarative script in the binding syntax
+# Part III Dynamic Transforms
+
+The distinction between what we refer to as "Static Transforms" vs "Dynamic Transforms" is a bit confusing.  The bottom line difference is this:  
+
+Can the transform be fully represented as JSON?
+
+The transforms we used for the counting example:
+
+```JavaScript
+hydratingTransform: {
+    buttonElements: [{}, {click:{
+        prop:'count',
+        vft: 'dataset.d',
+        plusEq: true,
+        parseValAs: 'int',
+    }}]
+},
+transform: {
+    countParts: 'count'
+},
+```
+
+are clearly fully JSON serializable.  The way the DTR engine *interprets* the transforms allows for some dynamic things to happen -- attaching event handlers, setting the count.  But the transforms themselves never change, so we call these static transforms.
+
+However, there are certainly scenarios where static transforms aren't sufficient.
+
+Let's start with an example, that might be aptly titled "Clueless in SVG".
+
+The package [xtal-fig](https://github.com/bahrus/xtal-fig) was done to see how xtal-elements could work with SVG.  They were done by an SVG (creator) newbie.  In particular, said newbie was unaware of the power of the css style: "width:inherit".  Nevertheless, it is an illustration of a scenario where DTR doesn't help us:  Dynamically setting (deeply buried) style settings, that may require mathematical manipulation.
+
+So for that, we utilize dynamic transforms.
+
+
+
+# Part IV Support for the non declarative script in the binding syntax [Subject to be removed shortly]
 
 Our counter example above showcased use of Declarative Trans Rendering (DTR), where there is no JavaScript, only JSON/HTML.
 
