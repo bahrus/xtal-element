@@ -294,7 +294,7 @@ export class TimeTicker extends HTMLElement implements Actions{
                 ticks: wait ? ticks : ticks + 1,
             }, 
             {
-                incTicks: {on: timeEmitter.emits, of: timeEmitter}
+                incTicks: {on: 'value-changed', of: timeEmitter}
             }
         ] as PPE;
     }
@@ -565,179 +565,9 @@ A light-touch "compiler" (or "transpiler"?) is provided by the [may-it-be](https
 
 Note that, unlike the previous example, we didn't use any libraries from this xtal-element package, in particular "XE".    The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, CE (for Custom Element) that covers enough ground to provide a declarative, JS-free web component that meets the requirements for this component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
 
-## CE vs XE
-
-So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide over it's only dependency, the trans-render package?
-
-CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things like setting css pseudo state and form  support.  None of which was required in the counter example.
-
-But an amazing benefit of dynamic imports is that they allow us to always just use the more powerful library (XE).  The extra services XE supports are only loaded if they are relevant.  It seems important for us to "prove" that it is possible to "scale up" from a basic web component ergonomic layer (CE), to a more powerful one (XE), in a seamless way, without incurring a penalty from unused features, and that has been accomplished.  
-
-Bottom line, just use XE, unless you really need to shave a few bytes (containing the dynamic import statement).
-
-
-## XENON
-
-So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can import the JSON file, and automatically register the JSON file as a web component, via the XENON api:
-
-```TypeScript
-import {XENON} from 'xtal-element/src/XENON.js';
-...
-
-XENON.define(x => import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
-```
-
-**NB**:  JSON imports abide by import maps!
-
-So to reference a JSON based web component, two references are needed -- one-time reference for XENON, but once that is done, single references per JSON file / custom element.  Not too bad!
-
-XENON stands for "**x**tal-**e**lement **n**ée of **object** **n**otation." 
-
-[Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features).
-
-When combined with trans-render plugins and [be-*](https://github.com/bahrus?tab=repositories&q=be-&type=&language=&sort=) decorators, both of which adhere to pure 100% declarative JSON syntax ultimately, a rather large variety of web components can be developed, JS (in the client browser) free! Of course we do need to download and execute these plugins, but once downloaded, the declarative syntax can scale rapidly to large, more complex applications, while the client-side JS remains tightly constrained in size.
-
-## Hybrid Mode
-
-Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is a benefit of any code reuse).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way -- providing some generic functionality captured by JSON settings.  
-
-But providing an easy way to move the remaining JSON serializable data to a separate file, which the browser can more easily digest, and safely replace with alternative settings, seems worthwhile.
-
-For that purpose if CE (or XE) encounters a *function* rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.
-
-So here we present the timer component, take 2.  It is now split into two files:
-
-The EcmaScript file:
-
-```TypeScript
-import {TimeTickerProps, TimeTickerActions} from './types';
-import {XE} from 'xtal-element/src/XE.js';
-
-export class TimeTicker extends HTMLElement implements TimeTickerActions{
-
-    async start({duration, ticks, wait}: this) {
-        const controller = new AbortController();
-        const {animationInterval} = await import('./animationInterval.js');
-        animationInterval(duration, controller.signal, time => {
-            this.ticks++;
-        });
-        return {
-            controller,
-            ticks: wait ? ticks : ticks + 1,
-        };
-    }
-
-    stop({controller}: this) {
-        controller.abort();
-        return {
-            controller: undefined,
-        };
-    }
-
-    rotateItems({items}: this){
-        return {
-            repeat: items.length,
-        };
-    }
-
-    onTicks({idx, repeat, loop, items}: this){
-        if(idx >= repeat - 1){
-            if(loop){
-                idx = -1;
-            }else{
-                return {
-                    disabled: true,
-                };
-            }
-        }
-        idx++;
-        return {
-            idx,
-            value: {
-                idx,
-                item: (items && items.length > idx) ? items[idx] : undefined,
-            }
-        };
-    }
-}
-
-export interface TimeTicker extends TimeTickerProps{}
-
-const xe = new XE<TimeTickerProps, TimeTickerActions>({
-    config: () => import('./tt-config.json', {assert: {type: 'json'}}),
-    superclass: TimeTicker,
-});
-```
-
-and the MJS/MTS file used to generate the JSON file tt-config.json:
-
-```TypeScript
-import {DefineArgs} from 'xtal-element/src/types';
-import {TimeTickerProps, TimeTickerActions} from './types';
-
-const da: DefineArgs<TimeTickerProps, TimeTickerActions> = {
-    config:{
-        tagName: 'time-ticker',
-        propDefaults: {
-            ticks: 0,
-            idx: -1,
-            duration: 1_000,
-            repeat: Infinity,
-            enabled: true,
-            disabled: false,
-            loop: false,
-            wait: false,
-        },
-        propInfo:{
-            enabled:{
-                dry: false,
-                notify: {
-                    toggleTo: 'disabled',
-                }
-            },
-            repeat: {
-                dry: false,
-            },
-            value: {
-                notify: {
-                    dispatch: true,
-                },
-                parse: false,
-            },
-        },
-        style: {
-            display: 'none',
-        },
-        actions: {
-            stop:{
-                ifAllOf: ['disabled', 'controller']
-            },
-            rotateItems:'items',
-            start:{
-                ifAllOf: ['duration'],
-                ifNoneOf: ['disabled'],
-            },
-            onTicks: {
-                ifAllOf: ['ticks'],
-                ifKeyIn: ['repeat', 'loop'],
-                ifNoneOf: ['disabled'],
-            }
-        }
-    },
-};
-
-console.log(JSON.stringify(da.config));
-```
-
-**NB:**  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet.  However, [be-loaded/importJSON.js(https://github.com/bahrus/be-loaded/blob/baseline/importJSON.ts) may provide an interim solution.
-
 # Part III Dynamic Transforms
 
-The distinction between what we refer to as "Static Transforms" vs "Dynamic Transforms" (which we haven't explained yet) can be bit confusing.  The bottom line difference is this:  
-
-Can the transform be fully represented as JSON?
-
-The transforms we used for the counting example:
+The transforms used in our counter above:
 
 ```JavaScript
 hydratingTransform: {
@@ -749,19 +579,71 @@ hydratingTransform: {
     }}]
 },
 transform: {
-    countParts: 'count'
+        countParts: 'count'
 },
 ```
 
-are clearly fully JSON serializable.  The way the DTR engine *interprets* the transforms allows for some dynamic things to happen -- attaching event handlers, setting the count.  But the transforms themselves never change, so we call these static transforms.
+are JSON serializable.  As such, they can be considered "static transforms" in the sense that they are "constant" transforms.  They don't change.  Yes, there's a dynamic binding in there (setting elements with part "count" to the value of "count" in the host object, that updates anytime the count changes).  And event handlers ("click").  But the transform objects themselves don't change.
+
+ "Dynamic Transforms", in contrast, are fleeting transforms that are emitted as part of the return object of an action method.  If an action method returns an array, the third element of that array, if it is defined, is expected be a [DTR](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-json-serializable-rhs-expressions-with-libdtrjs)  syntax JSON object, but the JSON object contains dynamic data in it, that is expected to change every time the action method is called.
+
+
+Static transforms is preferred, as they can be imported as JSON, and as such are kinder to the browser's cpu.
 
 However, there are certainly scenarios where static transforms aren't sufficient.
 
 Let's start with an example, that might be aptly titled "Clueless in SVG".
 
-The package [xtal-fig](https://github.com/bahrus/xtal-fig) was done to see how xtal-elements could work with SVG.  They were done by an SVG (creator) newbie.  In particular, said newbie was unaware of the power of the css style: "width:inherit".  Nevertheless, it is an illustration of a scenario where DTR doesn't help us:  Dynamically setting (deeply buried) style settings, that may require mathematical manipulation.
+The package [xtal-fig](https://github.com/bahrus/xtal-fig) was done to see how xtal-elements could work with SVG.  They were done by an SVG (creator) newbie.  In particular, said newbie was unaware of the power of the css style: "width:inherit".  Nevertheless, it is an illustration of a scenario where DTR doesn't help us:  Dynamically setting (deeply buried) style settings, that may require mathematical manipulation.  That is a prime candidate for use of dynamic transforms, as illustrated here:
 
-So for that, we utilize dynamic transforms.
+```TypeScript
+
+const mainTemplate = String.raw `
+...
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path part=para-fill 
+        style="fill:#ccff00;stroke:none" />
+    <path part=para-border 
+        style="fill:none;stroke:#000000;stroke-linejoin:round;" />
+    <g>
+        <foreignObject part=inner>
+            <slot></slot>
+        </foreignObject>
+    </g>
+</svg>
+`
+export class XtalFigParallelogramCore extends HTMLElement implements ParaActions{
+    setDimensions({width, height, strokeWidth, innerWidth, innerHeight, innerX, innerY, slant}: this): [PPara, EPara, DT] {
+        const hOffset = width * Math.sin(Math.PI * slant / 180) + strokeWidth;
+        return [,,{transform:{
+            pathE: [,, {d: [
+                `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},${strokeWidth} z`
+            ]}],
+        }}]
+    }
+}
+```
+
+If the transform contains "static" bindings to host properties, they will be applied once, but will **not** be automatically reapplied when the property changes, for dynamic transforms.
+
+This is a "shortcut" for:
+
+```JavaScript
+export class XtalFigParallelogramCore extends HTMLElement implements ParaActions{
+    setDimensions({width, height, strokeWidth, innerWidth, innerHeight, innerX, innerY, slant}: this){
+        const hOffset = width * Math.sin(Math.PI * slant / 180) + strokeWidth;
+        const root = this.clonedTemplate || this.shadowRoot;
+        root.querySelector('path').setAttribute('d', 
+            `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},${strokeWidth} z`
+        );
+    }
+}
+```
+
+In this case, the shortcut doesn't reduce the JavaScript that much, and, unlike static transforms, can't be imported as JSON.  However:
+
+1.  With more complex scenarios, this "shortcut" can reduce boilerplate.
+2.  The method itself has no side effects and is easy to test. 
 
 
 
@@ -1008,3 +890,170 @@ actions:{
 }
 
 ```
+
+## CE vs XE
+
+So why did the first example we present require the use of xtal-element?  What value-add does xtal-element provide over it's only dependency, the trans-render package?
+
+CE provides a bit less functionality -- in particular, it is sufficient for creating simple "introverted" web components that may require more custom code for computed properties. XE provides support for declaratively emitting events, and doing things like setting css pseudo state and form  support.  None of which was required in the counter example.
+
+But an amazing benefit of dynamic imports is that they allow us to always just use the more powerful library (XE).  The extra services XE supports are only loaded if they are relevant.  It seems important for us to "prove" that it is possible to "scale up" from a basic web component ergonomic layer (CE), to a more powerful one (XE), in a seamless way, without incurring a penalty from unused features, and that has been accomplished.  
+
+Bottom line, just use XE, unless you really need to shave a few bytes (containing the dynamic import statement).
+
+
+## XENON
+
+So if we use the may-it-be compiler to JSON-ify our nice declarative JS, we can import the JSON file, and automatically register the JSON file as a web component, via the XENON api:
+
+```TypeScript
+import {XENON} from 'xtal-element/src/XENON.js';
+...
+
+XENON.define(x => import('my-package/dtr-counter.json', {assert: {type: 'json'}}));
+```
+
+**NB**:  JSON imports abide by import maps!
+
+So to reference a JSON based web component, two references are needed -- one-time reference for XENON, but once that is done, single references per JSON file / custom element.  Not too bad!
+
+XENON stands for "**x**tal-**e**lement **n**ée of **object** **n**otation." 
+
+[Polyfills exist](https://github.com/guybedford/es-module-shims#features) for JSON modules, for browsers that are still catching up.  It could [be a while](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Experimental_features). 
+
+When combined with trans-render plugins and [be-*](https://github.com/bahrus?tab=repositories&q=be-&type=&language=&sort=) decorators, both of which adhere to pure 100% declarative JSON syntax ultimately, a rather large variety of web components can be developed, JS (in the client browser) free! Of course we do need to download and execute these plugins, but once downloaded, the declarative syntax can scale rapidly to large, more complex applications, while the client-side JS remains tightly constrained in size.
+
+## Hybrid Mode
+
+Going back to our first example (the timer web component), we were not fully successful in our holy quest to vanquish all JavaScript.  Yes, once defined, all timers whose requirements are met by this component don't require any more client-side JavaScript (which is a benefit of any code reuse).  But the JavaScript the class contains doesn't seem amenable to "data-fying" in some way -- providing some generic functionality captured by JSON settings.  
+
+But providing an easy way to move the remaining JSON serializable data to a separate file, which the browser can more easily digest, and safely replace with alternative settings, seems worthwhile.
+
+For that purpose if CE (or XE) encounters a *function* rather than an object, for the "config" value, it will assume that calling the function will return a JSON import, so it will apply the function and replace the config value with the JSON data that is returned.
+
+So here we present the timer component, take 2.  It is now split into two files:
+
+The EcmaScript file:
+
+```TypeScript
+import {TimeTickerProps, TimeTickerActions} from './types';
+import {XE} from 'xtal-element/src/XE.js';
+
+export class TimeTicker extends HTMLElement implements TimeTickerActions{
+
+    async start({duration, ticks, wait}: this) {
+        const controller = new AbortController();
+        const {animationInterval} = await import('./animationInterval.js');
+        animationInterval(duration, controller.signal, time => {
+            this.ticks++;
+        });
+        return {
+            controller,
+            ticks: wait ? ticks : ticks + 1,
+        };
+    }
+
+    stop({controller}: this) {
+        controller.abort();
+        return {
+            controller: undefined,
+        };
+    }
+
+    rotateItems({items}: this){
+        return {
+            repeat: items.length,
+        };
+    }
+
+    onTicks({idx, repeat, loop, items}: this){
+        if(idx >= repeat - 1){
+            if(loop){
+                idx = -1;
+            }else{
+                return {
+                    disabled: true,
+                };
+            }
+        }
+        idx++;
+        return {
+            idx,
+            value: {
+                idx,
+                item: (items && items.length > idx) ? items[idx] : undefined,
+            }
+        };
+    }
+}
+
+export interface TimeTicker extends TimeTickerProps{}
+
+const xe = new XE<TimeTickerProps, TimeTickerActions>({
+    config: () => import('./tt-config.json', {assert: {type: 'json'}}),
+    superclass: TimeTicker,
+});
+```
+
+and the MJS/MTS file used to generate the JSON file tt-config.json:
+
+```TypeScript
+import {DefineArgs} from 'xtal-element/src/types';
+import {TimeTickerProps, TimeTickerActions} from './types';
+
+const da: DefineArgs<TimeTickerProps, TimeTickerActions> = {
+    config:{
+        tagName: 'time-ticker',
+        propDefaults: {
+            ticks: 0,
+            idx: -1,
+            duration: 1_000,
+            repeat: Infinity,
+            enabled: true,
+            disabled: false,
+            loop: false,
+            wait: false,
+        },
+        propInfo:{
+            enabled:{
+                dry: false,
+                notify: {
+                    toggleTo: 'disabled',
+                }
+            },
+            repeat: {
+                dry: false,
+            },
+            value: {
+                notify: {
+                    dispatch: true,
+                },
+                parse: false,
+            },
+        },
+        style: {
+            display: 'none',
+        },
+        actions: {
+            stop:{
+                ifAllOf: ['disabled', 'controller']
+            },
+            rotateItems:'items',
+            start:{
+                ifAllOf: ['duration'],
+                ifNoneOf: ['disabled'],
+            },
+            onTicks: {
+                ifAllOf: ['ticks'],
+                ifKeyIn: ['repeat', 'loop'],
+                ifNoneOf: ['disabled'],
+            }
+        }
+    },
+};
+
+console.log(JSON.stringify(da.config));
+```
+
+**NB:**  It seems to be too soon to use JSON imports, without fallback mechanisms at least for components meant to work in multiple environments.  For example, esm.run doesn't support it yet.  However, [be-loaded/importJSON.js(https://github.com/bahrus/be-loaded/blob/baseline/importJSON.ts) may provide an interim solution.
+
