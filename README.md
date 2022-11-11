@@ -434,7 +434,7 @@ This argument weakens somewhat when we start to use an additional feature the FR
 
 Action methods can return an array of objects - a tuple - and the FROOP orchestrator knows exactly what to do with it.  
 
-The acronym for the tuple an action method can return is currently "M[A[D]]".  "M" stands for "(shallow) merge", so the first element of the array is interpreted, again, as things that should be shallow merged into the host via Object.assign.
+The acronym for the tuple an action method can return is currently "P[A[D]]".  "P" stands for "props", so the first element of the array is interpreted, again, as things that should be shallow merged into the host via Object.assign.
 
 So the code above is equivalent to the slightly more verbose:
 
@@ -451,9 +451,9 @@ rotateItem({idx, items}: this){
 
 ...as far as the FROOP orchestrator is concerned.
 
-The second element of the array, if there is one, the "A" element, stands for "add event listeners".  After spending years (literally) playing with custom elements / behaviors, a clear pattern emerges that often we need to add event handlers to things -- elements within the shadow DOM, or any class instance that extends the EventTarget.
+The second element of the array, if there is one, the "A" element, stands for "add event listeners".  After spending years (literally) playing with custom elements / behaviors, a clear pattern emerges that often we need to add event handlers to things -- elements within or outside the shadow DOM, or in general any class instance that extends the EventTarget, however it is obtained.
 
-We also saw an example of this two-element array in the counter example:
+We also saw an example of this two-element array in the timer example:
 
 ```TypeScript
 
@@ -465,9 +465,9 @@ async start({duration, ticks, wait, controller}: this) {
             ticks: wait ? ticks : ticks + 1,
         }, 
         {
-            incTicks: {on: timeEmitter.emits, of: timeEmitter}
+            incTicks: {on: 'value-changed', of: timeEmitter}
         }
-    ] as PPE; //rename to MA
+    ] as PPE; //rename to PA?
 }
 ```
 
@@ -479,11 +479,13 @@ What the second element of the array:
 }
 ```
 
-...is saying is:  "add event listener with type specified by timeEmitter.emits (a constant) to the timeEmitter class instance.  When the event is triggered, pass the event object to action method "incTicks".
+...is saying is:  "add event listener with type 'value-changed' to the timeEmitter class instance".  When the event is triggered, pass the event object to action method "incTicks", and (usually) shallow merge whatever that method returns into the host (recursively, including, if an array is passed back, adding new event handlers, etc).
 
 The amount of code writing that doing this entails isn't huge, but it is kind of unpleasant boilerplate, full of parenthesis and arrows, not to mention cleanup code if needed. This is just a convenient shortcut.  But is utilizing something like this library neutral?
 
-Migrating the code to some other "framework / library" would either mean unraveling the short cut and writing out the code explicitly in each instance or finding some mechanism in the new framework / library that can support the same shortcut(s).  Judge for yourself how deeply entangled utilizing this feature is, if this [falling into](https://en.wikipedia.org/wiki/Vendor_lock-in) the ["vendor lock-in"](https://www.cloudflare.com/learning/cloud/what-is-vendor-lock-in/) trap that seems some prevalent in IT (*cough*react*cough*).
+Migrating the code to some other "framework / library" would either mean unraveling the short cut and writing out the code explicitly in each instance or finding some mechanism in the new framework / library that can support the same shortcut(s).  Judge for yourself how deeply entangled utilizing this feature is, if this means [falling into](https://en.wikipedia.org/wiki/Vendor_lock-in) the ["vendor lock-in"](https://www.cloudflare.com/learning/cloud/what-is-vendor-lock-in/) trap that seems some prevalent in IT (*cough*react*cough*).
+
+
 
 </details>
 
@@ -731,7 +733,7 @@ console.log(JSON.stringify(da.config));
 
 # Part III Dynamic Transforms
 
-The distinction between what we refer to as "Static Transforms" vs "Dynamic Transforms" is a bit confusing.  The bottom line difference is this:  
+The distinction between what we refer to as "Static Transforms" vs "Dynamic Transforms" (which we haven't explained yet) can be bit confusing.  The bottom line difference is this:  
 
 Can the transform be fully represented as JSON?
 
