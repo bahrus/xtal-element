@@ -650,11 +650,11 @@ In addition:
 4.  The method itself has no side effects and is easy to test. 
 5.  Requires less "thought", perhaps.
 
+Note also that if the developer never returns a three element array from an action method, the library that supports this feature is not loaded.
 
 
 
-
-# Part IV Support for the non declarative script in the binding syntax [Subject to be removed shortly]
+# Part IV Support for the non declarative script in the binding syntax for Static Transforms
 
 Our counter example above showcased use of Declarative Trans Rendering (DTR), where there is no JavaScript, only JSON/HTML.
 
