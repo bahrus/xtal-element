@@ -617,7 +617,7 @@ export class XtalFigParallelogramCore extends HTMLElement implements ParaActions
         const hOffset = width * Math.sin(Math.PI * slant / 180) + strokeWidth;
         return [,,{transform:{
             pathE: [,, {d: [
-                `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},${strokeWidth} z`
+            `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},{strokeWidth}z`
             ]}],
         }}]
     }
@@ -632,7 +632,7 @@ This is a "shortcut" for:
 export class XtalFigParallelogramCore extends HTMLElement implements ParaActions{
     setDimensions({width, height, strokeWidth, innerWidth, innerHeight, innerX, innerY, slant}: this){
         const hOffset = width * Math.sin(Math.PI * slant / 180) + strokeWidth;
-        const root = this.clonedTemplate || this.shadowRoot;
+        const root = this.clonedTemplate || this.shadowRoot; //preference is to apply this before added into the ShadowDOM
         root.querySelector('path').setAttribute('d', 
             `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},${strokeWidth} z`
         );
@@ -640,10 +640,17 @@ export class XtalFigParallelogramCore extends HTMLElement implements ParaActions
 }
 ```
 
-In this case, the shortcut doesn't reduce the JavaScript that much, and, unlike static transforms, can't be imported as JSON.  However:
+This equivalent code is underselling what the Froop Orchestrator is doing -- it is also caching document queries, for better repeated performance.  And it plans to add support for template parts when those api's become available.
+
+In addition:
 
 1.  With more complex scenarios, this "shortcut" can reduce boilerplate.
-2.  The method itself has no side effects and is easy to test. 
+2.  No use of the dreaded "this".
+3.  Is a little more library / UI "neutral".
+4.  The method itself has no side effects and is easy to test. 
+5.  Requires less "thought", perhaps.
+
+
 
 
 
