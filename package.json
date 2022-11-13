@@ -17,7 +17,8 @@
   "files": [
     "lib/*",
     "src/*",
-    "types.d.ts"
+    "types.d.ts",
+    "*.*"
   ],
   "typings": "types.d.ts",
   "exports": {
