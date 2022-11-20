@@ -54,7 +54,7 @@ export async function ifPR(instance, propagator, key, oldValue, value, notify, p
             //(<any>src).inReflectMode = false;
         }
         if (customState !== undefined) {
-            const internals = instance.internals_;
+            const internals = instance._internals_;
             if (internals === undefined)
                 return;
             const customStateObj = typeof customState === 'string' ? {

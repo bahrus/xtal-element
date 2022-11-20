@@ -59,7 +59,7 @@ export async function ifPR(instance: EventTarget, propagator: IPropagator, key: 
             //(<any>src).inReflectMode = false;
         }
         if(customState !== undefined){
-            const internals = (<any>instance).internals_;
+            const internals = (<any>instance)._internals_;
             if(internals === undefined) return;
             const customStateObj: ICustomState = typeof customState === 'string' ? {
                 nameValue: customState,
