@@ -3,7 +3,7 @@ import {CEArgs} from 'trans-render/froop/types';
 import {Action, WCConfig} from 'trans-render/lib/types';
 import {PropInfoExt} from './types';
 import {XEArgs} from './types';
-export {ActionOnEventConfigs} from 'trans-render/froop/types';
+export {ActionOnEventConfigs} from 'trans-render/froop/types.d.js';
 
 export class XE<
     TProps = any, TActions = TProps,
