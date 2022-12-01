@@ -34,7 +34,8 @@ export interface IToggleTo<MCProps = any>{
 
 export interface IReflectTo<MCProps = any>{
     attr?: boolean,
-    customState?: string | ICustomState<MCProps>
+    customState?: string | ICustomState<MCProps>,
+    aria?: string,
 }
 
 export interface IParse<MCProps = any>{

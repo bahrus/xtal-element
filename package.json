@@ -31,7 +31,7 @@
     "trans-render": "0.0.650"
   },
   "devDependencies": {
-    "@playwright/test": "1.27.1",
+    "@playwright/test": "1.28.1",
     "@skypack/package-check": "0.2.2",
     "may-it-serve": "0.0.4",
     "xtal-shell": "0.0.27"

@@ -30,7 +30,7 @@ export async function ifPR(instance: EventTarget, propagator: IPropagator, key: 
                 nameValue: reflectTo
             }
         } : reflectTo;
-        const {attr, customState} = reflectToObj;
+        const {attr, customState, aria} = reflectToObj;
         let val = value;
         if(attr){
             //(<any>in).inReflectMode = true;
@@ -52,11 +52,14 @@ export async function ifPR(instance: EventTarget, propagator: IPropagator, key: 
                     break;
             }
             if(remAttr){
-                (<any>instance).removeAttribute(lispName);
+                (<Element>instance).removeAttribute(lispName);
             }else{
-                (<any>instance).setAttribute(lispName, val);
+                (<Element>instance).setAttribute(lispName, val);
             }
             //(<any>src).inReflectMode = false;
+        }
+        if(aria !== undefined){
+            (<Element>instance).setAttribute('aria-' + aria, value.toString());
         }
         if(customState !== undefined){
             const internals = (<any>instance)._internals_;

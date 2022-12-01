@@ -24,7 +24,7 @@ export async function ifPR(instance, propagator, key, oldValue, value, notify, p
                 nameValue: reflectTo
             }
         } : reflectTo;
-        const { attr, customState } = reflectToObj;
+        const { attr, customState, aria } = reflectToObj;
         let val = value;
         if (attr) {
             //(<any>in).inReflectMode = true;
@@ -52,6 +52,9 @@ export async function ifPR(instance, propagator, key, oldValue, value, notify, p
                 instance.setAttribute(lispName, val);
             }
             //(<any>src).inReflectMode = false;
+        }
+        if (aria !== undefined) {
+            instance.setAttribute('aria-' + aria, value.toString());
         }
         if (customState !== undefined) {
             const internals = instance._internals_;
