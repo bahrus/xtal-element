@@ -593,7 +593,7 @@ However, there are certainly scenarios where static transforms aren't sufficient
 
 Let's start with an example, that might be aptly titled "Clueless in SVG".
 
-The package [xtal-fig](https://github.com/bahrus/xtal-fig) was done to see how xtal-elements could work with SVG.  They were done by an SVG (creator) newbie.  In particular, said newbie was unaware of the power of the css style: "width:inherit".  Nevertheless, it is an illustration of a scenario where DTR doesn't help us:  Dynamically setting (deeply buried) style settings, that may require mathematical manipulation.  That is a prime candidate for use of dynamic transforms, as illustrated here:
+The package [xtal-fig](https://github.com/bahrus/xtal-fig) was done to see how xtal-elements could work with SVG.  They were done by an SVG (creator) newbie.  In particular, said newbie was unaware of the power of the css style: "width:inherit".  Nevertheless, it is an illustration of a scenario where static DTR doesn't help us:  Dynamically setting (deeply buried) style settings, that may require mathematical manipulation.  That is a prime candidate for use of dynamic transforms, as illustrated here:
 
 ```TypeScript
 
