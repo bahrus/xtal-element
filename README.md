@@ -258,6 +258,27 @@ Development of a xtal-element consists of checks and balances between these ment
     2.  "Dependency injection":  with the help of the link preload tag (and/or, possibly, import maps), allow the consumer of the web component to define their own theme, with no penalty for the consumer from the original default css theme which the developer chose to forgo.
 3.  "The "Ecmascript Branch".  The client-side Javascript that must ship and execute in the browser's main thread to achieve the desired functionality.  Minimal JS boilerplate to "tie the knot" as far as registering the custom element, and specialized methods made available to the custom element class, as a last resort.  If github autopilot is accurately guessing all your next moves when writing JS, maybe it's time to encapsulate that as a declarative web component or behavior/decorator.  With current standards, we are pushed quite hard to make this file serve as the entry point for our custom element.  The JS file can then import the other two files in parallel (especially if link rel=preload is used).  However, with the help of a few key behaviors / decorators built with xtal-element, it is possible to circumvent [the need for the boilerplate JS](https://github.com/bahrus/be-definitive).  Use of other xtal-element built components allows the JSON and CSS files to be replaced with alternative custom files for ultimate flexibility / customizability / extensibility, with no additional payload.  This is configured via optional (but highly encouraged) link rel=preload tags.
 
+
+In the table below, "Pre-JSON-M" refers to before universal browser and CDN support for JSON modules, "Post-JSON-M" refers to once universal browser and CDN support are there for JSON modules.
+
+<table>
+    <thead>
+        <tr>
+            <th>Scenario</th>
+            <th>Entry Point</th>
+            <th>Secondary File</th>
+            <th>Tertiary File</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Non visual component, Pre-JSON-M</td>
+            <td></td>
+            <td></td>
+            <td></td>
+    </tbody>
+</table>
+
 Additional files that are optional, but definitely helpful / expected for an xtal-element-based custom element:
 
 1.  A TypeScript types file.
