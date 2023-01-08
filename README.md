@@ -266,16 +266,47 @@ In the table below, "Pre-JSON-M" refers to before universal browser and CDN supp
         <tr>
             <th>Scenario</th>
             <th>Entry Point</th>
-            <th>Secondary File</th>
-            <th>Tertiary File</th>
+            <th>(Optional) Secondary File</th>
+            <th>(Optional) Tertiary File</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>Non visual component, Pre-JSON-M</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>name-of-element (name-of-element.js)</td>
+            <td>config.mts => config.mjs</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Non visual component, Post-JSON-M</td>
+            <td>name-of-element (name-of-element.js)</td>
+            <td>config.mts => config.mjs => config.json</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Visual component, Pre-JSON-M, no custom code, no shared css</td>
+            <td>root.html</td>
+            <td>make.ts => make.js</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Visual component, Post-JSON-M, no custom code, no shared css</td>
+            <td>root.html</td>
+            <td>make.mts => make.mjs => make.json (or use Deno, or [node-ts](https://typestrong.org/ts-node/docs/#:~:text=ts-node%20is%20a%20TypeScript%20execution%20engine%20and%20REPL,used%20seamlessly%20alongside%20other%20Node.js%20tools%20and%20libraries.)</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Visual component, Pre-JSON-M, custom code, no shared css</td>
+            <td>root.html</td>
+            <td>make.ts => make.js</td>
+            <td>*VM.ts => *VM.js (view model, super class  or mixin)</td>
+        </tr>
+        <tr>
+            <td>Visual component, Post-JSON-M, custom code, no shared css</td>
+            <td>root.html</td>
+            <td>make.ts => make.js</td>
+            <td>vm.ts => vm.js (view model, super class  or mixin)</td>
+        </tr>
     </tbody>
 </table>
 
