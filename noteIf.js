@@ -27,7 +27,9 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
     }
     if (toFormValue) {
         let nnv = typeof value === 'object' ? JSON.stringify(value) : value.toString();
-        instance.internals_.setFormValue(nnv);
+        const internals = instance._internals_;
+        if (internals !== undefined)
+            internals.setFormValue(nnv);
     }
     if (setTo !== undefined) {
         const { key, val } = setTo;

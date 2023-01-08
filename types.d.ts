@@ -1,6 +1,7 @@
 import {CEArgs, IResolvableService, CEServiceClasses, CEServices} from 'trans-render/froop/types';
 import {PropInfo} from 'trans-render/lib/types';
 
+
 export interface INotifySvc extends IResolvableService{}
 
 export interface XEServiceClasses extends CEServiceClasses{
@@ -11,7 +12,7 @@ export interface XEServices extends CEServices{
     notify?: INotifySvc
 }
 
-export interface XEArgs<TProps = any, TAciopns = TProps> extends CEArgs<TProps, TActions> {
+export interface XEArgs<TProps = any, TAciopns = TProps> extends CEArgs<TProps, TActions, PropInfoExt<TProps, TActions>> {
     servers: XEServiceClasses,
     services: XEServices,
 }

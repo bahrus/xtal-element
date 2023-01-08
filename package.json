@@ -9,7 +9,8 @@
     "serve": "node node_modules/may-it-serve/serve.js",
     "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open",
     "package-check": "package-check",
-    "pub": "git commit -m \"...\" && git push && npm version patch && npm publish && git pull && git push"
+    "pub": "git commit -m \"...\" && git push && npm version patch && npm publish && git pull && git push",
+    "safari": "npx playwright wk http://localhost:3030"
   },
   "keywords": [
     "web-components"
@@ -28,7 +29,7 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "trans-render": "0.0.658"
+    "trans-render": "0.0.659"
   },
   "devDependencies": {
     "@playwright/test": "1.29.2",
