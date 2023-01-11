@@ -299,7 +299,7 @@ In the table below, "Pre-JSON-M" refers to before universal browser and CDN supp
             <td>Visual component, Pre-JSON-M, custom code, no shared css</td>
             <td>root.html</td>
             <td>make.ts => make.js</td>
-            <td>*VM.ts => *VM.js (view model, super class  or mixin)</td>
+            <td></td>
         </tr>
         <tr>
             <td>Visual component, Post-JSON-M, custom code, no shared css</td>

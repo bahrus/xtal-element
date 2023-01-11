@@ -13,8 +13,8 @@ export interface XEServices extends CEServices{
 }
 
 export interface XEArgs<TProps = any, TAciopns = TProps> extends CEArgs<TProps, TActions, PropInfoExt<TProps, TActions>> {
-    servers: XEServiceClasses,
-    services: XEServices,
+    servers?: XEServiceClasses,
+    services?: XEServices,
 }
 
 export interface ICustomState<MCProps = any>{
