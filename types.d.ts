@@ -66,12 +66,33 @@ export interface IMapTo<MCProps = any>{
 }
 
 export interface INotify<MCProps = any>{
+    /**
+     * dispatch an event with property value changes
+     */
     dispatch?: boolean,
+    /**
+     * clone a copy of the property value to another property when it changes
+     */
     cloneTo?: keyof MCProps,
+    /**
+     * echo the value to specified target property
+     */
     echoTo?: (keyof MCProps & string) | IEchoTo<MCProps>,
+    /**
+     * set the opposite value when (boolean) property changes
+     */
     negateTo?: (keyof MCProps & string) | IToggleTo<MCProps>,
+    /**
+     * toggle another property value whenever this property changes
+     */
     toggleTo?: string,
+    /**
+     * reflect ao attribute and/or custom state.
+     */
     reflectTo?: string | IReflectTo<MCProps>
+    /**
+     * Stringify property to specified target property.
+     */
     toStringTo?: (keyof MCProps & string),
     localeStringTo?: IFormat<MCProps>,
 
