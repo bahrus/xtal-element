@@ -1,6 +1,6 @@
 export async function noteIf(instance, propagator, key, oldValue, value, notify, propInfo) {
     //console.log({instance, propagator, key, oldValue, value, notify, propInfo});
-    const { dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo, toStringTo } = notify;
+    const { dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo, toStringTo, mapTo } = notify;
     if (dispatch !== undefined) {
         const { camelToLisp } = await import('trans-render/lib/camelToLisp.js');
         const lispName = camelToLisp(key);
@@ -49,5 +49,9 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
     if (parseTo || reflectTo) {
         const { ifPR } = await import('./ifPR.js');
         await ifPR(instance, propagator, key, oldValue, value, notify, propInfo);
+    }
+    if (mapTo) {
+        const { ifS } = await import('./ifM.js');
+        await ifS(instance, propagator, key, oldValue, value, notify, propInfo);
     }
 }

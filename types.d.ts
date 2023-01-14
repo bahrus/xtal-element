@@ -60,6 +60,11 @@ export interface IFormat<MCProps = any>{
     localeOptions: any,
 }
 
+export interface IMapTo<MCProps = any>{
+    key: keyof MCProps,
+    map: [match: any, val: any][]
+}
+
 export interface INotify<MCProps = any>{
     dispatch?: boolean,
     cloneTo?: keyof MCProps,
@@ -75,7 +80,8 @@ export interface INotify<MCProps = any>{
     incTo?: string | IInc<MCProps>,
     lengthTo?: string,
     toFormValue?: boolean,
-    setTo?: ISetTo
+    setTo?: ISetTo,
+    mapTo?: IMapTo,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo {
