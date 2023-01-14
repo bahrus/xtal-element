@@ -1,6 +1,6 @@
 export async function noteIf(instance, propagator, key, oldValue, value, notify, propInfo) {
     //console.log({instance, propagator, key, oldValue, value, notify, propInfo});
-    const { dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo } = notify;
+    const { dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo, toStringTo } = notify;
     if (dispatch !== undefined) {
         const { camelToLisp } = await import('trans-render/lib/camelToLisp.js');
         const lispName = camelToLisp(key);
@@ -11,12 +11,16 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
             }
         }));
     }
-    if (cloneTo !== undefined && value !== undefined) {
+    const isDef = value !== undefined;
+    if (isDef && cloneTo !== undefined) {
         instance[cloneTo] = structuredClone(value);
     }
-    if (localeStringTo !== undefined) {
+    if (isDef && toStringTo !== undefined) {
+        instance[toStringTo] = value.toString();
+    }
+    if (isDef && localeStringTo !== undefined) {
         const { key, locale, localeOptions } = localeStringTo;
-        instance[key] = value.toLocale(locale, localeOptions);
+        instance[key] = value.toLocaleString(locale, localeOptions);
     }
     if (lengthTo !== undefined) {
         let nnv = undefined;
@@ -25,7 +29,7 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
         }
         instance[lengthTo] = nnv;
     }
-    if (toFormValue) {
+    if (isDef && toFormValue) {
         let nnv = typeof value === 'object' ? JSON.stringify(value) : value.toString();
         const internals = instance._internals_;
         if (internals !== undefined)

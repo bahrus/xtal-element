@@ -54,6 +54,12 @@ export interface IInc<MCProps = any>{
     notifyWhenMax?: INotify<MCProps>
 }
 
+export interface IFormat<MCProps = any>{
+    key: keyof MCProps,
+    locale: string,
+    localeOptions: any,
+}
+
 export interface INotify<MCProps = any>{
     dispatch?: boolean,
     cloneTo?: keyof MCProps,
@@ -61,7 +67,7 @@ export interface INotify<MCProps = any>{
     negateTo?: (keyof MCProps & string) | IToggleTo<MCProps>,
     toggleTo?: string,
     reflectTo?: string | IReflectTo<MCProps>
-
+    toStringTo?: (keyof MCProps & string),
     localeStringTo?: IFormat<MCProps>,
 
     parseTo?: IParse<MCProps>,
