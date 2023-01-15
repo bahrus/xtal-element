@@ -35,15 +35,8 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
         if (internals !== undefined)
             internals.setFormValue(nnv);
     }
-    if (setTo !== undefined) {
-        const { key, val } = setTo;
-        instance[key] = val;
-    }
-    if (toggleTo !== undefined) {
-        instance[toggleTo] = !instance[toggleTo];
-    }
-    if (echoTo || negateTo || incTo) {
-        const { ifENI } = await import('./ifENI.js');
+    if (echoTo || negateTo || incTo || toggleTo || setTo) {
+        const { ifENI } = await import('./ifENITS.js');
         await ifENI(instance, propagator, key, oldValue, value, notify, propInfo);
     }
     if (parseTo || reflectTo) {

@@ -1,5 +1,5 @@
 export async function ifENI(instance, propagator, key, oldValue, value, notify, propInfo) {
-    const { echoTo, negateTo, incTo } = notify;
+    const { echoTo, negateTo, incTo, setTo, toggleTo } = notify;
     if (echoTo !== undefined) {
         if (typeof echoTo === 'string') {
             instance[echoTo] = value;
@@ -7,7 +7,7 @@ export async function ifENI(instance, propagator, key, oldValue, value, notify, 
         else {
             const { delay, key } = echoTo;
             if (delay) {
-                let echoDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+                const echoDelayNum = typeof (delay) === 'number' ? delay : self[delay];
                 const { eth } = propagator;
                 if (eth.has(key)) {
                     clearTimeout(eth.get(key));
@@ -22,6 +22,35 @@ export async function ifENI(instance, propagator, key, oldValue, value, notify, 
             }
         }
     }
+    if (setTo !== undefined) {
+        const { key, val, delay } = setTo;
+        if (delay) {
+            const setToDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+            setTimeout(() => {
+                instance[key] = val;
+            }, setToDelayNum);
+        }
+        else {
+            instance[key] = val;
+        }
+    }
+    if (toggleTo !== undefined) {
+        if (typeof toggleTo === 'string') {
+            instance[toggleTo] = !instance[toggleTo];
+        }
+        else {
+            const { delay, key } = toggleTo;
+            if (delay) {
+                const toggleDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+                setTimeout(() => {
+                    instance[key] = !instance[key];
+                }, toggleDelayNum);
+            }
+            else {
+                instance[key] = !instance[key];
+            }
+        }
+    }
     if (negateTo !== undefined) {
         if (typeof negateTo === 'string') {
             instance[negateTo] = !value;
@@ -29,14 +58,14 @@ export async function ifENI(instance, propagator, key, oldValue, value, notify, 
         else {
             const { delay, key } = negateTo;
             if (delay) {
-                const toggleDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+                const negateDelayNum = typeof (delay) === 'number' ? delay : self[delay];
                 const { tth } = propagator;
                 if (tth.has(key)) {
                     clearTimeout(tth.get(key));
                 }
                 const t = setTimeout(() => {
                     instance[key] = !value;
-                }, toggleDelayNum);
+                }, negateDelayNum);
             }
             else {
                 instance[key] = !value;

@@ -2,14 +2,14 @@ import {IPropagator, IPropChg} from 'trans-render/froop/types';
 import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
 
 export async function ifENI(instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, value: any, notify: INotify, propInfo: PropInfoExt){
-    const {echoTo, negateTo, incTo} = notify;
+    const {echoTo, negateTo, incTo, setTo, toggleTo} = notify;
     if(echoTo !== undefined){
         if(typeof echoTo === 'string'){
             (<any>instance)[echoTo] = value;
         }else{
             const {delay, key} = echoTo;
             if(delay){
-                let echoDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
+                const echoDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
                 const {eth} = propagator;
                 if(eth!.has(key)){
                     clearTimeout(eth!.get(key));
@@ -23,13 +23,41 @@ export async function ifENI(instance: EventTarget, propagator: IPropagator, key:
             }
         }
     }
+    if(setTo !== undefined){
+        const {key, val, delay} = setTo;
+        if(delay){
+            const setToDelayNum = typeof(delay) === 'number' ? delay : (<any>self)[delay] as number;
+            setTimeout(() =>{
+                (<any>instance)[key] = val;
+            }, setToDelayNum);
+        }else{
+            (<any>instance)[key] = val;
+        }
+       
+    }
+    if(toggleTo !== undefined){
+        if(typeof toggleTo === 'string'){
+            (<any>instance)[toggleTo] = !(<any>instance)[toggleTo];
+        }else{
+            const {delay, key} = toggleTo;
+            if(delay){
+                const toggleDelayNum = typeof(delay) === 'number' ? delay : (<any>self)[delay] as number;
+                setTimeout(() => {
+                    (<any>instance)[key] = !(<any>instance)[key];
+                }, toggleDelayNum);
+            }else{
+                (<any>instance)[key] = !(<any>instance)[key];
+            }
+        }
+       
+    }
     if(negateTo !== undefined){
         if(typeof negateTo === 'string'){
             (<any>instance)[negateTo] = !value;
         }else{
             const {delay, key} = negateTo;
             if(delay){
-                const toggleDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
+                const negateDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
                 const {tth} = propagator;
                 if(tth!.has(key)){
                     clearTimeout(tth!.get(key));
@@ -37,7 +65,7 @@ export async function ifENI(instance: EventTarget, propagator: IPropagator, key:
                 
                 const t = setTimeout(() => {
                     (<any>instance)[key] = !value;
-                }, toggleDelayNum);
+                }, negateDelayNum);
             }else{
                 (<any>instance)[key] = !value;
             }            

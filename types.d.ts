@@ -24,12 +24,18 @@ export interface ICustomState<MCProps = any>{
 }
 
 export interface IEchoTo<MCProps = any>{
-    key: string,
+    key: keyof MCProps & string,
     delay?: number | (keyof MCProps)
 }
 
 export interface IToggleTo<MCProps = any>{
-    key: string,
+    key: keyof MCProps & string,
+    delay?: number | (keyof MCProps)
+}
+
+export interface ISetTo<MCProps = any>{
+    key: keyof MCProps & string,
+    val: any,
     delay?: number | (keyof MCProps)
 }
 
@@ -85,7 +91,7 @@ export interface INotify<MCProps = any>{
     /**
      * toggle another property value whenever this property changes
      */
-    toggleTo?: string,
+    toggleTo?: string | IToggleTo<MCProps>,
     /**
      * reflect ao attribute and/or custom state.
      */
