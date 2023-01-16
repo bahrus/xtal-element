@@ -3,7 +3,10 @@ import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
 
 export async function noteIf(instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, value: any, notify: INotify, propInfo: PropInfoExt){
     //console.log({instance, propagator, key, oldValue, value, notify, propInfo});
-    const {dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, parseTo, incTo, lengthTo, toFormValue, setTo, toStringTo, mapTo} = notify;
+    const {
+        dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, 
+        parseTo, incTo, lengthTo, toFormValue, setTo, toStringTo, mapTo, wrapTo,
+    } = notify;
     if(dispatch !== undefined){
         const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
         const lispName = camelToLisp(key);
@@ -46,9 +49,9 @@ export async function noteIf(instance: EventTarget, propagator: IPropagator, key
         const {ifPR} = await import('./ifPR.js');
         await ifPR(instance, propagator, key, oldValue, value, notify, propInfo);
     }
-    if(mapTo){
-        const {ifS} = await import('./ifM.js');
-        await ifS(instance, propagator, key, oldValue, value, notify, propInfo);
+    if(mapTo || wrapTo){
+        const {ifWM} = await import('./ifWM.js');
+        await ifWM(instance, propagator, key, oldValue, value, notify, propInfo);
     }
 
 }

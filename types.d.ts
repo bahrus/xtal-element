@@ -12,7 +12,7 @@ export interface XEServices extends CEServices{
     notify?: INotifySvc
 }
 
-export interface XEArgs<TProps = any, TAciopns = TProps> extends CEArgs<TProps, TActions, PropInfoExt<TProps, TActions>> {
+export interface XEArgs<TProps = any, TActions = TProps> extends CEArgs<TProps, TActions, PropInfoExt<TProps, TActions>> {
     servers?: XEServiceClasses,
     services?: XEServices,
 }
@@ -60,10 +60,16 @@ export interface IInc<MCProps = any>{
     notifyWhenMax?: INotify<MCProps>
 }
 
-export interface IFormat<MCProps = any>{
+export interface ILocale<MCProps = any>{
     key: keyof MCProps,
     locale: string,
     localeOptions: any,
+}
+
+export interface IWrapTo<MCProps = any>{
+    key: keyof MCProps,
+    lhs?: string,
+    rhs?: string
 }
 
 export interface IMapTo<MCProps = any>{
@@ -100,7 +106,7 @@ export interface INotify<MCProps = any>{
      * Stringify property to specified target property.
      */
     toStringTo?: (keyof MCProps & string),
-    localeStringTo?: IFormat<MCProps>,
+    localeStringTo?: ILocale<MCProps>,
 
     parseTo?: IParse<MCProps>,
 
@@ -109,6 +115,7 @@ export interface INotify<MCProps = any>{
     toFormValue?: boolean,
     setTo?: ISetTo,
     mapTo?: IMapTo,
+    wrapTo?: IWrapTo,
 }
 
 export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInfo {
