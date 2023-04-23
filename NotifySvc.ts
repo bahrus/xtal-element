@@ -1,6 +1,6 @@
 import {InstSvc} from 'trans-render/froop/InstSvc.js';
 import {XEArgs} from './types';
-import {mse, npb} from 'trans-render/froop/const.js';
+import {mse, xsr} from 'trans-render/froop/const.js';
 import { INewPropagator } from 'trans-render/froop/types';
 
 export class NotifySvc extends InstSvc{
@@ -14,7 +14,7 @@ export class NotifySvc extends InstSvc{
     async #do(args: XEArgs){
         const {services} = args;
         const {propper} = services!
-        propper.addEventListener(npb, async e => {
+        propper.addEventListener(xsr, async e => {
             const propEvent = (e as CustomEvent).detail as INewPropagator;
             const {instance, propagator} = propEvent;
             if(propagator.eth === undefined) propagator.eth = new Map();

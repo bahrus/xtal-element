@@ -1,5 +1,5 @@
 import { InstSvc } from 'trans-render/froop/InstSvc.js';
-import { mse, npb } from 'trans-render/froop/const.js';
+import { mse, xsr } from 'trans-render/froop/const.js';
 export class NotifySvc extends InstSvc {
     args;
     constructor(args) {
@@ -12,7 +12,7 @@ export class NotifySvc extends InstSvc {
     async #do(args) {
         const { services } = args;
         const { propper } = services;
-        propper.addEventListener(npb, async (e) => {
+        propper.addEventListener(xsr, async (e) => {
             const propEvent = e.detail;
             const { instance, propagator } = propEvent;
             if (propagator.eth === undefined)
