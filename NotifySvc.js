@@ -12,6 +12,7 @@ export class NotifySvc extends InstSvc {
     async #do(args) {
         const { services } = args;
         const { propper } = services;
+        const { notarize } = await import('./notarize.js');
         propper.addEventListener(xsr, async (e) => {
             const propEvent = e.detail;
             const { instance, propagator } = propEvent;
@@ -19,7 +20,6 @@ export class NotifySvc extends InstSvc {
                 propagator.eth = new Map();
             if (propagator.tth === undefined)
                 propagator.tth = new Map();
-            const { notarize } = await import('./notarize.js');
             notarize(instance, propagator, args);
             this.instanceResolved = instance;
         });
