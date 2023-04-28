@@ -13,8 +13,6 @@ export class NotifySvc extends InstSvc {
     async #do(args) {
         const { services } = args;
         const { propper } = services;
-        //const {notarize} = await import('./notarize.js');
-        console.log('listen for xsr');
         propper.addEventListener(xsr, async (e) => {
             const propEvent = e.detail;
             const { instance, propagator } = propEvent;
