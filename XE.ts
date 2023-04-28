@@ -13,7 +13,7 @@ export class XE<
 
 
     override async addSvcClasses(args: CEArgs){
-        await super.addSvcClasses(args);
+        if(args.servers === undefined) args.servers = {};
         const config = args.config as WCConfig;
         const {propInfo} = config;
         if(propInfo === undefined) return;
@@ -27,7 +27,7 @@ export class XE<
                 break;
             }
         }
-        
+        await super.addSvcClasses(args);
     }
 
 

@@ -1,7 +1,8 @@
 import { CE } from 'trans-render/froop/CE.js';
 export class XE extends CE {
     async addSvcClasses(args) {
-        await super.addSvcClasses(args);
+        if (args.servers === undefined)
+            args.servers = {};
         const config = args.config;
         const { propInfo } = config;
         if (propInfo === undefined)
@@ -16,5 +17,6 @@ export class XE extends CE {
                 break;
             }
         }
+        await super.addSvcClasses(args);
     }
 }
