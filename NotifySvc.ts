@@ -2,7 +2,7 @@ import {InstSvc} from 'trans-render/froop/InstSvc.js';
 import {XEArgs} from './types';
 import {mse, xsr} from 'trans-render/froop/const.js';
 import { INewPropagator } from 'trans-render/froop/types';
-
+import {notarize} from './notarize.js';
 export class NotifySvc extends InstSvc{
     constructor(public args: XEArgs){
         super();
@@ -14,7 +14,6 @@ export class NotifySvc extends InstSvc{
     async #do(args: XEArgs){
         const {services} = args;
         const {propper} = services!
-        const {notarize} = await import('./notarize.js');
         propper.addEventListener(xsr, async e => {
             const propEvent = (e as CustomEvent).detail as INewPropagator;
             const {instance, propagator} = propEvent;
