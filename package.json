@@ -16,10 +16,8 @@
     "web-components"
   ],
   "files": [
-    "lib/*",
-    "src/*",
     "types.d.ts",
-    "*.*"
+    "*.js"
   ],
   "typings": "types.d.ts",
   "exports": {
@@ -29,11 +27,10 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "trans-render": "0.0.677"
+    "trans-render": "0.0.680"
   },
   "devDependencies": {
     "@playwright/test": "1.33.0",
-    "@skypack/package-check": "0.2.2",
     "may-it-serve": "0.0.5",
     "xtal-shell": "0.0.27"
   },
