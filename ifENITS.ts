@@ -9,7 +9,7 @@ export async function ifENI(instance: EventTarget, propagator: IPropagator, key:
         }else{
             const {delay, key} = echoTo;
             if(delay){
-                const echoDelayNum: number = typeof(delay) === 'number' ? delay : (<any>self)[delay];
+                const echoDelayNum: number = typeof(delay) === 'number' ? delay : (<any>instance)[delay];
                 const {eth} = propagator;
                 if(eth!.has(key)){
                     clearTimeout(eth!.get(key));

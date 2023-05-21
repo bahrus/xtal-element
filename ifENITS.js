@@ -7,7 +7,7 @@ export async function ifENI(instance, propagator, key, oldValue, value, notify, 
         else {
             const { delay, key } = echoTo;
             if (delay) {
-                const echoDelayNum = typeof (delay) === 'number' ? delay : self[delay];
+                const echoDelayNum = typeof (delay) === 'number' ? delay : instance[delay];
                 const { eth } = propagator;
                 if (eth.has(key)) {
                     clearTimeout(eth.get(key));
