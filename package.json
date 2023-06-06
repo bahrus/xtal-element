@@ -27,7 +27,7 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "trans-render": "0.0.684"
+    "trans-render": "0.0.685"
   },
   "devDependencies": {
     "@playwright/test": "1.34.3",
