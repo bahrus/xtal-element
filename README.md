@@ -252,63 +252,12 @@ Instead, developers can pick and choose from a potentially infinite variety of c
 
 Development of a xtal-element consists of checks and balances between these mental "branches" of development:
 
-1.  The "Majestic Definitive Branch".   An html file, together with an optional mjs file that is only used by (no)de(no) to build a JSON file.  The developer edits an mjs (or mts file -- support and enjoys compile time checks.  Potentially another mjs file is edited that produces a static html file, with the help of tagged template literals (though other syntaxes like the beautifully compact pug or the verbose JSX could certainly be supported, as long as the end result is the same html/JSON).  Developing xtal-element elements works best in combination with the [may-it-be](https://github.com/bahrus/may-it-be) compiler, which for now is limited to providing tagged template literal support.  
+1.  The "Majestic Definitive Branch".   An html file.  The developer can alternatively edit an mjs (or mts file with support for compile time checks), with the help of tagged template literals (though other syntaxes like the beautifully compact pug or the verbose JSX could certainly be supported, as long as the end result is the same html).  Developing xtal-element elements via *.mts works best in combination with the [may-it-be](https://github.com/bahrus/may-it-be) compiler, which for now is limited to providing tagged template literal support.  
 2.  The "Concessional Branch":  CSS styling, imported via CSS Modules or via a style tag within the html file.  There are two strong reasons to keep the CSS in a separate file (but this is not a doctrinaire rule).  
     1.  Multiple components share the same CSS.
     2.  "Dependency injection":  with the help of the link preload tag (and/or, possibly, import maps), allow the consumer of the web component to define their own theme, with no penalty for the consumer from the original default css theme which the developer chose to forgo.
 3.  "The "Ecmascript Branch".  The client-side Javascript that must ship and execute in the browser's main thread to achieve the desired functionality.  Minimal JS boilerplate to "tie the knot" as far as registering the custom element, and specialized methods made available to the custom element class, as a last resort.  If github autopilot is accurately guessing all your next moves when writing JS, maybe it's time to encapsulate that as a declarative web component or behavior/decorator.  With current standards, we are pushed quite hard to make this file serve as the entry point for our custom element.  The JS file can then import the other two files in parallel (especially if link rel=preload is used).  However, with the help of a few key behaviors / decorators built with xtal-element, it is possible to circumvent [the need for the boilerplate JS](https://github.com/bahrus/be-definitive).  Use of other xtal-element built components allows the JSON and CSS files to be replaced with alternative custom files for ultimate flexibility / customizability / extensibility, with no additional payload.  This is configured via optional (but highly encouraged) link rel=preload tags.
 
-
-In the table below, "Pre-JSON-M" refers to before universal browser and CDN support for JSON modules, "Post-JSON-M" refers to once universal browser and CDN support are there for JSON modules.
-
-<table>
-    <thead>
-        <tr>
-            <th>Scenario</th>
-            <th>Entry Point</th>
-            <th>(Optional) Secondary File</th>
-            <th>(Optional) Tertiary File</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Non visual component, Pre-JSON-M</td>
-            <td>name-of-element (name-of-element.js)</td>
-            <td>config.mts => config.mjs</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>Non visual component, Post-JSON-M</td>
-            <td>name-of-element (name-of-element.js)</td>
-            <td>config.mts => config.mjs => config.json</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>Visual component, Pre-JSON-M, no custom code, no shared css</td>
-            <td>root.html</td>
-            <td>make.ts => make.js</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>Visual component, Post-JSON-M, no custom code, no shared css</td>
-            <td>root.html</td>
-            <td>make.mts => make.mjs => make.json (or use Deno, or [node-ts](https://typestrong.org/ts-node/docs/#:~:text=ts-node%20is%20a%20TypeScript%20execution%20engine%20and%20REPL,used%20seamlessly%20alongside%20other%20Node.js%20tools%20and%20libraries.)</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>Visual component, Pre-JSON-M, custom code, no shared css</td>
-            <td>root.html</td>
-            <td>make.ts => make.js</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Visual component, Post-JSON-M, custom code, no shared css</td>
-            <td>root.html</td>
-            <td>make.mts => make.json</td>
-            <td>vm.ts => vm.js (view model, super class  or mixin)</td>
-        </tr>
-    </tbody>
-</table>
 
 Additional files that are optional, but definitely helpful / expected for an xtal-element-based custom element:
 

@@ -1,4 +1,5 @@
 import { CE } from 'trans-render/froop/CE.js';
+export { ActionOnEventConfigs } from 'trans-render/froop/types.d.js';
 export class XE extends CE {
     async addSvcClasses(args) {
         if (args.servers === undefined)
