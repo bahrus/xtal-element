@@ -1,5 +1,5 @@
 import {CEArgs, IResolvableService, CEServiceClasses, CEServices} from 'trans-render/froop/types';
-import {PropInfo} from 'trans-render/lib/types';
+import {PropInfo, WCConfig} from 'trans-render/lib/types';
 
 
 export interface INotifySvc extends IResolvableService{}
@@ -16,6 +16,8 @@ export interface XEArgs<TProps = any, TActions = TProps> extends CEArgs<TProps, 
     servers?: XEServiceClasses,
     services?: XEServices,
 }
+
+export interface Config<TProps=any, TActions = TProps> extends WCConfig<TProps, TActions, PropInfoExt<TProps, TActions>>{}
 
 export interface ICustomState<MCProps = any>{
     truthy?: string,
