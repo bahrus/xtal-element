@@ -1,6 +1,6 @@
 {
   "name": "xtal-element",
-  "version": "0.0.570",
+  "version": "0.0.571",
   "description": "Some opinionated web component base classes.",
   "main": "XE.js",
   "module": "XE.js",
@@ -27,7 +27,7 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "trans-render": "0.0.692"
+    "trans-render": "0.0.693"
   },
   "devDependencies": {
     "@playwright/test": "1.35.1",
