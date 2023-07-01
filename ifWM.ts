@@ -8,12 +8,16 @@ export async function ifWM(instance: EventTarget, propagator: IPropagator, key: 
         (<any>instance)[key] = (lhs || '') + value + (rhs || '');
     }
     if(mapTo !== undefined){
-        const {key, map} = mapTo;
-        for(const test of map){
-            if(test[0] === value){
-                (<any>instance)[key] = test[1];
-                break;
+        const mapTos = Array.isArray(mapTo) ? mapTo : [mapTo];
+        for(const mapToInstance of mapTos){
+            const {key, map} = mapToInstance;
+            for(const test of map){
+                if(test[0] === value){
+                    (<any>instance)[key] = test[1];
+                    break;
+                }
             }
         }
+
     }
 }

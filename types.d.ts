@@ -116,7 +116,7 @@ export interface INotify<MCProps = any>{
     lengthTo?: string,
     toFormValue?: boolean,
     setTo?: ISetTo,
-    mapTo?: IMapTo,
+    mapTo?: IMapTo | IMapTo[],
     wrapTo?: IWrapTo,
 }
 

@@ -6,15 +6,15 @@
 		"experimentalDecorators": false,
 		"skipLibCheck": true,
 		"strict": true,
-		"newLine": "LF",
-		"watch": true
+		"newLine": "LF"
 	},
 	"files": [
 		"XE.ts"
 	],
 	"include":[
-		"demo/*"
-, "XENON.ts"	],
+		"demo/*",
+		 "XENON.ts"	
+	],
 	"exclude":[
 		"./node_modules/*"
 	]
