@@ -10,7 +10,8 @@
     "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open",
     "package-check": "package-check",
     "pub": "git commit -m \"...\" && git push && npm version patch && npm publish && git pull && git push",
-    "safari": "npx playwright wk http://localhost:3030"
+    "safari": "npx playwright wk http://localhost:3030",
+    "update": "ncu -u && npm install"
   },
   "keywords": [
     "web-components"
@@ -27,10 +28,10 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "trans-render": "0.0.694"
+    "trans-render": "0.0.695"
   },
   "devDependencies": {
-    "@playwright/test": "1.35.1",
+    "@playwright/test": "1.36.0",
     "may-it-serve": "0.0.5",
     "xtal-shell": "0.0.27"
   },
