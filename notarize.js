@@ -5,7 +5,9 @@ export function notarize(instance, propagator, args) {
         const { key, oldVal, newVal } = chg;
         const { services } = args;
         const { itemizer } = services;
-        await itemizer.resolve();
+        if (!itemizer.resolved) {
+            await itemizer.resolve();
+        }
         const { nonDryProps } = itemizer;
         const propInfo = itemizer.propInfos[key];
         const { notify } = propInfo;

@@ -10,7 +10,10 @@ export function notarize(instance: EventTarget, propagator: IPropagator, args: X
         const {key, oldVal, newVal} = chg;
         const {services} = args;
         const {itemizer} = services!;
-        await itemizer.resolve();
+        if(!itemizer.resolved){
+            await itemizer.resolve();
+        }
+        
         const {nonDryProps} = itemizer;
         const propInfo = itemizer.propInfos[key] as PropInfoExt;
         const {notify} = propInfo;
