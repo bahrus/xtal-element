@@ -16,6 +16,21 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
             }
         }));
     }
+    if (isEnh) {
+        const { dispatchFromEnhancedElement } = notify;
+        if (dispatchFromEnhancedElement) {
+            const enhancedElement = instance.enhancedElement;
+            const { camelToLisp } = await import('trans-render/lib/camelToLisp.js');
+            const lispName = camelToLisp(key);
+            const evtType = 'enh-by-' + lispName + '-changed';
+            enhancedElement.dispatchEvent(new CustomEvent(evtType, {
+                detail: {
+                    oldValue,
+                    value,
+                }
+            }));
+        }
+    }
     const isDef = value !== undefined;
     if (isDef && cloneTo !== undefined) {
         instance[cloneTo] = structuredClone(value);

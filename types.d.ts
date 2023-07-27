@@ -85,6 +85,10 @@ export interface INotify<MCProps = any>{
      */
     dispatch?: boolean,
     /**
+     * dispatch event from enhanced element with element enhancements
+     */
+    dispatchFromEnhancedElement?: boolean,
+    /**
      * clone a copy of the property value to another property when it changes
      */
     cloneTo?: keyof MCProps,

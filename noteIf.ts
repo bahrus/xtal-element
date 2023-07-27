@@ -27,6 +27,21 @@ export async function noteIf(
             }
         }));
     }
+    if(isEnh){
+        const {dispatchFromEnhancedElement} = notify;
+        if(dispatchFromEnhancedElement){
+            const enhancedElement = (<any>instance).enhancedElement;
+            const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
+            const lispName = camelToLisp(key);
+            const evtType = 'enh-by-' + lispName + '-changed';
+            enhancedElement.dispatchEvent(new CustomEvent(evtType, {
+                detail: {
+                    oldValue,
+                    value,
+                }
+            }))
+        }
+    }
     const isDef = value !== undefined;
     if(isDef && cloneTo !== undefined){
         (<any>instance)[cloneTo] = structuredClone(value);
