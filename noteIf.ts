@@ -1,16 +1,26 @@
 import {IPropagator, IPropChg} from 'trans-render/froop/types';
-import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
+import {INotify, PropInfoExt, IReflectTo, ICustomState, Config} from './types';
 
-export async function noteIf(instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, value: any, notify: INotify, propInfo: PropInfoExt){
+export async function noteIf(
+    instance: EventTarget, propagator: IPropagator, key: string, 
+    oldValue: any, value: any, notify: INotify, propInfo: PropInfoExt,
+    config: Config
+    ){
     //console.log({instance, propagator, key, oldValue, value, notify, propInfo});
     const {
         dispatch, echoTo, toggleTo, negateTo, reflectTo, cloneTo, localeStringTo, 
         parseTo, incTo, lengthTo, toFormValue, setTo, toStringTo, mapTo, wrapTo,
     } = notify;
+    const {isEnh} = config;
     if(dispatch !== undefined){
-        const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
-        const lispName = camelToLisp(key);
-        instance.dispatchEvent(new CustomEvent(lispName + '-changed', {
+        let evtType = key;
+        if(!isEnh){
+            const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
+            const lispName = camelToLisp(key);
+            evtType = lispName + '-changed';
+        }
+        
+        instance.dispatchEvent(new CustomEvent(evtType, {
             detail:{
                 oldValue,
                 value

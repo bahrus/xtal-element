@@ -1,5 +1,8 @@
 import { pc } from 'trans-render/froop/const.js';
 export function notarize(instance, propagator, args) {
+    console.log({ args });
+    const { config } = args;
+    //const {isEnh} = config as Config;
     propagator.addEventListener(pc, async (e) => {
         const chg = e.detail;
         const { key, oldVal, newVal } = chg;
@@ -18,6 +21,6 @@ export function notarize(instance, propagator, args) {
                 return;
         }
         const { noteIf } = await import('./noteIf.js');
-        await noteIf(instance, propagator, key, oldVal, newVal, notify, propInfo);
+        await noteIf(instance, propagator, key, oldVal, newVal, notify, propInfo, config);
     });
 }

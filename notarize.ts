@@ -3,8 +3,12 @@ import {pc} from 'trans-render/froop/const.js';
 import {XEArgs} from './types';
 import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
 import { PropInfo, } from 'trans-render/lib/types';
+import {Config} from './types';
 
 export function notarize(instance: EventTarget, propagator: IPropagator, args: XEArgs){
+    console.log({args});
+    const {config} = args;
+    //const {isEnh} = config as Config;
     propagator.addEventListener(pc, async e => {
         const chg = (e as CustomEvent).detail as IPropChg;
         const {key, oldVal, newVal} = chg;
@@ -22,7 +26,7 @@ export function notarize(instance: EventTarget, propagator: IPropagator, args: X
             if(oldVal === newVal) return;
         }
         const {noteIf} = await import('./noteIf.js');
-        await noteIf(instance, propagator, key, oldVal, newVal, notify, propInfo);
+        await noteIf(instance, propagator, key, oldVal, newVal, notify, propInfo, config as Config);
     });
 
 }
