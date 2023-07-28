@@ -57,7 +57,7 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
     }
     if (echoTo || negateTo || incTo || toggleTo || setTo) {
         const { ifENI } = await import('./ifENITS.js');
-        await ifENI(instance, propagator, key, oldValue, value, notify, propInfo);
+        await ifENI(instance, propagator, key, oldValue, value, notify, propInfo, config);
     }
     if (parseTo || reflectTo) {
         const { ifPR } = await import('./ifPR.js');

@@ -1,4 +1,4 @@
-export async function ifENI(instance, propagator, key, oldValue, value, notify, propInfo) {
+export async function ifENI(instance, propagator, key, oldValue, value, notify, propInfo, config) {
     const { echoTo, negateTo, incTo, setTo, toggleTo } = notify;
     if (echoTo !== undefined) {
         if (typeof echoTo === 'string') {
@@ -98,7 +98,7 @@ export async function ifENI(instance, propagator, key, oldValue, value, notify, 
                 }
                 else {
                     const { noteIf } = await import('./noteIf.js');
-                    await noteIf(instance, propagator, key, oldValue, value, notifyWhenMax, propInfo);
+                    await noteIf(instance, propagator, key, oldValue, value, notifyWhenMax, propInfo, config);
                     return;
                 }
             }

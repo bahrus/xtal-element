@@ -1,7 +1,9 @@
 import {IPropagator, IPropChg} from 'trans-render/froop/types';
-import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
+import {INotify, PropInfoExt, IReflectTo, ICustomState, Config} from './types';
 
-export async function ifENI(instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, value: any, notify: INotify, propInfo: PropInfoExt){
+export async function ifENI(
+    instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, 
+    value: any, notify: INotify, propInfo: PropInfoExt, config: Config){
     const {echoTo, negateTo, incTo, setTo, toggleTo} = notify;
     if(echoTo !== undefined){
         if(typeof echoTo === 'string'){
@@ -95,7 +97,7 @@ export async function ifENI(instance: EventTarget, propagator: IPropagator, key:
                     return;
                 }else{
                     const {noteIf} = await import('./noteIf.js');
-                    await noteIf(instance, propagator, key, oldValue, value, notifyWhenMax, propInfo)
+                    await noteIf(instance, propagator, key, oldValue, value, notifyWhenMax, propInfo, config)
                     return;
                 }
             }
