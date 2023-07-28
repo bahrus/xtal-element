@@ -6,9 +6,7 @@ import { PropInfo, } from 'trans-render/lib/types';
 import {Config} from './types';
 
 export function notarize(instance: EventTarget, propagator: IPropagator, args: XEArgs){
-    console.log({args});
     const {config} = args;
-    //const {isEnh} = config as Config;
     propagator.addEventListener(pc, async e => {
         const chg = (e as CustomEvent).detail as IPropChg;
         const {key, oldVal, newVal} = chg;

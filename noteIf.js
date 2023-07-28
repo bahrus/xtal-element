@@ -22,7 +22,7 @@ export async function noteIf(instance, propagator, key, oldValue, value, notify,
             const enhancedElement = instance.enhancedElement;
             const { camelToLisp } = await import('trans-render/lib/camelToLisp.js');
             const lispName = camelToLisp(key);
-            const evtType = 'enh-by-' + lispName + '-changed';
+            const evtType = 'enh-by-' + instance.enhancementInfo.enh + '.' + lispName + '-changed';
             enhancedElement.dispatchEvent(new CustomEvent(evtType, {
                 detail: {
                     oldValue,

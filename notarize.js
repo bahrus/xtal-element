@@ -1,8 +1,6 @@
 import { pc } from 'trans-render/froop/const.js';
 export function notarize(instance, propagator, args) {
-    console.log({ args });
     const { config } = args;
-    //const {isEnh} = config as Config;
     propagator.addEventListener(pc, async (e) => {
         const chg = e.detail;
         const { key, oldVal, newVal } = chg;
