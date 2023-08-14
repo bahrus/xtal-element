@@ -58,7 +58,7 @@ export async function ifPR(instance: EventTarget, propagator: IPropagator, key: 
             }
             //(<any>src).inReflectMode = false;
         }
-        if(aria !== undefined){
+        if(aria !== undefined && value !== undefined && value !== null){
             (<Element>instance).setAttribute('aria-' + aria, value.toString());
         }
         if(customState !== undefined){

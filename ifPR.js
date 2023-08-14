@@ -53,7 +53,7 @@ export async function ifPR(instance, propagator, key, oldValue, value, notify, p
             }
             //(<any>src).inReflectMode = false;
         }
-        if (aria !== undefined) {
+        if (aria !== undefined && value !== undefined && value !== null) {
             instance.setAttribute('aria-' + aria, value.toString());
         }
         if (customState !== undefined) {
