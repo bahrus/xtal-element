@@ -105,7 +105,7 @@ export interface INotify<MCProps = any>{
      */
     toggleTo?: string | IToggleTo<MCProps>,
     /**
-     * reflect ao attribute and/or custom state.
+     * reflect as attribute and/or custom state.
      */
     reflectTo?: string | IReflectTo<MCProps>
     /**
