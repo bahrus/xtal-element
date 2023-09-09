@@ -28,10 +28,10 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "trans-render": "0.0.702"
+    "trans-render": "0.0.705"
   },
   "devDependencies": {
-    "@playwright/test": "1.37.0",
+    "@playwright/test": "1.37.1",
     "may-it-serve": "0.0.5",
     "xtal-shell": "0.0.27"
   },
