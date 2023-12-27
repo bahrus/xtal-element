@@ -1,5 +1,6 @@
 import {TemplMgmt, TemplMgmtProps, TemplMgmtActions, beTransformed, propInfo} from 'trans-render/lib/mixins/TemplMgmt.js';
 import {CE} from 'trans-render/froop/CE.js';
+import { XForm } from 'trans-render/types.js';
 
 export interface DTRCounterProps {
     count: number;
@@ -37,16 +38,17 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
             </style>
             `,
             count: 30,
-            hydratingTransform:{
-                buttonElements: [{},{click:{prop:'count', plusEq: true, vft: 'dataset.d',  parseValAs: 'int'}}]
-            },
-            shadowRootMode: 'open',
-            transform: {countParts: 'count'},
-            unsafeTransform:{
-                countParts: ({target}) => {
-                    console.log(target);
+            xform: {
+                '% count': 0,
+                "button": {
+                    m: {
+                        on: 'click',
+                        inc: 'count',
+                        byAmt: '.dataset.d',
+                    },
                 }
-            },
+            } as XForm<DTRCounterProps, TemplMgmtActions> as any,
+            shadowRootMode: 'open',
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
 
         },

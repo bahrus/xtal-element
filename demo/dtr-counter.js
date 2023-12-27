@@ -33,16 +33,17 @@ const ce = new CE({
             </style>
             `,
             count: 30,
-            hydratingTransform: {
-                buttonElements: [{}, { click: { prop: 'count', plusEq: true, vft: 'dataset.d', parseValAs: 'int' } }]
-            },
-            shadowRootMode: 'open',
-            transform: { countParts: 'count' },
-            unsafeTransform: {
-                countParts: ({ target }) => {
-                    console.log(target);
+            xform: {
+                '% count': 0,
+                "button": {
+                    m: {
+                        on: 'click',
+                        inc: 'count',
+                        byAmt: '.dataset.d',
+                    },
                 }
             },
+            shadowRootMode: 'open',
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
         },
     },
