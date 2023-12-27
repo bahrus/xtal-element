@@ -509,17 +509,16 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
         },
         propDefaults:{
             count: 30,
-            hydratingTransform: {
-                buttonElements: [{}, {click:{
-                    prop:'count',
-                    vft: 'dataset.d',
-                    plusEq: true,
-                    parseValAs: 'int',
-                }}]
-            },
-            transform: {
-                    countParts: 'count'
-            },
+            xform: {
+                '% count': 0,
+                "button": {
+                    m: {
+                        on: 'click',
+                        inc: 'count',
+                        byAmt: '.dataset.d',
+                    },
+                }
+            } as XForm<DTRCounterProps, TemplMgmtActions> as any,
             mainTemplate: String.raw `
                 <button part=down data-d=-1>-</button>
                 <span part=count></span>
