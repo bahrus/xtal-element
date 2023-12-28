@@ -1,6 +1,7 @@
 import { TemplMgmt, beTransformed, propInfo } from 'trans-render/lib/mixins/TemplMgmt.js';
-import { CE } from 'trans-render/froop/CE.js';
-const ce = new CE({
+import { XE } from '../XE.js';
+import { UtilMixin } from '../UtilMixin.js';
+const ce = new XE({
     config: {
         tagName: 'dtr-counter',
         actions: {
@@ -34,7 +35,7 @@ const ce = new CE({
             `,
             count: 30,
             xform: {
-                '% count': 0,
+                '% count': 'localize',
                 "button": {
                     m: {
                         on: 'click',
@@ -47,5 +48,5 @@ const ce = new CE({
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
         },
     },
-    mixins: [TemplMgmt],
+    mixins: [TemplMgmt, UtilMixin],
 });

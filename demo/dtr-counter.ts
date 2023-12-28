@@ -1,11 +1,12 @@
 import {TemplMgmt, TemplMgmtProps, TemplMgmtActions, beTransformed, propInfo} from 'trans-render/lib/mixins/TemplMgmt.js';
-import {CE} from 'trans-render/froop/CE.js';
+import {XE} from '../XE.js';
 import { XForm } from 'trans-render/types.js';
+import {UtilMixin, UtilMixinMethods} from '../UtilMixin.js';
 
 export interface DTRCounterProps {
     count: number;
 } 
-const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
+const ce = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions & UtilMixinMethods>({
     config:  {
         tagName:'dtr-counter',
         actions:{
@@ -39,7 +40,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
             `,
             count: 30,
             xform: {
-                '% count': 0,
+                '% count': 'localize',
                 "button": {
                     m: {
                         on: 'click',
@@ -47,12 +48,12 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
                         byAmt: '.dataset.d',
                     },
                 }
-            } as XForm<DTRCounterProps, TemplMgmtActions> as any,
+            } as XForm<DTRCounterProps, TemplMgmtActions & UtilMixinMethods> as any,
             shadowRootMode: 'open',
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
 
         },
         
     },
-    mixins: [TemplMgmt],
+    mixins: [TemplMgmt, UtilMixin],
 });
