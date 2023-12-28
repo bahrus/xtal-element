@@ -11,6 +11,7 @@
     <div id=target></div>
     <script type=importmap>{
         "imports":{
+            "mount-observer/": "../node_modules/mount-observer/",
             "trans-render/": "../node_modules/trans-render/"
         }
     }</script>
@@ -19,7 +20,9 @@
     </script>
     <script>
         function runTest(){
-            document.querySelector('dtr-counter').shadowRoot.querySelector('button[part="up"]').click();
+            const button = document.querySelector('dtr-counter').shadowRoot.querySelector('button[part="up"]')
+            button.click();
+            //button.dispatchEvent(new Event('click'));
             setTimeout(() => {
                 if(document.querySelector('dtr-counter').shadowRoot.querySelector('span').textContent === '14'){
                     target.setAttribute('mark', 'good');

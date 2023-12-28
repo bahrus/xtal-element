@@ -1,12 +1,13 @@
 import {TemplMgmt, TemplMgmtProps, TemplMgmtActions, beTransformed, propInfo} from 'trans-render/lib/mixins/TemplMgmt.js';
+import {Localizer, LocalizerMethods} from 'trans-render/lib/mixins/Localizer.js';
 import {XE} from '../XE.js';
 import { XForm } from 'trans-render/types.js';
-import {UtilMixin, UtilMixinMethods} from '../UtilMixin.js';
 
 export interface DTRCounterProps {
     count: number;
 } 
-const ce = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions & UtilMixinMethods>({
+const ce = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
+    mixins: [TemplMgmt, Localizer],
     config:  {
         tagName:'dtr-counter',
         actions:{
@@ -48,12 +49,12 @@ const ce = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions & UtilMixin
                         byAmt: '.dataset.d',
                     },
                 }
-            } as XForm<DTRCounterProps, TemplMgmtActions & UtilMixinMethods> as any,
+            } as XForm<DTRCounterProps, TemplMgmtActions & LocalizerMethods> as any,
             shadowRootMode: 'open',
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
 
         },
         
     },
-    mixins: [TemplMgmt, UtilMixin],
+    
 });

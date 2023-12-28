@@ -1,7 +1,8 @@
 import { TemplMgmt, beTransformed, propInfo } from 'trans-render/lib/mixins/TemplMgmt.js';
+import { Localizer } from 'trans-render/lib/mixins/Localizer.js';
 import { XE } from '../XE.js';
-import { UtilMixin } from '../UtilMixin.js';
 const ce = new XE({
+    mixins: [TemplMgmt, Localizer],
     config: {
         tagName: 'dtr-counter',
         actions: {
@@ -48,5 +49,4 @@ const ce = new XE({
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
         },
     },
-    mixins: [TemplMgmt, UtilMixin],
 });
