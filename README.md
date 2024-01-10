@@ -907,6 +907,59 @@ But an amazing benefit of dynamic imports is that they allow us to always just u
 
 Bottom line, just use XE, unless you really need to shave a few bytes (containing the dynamic import statement).
 
+## Web components from HTML streamed content [TODO]
+
+This package contains a web component, xtal-element, that allows us to manufacture other web components declaratively, conveniently, and without repeating ourselves.
+
+## Example 1 -- Pre-rendered live DOM that is reused [TODO]
+
+```html
+<div>
+    <div>Hello, <span>world</span></div>
+    <xtal-element define=hello-world></xtal-element>
+</div>
+
+...
+
+<hello-world></hello-world>
+```
+
+Renders:
+
+```html
+<div be-definitive=hello-world>
+    <div>Hello, <span>world</span></div>
+</div>
+...
+<hello-world>
+    <div>Hello, <span>world</span></div>
+</hello-world>
+```
+
+**NB:** Shadow DOM is bypassed in this instance.  It makes sense in this case not to use Shadow DOM for consistency between the original, defining element, and subsequent instances, for styling consistency.
+
+In fact, the following may make more sense from a styling perspective, and also works:
+
+## Example 1a -- Pre-rendered live DOM specifies the name of the web component:
+
+```html
+<hello-world>
+    <div>Hello, <span>world</span></div>
+    <xtal-element></xtal-element>
+</hello-world>
+<hello-world></hello-world>
+```
+
+Renders:
+
+```html
+<hello-world>
+  <div>Hello, <span>world</span></div>
+</hello-world>
+<hello-world>
+  <div>Hello, <span>world</span></div>
+</hello-world>
+```
 
 ## XENON
 
