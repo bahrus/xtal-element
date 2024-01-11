@@ -1,7 +1,7 @@
 import { TemplMgmt, beTransformed, propInfo } from 'trans-render/lib/mixins/TemplMgmt.js';
 import { Localizer } from 'trans-render/lib/mixins/Localizer.js';
 import { XE } from '../XE.js';
-const ce = new XE({
+const xe = new XE({
     mixins: [TemplMgmt, Localizer],
     config: {
         tagName: 'dtr-counter',

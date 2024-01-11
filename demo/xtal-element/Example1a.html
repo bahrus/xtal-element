@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div>Hello, <span>world</span></div>
+        <xtal-element aka=hello-world></xtal-element>
+    </div>
+    
+    <hello-world></hello-world>
+
+    <script type=importmap>{
+        "imports":{
+            "mount-observer/": "../../node_modules/mount-observer/",
+            "trans-render/": "../../node_modules/trans-render/"
+        }
+    }</script>
+    <script type=module>
+        import '../../xtal-element.js';
+    </script>
+</body>
+</html>

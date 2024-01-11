@@ -1,24 +1,13 @@
-import {XE} from './XE.js';
-import {
-    XtalElementEndUserProps,
-    XtalElementActions,
-    XtalElementAllProps
-} from './types.js';
-
-export class XtalElement extends HTMLElement implements XtalElementActions {
-    async define(self: this) {
+import { XE } from './XE.js';
+export class XtalElement extends HTMLElement {
+    async define(self) {
         console.log('iah');
         return {
             resolved: true
-        }
+        };
     }
 }
-
-export interface XtalElement extends XtalElementEndUserProps {
-
-}
-
-const xe = new XE<XtalElementAllProps, XtalElementActions>({
+const xe = new XE({
     superclass: XtalElement,
     config: {
         tagName: 'xtal-element',
@@ -27,12 +16,11 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
             targetScope: 'porn',
             inferProps: false,
             propInferenceCriteria: [{
-                cssSelector: '[itemprop]',
-                attrForProp: 'itemprop',
-            }],
-
+                    cssSelector: '[itemprop]',
+                    attrForProp: 'itemprop',
+                }],
         },
-        propInfo:{
+        propInfo: {
             shadowRootMode: {
                 type: 'String'
             },
@@ -47,7 +35,7 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
                 type: 'Object'
             },
             resolved: {
-                notify:{
+                notify: {
                     dispatch: true,
                 }
             }
@@ -55,8 +43,8 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
         style: {
             display: 'none'
         },
-        actions:{
+        actions: {
             define: 'isAttrParsed'
         }
     },
-})
+});

@@ -1,5 +1,5 @@
 import {CEArgs, IResolvableService, CEServiceClasses, CEServices} from 'trans-render/froop/types';
-import {PropInfo, WCConfig} from 'trans-render/lib/types';
+import {PropInfo, Scope, WCConfig} from 'trans-render/lib/types';
 import { XForm } from 'trans-render/types';
 
 
@@ -149,14 +149,31 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
 
 }
 
+export interface PropInferenceCriteria{
+    cssSelector: string,
+    attrForProp: string,
+
+}
+
 export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     aka?: string,
     shadowRootMode?: ShadowRootMode,
-    propDefaults?: Partial<MCProps & MCActions>
-    propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>}
-    xform?: XForm<MCProps, MCActions>
+    propDefaults?: Partial<MCProps & MCActions>,
+    propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>},
+    xform?: XForm<MCProps, MCActions>,
+    inferProps?: boolean,
+    propInferenceCriteria?: Array<PropInferenceCriteria>,
+    targetScope?: Scope,
+    
+}
+
+export interface XtalElementAllProps<MCProps = any, MCActions = MCProps> extends XtalElementEndUserProps<MCProps, MCActions>{
+    isAttrParsed?: boolean,
+    mainTemplate?: HTMLTemplateElement,
+    inferredPropXForm?: XForm<MCProps, MCActions>,
+    resolved?: boolean
 }
 
 export interface XtalElementActions{
-    
+    define(self: this): Promise<Partial<XtalElementAllProps>>
 }
