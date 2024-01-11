@@ -722,7 +722,7 @@ Anyway.
 The "xform" setting uses [TR](https://github.com/bahrus/trans-render) syntax, similar to CSS, in order to bind the template "from a distance", but *xtal-element* eagerly awaits inline binding with Template Instantiation being built into the platform as well, so the two approaches can collaborate.
 
 
-## Example 3 -- Pre-rendered web components that use streaming declarative Shadow DOM. [TODO]
+## Example 3a -- Pre-rendered web components that use streaming declarative Shadow DOM. [TODO]
 
 This syntax also works:
 
@@ -742,7 +742,7 @@ This syntax also works:
 <hello-world place=Venus></hello-world>
 ```
 
-It requires declarative [ShadowDOM polyfill for Firefox](https://web.dev/declarative-shadow-dom/#detection-support).
+It requires declarative [ShadowDOM polyfill for Firefox](https://web.dev/declarative-shadow-dom/#detection-support), though Firefox nightly supports it now!
 
 ## Server-side rendering
 
@@ -776,7 +776,7 @@ One solution being pursued for this functionality is the [xodus cloudflare helpe
 
 Its goal is to apply the "transform(s)" specified above, but in the cloud (or service worker) for the initial render (or pre-render?).
 
-## Example 4 -- Referencing non-JSON serializable entities. [TODO]
+## Example 4a -- Referencing non-JSON serializable entities. [TODO]
 
 # Part III Dynamic Transforms
 
