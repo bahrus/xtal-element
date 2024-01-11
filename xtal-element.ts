@@ -7,7 +7,21 @@ import {
 
 export class XtalElement extends HTMLElement implements XtalElementActions {
     async define(self: this) {
-        console.log('iah');
+        const {targetScope} = self;
+        console.log({targetScope});
+        const {findRealm} = await import('trans-render/lib/findRealm.js');
+        const rn = await findRealm(self, targetScope!) as DocumentFragment;
+        let blowDry = rn.querySelector('blow-dry');
+        if(blowDry === null){
+            import('blow-dry/blow-dry.js');
+            blowDry = document.createElement('blow-dry');
+            blowDry.addEventListener('resolved', e => {
+                const canonicalTemplate = (<any>blowDry).canonicalTemplate as HTMLTemplateElement
+                console.log({e, canonicalTemplate});
+            });
+            rn.appendChild(blowDry);
+        }
+        console.log({rn});
         return {
             resolved: true
         }
