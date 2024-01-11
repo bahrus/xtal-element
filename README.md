@@ -501,6 +501,9 @@ export interface DTRCounterProps {
     count: number;
 } 
 
+const html = String.raw;
+const css = String.raw;
+
 const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
     config:  {
         tagName:'dtr-counter',
@@ -519,11 +522,11 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
                     },
                 }
             } as XForm<DTRCounterProps, TemplMgmtActions> as any,
-            mainTemplate: String.raw `
+            mainTemplate: html `
                 <button part=down data-d=-1>-</button>
                 <span part=count></span>
                 <button part=up data-d=1>+</button>`,
-            styles: String.raw `
+            styles: css `
 <style>
     * {
       font-size: 200%;
