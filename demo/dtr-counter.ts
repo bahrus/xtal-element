@@ -6,7 +6,7 @@ import { XForm } from 'trans-render/types.js';
 export interface DTRCounterProps {
     count: number;
 } 
-const ce = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
+const xe = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
     mixins: [TemplMgmt, Localizer],
     config:  {
         tagName:'dtr-counter',

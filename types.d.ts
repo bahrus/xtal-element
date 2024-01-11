@@ -156,3 +156,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>}
     xform?: XForm<MCProps, MCActions>
 }
+
+export interface XtalElementActions{
+    
+}

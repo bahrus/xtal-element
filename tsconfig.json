@@ -9,8 +9,7 @@
 		"newLine": "LF"
 	},
 	"files": [
-		"xtal-element.ts",
-		"XE.ts"
+		"xtal-element.ts"
 	],
 	"include":[
 		"demo/*",
