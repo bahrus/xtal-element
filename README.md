@@ -521,7 +521,7 @@ const ce = new CE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
                         byAmt: '.dataset.d',
                     },
                 }
-            } as XForm<DTRCounterProps, TemplMgmtActions> as any,
+            } as XForm<DTRCounterProps, TemplMgmtActions>,
             mainTemplate: html `
                 <button part=down data-d=-1>-</button>
                 <span part=count></span>
@@ -618,6 +618,7 @@ Renders:
 ```html
 <hello-world>
   <div>Hello, <span>world</span></div>
+  <xtal-element></xtal-element>
 </hello-world>
 <hello-world>
   <div>Hello, <span>world</span></div>
@@ -783,20 +784,19 @@ Its goal is to apply the "transform(s)" specified above, but in the cloud (or se
 
 # Part III Dynamic Transforms
 
-The transforms used in our counter above:
+The transform used in our counter above:
 
 ```JavaScript
-hydratingTransform: {
-    buttonElements: [{}, {click:{
-        prop:'count',
-        vft: 'dataset.d',
-        plusEq: true,
-        parseValAs: 'int',
-    }}]
-},
-transform: {
-        countParts: 'count'
-},
+xform: {
+    '% count': 0,
+    "button": {
+        m: {
+            on: 'click',
+            inc: 'count',
+            byAmt: '.dataset.d',
+        },
+    }
+} as XForm<DTRCounterProps, TemplMgmtActions>,
 ```
 
 are JSON serializable.  As such, they can be considered "static transforms" in the sense that they are "constant" transforms.  They don't change.  Yes, there's a dynamic binding in there (setting elements with part "count" to the value of "count" in the host object, that updates anytime the count changes).  And event handlers ("click").  But the transform objects themselves don't change.

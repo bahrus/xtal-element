@@ -49,7 +49,7 @@ const ce = new XE<DTRCounterProps & TemplMgmtProps, TemplMgmtActions>({
                         byAmt: '.dataset.d',
                     },
                 }
-            } as XForm<DTRCounterProps, TemplMgmtActions & LocalizerMethods> as any,
+            } as XForm<DTRCounterProps, TemplMgmtActions & LocalizerMethods>,
             shadowRootMode: 'open',
             mainTemplate: String.raw `<button part=down data-d=-1>-</button><span part=count></span><button part=up data-d=1>+</button>`,
 
