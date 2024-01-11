@@ -567,13 +567,13 @@ A light-touch "compiler" (or "transpiler"?) is provided by the [may-it-be](https
 
 Note that, unlike the previous example, we didn't use any libraries from this xtal-element package, in particular "XE".    The trans-render package, that contains the DTR library, already provides a bare-bones web component helper, CE (for Custom Element) that covers enough ground to provide a declarative, JS-free web component that meets the requirements for this component.  Keeping custom JS code to a minimum is a high priority goal of trans-render and xtal-element packages, so it would appear to be a fait accompli for this example at least.
 
-# Part III - Web components from HTML streamed content [TODO]
+# Part III - Web components from HTML streamed content [WIP]
 
 This package contains a web component, xtal-element, that allows us to manufacture other web components declaratively, conveniently, and without having to repeat ourselves by separately downloading a template.  Instead, the definition of the web component can be inferred from the live HTML stream, as part of the original payload of the web page, or, where it makes sense to lazy load, from an HTML stream delivered via fetch.  This has a number of benefits -- it is less complex for the developer to manage,  and it reduces the payload / time to interactivity.
 
 The analogy is defining a variable, and assigning a result to the variable at the same time, when writing a program.
 
-## Example 1a -- Pre-rendered live DOM that is reused [TODO]
+## Example 1a -- Pre-rendered live DOM that is reused 
 
 ```html
 <div>
