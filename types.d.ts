@@ -1,5 +1,6 @@
 import {CEArgs, IResolvableService, CEServiceClasses, CEServices} from 'trans-render/froop/types';
 import {PropInfo, WCConfig} from 'trans-render/lib/types';
+import { XForm } from 'trans-render/types';
 
 
 export interface INotifySvc extends IResolvableService{}
@@ -146,4 +147,12 @@ export interface PropInfoExt<MCProps = any, MCActions = MCProps> extends PropInf
 
     //updatedBy?: Partial<{[key in keyof MCActions]: DeclarativeBinder<MCProps, MCActions>}>[];
 
+}
+
+export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
+    aka?: string,
+    shadowRootMode?: ShadowRootMode,
+    propDefaults?: Partial<MCProps & MCActions>
+    propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>}
+    xform?: XForm<MCProps, MCActions>
 }
