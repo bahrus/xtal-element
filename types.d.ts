@@ -174,6 +174,9 @@ export interface XtalElementAllProps<MCProps = any, MCActions = MCProps> extends
     resolved?: boolean
 }
 
+export type ProAP = Promise<Partial<XtalElementAllProps>>;
+
 export interface XtalElementActions{
-    define(self: this): Promise<Partial<XtalElementAllProps>>
+    getTemplate(self: this): ProAP,
+    define(self: this): ProAP
 }
