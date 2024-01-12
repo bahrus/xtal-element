@@ -658,7 +658,7 @@ So the first instance of the pattern displays without a single byte of Javascrip
 
 Subsequent instances take less bandwidth to download, and generate quite quickly due to use of templates.  It does require the xtal-element web component library to be loaded once.
 
-## Example 2b -- With dynamic properties, binding from a distance [TODO]
+## Example 2b -- With dynamic properties, binding from a distance
 
 ```html
 <div>
