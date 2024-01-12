@@ -32,7 +32,6 @@ export class XtalElement extends HTMLElement {
             });
             rn.appendChild(blowDry);
         }
-        console.log({ rn });
         return {
         //mainTemplate
         };

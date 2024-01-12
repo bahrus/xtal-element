@@ -789,7 +789,22 @@ One solution being pursued for this functionality is the [xodus cloudflare helpe
 
 Its goal is to apply the "transform(s)" specified above, but in the cloud (or service worker) for the initial render (or pre-render?).
 
-## Example 4a -- Referencing non-JSON serializable entities. [TODO]
+## Example 4a -- Referencing non-JSON serializable entities.
+
+```html
+<xtal-element
+    onload=doEval 
+    aka=hello-world 
+    prop-defaults='{
+        "place": "Venus"
+    }' 
+    xform='{
+        "span": "place"
+    }'
+></xtal-element>
+```
+
+[TODO]: document
 
 # Part III Dynamic Transforms
 
