@@ -1,10 +1,15 @@
 import { XE } from './XE.js';
 export class XtalElement extends HTMLElement {
     async getTemplate(self) {
-        const { targetScope } = self;
-        console.log({ targetScope });
+        const { targetScope, aka } = self;
         const { findRealm } = await import('trans-render/lib/findRealm.js');
         const rn = await findRealm(self, targetScope);
+        if (aka === undefined) {
+            if (rn instanceof Element) {
+                self.aka = rn.localName;
+                rn.skipTemplateClone = true;
+            }
+        }
         let blowDry = rn.querySelector('blow-dry');
         let mainTemplate;
         if (blowDry === null) {
@@ -63,6 +68,7 @@ const xe = new XE({
                     cssSelector: '[itemprop]',
                     attrForProp: 'itemprop',
                 }],
+            isPropDefaulted: true,
         },
         propInfo: {
             shadowRootMode: {
@@ -88,7 +94,9 @@ const xe = new XE({
             display: 'none'
         },
         actions: {
-            getTemplate: 'isAttrParsed',
+            getTemplate: {
+                ifAllOf: ['isAttrParsed', 'isPropDefaulted']
+            },
             define: 'mainTemplate',
         }
     },

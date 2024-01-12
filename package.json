@@ -28,7 +28,7 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "blow-dry": "0.0.2",
+    "blow-dry": "0.0.3",
     "trans-render": "0.0.724"
   },
   "devDependencies": {

@@ -8,10 +8,17 @@ import {
 
 export class XtalElement extends HTMLElement implements XtalElementActions {
     async getTemplate(self: this) {
-        const {targetScope} = self;
-        console.log({targetScope});
+        const {targetScope, aka} = self;
+
+
         const {findRealm} = await import('trans-render/lib/findRealm.js');
         const rn = await findRealm(self, targetScope!) as DocumentFragment;
+        if(aka === undefined){
+            if(rn instanceof Element){
+                self.aka = rn.localName;
+                (<any>rn).skipTemplateClone = true;
+            }
+        }
         let blowDry = rn.querySelector('blow-dry');
         let mainTemplate: HTMLTemplateElement | undefined;
         if(blowDry === null){
@@ -76,7 +83,7 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
                 cssSelector: '[itemprop]',
                 attrForProp: 'itemprop',
             }],
-
+            isPropDefaulted: true,
         },
         propInfo:{
             shadowRootMode: {
@@ -102,7 +109,9 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
             display: 'none'
         },
         actions:{
-            getTemplate: 'isAttrParsed',
+            getTemplate: {
+                ifAllOf: ['isAttrParsed', 'isPropDefaulted']
+            },
             define: 'mainTemplate',
         }
     },

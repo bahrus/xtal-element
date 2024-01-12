@@ -169,6 +169,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
 
 export interface XtalElementAllProps<MCProps = any, MCActions = MCProps> extends XtalElementEndUserProps<MCProps, MCActions>{
     isAttrParsed?: boolean,
+    isPropDefaulted?: boolean,
     mainTemplate?: HTMLTemplateElement,
     inferredPropXForm?: XForm<MCProps, MCActions>,
     resolved?: boolean
