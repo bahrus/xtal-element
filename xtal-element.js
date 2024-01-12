@@ -9,6 +9,14 @@ export class XtalElement extends HTMLElement {
                 self.aka = rn.localName;
                 rn.skipTemplateClone = true;
             }
+            else if (rn.host !== undefined) {
+                const host = rn.host;
+                self.aka = host.localName;
+                host.skipTemplateClone = true;
+            }
+            else {
+                throw 404;
+            }
         }
         let blowDry = rn.querySelector('blow-dry');
         let mainTemplate;

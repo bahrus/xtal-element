@@ -17,6 +17,12 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
             if(rn instanceof Element){
                 self.aka = rn.localName;
                 (<any>rn).skipTemplateClone = true;
+            }else if((<any>rn).host !== undefined){
+                const host = (<any>rn).host;
+                self.aka = host.localName;
+                host.skipTemplateClone = true;
+            }else{
+                throw 404;
             }
         }
         let blowDry = rn.querySelector('blow-dry');

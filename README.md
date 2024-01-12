@@ -735,12 +735,12 @@ Anyway.
 The "xform" setting uses [TR](https://github.com/bahrus/trans-render) syntax, similar to CSS, in order to bind the template "from a distance", but *xtal-element* eagerly awaits inline binding with Template Instantiation being built into the platform as well, so the two approaches can collaborate.
 
 
-## Example 3a -- Pre-rendered web components that use streaming declarative Shadow DOM. [TODO]
+## Example 3a -- Pre-rendered web components that use streaming declarative Shadow DOM.
 
 This syntax also works:
 
 ```html
-<hello-world>
+<hello-world place=Earth>
   <template shadowrootmode=open>
       <div itemscope>Hello, <span itemprop=place>world</span></div>
         <style adopt>
