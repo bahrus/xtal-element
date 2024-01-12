@@ -9,8 +9,6 @@ import {
 export class XtalElement extends HTMLElement implements XtalElementActions {
     async getTemplate(self: this) {
         const {targetScope, aka} = self;
-
-
         const {findRealm} = await import('trans-render/lib/findRealm.js');
         const rn = await findRealm(self, targetScope!) as DocumentFragment;
         if(aka === undefined){
@@ -28,7 +26,7 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
                 mainTemplate = (<any>blowDry).canonicalTemplate as HTMLTemplateElement;
                 const xtalE = mainTemplate.content.querySelector('xtal-element')!;
                 xtalE.remove();
-                console.log({e, mainTemplate});
+                //console.log({e, mainTemplate});
                 self.mainTemplate = mainTemplate;
             });
             rn.appendChild(blowDry);

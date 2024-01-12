@@ -19,7 +19,7 @@ export class XtalElement extends HTMLElement {
                 mainTemplate = blowDry.canonicalTemplate;
                 const xtalE = mainTemplate.content.querySelector('xtal-element');
                 xtalE.remove();
-                console.log({ e, mainTemplate });
+                //console.log({e, mainTemplate});
                 self.mainTemplate = mainTemplate;
             });
             rn.appendChild(blowDry);
