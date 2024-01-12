@@ -30,7 +30,7 @@ export class XtalElement extends HTMLElement {
         };
     }
     async define(self) {
-        const { mainTemplate, xform, aka, propInfo: pi, inferProps } = self;
+        const { mainTemplate, xform, aka, propInfo: pi, inferProps, propDefaults } = self;
         const { XE } = await import('./XE.js');
         const { TemplMgmt, beTransformed, propInfo } = await import('trans-render/lib/mixins/TemplMgmt.js');
         const { Localizer } = await import('trans-render/lib/mixins/Localizer.js');
@@ -64,6 +64,7 @@ export class XtalElement extends HTMLElement {
                     ...pi,
                 },
                 propDefaults: {
+                    ...propDefaults,
                     xform: { ...inferredXForm, ...xform },
                     mainTemplate
                 }
@@ -93,6 +94,9 @@ const xe = new XE({
                 type: 'String'
             },
             xform: {
+                type: 'Object'
+            },
+            propDefaults: {
                 type: 'Object'
             },
             aka: {

@@ -674,6 +674,8 @@ Subsequent instances take less bandwidth to download, and generate quite quickly
   ></xtal-element>
 </div>
 <hello-world place=Mars></hello-world>
+<hello-world></hello-world>
+
 ```
 
 ... generates:
@@ -686,6 +688,11 @@ Subsequent instances take less bandwidth to download, and generate quite quickly
 <hello-world place=Mars>
     <div>
         <div>Hello, <span>Mars</span></div>
+    </div>
+</hello-world>
+<hello-world place=Mars>
+    <div>
+        <div>Hello, <span>Venus</span></div>
     </div>
 </hello-world>
 ```
