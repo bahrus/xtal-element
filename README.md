@@ -603,7 +603,7 @@ Renders:
 
 In fact, the following may make more sense from a styling perspective, and also works:
 
-## Example 1b -- Pre-rendered live DOM specifies the name of the web component: [TODO]
+## Example 1b -- Pre-rendered live DOM specifies the name of the web component:
 
 ```html
 <hello-world>
@@ -625,12 +625,12 @@ Renders:
 </hello-world>
 ```
 
-## Example 2a:  With inline binding [TODO]
+## Example 2a:  With inline binding
 
 We can add implicit inline binding using microdata attributes:
 
 ```html
-<hello-world>
+<hello-world place=Earth>
     <div itemscope>Hello, <span itemprop=place>world</span></div>
     <xtal-element infer-props></xtal-element>
 </hello-world>
@@ -643,7 +643,7 @@ We can add implicit inline binding using microdata attributes:
 
 ```html
 <hello-world>
-    <div itemscope>Hello, <span itemprop=place>world</span></div>
+    <div itemscope>Hello, <span itemprop=place>Earth</span></div>
     <xtal-element infer-props></xtal-element>
 </hello-world>
 <hello-world place=Venus>

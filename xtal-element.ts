@@ -1,9 +1,11 @@
 import {XE} from './XE.js';
+import { XForm } from './trans-render/types.js';
 import {
     XtalElementEndUserProps,
     XtalElementActions,
     XtalElementAllProps,
-    ProAP
+    ProAP,
+    PropInfoExt
 } from './types.js';
 
 export class XtalElement extends HTMLElement implements XtalElementActions {
@@ -38,10 +40,27 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
     }
     
     async define(self: this): ProAP {
-        const {mainTemplate, xform, aka, propInfo: pi} = self;
+        const {mainTemplate, xform, aka, propInfo: pi, inferProps} = self;
         const {XE} = await import('./XE.js');
         const {TemplMgmt, beTransformed, propInfo} = await import('trans-render/lib/mixins/TemplMgmt.js');
         const {Localizer} = await import('trans-render/lib/mixins/Localizer.js');
+        const inferredProps: {[key: string]: PropInfoExt} = {};
+        const inferredXForm: XForm<any, any> = {};
+        if(inferProps){
+            const {propInferenceCriteria} = self;
+            const content = mainTemplate!.content;
+            for(const criteria of propInferenceCriteria!){
+                const {cssSelector, attrForProp} = criteria;
+                const matches = Array.from(content.querySelectorAll(cssSelector));
+                for(const match of matches){
+                    const propName = match.getAttribute(attrForProp);
+                    inferredProps[propName!] = {
+                        type: 'String'
+                    };
+                    inferredXForm[`| ${propName}`] = 0;
+                }
+            }
+        }
         const xe = new XE({
             mixins: [TemplMgmt, Localizer],
             config: {
@@ -50,11 +69,12 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
                     ...beTransformed
                 },
                 propInfo: {
+                    ...inferredProps,
                     ...propInfo,
                     ...pi,
                 },
                 propDefaults:{
-                    xform,
+                    xform: {...inferredXForm,  ...xform},
                     mainTemplate
                 }
             }
