@@ -701,6 +701,8 @@ Again, using Shadow DOM is somewhat iffy, as styling is fundamentally different 
 
 To enable ShadowDOM, use the "shadowRootMode" setting:
 
+## Example 2c -- with shadow DOM
+
 ```html
 <div>
   <div>Hello, <span>world</span></div>
