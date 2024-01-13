@@ -122,6 +122,9 @@ const xe = new XE({
             propDefaults: {
                 type: 'Object'
             },
+            propInfo: {
+                type: 'Object'
+            },
             aka: {
                 type: 'String'
             },

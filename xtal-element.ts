@@ -135,6 +135,9 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
             propDefaults:{
                 type: 'Object'
             },
+            propInfo: {
+                type: 'Object'
+            },
             aka: {
                 type: 'String'
             },
