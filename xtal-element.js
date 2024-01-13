@@ -43,6 +43,7 @@ export class XtalElement extends HTMLElement {
         const { Localizer } = await import('trans-render/lib/mixins/Localizer.js');
         const inferredProps = {};
         const inferredXForm = {};
+        const inferredDefaultValues = {};
         if (inferProps) {
             const { propInferenceCriteria } = self;
             const content = mainTemplate.content;
@@ -51,9 +52,22 @@ export class XtalElement extends HTMLElement {
                 const matches = Array.from(content.querySelectorAll(cssSelector));
                 for (const match of matches) {
                     const propName = match.getAttribute(attrForProp);
-                    inferredProps[propName] = {
-                        type: 'String'
-                    };
+                    const { localName } = match;
+                    let prop;
+                    if (match instanceof HTMLLinkElement) {
+                        const { href } = match;
+                        prop = {
+                            type: 'Boolean',
+                        };
+                        inferredDefaultValues[propName] = !href ? undefined : href.endsWith('True') ? true : false;
+                        match.href = '';
+                    }
+                    else {
+                        prop = {
+                            type: 'String'
+                        };
+                    }
+                    inferredProps[propName] = prop;
                     inferredXForm[`| ${propName}`] = 0;
                 }
             }
@@ -72,6 +86,7 @@ export class XtalElement extends HTMLElement {
                 },
                 propDefaults: {
                     ...propDefaults,
+                    ...inferredDefaultValues,
                     shadowRootMode,
                     xform: { ...inferredXForm, ...xform },
                     mainTemplate
