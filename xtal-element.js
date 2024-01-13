@@ -11,6 +11,7 @@ export class XtalElement extends HTMLElement {
             }
             else if (rn.host !== undefined) {
                 const host = rn.host;
+                self.shadowRootMode = 'open'; //how do we detect closed?
                 self.aka = host.localName;
                 host.skipTemplateClone = true;
             }
