@@ -1,5 +1,5 @@
 import {XE} from './XE.js';
-import { XForm } from './trans-render/types.js';
+import { XForm } from 'trans-render/types.js';
 import {
     XtalElementEndUserProps,
     XtalElementActions,
@@ -66,11 +66,10 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
                 }
             }
         }
-        const xe = new XE({
+        const xe = new XE<any>({
             mixins: [TemplMgmt, Localizer],
             config: {
                 tagName: aka,
-                
                 actions:{
                     ...beTransformed
                 },

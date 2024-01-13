@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "blow-dry": "0.0.3",
-    "trans-render": "0.0.724"
+    "trans-render": "0.0.725"
   },
   "devDependencies": {
     "@playwright/test": "1.40.1",
