@@ -806,7 +806,7 @@ Its goal is to apply the "transform(s)" specified above, but in the cloud (or se
 
 [TODO]: document
 
-# Part III Dynamic Transforms
+# Part III Dynamic Merging
 
 The transform used in our counter above:
 
@@ -825,12 +825,7 @@ xform: {
 
 are JSON serializable.  As such, they can be considered "static transforms" in the sense that they are "constant" transforms.  They don't change.  Yes, there's a dynamic binding in there (setting elements with part "count" to the value of "count" in the host object, that updates anytime the count changes).  And event handlers ("click").  But the transform objects themselves don't change.
 
- "Dynamic Transforms", in contrast, are fleeting transforms that are emitted as part of the return object of an action method.  If an action method returns an array, the third element of that array, if it is defined, is expected be a [DTR](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-json-serializable-rhs-expressions-with-libdtrjs)  syntax JSON object, but the JSON object contains dynamic data in it, that is expected to change every time the action method is called.
-
-
-Static transforms is preferred, as they can be imported as JSON, and as such are kinder to the browser's cpu.
-
-However, there are certainly scenarios where static transforms aren't sufficient.
+ "Dynamic Mergings", in contrast, are fleeting "light transforms" that are emitted as part of the return object of an action method.  They are considerably less powerful than trans-rendering, as much of tran-rendering is concerned with "binding from a distance", as opposed to immediately updating the context.
 
 Let's start with an example, that might be aptly titled "Clueless in SVG".
 
@@ -855,16 +850,18 @@ const mainTemplate = String.raw `
 export class XtalFigParallelogramCore extends HTMLElement implements ParaActions{
     setDimensions({width, height, strokeWidth, innerWidth, innerHeight, innerX, innerY, slant}: this): [PPara, EPara, DT] {
         const hOffset = width * Math.sin(Math.PI * slant / 180) + strokeWidth;
-        return [,,{transform:{
-            pathE: [,, {d: [
-            `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},{strokeWidth}z`
-            ]}],
-        }}]
+        return {
+            "* path": {
+                " d": `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},{strokeWidth}z`
+            }
+        }
     }
 }
 ```
 
-If the transform contains "static" bindings to host properties, they will be applied once, but will **not** be automatically reapplied when the property changes, for dynamic transforms.
+[TODO] go through special syntax in lhs in more detail.
+
+If the transform contains "static" bindings to host properties, they will be applied once, but will **not** be automatically reapplied when the property changes, for dynamic transforms.  Nor will the bindings be applied to any elements that may be added into the (shadow) children after the method executes.
 
 This is a "shortcut" for:
 
@@ -873,16 +870,14 @@ export class XtalFigParallelogramCore extends HTMLElement implements ParaActions
     setDimensions({width, height, strokeWidth, innerWidth, innerHeight, innerX, innerY, slant}: this){
         const hOffset = width * Math.sin(Math.PI * slant / 180) + strokeWidth;
         const root = this.clonedTemplate || this.shadowRoot; //preference is to apply this before added into the ShadowDOM
-        root.querySelector('path').setAttribute('d', 
+        root.querySelectorAll('path')forEach(el => el.setAttribute('d', 
             `M ${hOffset},${strokeWidth} L ${width - strokeWidth},${strokeWidth} L ${width - hOffset},${height - strokeWidth} L ${strokeWidth},${height - strokeWidth} L ${hOffset},${strokeWidth} z`
-        );
+        ));
     }
 }
 ```
 
-This equivalent code is underselling what the Froop Orchestrator is doing -- it is also caching document queries, for better repeated performance.  And it plans to add support for template parts when those api's become available.
-
-In addition:
+Benefits
 
 1.  With more complex scenarios, this "shortcut" can reduce boilerplate.
 2.  No use of the dreaded "this".
