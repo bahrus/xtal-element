@@ -28,8 +28,8 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "blow-dry": "0.0.4",
-    "trans-render": "0.0.727"
+    "blow-dry": "0.0.5",
+    "trans-render": "0.0.728"
   },
   "devDependencies": {
     "@playwright/test": "1.40.1",
