@@ -166,7 +166,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     propInferenceCriteria?: Array<PropInferenceCriteria>,
     targetScope?: Scope,
     superclass?: string,
-    
+    actions?: any,
 }
 
 export interface XtalElementAllProps<MCProps = any, MCActions = MCProps> extends XtalElementEndUserProps<MCProps, MCActions>{
