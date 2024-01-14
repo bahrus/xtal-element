@@ -44,13 +44,18 @@ export class XtalElement extends HTMLElement {
         };
     }
     async define(self) {
-        const { mainTemplate, xform, aka, propInfo: pi, inferProps, propDefaults, shadowRootMode, beFormAssociated, styles } = self;
+        const { mainTemplate, xform, aka, propInfo: pi, inferProps, propDefaults, shadowRootMode, beFormAssociated, styles, superclass } = self;
         const { XE } = await import('./XE.js');
         const { TemplMgmt, beTransformed, propInfo } = await import('trans-render/lib/mixins/TemplMgmt.js');
         const { Localizer } = await import('trans-render/lib/mixins/Localizer.js');
         const inferredProps = {};
         const inferredXForm = {};
         const inferredDefaultValues = {};
+        let superClassCtr;
+        if (superclass !== undefined) {
+            superClassCtr = await customElements.whenDefined(superclass);
+            console.log({ superClassCtr });
+        }
         if (inferProps) {
             const { propInferenceCriteria } = self;
             const content = mainTemplate.content;
@@ -101,6 +106,7 @@ export class XtalElement extends HTMLElement {
                 },
                 formAss: beFormAssociated,
             },
+            superclass: superClassCtr,
         });
         return {
             resolved: true
@@ -148,6 +154,9 @@ const xe = new XE({
                 notify: {
                     dispatch: true,
                 }
+            },
+            superclass: {
+                type: 'String'
             }
         },
         style: {
