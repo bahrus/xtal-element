@@ -173,7 +173,8 @@ export interface XtalElementAllProps<MCProps = any, MCActions = MCProps> extends
     isPropDefaulted?: boolean,
     mainTemplate?: HTMLTemplateElement,
     inferredPropXForm?: XForm<MCProps, MCActions>,
-    resolved?: boolean
+    resolved?: boolean,
+    styles?: string,
 }
 
 export type ProAP = Promise<Partial<XtalElementAllProps>>;

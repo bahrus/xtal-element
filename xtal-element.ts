@@ -34,7 +34,13 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
                 mainTemplate = (<any>blowDry).canonicalTemplate as HTMLTemplateElement;
                 const xtalE = mainTemplate.content.querySelector('xtal-element')!;
                 xtalE.remove();
-                //console.log({e, mainTemplate});
+                const adopted = Array.from(mainTemplate.content.querySelectorAll('style[adopt]'));
+                const styles = adopted.map(s => {
+                    const inner = s.innerHTML;
+                    s.remove();
+                    return inner;
+                }).join('');
+                self.styles = styles;
                 self.mainTemplate = mainTemplate;
             });
             rn.appendChild(blowDry);
@@ -45,7 +51,7 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
     }
     
     async define(self: this): ProAP {
-        const {mainTemplate, xform, aka, propInfo: pi, inferProps, propDefaults, shadowRootMode, beFormAssociated} = self;
+        const {mainTemplate, xform, aka, propInfo: pi, inferProps, propDefaults, shadowRootMode, beFormAssociated, styles} = self;
         const {XE} = await import('./XE.js');
         const {TemplMgmt, beTransformed, propInfo} = await import('trans-render/lib/mixins/TemplMgmt.js');
         const {Localizer} = await import('trans-render/lib/mixins/Localizer.js');
@@ -97,10 +103,13 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
                     ...inferredDefaultValues,
                     shadowRootMode,
                     xform: {...inferredXForm,  ...xform},
-                    mainTemplate
+                    mainTemplate,
+                    styles,  
                 },
-                formAss: beFormAssociated
-            }
+                formAss: beFormAssociated,
+
+            },
+            
         })
         return {
             resolved: true
