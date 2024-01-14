@@ -157,6 +157,7 @@ export interface PropInferenceCriteria{
 
 export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     aka?: string,
+    beFormAssociated?: boolean,
     shadowRootMode?: ShadowRootMode,
     propDefaults?: Partial<MCProps & MCActions>,
     propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>},
