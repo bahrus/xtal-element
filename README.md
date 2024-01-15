@@ -806,6 +806,16 @@ Its goal is to apply the "transform(s)" specified above, but in the cloud (or se
 
 [TODO]: document
 
+# Real world example
+
+## Example 1 up-down-counter
+
+[Streaming HTML definition](https://github.com/bahrus/up-down-counter/blob/baseline/root.html)
+
+[How to reference it](https://github.com/bahrus/up-down-counter/blob/baseline/demo/dev.html)
+
+
+
 # Part III Dynamic Merging
 
 The transform used in our counter above:
