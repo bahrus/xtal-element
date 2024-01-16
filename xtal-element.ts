@@ -53,7 +53,7 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
     async define(self: this): ProAP {
         const {
             mainTemplate, xform, aka, propInfo: pi, inferProps, propDefaults, shadowRootMode, 
-            beFormAssociated, styles, superclass, actions
+            beFormAssociated, styles, superclass, actions, lcXform
         } = self;
         const {XE} = await import('./XE.js');
         const {TemplMgmt, beTransformed, propInfo} = await import('trans-render/lib/mixins/TemplMgmt.js');
@@ -112,6 +112,7 @@ export class XtalElement extends HTMLElement implements XtalElementActions {
                     ...inferredDefaultValues,
                     shadowRootMode,
                     xform: {...inferredXForm,  ...xform},
+                    lcXform,
                     mainTemplate,
                     styles,  
                 },
@@ -155,6 +156,9 @@ const xe = new XE<XtalElementAllProps, XtalElementActions>({
                 type: 'String'
             },
             xform: {
+                type: 'Object'
+            },
+            lcXform: {
                 type: 'Object'
             },
             propDefaults:{

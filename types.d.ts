@@ -162,6 +162,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     propDefaults?: Partial<MCProps & MCActions>,
     propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>},
     xform?: XForm<MCProps, MCActions>,
+    lcXform?: XForm<MCProps, MCActions>,
     inferProps?: boolean,
     propInferenceCriteria?: Array<PropInferenceCriteria>,
     targetScope?: Scope,
