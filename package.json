@@ -28,11 +28,11 @@
     "./src/XENON.js": "./src/XENON.js"
   },
   "dependencies": {
-    "blow-dry": "0.0.5",
+    "blow-dry": "0.0.6",
     "trans-render": "0.0.731"
   },
   "devDependencies": {
-    "@playwright/test": "1.40.1",
+    "@playwright/test": "1.41.0",
     "may-it-serve": "0.0.6",
     "xtal-shell": "0.0.27"
   },
