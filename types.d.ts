@@ -1,5 +1,5 @@
 import {CEArgs, IResolvableService, CEServiceClasses, CEServices} from 'trans-render/froop/types';
-import {PropInfo, Scope, WCConfig} from 'trans-render/lib/types';
+import {PropInfo, Scope, WCConfig, Action} from 'trans-render/lib/types';
 import { XForm } from 'trans-render/types';
 
 
@@ -159,7 +159,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     aka?: string,
     beFormAssociated?: boolean,
     shadowRootMode?: ShadowRootMode,
-    propDefaults?: Partial<MCProps & MCActions>,
+    propDefaults?: Partial<MCProps>,
     propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>},
     xform?: XForm<MCProps, MCActions>,
     lcXform?: XForm<MCProps, MCActions>,
@@ -167,7 +167,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     propInferenceCriteria?: Array<PropInferenceCriteria>,
     targetScope?: Scope,
     superclass?: string,
-    actions?: any,
+    actions?: Partial<{[key in keyof MCActions & string]: Action<MCProps, MCActions> | keyof MCProps}> ,
 }
 
 export interface XtalElementAllProps<MCProps = any, MCActions = MCProps> extends XtalElementEndUserProps<MCProps, MCActions>{
