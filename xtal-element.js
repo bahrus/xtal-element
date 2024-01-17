@@ -27,7 +27,9 @@ export class XtalElement extends HTMLElement {
             blowDry.addEventListener('resolved', e => {
                 mainTemplate = blowDry.canonicalTemplate;
                 const xtalE = mainTemplate.content.querySelector('xtal-element');
-                xtalE.remove();
+                if (xtalE !== null) {
+                    xtalE.remove();
+                }
                 const adopted = Array.from(mainTemplate.content.querySelectorAll('style[adopt]'));
                 const styles = adopted.map(s => {
                     const inner = s.innerHTML;
