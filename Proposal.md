@@ -48,7 +48,8 @@ The initialState would be a full object representation of all the (parsed) attri
 
 If one of the observed attributes isn't present, it would be part of this parsed object, but the value would be null.
 
-Standard parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided. 
+Standard parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.
+
 
 Object.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
@@ -59,4 +60,6 @@ It seems, as a result of the discussion surrounding custom attributes / behavior
 I think for those scenarios, it would be helpful to provide  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of Object.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility? 
 
 This proposal is still shying away from actually setting property values of the custom element from the attributes, as that may get into a part where there is less consensus among libraries.
+
+I suspect most developers would simply be able to use Object.assign with these two methods (.observe and ..parseObservedAttributes) so it really wouldn't reduce the footprint all that much.
 
