@@ -8,9 +8,9 @@ It's true that managing the relationship between attributes and their associated
 
 Perhaps this decision was wise, as the best way to manage the relationship between attributes and properties might not always be obvious, especially as custom elements may tend to pioneer scenarios well beyond anything built-in elements have yet to tackle (such as supporting [JSON in attributes](https://www.webcomponents.org/element/@google-web-components/google-chart)).
 
-I don't know that we are anywhere closer to having a consensus on how best to manage them.  I suspect we won't until support for decorators has been built into all the browsers, for starters.
+I don't know that we are anywhere closer to having a consensus on how best to manage them at present.  I suspect we won't until support for decorators has been built into all the browsers, for starters.
 
-But for now, this proposal is suggesting some minimal steps forward that I at least would find helpful, that seem like useful, uncontroversial (?) primitives a more encompassing solution down the road would leverage, that would help reduce the footprint of web component libraries that assist with developer ergonomics.
+But for now, this proposal is suggesting some minimal steps forward that I at least would find helpful, that seem like useful, uncontroversial (?) primitives a more encompassing solution down the road would leverage, that could already help reduce the footprint of web component libraries that assist with developer ergonomics.
 
 I think providing this would also have the added side effect of providing a more official channel for publishing details about the web component, something that has been provided exclusively by the Custom Element Manifest for now (and which that initiative could tap into).
 
@@ -30,6 +30,7 @@ class ClubMember extends HTMLElement{
         },
 
     ]
+
     connectedCallback(){
         const observer = Object.observeObservedAttributes(this);
         const initialState = Object.parseObservedAttributes(this);
@@ -55,9 +56,9 @@ Object.observeObservedAttributes() would be useful, as it could allow multiple l
 
 The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).  
 
-It seems, as a result of the discussion surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that desire to update attributes frequently.
+It seems, as a result of the discussion surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that desire to update attributes frequently, on the client side.
 
-I think for those scenarios, it would be helpful to provide  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of Object.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility? 
+I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of Object.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility? 
 
 This proposal is still shying away from actually setting property values of the custom element from the attributes, as that may get into a part where there is less consensus among libraries.
 
