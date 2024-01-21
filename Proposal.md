@@ -14,6 +14,8 @@ But for now, this proposal is suggesting some minimal steps forward that I at le
 
 I think providing this would also have the added side effect of providing a more official channel for publishing details about the web component, something that has been provided exclusively by the Custom Element Manifest for now (and which that initiative could tap into).
 
+In discussions with the React framework regarding ways React could balance setting attribute values for styling purposes before the element had upgraded, this official support might have helped in being able to use a single template that could be used before and after the upgrade.  Lack of official support was a significant limiting factor.
+
 For starters, I think we could modify the observedAttributes static property, so it could accept objects, where details are spelled out:
 
 ```Typescript
@@ -49,8 +51,7 @@ The initialState would be a full object representation of all the (parsed) attri
 
 If one of the observed attributes isn't present, it would be part of this parsed object, but the value would be null.
 
-Standard parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.
-
+Standard (probably not locale sensitive) parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.
 
 Object.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
@@ -58,9 +59,9 @@ The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects,
 
 It seems, as a result of the discussion surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that desire to update attributes frequently, on the client side.
 
-I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of Object.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility? 
+I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of Object.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility?  This could also serve the purpose of putting less of a burden on custom element authors to weed out inconsistent states, when frameworks have to update attributes one by one.  I don't think this is very high priority, but I think it is at least worth considering.
 
 This proposal is still shying away from actually setting property values of the custom element from the attributes, as that may get into a part where there is less consensus among libraries.
 
-I suspect most developers would simply be able to use Object.assign with these two methods (.observe and ..parseObservedAttributes) so it really wouldn't reduce the footprint all that much.
+I suspect most developers would simply be able to use Object.assign with these two methods (.observe and ..parseObservedAttributes) so it really wouldn't reduce the footprint all that much to go there for now.
 
