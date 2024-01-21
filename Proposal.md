@@ -65,3 +65,5 @@ This proposal is still shying away from actually setting property values of the 
 
 I suspect most developers would simply be able to use Object.assign with these two methods (.observe and ..parseObservedAttributes) so it really wouldn't reduce the footprint all that much to go there for now.
 
+Maybe I'm wrong, maybe there's enough consensus that we could do the Object.assign, at least for fields where the mapsTo is specified?
+
