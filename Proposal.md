@@ -41,7 +41,7 @@ class ClubMember extends HTMLElement{
             console.log({modifiedObjectFieldValues, preModifiedFieldValues});
             
         });
-        customElements.setAttributes([{'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}]);
+        customElements.setAttributes(this, [{'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}]);
         
     }
 }
@@ -51,7 +51,7 @@ The initialState constant above, retrieved from customElements.parseObservedAttr
 
 If one of the observed attributes isn't present, it would be part of this parsed object, but the value would be null.
 
-Standard (probably not locale sensitive) parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.  If the standard parsers don't satisfy a particular demand, the developer could provide a custom parser (via the customParser property).
+Standard (probably not locale sensitive) parsers for Date, Number, Boolean, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.  If the standard parsers don't satisfy a particular demand, the developer could provide a custom parser (via the customParser property).
 
 The idea that developers could "register" a custom parser that is used across many web components, so that we could specify a string rather than a function as shown above, might be nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
 
