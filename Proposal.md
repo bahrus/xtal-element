@@ -1,6 +1,6 @@
 # Observing the Observed Attributes API
 
-An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / enhancements.  Paraphrasing the concern in a way that makes sense to me:
+An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
 Why would we introduce new ways for the platform to recognize custom attributes associated with elements (built-in or custom) when we haven't really made it easy for custom elements to manage their own attributes yet?
 
@@ -12,7 +12,7 @@ I don't know that we are anywhere closer to having a consensus on how best to ma
 
 But for now, this proposal is suggesting some minimal steps forward that I at least would find helpful, that seem like useful, uncontroversial (?) primitives a more encompassing solution down the road would leverage, that could already help reduce the footprint of web component libraries that assist with developer ergonomics.
 
-I think providing this would also have the added side effect of providing a more official channel for publishing details about the web component, something that has been provided exclusively by the Custom Element Manifest for now (and which that initiative could tap into).
+I think providing this would also have the added side effect of providing a more official channel for publishing details about the web component, something that has, up to now, been provided exclusively by the Custom Element Manifest for now.   I suspect that initiative would happily tap into whatever official reflection opportunities the platform provides.
 
 In discussions with the React framework regarding ways React could balance setting attribute values for styling purposes before the element had upgraded, this official support might have helped in being able to use a single template that could be used before and after the upgrade.  Lack of official support was a significant limiting factor.
 
@@ -29,7 +29,7 @@ class ClubMember extends HTMLElement{
             mapsTo: 'memberStartDt',
             instanceOf: Date,
             customParser: (newValue: string | null, oldValue: string | null, instance: this) => Date(newValue)
-        },
+        }
 
     ]
 
@@ -47,11 +47,13 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-The initialState would be a full object representation of all the (parsed) attribute values after the server rendering of the element has completed (is there a distinct hook that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
+The initialState constant above, retrieved from Object.parseObservedAttributes would be a full object representation of all the (parsed) attribute values after the server rendering of the element has completed (is there a distinct hook that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
 
 If one of the observed attributes isn't present, it would be part of this parsed object, but the value would be null.
 
-Standard (probably not locale sensitive) parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.
+Standard (probably not locale sensitive) parsers for Date, Number, Object (meaning JSON.parse), RegExp, maybe even hyperlinks would be provided, that would be used to provide the values of the object mentioned above.  If the standard parsers don't satisfy a particular demand, the developer could provide a custom parser (via the customParser property).
+
+The idea that developers could "register" a custom parser that is used across many web components, so that we could specify a string rather than a function as shown above, might be nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
 
 Object.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
