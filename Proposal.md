@@ -47,7 +47,7 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-The initialState constant above, retrieved from Object.parseObservedAttributes would be a full object representation of all the (parsed) attribute values after the server rendering of the element has completed (is there a distinct hook that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
+The initialState constant above, retrieved from Object.parseObservedAttributes, would be a full object representation of all the (parsed) attribute values after the server rendering of the element has completed (is there a distinct hook that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
 
 If one of the observed attributes isn't present, it would be part of this parsed object, but the value would be null.
 
