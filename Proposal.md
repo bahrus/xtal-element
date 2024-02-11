@@ -41,7 +41,7 @@ class ClubMember extends HTMLElement{
     async connectedCallback(){
         const observer = customElements.observeObservedAttributes(this);
         const initialState = await customElements.parseObservedAttributes(this);
-        observer.addEventListener('parsed-object-changed', e => {
+        observer.addEventListener('parsed-attrs-changed', e => {
             const {modifiedObjectFieldValues, preModifiedFieldValues} = e;
             console.log({modifiedObjectFieldValues, preModifiedFieldValues});
             
