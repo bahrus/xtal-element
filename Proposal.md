@@ -125,16 +125,16 @@ class ClubMember extends HTMLElement{
         {
             name: 'badge-color',
             //optional
-            mapsTo: 'style.backgroundColor'
+            mapsTo: 'style.backgroundColor',
             handler: 'MyCustomAttributeHandlerClassNameAsRegisteredInSomeRegistryOrOther',
         }
     ]
 }
 ```
 
-So *if* the attributeChangedCallback method returns a value, *and if* mapsTo is defined as above, with a dot delimiter, 
+So *if* the attributeChangedCallback method returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style subobject defined in it.
 
-Or, the developer could not specify mapsTo, and do the merge internally, at the expense of less transparency to external users (but I could see the appeal of keeping that private in some cases).
+If not, if the developer does not specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still benefitting from the declarative support this proposal provides, and the ability to share logic across different components.
 
 If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative way of just registering handler stateless functions would be beneficial to declarative custom elements as well.
 
