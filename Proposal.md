@@ -70,9 +70,10 @@ customElements.observeObservedAttributes() would be useful, as it could allow mu
 
 The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).
 
-In the case of the badge-color attribute, the parsed object would have a sub object, style, with the backgroundColor set, which the developer could then choose to merge into the style object. (There is another [proposal](https://github.com/developit/unified-element-properties-proposal) which was raised by the [creator of preact](https://github.com/developit), that I thought I saw somewhere proposed in a public setting, but cannot locate it now.
+In the case of the badge-color attribute, the parsed object would have a sub object, style, with the backgroundColor set, which the developer could then choose to merge into the style object. There is another [proposal](https://github.com/developit/unified-element-properties-proposal) which was raised by the [creator of preact](https://github.com/developit), that I thought I saw somewhere proposed in a public setting, but cannot locate it now.
 
-This proposal would, I believe, be usefull well beyond this particular proposal.
+That related proposal would, I believe, be useful well beyond this particular proposal.  Basically, we need a deep merge function specifically tailored for merging properties into a DOM element.
+
 
 ## A registry of custom attribute parsers / handlers?
 
@@ -107,7 +108,7 @@ customAttributes.default.define('bg-color', BgColor)
 
 I'm lukewarm about that appeal personally, but there are probably some strong use cases that I don't know about that makes the appeal of this seem to be so strong to some prominent members of the community.  
 
-Another murky use case where I could possibly see the appeal is if the parser is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.
+Another murky use case where I could possibly see the appeal is if the string the needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.
 
 So to accommodate that desire more closely with this proposal, assuming the cost of extending the AttributeNode is minimal compared to simply invoking a stateless function, what this would probably look like would be:
 
@@ -134,20 +135,20 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-So *if* the attributeChangedCallback method returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style subobject defined in it.
+So *if* the attributeChangedCallback method returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style sub-object defined within, ready to be carefully merged (Object.assign would throw an error).
 
-If not, if the developer does not specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still benefitting from the declarative support this proposal provides, and the ability to share logic across different components.
+If not, if the developer does not specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
 
-If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative way of just registering handler stateless functions would be beneficial to declarative custom elements as well.
+If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative way of just registering handler stateless functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
-  
+A third option would be able to specify a method handler from the owner element to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
 
 I became aware, as a result of the discussions surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that have found it useful to update attributes frequently, on the client side.
 
 I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of customElements.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility?  This could also serve the purpose of putting less of a burden on custom element authors to weed out inconsistent states, when frameworks have to update attributes one by one.  I don't think this is very high priority, but I think it is at least worth considering.
 
-This proposal is still shying away from actually setting property values of the custom element from the attributes, as that may veer into "tipping the scales" unnecessarily, where there is less consensus amongst libraries.
+This proposal is still shying away from actually officially setting property values of the custom element from the attributes, without taping into the custom features discussed above, as that may veer into "tipping the scales" unnecessarily, where there is less consensus amongst libraries.
 
-I suspect most developers would simply be able to use Object.assign after calling the two proposed methods above (.observe and .parseObservedAttributes) so it really wouldn't reduce the footprint all that much to go there for now.
+I suspect most developers would simply be able to use Object.assign after calling the two proposed methods above (.observe and ..parseObservedAttributes) so it really wouldn't reduce the footprint all that much to go there for now.
 
 
