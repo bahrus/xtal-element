@@ -108,7 +108,7 @@ customAttributes.default.define('bg-color', BgColor)
 
 I'm lukewarm about that appeal personally, but there are probably some strong use cases that I don't know about that makes the appeal of this seem to be so strong to some prominent members of the community.  
 
-Another murky use case where I could possibly see the appeal is if the string the needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.
+Another murky use case where I could possibly see the appeal is if the string that needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.
 
 So to accommodate that desire more closely with this proposal, assuming the cost of extending the AttributeNode is minimal compared to simply invoking a stateless function, what this would probably look like would be:
 
@@ -135,7 +135,7 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-So *if* the attributeChangedCallback method returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style sub-object defined within, ready to be carefully merged (Object.assign would throw an error).
+So *if* the attributeChangedCallback method of the class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style sub-object defined within, ready to be carefully merged (Object.assign would throw an error).
 
 If not, if the developer does not specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
 
