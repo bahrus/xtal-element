@@ -70,7 +70,9 @@ customElements.observeObservedAttributes() would be useful, as it could allow mu
 
 The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).
 
-In the case of the badge-color attribute, the parsed object would have a sub object, style, with the backgroundColor set, which the developer could then choose to merge into the style object. (There is another proposal which was raised by the [creator of preact](https://github.com/developit), I think, which I will link to when I find it, that provides for a nice merge function which can merge such things with a single call, which I think would be great).
+In the case of the badge-color attribute, the parsed object would have a sub object, style, with the backgroundColor set, which the developer could then choose to merge into the style object. (There is another [proposal](https://github.com/developit/unified-element-properties-proposal) which was raised by the [creator of preact](https://github.com/developit), that I thought I saw somewhere proposed in a public setting, but cannot locate it now.
+
+This proposal would, I believe, be usefull well beyond this particular proposal.
 
 ## A registry of custom attribute parsers / handlers?
 
