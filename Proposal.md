@@ -60,7 +60,7 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-The initialState constant above, retrieved from customElements.parseObservedAttributes, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed (is there a distinct hook that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
+The initialState constant above, retrieved from customElements.parseObservedAttributes, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed (is there a distinct lifecycle event that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
 
 In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).
 
@@ -79,7 +79,7 @@ That related proposal would, I believe, be useful well beyond this particular pr
 
 The idea that developers could "register" a custom parser (or it seems this is what some are calling a "custom attribute") that is used across many different web components, so that we could specify a string rather than a function as shown above, would be rather nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
 
-To be clear, the proposal linked to above is advocating more than registering a simple function (with the ability to go beyond what the minimalist scope of this proposal and actually set property values of the instance).  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement", and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  
+To be clear, the proposal linked to above is advocating more than registering a simple function (with the ability to go beyond what the minimalist scope of this proposal provides, and could actually set property values of the instance).  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement", and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  
 
 For [example](https://github.com/lume/custom-attributes):
 
@@ -106,9 +106,9 @@ class BgColor {
 customAttributes.default.define('bg-color', BgColor)
 ```
 
-I'm lukewarm about that appeal personally, but there are probably some strong use cases that I don't know about that makes the appeal of this seem to be so strong to some prominent members of the community.  
+I'm lukewarm about that appeal personally, but there are probably some important use cases that I don't know about that makes the appeal of this seem to be so strong to some prominent members of the community.  
 
-Another murky use case where I could possibly see the appeal is if the string that needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.
+Another murky use case where I could possibly see the appeal is if the string that needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.   
 
 So to accommodate that desire more closely with this proposal, assuming the cost of extending the AttributeNode is minimal compared to simply invoking a stateless function, what this would probably look like would be:
 
@@ -135,13 +135,13 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-So *if* the attributeChangedCallback method of the class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style sub-object defined within, ready to be carefully merged (Object.assign would throw an error).
+So *if* the attributeChangedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style sub-object defined within, ready to be carefully merged in to the ownerElement.  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
 
-If not, if the developer does not specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
+If not, if the developer does *not* specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still partially benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
 
-If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative way of just registering handler stateless functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
+If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative mechanism to be able to just register stateless handler functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
-A third option would be able to specify a method handler from the owner element to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
+A third option would be able to specify a method handler that is part of the owner element's protocol definition, that has the same signature as attributeChangedCallback, to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
 
 I became aware, as a result of the discussions surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that have found it useful to update attributes frequently, on the client side.
 
