@@ -185,8 +185,7 @@ I became aware, as a result of the discussions surrounding custom attributes / b
 
 I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of customElements.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility?  This could also serve the purpose of putting less of a burden on custom element authors to weed out inconsistent states, when frameworks have to update attributes one by one.  I don't think this is very high priority, but I think it is at least worth considering.
 
-This proposal is still shying away from actually officially setting property values of the custom element from the attributes, without taping into the custom features discussed above, as that may veer into "tipping the scales" unnecessarily, where there is less consensus amongst libraries.
+As mentioned previously, this proposal is still shying away from actually officially setting property values of the custom element from the attributes automatically, without tapping into the custom features discussed above, as that may veer into "tipping the scales" unnecessarily, where there is less consensus amongst libraries.
 
-I suspect most developers would simply be able to use Object.assign after calling the two proposed methods above (.observe and ..parseObservedAttributes) so it really wouldn't reduce the footprint all that much to go there for now.
 
 
