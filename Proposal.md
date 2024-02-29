@@ -1,7 +1,7 @@
 # Observing the Observed Attributes API
 
 Author:  Bruce B. Anderson
-Last update: 2024-02-27
+Last update: 2024-02-29
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -41,45 +41,82 @@ class ClubMember extends HTMLElement{
         },
         {
             name: 'badge-color',
-            mapsTo: 'style.backgroundColor'
+            mapsTo: '?.style?.backgroundColor'
+        },
+        {
+            name: 'search-string',
+            mapsTo: '?.enhancements?.beSearching?.for'
         }
 
     ]
 
+    // This is some custom private property a library might, 
+    // for example, use to know that when the value is true,
+    // do not reflect changes to property values
+    // back to the attributes, as that may risk getting into an 
+    // infinite loop.
+    #doNotReflectToAttrs = false;
+
     async connectedCallback(){
         const observer = customElements.observeObservedAttributes(this);
         const initialState = await customElements.parseObservedAttributes(this);
+        this.#doNotReflectToAttrs = true;
+        Object.assignGingerly(this, initialState);
+        this.#doNotReflectToAttrs = false;
+        
+
         observer.addEventListener('parsed-attrs-changed', e => {
             const {modifiedObjectFieldValues, preModifiedFieldValues} = e;
             console.log({modifiedObjectFieldValues, preModifiedFieldValues});
+            this.#doNotReflectToAttrs = true;
+            Object.assignGingerly(this, modifiedObjectFieldValues);
+            this.#doNotReflectToAttrs = false;
             
         });
-        customElements.setAttributes(this, [{'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}]);
+        customElements.setAttributes(this, [
+            {'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}
+        ]);
         
     }
 }
 ```
+## Explanation
 
-The initialState constant above, retrieved from customElements.parseObservedAttributes, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed (is there a distinct lifecycle event that the platform knows of when this could happen?).  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
+The initialState constant above, retrieved from *customElements.parseObservedAttributes*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
 
 In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).
 
-Standard (probably not locale sensitive) parsers for Date, Number, Boolean, Object (via JSON.parse), RegExp, maybe even URL's would be baked into the platform, that would be used to provide the values of the object mentioned above.  If the standard parsers don't satisfy a particular demand, the developer could provide a custom parser (via the customParser property).
+Standard (probably not locale sensitive) parsers for Date, Number, Boolean, Object (via JSON.parse), RegExp, maybe even URL's would be baked into the platform, that would be used to provide the values of the object mentioned above.  
+
+If the standard parsers don't satisfy a particular demand, the developer could provide a custom parser (via the customParser property).  The custom parser could choose to do something the rest of this proposal shies away from:  Actually setting property values of the instance element.
 
 customElements.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
 The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).
 
-In the case of the badge-color attribute, the parsed object would have a sub object, style, with the backgroundColor set, which the developer could then choose to merge into the style object. There is another [proposal](https://github.com/developit/unified-element-properties-proposal) which was raised by the [creator of preact](https://github.com/developit), that I thought I saw somewhere proposed in a public setting, but cannot locate it now.
+*Object.assignGingerly* would have special logic to set properties with keys starting with "?." in a manner similar to optional chaining property access (but in reverse?):
 
-That related proposal would, I believe, be useful well beyond this particular proposal.  Basically, we need a deep merge function specifically tailored for merging properties into a DOM element.
+For example:
+
+```JavaScript
+if(this.enhancements === undefined) this.enhancements = {};
+if(this.enhancements.beSearchingFor === undefined) this.enhancements.beSearchingFor = {};
+this.enhancements.beSearchingFor.for = newVal;
+```
+
+In summary, the list of new methods this proposal calls for are:
+
+1.  customElements.observeObservedAttributes(instance)
+2.  customElements.parseObservedAttributes(instance)
+3.  Object.assignGingerly(instance, propObject);
+4.  customElements.setAttributes(instance, attrNameValuePairArray);
 
 
 ## A registry of custom attribute parsers / handlers?
 
 The idea that developers could "register" a custom parser (or it seems this is what some are calling a "custom attribute") that is used across many different web components, so that we could specify a string rather than a function as shown above, would be rather nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
 
-To be clear, the proposal linked to above is advocating more than registering a simple function (with the ability to go beyond what the minimalist scope of this proposal provides, and could actually set property values of the instance).  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement", and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  
+To be clear, the proposal linked to above is advocating more than registering a simple stateless function.  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement" field of the class instance, and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  
 
 For [example](https://github.com/lume/custom-attributes):
 
@@ -128,14 +165,14 @@ class ClubMember extends HTMLElement{
         {
             name: 'badge-color',
             //optional
-            mapsTo: 'style.backgroundColor',
+            mapsTo: '?.style?.backgroundColor',
             handler: 'MyCustomAttributeHandlerClassNameAsRegisteredInSomeRegistryOrOther',
         }
     ]
 }
 ```
 
-So *if* the attributeChangedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have the style sub-object defined within, ready to be carefully merged in to the ownerElement.  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
+So *if* the attributeChangedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have key '?.style?.backgroundColor' set to whatever value is returned, ready to be carefully merged in to the ownerElement (using Object.assignGingerly).  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
 
 If not, if the developer does *not* specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still partially benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
 
