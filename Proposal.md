@@ -101,8 +101,8 @@ For example:
 
 ```JavaScript
 if(this.enhancements === undefined) this.enhancements = {};
-if(this.enhancements.beSearchingFor === undefined) this.enhancements.beSearchingFor = {};
-this.enhancements.beSearchingFor.for = newVal;
+if(this.enhancements.beSearching === undefined) this.enhancements.beSearching = {};
+this.enhancements.beSearching.for = newVal;
 ```
 
 In summary, the list of new methods this proposal calls for are:
