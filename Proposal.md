@@ -1,6 +1,7 @@
 # Observing the Observed Attributes API
 
 Author:  Bruce B. Anderson
+
 Last update: 2024-02-29
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
