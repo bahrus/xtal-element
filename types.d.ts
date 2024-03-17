@@ -160,7 +160,7 @@ export interface XtalElementEndUserProps<MCProps = any, MCActions = MCProps>{
     beFormAssociated?: boolean,
     shadowRootMode?: ShadowRootMode,
     propDefaults?: Partial<MCProps>,
-    propInfo?: {[key: keyof MCProps & string]: PropInfoExt<MCProps, MCActions>},
+    propInfo?: {[key in keyof MCProps & string]: PropInfoExt<MCProps, MCActions>},
     xform?: XForm<MCProps, MCActions>,
     lcXform?: XForm<MCProps, MCActions>,
     inferProps?: boolean,
