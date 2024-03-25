@@ -822,7 +822,7 @@ To evaluate dynamic expressions with full access to the JavaScript runtime engin
 
 
 
-# Part III Dynamic Merging
+# Part V Dynamic Merging
 
 The transform used in our counter above:
 
