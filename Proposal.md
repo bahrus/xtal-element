@@ -184,7 +184,7 @@ In fact, this idea of granting the AttributeNode extra powers that could be used
 So [something like](https://github.com/whatwg/html/issues/10220):
 
 ```JavaScript
-class IsFormAssociatedAttribute extends Attribute {
+class BeFormLike extends Attribute {
 	ownerElement; // element this is attached to
     elementInternals; //grants access to the element internals of elements that list this handler in the observedAttributes list
 
@@ -204,10 +204,10 @@ class IsFormAssociatedAttribute extends Attribute {
 	
 }
 
-HTMLFormElement.attributeRegistry.define("is-form-associated", IsFormAssociatedAttribute);
+HTMLFormElement.attributeRegistry.define("be-form-like", BeFormLike);
 ```
 
-This would make custom elements that add this handler in their list of observedAttributes "FormAssociated", and the strange thing is we would want the custom element to be form associated, even if the "is-form-associated" attribute isn't actually added to the element instance, I think.  It's just there as a reserved attribute name, that *could* be passed in values in some cases, when needed.  Or something.  Again, this isn't my proposal, I'm just spit-balling how I could sort of see the appeal of it.
+This would make custom elements that add this handler in their list of observedAttributes "Form Like", and the strange thing is we would want the custom element to be essentially behave like an HTMLFormElement, even if the "be-form-like" attribute isn't actually added to the element instance, I think.  It's just there as a reserved attribute name, that *could* be passed in values in some cases, when needed.  Or something.  Again, this isn't my proposal, I'm just spit-balling how I could sort of see the appeal of it.
 
 I must strenuously insist that we don't get carried away by the apparent appeal of this option.  This may solve one problem well (perhaps, I'm just spit-balling here), but I still strongly believe the platform should *also* push forward with a solution to support cross-cutting "decorator" patterns, which [the custom enhancement proposal provides](https://github.com/WICG/webcomponents/issues/1000), that follows the more traditional view of regarding a suite of attributes as simply carriers of information in support of a single unifying "behavior/enhancement".  There may be some problems where either proposal could solve it, but I strongly believe that a robust platform would provide support for both approaches (one that is more tightly coupled to the element type it is enhancing, similar to class extensions, (or the built-in extension "standard" as ish) and one which is loosely coupled, and provides more support for highly semantic markup, and which aligns with what the industry has done (React, JQuery, etc) as far as attaching custom objects onto the DOM element directly).
 
