@@ -2,7 +2,7 @@
 
 Author:  Bruce B. Anderson
 
-Last update: 2024-02-29
+Last update: 2024-03-31
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -19,6 +19,8 @@ But for now, this proposal is suggesting some minimal steps forward that I, at l
 These primitives would also have the added side effect of providing a more official channel for publishing details about the web component, something that has, up to now, been provided exclusively by the Custom Element Manifest.   I suspect that initiative would happily tap into whatever official reflection opportunities the platform provides.
 
 In discussions with the React framework team regarding ways React could be able to set attribute values, for styling purposes, before the element had upgraded, and then switching over to the more powerful and efficient associated properties (avoiding excessive string parsing), this (currently lacking) official support might have helped us to find a more satisfying solution.  Lack of official support was a significant limiting factor.
+
+Perhaps most importantly, **declaratively exposing to the platform the strategy for how the custom element (or custom enhancement) goes about parsing its observed attributes would give the platform the opportunity to optimize this processing during template instantiation** -- scenarios where the attributes are repeatedly cloned and (if necessary) re-parsed.  If the platform ever makes it to the point where it provides official support for template instantiation, it could look for optimizing opportunities -- cache the parsed strings.  In the meantime, userland implementations of template instantiation could take advantage of the same sorts of optimizations **without requiring adopting a proprietary solution**, but rather, based on this standard.
 
 ## The proposal, in a nutshell
 
@@ -115,9 +117,9 @@ In summary, the list of new methods this proposal calls for are:
 
 ## A registry of custom attribute parsers / handlers?
 
-The idea that developers could "register" a custom parser (or it seems this is what some are calling a "custom attribute") that is used across many different web components, so that we could specify a string rather than a function as shown above, would be rather nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
+The idea that developers could "register" a custom parser (or it seems this is what some are calling a "custom attribute") that is used across many different web components, so that we could specify a registered name as a string, rather than a function as shown above, would be rather nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
 
-To be clear, the proposal linked to above is advocating more than registering a simple stateless function.  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement" field of the class instance, and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  
+To be clear, the proposal linked to above is advocating more than registering a simple stateless function.  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement" field of the class instance, and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  (And that proposal even suggests being able to do this arbitrarily, independent of any suite of observed attributes). 
 
 For [example](https://github.com/lume/custom-attributes):
 
@@ -173,9 +175,45 @@ class ClubMember extends HTMLElement{
 }
 ```
 
-So *if* the attributeChangedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have key '?.style?.backgroundColor' set to whatever value is returned, ready to be carefully merged in to the ownerElement (using Object.assignGingerly).  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
+So to take one possible way this could work, *if* the attributeChangedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have key '?.style?.backgroundColor' set to whatever value is returned, ready to be carefully merged in to the ownerElement (using Object.assignGingerly).  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
 
 If not, if the developer does *not* specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still partially benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
+
+In fact, this idea of granting the AttributeNode extra powers that could be used to "fine-tune" the element type class it is registered against, *might* actually make it more of a palatable alternative to the built-in extension "standard" that WebKit finds problematic.  
+
+So [something like](https://github.com/whatwg/html/issues/10220):
+
+```JavaScript
+class IsFormAssociatedAttribute extends Attribute {
+	ownerElement; // element this is attached to
+    elementInternals; //grants access to the element internals of elements that list this handler in the observedAttributes list
+
+    /**
+     * Called after the ownerElement is connected to the DOM fragment, even if the attribute isn't actually present.
+     * Maybe?
+     *
+     * */
+	connectedCallback() { /* ... */ }
+
+	disconnectedCallback() { /* ... */ }
+
+	// Called whenever the attribute's value changes
+	changedCallback() { /* ... */ }
+
+	static dataType = AttributeType.ElementAssociation;
+	
+}
+
+HTMLFormElement.attributeRegistry.define("is-form-associated", IsFormAssociatedAttribute);
+```
+
+This would make custom elements that add this handler in their list of observedAttributes "FormAssociated", and the strange thing is we would want the custom element to be form associated, even if the "is-form-associated" attribute isn't actually added to the element instance, I think.  It's just there as a reserved attribute name, that *could* be passed in values in some cases, when needed.  Or something.  Again, this isn't my proposal, I'm just spit-balling how I could sort of see the appeal of it.
+
+I must strenuously insist that we don't get carried away by the apparent appeal of this option.  This may solve one problem well (perhaps, I'm just spit-balling here), but I still strongly believe the platform should *also* push forward with a solution to support cross-cutting "decorator" patterns, which [the custom enhancement proposal provides](https://github.com/WICG/webcomponents/issues/1000), that follows the more traditional view of regarding a suite of attributes as simply carriers of information in support of single .  There may some be problems where either proposal could solve it, but I strongly believe that a robust platform would provide support for both approaches (one that is more tightly coupled to the element type it is enhancing, similar to class extensions, and one which is loosely coupled, and provides more support for highly semantic markup, and which aligns with what the industry has done (React, JQuery, etc) as far as attaching custom objects onto the DOM element directly).
+
+It is unfortunate that there is a tendency to view proposals that are somewhat related as a zero-sum game, pitting teams of developers against each other.  Yes, we don't want the platform to duplicate things unnecessarily (resulting in higher maintenance costs, learning curve, etc), but I think the differences are significant enough that these two proposal aren't an either-or.
+
+If the issue is lack of resources able to implement both, maybe the WHATWG should dirty itself with some Kickstarter campaigns?  Look how well that worked for [Web-Awesome](https://www.kickstarter.com/projects/fontawesome/web-awesome?ref=68pa3y).  Imagine how much more could be raised for something like these proposals?  Sorry, more spit-balling.
 
 If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative mechanism to be able to just register stateless handler functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
