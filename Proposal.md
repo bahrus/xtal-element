@@ -20,7 +20,7 @@ These primitives would also have the added side effect of providing a more offic
 
 In discussions with the React framework team regarding ways React could be able to set attribute values, for styling purposes, before the element had upgraded, and then switching over to the more powerful and efficient associated properties (avoiding excessive string parsing), this (currently lacking) official support might have helped us to find a more satisfying solution.  Lack of official support was a significant limiting factor.
 
-Perhaps most importantly, **declaratively exposing to the platform the strategy for how the custom element (or custom enhancement) goes about parsing its observed attributes would give the platform the opportunity to optimize this processing during template instantiation** -- scenarios where the attributes are repeatedly cloned and (if necessary) re-parsed.  If the platform ever makes it to the point where it provides official support for template instantiation, it could look for optimizing opportunities -- cache the parsed strings.  In the meantime, userland implementations of template instantiation could take advantage of the same sorts of optimizations **without requiring adopting a proprietary solution**, but rather, based on this standard.
+Perhaps most importantly, **declaratively exposing to the platform the strategy for how the custom element (or custom enhancement) goes about parsing its observed attributes would give the platform (and userland implementions) the opportunity to optimize this processing during template instantiation** -- scenarios where the attributes are repeatedly cloned and (if necessary) re-parsed.  If the platform ever makes it to the point where it provides official support for template instantiation, it could look for optimizing opportunities -- cache the parsed strings.  In the meantime, userland implementations of template instantiation could take advantage of the same sorts of optimizations **without requiring adopting a proprietary solution**, but rather, based on this standard.
 
 ## The proposal, in a nutshell
 
@@ -214,6 +214,8 @@ I must strenuously insist that we don't get carried away by the apparent appeal 
 It is unfortunate that there is a tendency to view proposals that are somewhat related as a zero-sum game, pitting teams of developers against each other.  Yes, we don't want the platform to duplicate things unnecessarily (resulting in higher maintenance costs, learning curve, etc), but I think the differences are significant enough that these two proposal aren't an either-or.
 
 If the issue is lack of resources able to implement both, maybe the WHATWG should dirty itself with some Kickstarter campaigns?  Look how well that worked for [Web-Awesome](https://www.kickstarter.com/projects/fontawesome/web-awesome?ref=68pa3y).  Imagine how much more could be raised for something like these proposals?  Sorry, more spit-balling.
+
+
 
 If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative mechanism to be able to just register stateless handler functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
