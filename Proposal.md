@@ -40,7 +40,9 @@ class ClubMember extends HTMLElement{
             //needed if not a string,
             instanceOf: Date,
             //optional
-            customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue)
+            customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue),
+            //optional
+            valIfNull: any,
         },
         {
             name: 'badge-color',
