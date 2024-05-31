@@ -218,7 +218,7 @@ This syntax also works:
 <hello-world place=Venus></hello-world>
 ```
 
-It requires declarative [ShadowDOM polyfill for Firefox](https://web.dev/declarative-shadow-dom/#detection-support), though Firefox nightly supports it now!
+All the browsers support this now!
 
 ## Server-side rendering
 
