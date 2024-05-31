@@ -231,7 +231,7 @@ In that scenario, the CDN server of the (pre-built) static HTML file (or a local
 
 The good people of github, in particular, earn a definitive stamp of approval from xtal-element.  They are definitely onto something quite significant, with [their insightful comment](https://github.com/github/include-fragment-element#relation-to-server-side-includes):
 
->This declarative approach is very similar to SSI or ESI directives. In fact, an edge implementation could replace the markup before its actually delivered to the client.
+>This declarative approach is very similar to SSI or ESI directives. In fact, an edge implementation could replace the markup before it's actually delivered to the client.
 
 ```html
 <include-fragment src="/github/include-fragment/commit-count" timeout="100">
