@@ -5,7 +5,7 @@ import {
     XtalElementAllProps,
     ProAP,
     PropInfoExt
-} from '../types.js';
+} from './types.js';
 
 export class XtalElement extends HTMLElement implements XtalElementActions {
     async getTemplate(self: this) {

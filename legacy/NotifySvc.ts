@@ -1,5 +1,5 @@
 import {InstSvc} from 'trans-render/froop/InstSvc.js';
-import {XEArgs} from '../types.js';
+import {XEArgs} from './types.js';
 import {mse, xsr} from 'trans-render/froop/const.js';
 import { INewPropagator } from 'trans-render/froop/types';
 import {notarize} from './notarize.js';

@@ -1,8 +1,8 @@
 import {CE} from 'trans-render/froop/CE.js';
 import {CEArgs} from 'trans-render/froop/types';
 import {Action, WCConfig} from 'trans-render/lib/types';
-import {PropInfoExt} from '../types.js';
-import {XEArgs} from '../types.js';
+import {PropInfoExt} from './types.js';
+import {XEArgs} from './types.js';
 export {ActionOnEventConfigs} from 'trans-render/froop/types.d.js';
 
 export class XE<
