@@ -1,5 +1,5 @@
 import {TestEqualsProps, TestEqualsActions} from './types';
-import {XE} from '../XE.js';
+import {XE} from '../legacy/XE.js';
 
 export class TestEquals extends HTMLElement implements TestEqualsActions{
     doSynch({updateCount, updateCountEcho}: this){

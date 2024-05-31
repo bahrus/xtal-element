@@ -1,5 +1,5 @@
 import {IPropagator, IPropChg} from 'trans-render/froop/types';
-import {INotify, PropInfoExt, IReflectTo, ICustomState} from './types';
+import {INotify, PropInfoExt, IReflectTo, ICustomState} from '../types';
 
 export async function ifPR(instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, value: any, notify: INotify, propInfo: PropInfoExt){
     const {parseTo, reflectTo} = notify;

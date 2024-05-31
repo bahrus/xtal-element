@@ -1,6 +1,6 @@
 import {TemplMgmt, TemplMgmtProps, TemplMgmtActions, beTransformed, propInfo} from 'trans-render/lib/mixins/TemplMgmt.js';
 import {Localizer, LocalizerMethods} from 'trans-render/lib/mixins/Localizer.js';
-import {XE} from '../XE.js';
+import {XE} from '../legacy/XE.js';
 import { XForm } from 'trans-render/types.js';
 
 export interface DTRCounterProps {

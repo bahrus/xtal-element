@@ -9,11 +9,11 @@
 		"newLine": "LF"
 	},
 	"files": [
-		"xtal-element.ts"
+		"legacy/xtal-element.ts"
 	],
 	"include":[
 		"demo/*",
-		 "XENON.ts"	
+		 "legacy/XENON.ts"	
 	],
 	"exclude":[
 		"./node_modules/*"

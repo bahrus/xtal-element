@@ -1,5 +1,5 @@
 import {IPropagator, IPropChg} from 'trans-render/froop/types';
-import {INotify, PropInfoExt, IReflectTo, ICustomState, Config} from './types';
+import {INotify, PropInfoExt, IReflectTo, ICustomState, Config} from '../types.js';
 
 export async function ifENI(
     instance: EventTarget, propagator: IPropagator, key: string, oldValue: any, 
