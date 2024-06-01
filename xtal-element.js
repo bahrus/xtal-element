@@ -3,12 +3,25 @@ export class XtalElement extends O {
     static config = {
         propInfo: {
             targetScope: {
-                def: 'porn'
+                def: 'porn',
+                attrName: 'target-scope',
+                parse: true,
+            },
+            mainTemplate: {
+                type: 'Object'
+            },
+            aka: {
+                type: 'String',
+                attrName: 'aka',
+                parse: true,
             }
         },
         actions: {
             getTemplate: {
                 ifAllOf: ['targetScope']
+            },
+            define: {
+                ifAllOf: ['mainTemplate']
             }
         }
     };
@@ -56,5 +69,10 @@ export class XtalElement extends O {
         return {
         //mainTemplate
         };
+    }
+    async define(self) {
+        const { aka } = self;
+        console.log({ aka });
+        return {};
     }
 }

@@ -21,5 +21,6 @@ export type ProAP = Promise<AP>
 
 export interface Actions {
     getTemplate(self: this): ProAP,
+    define(self: this): ProAP,
 }
 

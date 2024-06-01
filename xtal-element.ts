@@ -5,12 +5,25 @@ export class XtalElement extends O implements Actions{
     static override config: OConfig<AP, Actions> = {
         propInfo:{
             targetScope: {
-                def: 'porn'
+                def: 'porn',
+                attrName: 'target-scope',
+                parse: true,
+            },
+            mainTemplate: {
+                type: 'Object'
+            },
+            aka: {
+                type: 'String',
+                attrName: 'aka',
+                parse: true,
             }
         },
         actions: {
             getTemplate: {
                 ifAllOf: ['targetScope']
+            },
+            define: {
+                ifAllOf: ['mainTemplate']
             }
         }
     }
@@ -56,6 +69,14 @@ export class XtalElement extends O implements Actions{
         }
         return {
             //mainTemplate
+        } as AP;
+    }
+
+    async define(self: this){
+        const {aka} = self;
+        console.log({aka});
+        return {
+
         } as AP;
     }
 }
