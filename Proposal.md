@@ -26,12 +26,12 @@ As has been pointed out [here](https://web.dev/articles/custom-elements-best-pra
 
 The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api may perhaps serve that purpose more effectively.)
 
-How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effectively help is: 
+How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effective help for managing each attribute is: 
 
 1.  Will only the initial value ever be used?
-2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes.
-3.  If the developer only needs to know that the value is changed from before ("is dirty") and can lazy parse it when needed on demand.
-4.  Allow for server-rendering to provide the initial value, prefer that frameworks pass in updates via props, but (reluctantly) provide for the more updating via attributes when useful.
+2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes?
+3.  Will needing to know that the value is changed from before only the actual value only  be needed "on demand" later on?
+4.  Is the normal expectation that server-rendering of initial configuration and/or state will be provided for rapid, simple hydration purposes, but after that, the preference is for client-side code/frameworks to pass in updates via props, while (reluctantly) providing for responding to updates via attributes also supported (but frowned upon)?
 
 ## The proposal, in a nutshell
 
@@ -104,7 +104,7 @@ class ClubMember extends HTMLElement{
         
 
         observer.addEventListener('attrChanged', e => {
-            const {modifiedObjectFieldValues, preModifiedFieldValues, dirtyFieldNames} = e;
+            const {modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified} = e;
             console.log({modifiedObjectFieldValues, preModifiedFieldValues});
             this.#doNotReflectToAttrs = true;
             Object.assignGingerly(this, modifiedObjectFieldValues);
@@ -131,7 +131,7 @@ If the standard parsers don't satisfy a particular demand, the developer could p
 
 customElements.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
-The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).
+The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).  For property values we don't need to parse right away, 
 
 *Object.assignGingerly* would have special logic to set properties with keys starting with "?." in a manner similar to optional chaining property access (but in reverse?):
 
