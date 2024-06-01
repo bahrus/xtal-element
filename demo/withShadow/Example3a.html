@@ -8,28 +8,28 @@
 <body>
 
     <hello-world place=Earth>
-    <template shadowrootmode=open>
-        <div itemscope>Hello, <span itemprop=place>world</span></div>
+        <template shadowrootmode=open>
+            <div itemscope>Hello, <span itemprop=place>world</span></div>
             <style adopt>
                 span {
                     color: green;
                 }
             </style>
             <xtal-element infer-props></xtal-element>
-    </template>
+        </template>
     </hello-world>
     <hello-world place=Mars></hello-world>
     <hello-world place=Venus></hello-world>
 
     <script type=importmap>{
         "imports":{
-            "blow-dry/": "../../node_modules/blow-dry/",
-            "mount-observer/": "../../node_modules/mount-observer/",
-            "trans-render/": "../../node_modules/trans-render/"
+            "blow-dry/": "/node_modules/blow-dry/",
+            "mount-observer/": "/node_modules/mount-observer/",
+            "trans-render/": "/trans-render/"
         }
     }</script>
     <script type=module>
-        import '../../xtal-element.js';
+        import '/index.js';
     </script>
 </body>
 </html>

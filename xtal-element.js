@@ -53,6 +53,11 @@ export class XtalElement extends O {
                 type: 'Object',
                 attrName: 'xform',
                 parse: true,
+            },
+            shadowRootMode: {
+                type: 'String',
+                attrName: 'shadow-root-mode',
+                parse: true,
             }
         },
         actions: {
@@ -110,7 +115,7 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, } = self;
+        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode } = self;
         const inferredProps = {};
         const inferredXForm = {};
         if (inferProps) {
@@ -143,11 +148,18 @@ export class XtalElement extends O {
                 }
             }
         }
+        let shadowRootInit;
+        if (shadowRootMode) {
+            shadowRootInit = {
+                mode: shadowRootMode
+            };
+        }
         const ctr = class extends Mount {
             localize = localize;
             static config = {
                 assumeCSR,
                 mainTemplate: mainTemplate,
+                shadowRootInit,
                 propDefaults: {
                     ...propDefaults
                 },
