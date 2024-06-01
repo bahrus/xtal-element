@@ -22,6 +22,16 @@ In discussions with the React framework team regarding ways React could be able 
 
 Perhaps most importantly, **declaratively exposing to the platform the strategy for how the custom element (or custom enhancement) goes about parsing its observed attributes would give the platform (and userland implementions) the opportunity to optimize this processing during template instantiation** -- scenarios where the attributes are repeatedly cloned and (if necessary) re-parsed.  If the platform ever makes it to the point where it provides official support for template instantiation, it could look for optimizing opportunities -- cache the parsed strings.  In the meantime, userland implementations of template instantiation could take advantage of the same sorts of optimizations **without requiring adopting a proprietary solution**, but rather, based on this standard.
 
+As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
+
+The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used to "reflect state" or styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api can serve that purpose, often more effectively.)
+
+How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effecive help is: 
+
+1.  Will only initial value ever be used?
+2.  If the (parsed) attribute value needs to immediately, reactively trigger some action anytime it changes.
+3.  If the developer only needs to know that the value is changed from before ("is dirty") and can lazy parse it when needed.
+
 ## The proposal, in a nutshell
 
 For starters, I think we could modify the observedAttributes static property, so it could support configuration type objects, where details are spelled out:
@@ -43,6 +53,8 @@ class ClubMember extends HTMLElement{
             customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue),
             //optional
             valIfNull: any,
+            //optional
+            once: true
         },
         {
             name: 'lang',
@@ -94,8 +106,6 @@ class ClubMember extends HTMLElement{
 ## Explanation
 
 The initialState constant above, retrieved from *customElements.parseObservedAttributes*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.
-
-As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties that are string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  Here it makes sense
 
 In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).  We use isSourceOfTruth to signify this.  Perhaps this should be assumed for string and boolean types.
 
