@@ -29,6 +29,16 @@ export class XtalElement extends O implements Actions{
                 attrName: 'assume-csr',
                 parse: true,
             },
+            propDefaults: {
+                type: 'Object',
+                attrName: 'prop-defaults',
+                parse: true,
+            },
+            propInfo: {
+                type: 'Object',
+                attrName: 'prop-info',
+                parse: true,
+            },
             inferProps:{
                 def: false,
                 type: 'Boolean',
@@ -105,7 +115,9 @@ export class XtalElement extends O implements Actions{
     }
 
     async define(self: this){
-        const {aka, mainTemplate, assumeCSR, inferProps, xform} = self;
+        const {aka, mainTemplate, assumeCSR, inferProps, xform,
+            propInfo, propDefaults,
+        } = self;
         const inferredProps: {[key: string]: PropInfo} = {};
         const inferredXForm: XForm<any, any> = {};
         if(inferProps){
@@ -143,9 +155,13 @@ export class XtalElement extends O implements Actions{
             static override config: MntCfg = {
                 assumeCSR,
                 mainTemplate: mainTemplate!,
+                propDefaults: {
+                    ...propDefaults
+                },
                 propInfo: {
                     ...super.mntCfgMxn.propInfo,
                     ...inferredProps,
+                    ...propInfo
                 },
                 actions:{
                     ...super.mntCfgMxn.actions
