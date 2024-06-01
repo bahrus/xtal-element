@@ -1,6 +1,17 @@
 import { O } from 'trans-render/froop/O.js';
 export class XtalElement extends O {
-    static config = {};
+    static config = {
+        propInfo: {
+            targetScope: {
+                def: 'porn'
+            }
+        },
+        actions: {
+            getTemplate: {
+                ifAllOf: ['targetScope']
+            }
+        }
+    };
     async getTemplate(self) {
         const { targetScope, aka } = self;
         const { findRealm } = await import('trans-render/lib/findRealm.js');

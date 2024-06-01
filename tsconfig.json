@@ -9,7 +9,7 @@
 		"newLine": "LF"
 	},
 	"files": [
-		"xtal-element.ts"
+		"index.ts"
 	],
 	"exclude":[
 		"./node_modules/*"
