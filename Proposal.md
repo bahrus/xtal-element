@@ -55,9 +55,9 @@ class ClubMember extends HTMLElement{
             //optional
             valIfNull: any,
             /**
-             * optional -- only read, (optionally) parse, and trigger events on encountering 
+             * optional -- only read, (optionally) parse, and trigger "attrChange" event on encountering 
              * the initial value  (other than null), ignore after that.
-             * as far as triggering events, but provide for lazy parsing on demand as needed.
+             * Provide for lazy parsing on demand as needed after that.
              */
             once: true
         },
@@ -66,9 +66,9 @@ class ClubMember extends HTMLElement{
             instanceOf: 'Object',
             mapsTo: 'chartData',
             /**
-             * optional -- only read, (optionally) parse, and trigger events on encountering 
-             * the initial value (other than null), 
-             * trigger 'isDirty' indicator after that
+             * optional -- triggers "attrChange" event, however doesn't parse.  It provides
+             * an object with all the lazy parsed attributes which have changed / are initializing
+             * which can be passed into the lazyParse method described below
              */
             lazyParse: true
         },
