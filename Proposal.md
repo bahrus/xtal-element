@@ -105,9 +105,10 @@ class ClubMember extends HTMLElement{
 
         observer.addEventListener('attrChanged', e => {
             const {modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified} = e;
-            console.log({modifiedObjectFieldValues, preModifiedFieldValues});
+            console.log({modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified});
             this.#doNotReflectToAttrs = true;
-            Object.assignGingerly(this, modifiedObjectFieldValues);
+            const parsedLazyModifiedFields = customElements.lazyParse(this, lazyParseFieldsModified);
+            Object.assignGingerly(this, {...modifiedObjectFieldValues, ...parsedLazyModifiedFields});
             this.#doNotReflectToAttrs = false;
             
         });
@@ -121,7 +122,7 @@ class ClubMember extends HTMLElement{
 ```
 ## Explanation
 
-The initialState constant above, retrieved from *customElements.parseObservedAttributes*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.
+The initialState constant above, retrieved from *customElements.parseObservedAttributes* and *customElements.lazyParse*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.
 
 In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).  We use isSourceOfTruth to signify this.  Perhaps this should be assumed for string and boolean types.
 
@@ -143,10 +144,16 @@ if(this.enhancements.beSearching === undefined) this.enhancements.beSearching = 
 this.enhancements.beSearching.for = newVal;
 ```
 
+If two arguments are passed into customElements.lazyParse, it looks at the second argument, and all the keys, and passes back a new object with the values of the keys provided based on the parsed attribute.
+
+If only one argument is passed into customElements.laxyParse, it passes back a proxy, allowing for getting the specific property value of interest on demand.
+
 In summary, the list of new methods this proposal calls for are:
 
-1.  customElements.observeObservedAttributes(instance)
-2.  customElements.parseObservedAttributes(instance)
+1.  customElements.observeObservedAttributes(instance);
+2.  customElements.parseObservedAttributes(instance);
+3.  customElements.lazyParse(instance)[propName];
+4.  customElements.lazyParse(instance, propObjectModelToUseForParsing)
 3.  Object.assignGingerly(instance, propObject);
 4.  customElements.setAttributes(instance, attrNameValuePairArray);
 
