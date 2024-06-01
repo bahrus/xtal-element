@@ -23,6 +23,12 @@ export class XtalElement extends O {
                 def: false,
                 attrName: 'assume-csr',
                 parse: true,
+            },
+            inferProps: {
+                def: false,
+                type: 'Boolean',
+                attrName: 'infer-props',
+                parse: true
             }
         },
         actions: {
