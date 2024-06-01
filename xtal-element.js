@@ -1,4 +1,7 @@
 import { O } from 'trans-render/froop/O.js';
+// used for generating the web component
+import { Mount } from 'trans-render/Mount.js';
+import { localize } from 'trans-render/funions/Localizer.js';
 export class XtalElement extends O {
     static config = {
         propInfo: {
@@ -71,8 +74,22 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka } = self;
-        console.log({ aka });
+        const { aka, mainTemplate } = self;
+        const ctr = class extends Mount {
+            localize = localize;
+            static config = {
+                mainTemplate: mainTemplate,
+                propInfo: {
+                    ...super.mntCfgMxn.propInfo,
+                },
+                actions: {
+                    ...super.mntCfgMxn.actions
+                },
+                xform: {}
+            };
+        };
+        await ctr.bootUp();
+        customElements.define(aka, ctr);
         return {};
     }
 }

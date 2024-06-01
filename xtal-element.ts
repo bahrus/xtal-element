@@ -1,6 +1,11 @@
 import {O, OConfig} from 'trans-render/froop/O.js';
 import {Actions, AP, ProAP} from './types';
 
+// used for generating the web component
+import {MntCfg, Mount, MountActions, MountProps} from 'trans-render/Mount.js';
+import {localize} from 'trans-render/funions/Localizer.js';
+import { ITransformer, UnitOfWork } from 'trans-render/types.js';
+
 export class XtalElement extends O implements Actions{
     static override config: OConfig<AP, Actions> = {
         propInfo:{
@@ -73,8 +78,22 @@ export class XtalElement extends O implements Actions{
     }
 
     async define(self: this){
-        const {aka} = self;
-        console.log({aka});
+        const {aka, mainTemplate} = self;
+        const ctr = class extends Mount {
+            localize = localize;
+            static override config: MntCfg = {
+                mainTemplate: mainTemplate!,
+                propInfo: {
+                    ...super.mntCfgMxn.propInfo,
+                },
+                actions:{
+                    ...super.mntCfgMxn.actions
+                },
+                xform: {}
+            }
+        }
+        await ctr.bootUp();
+        customElements.define(aka!, ctr);
         return {
 
         } as AP;
