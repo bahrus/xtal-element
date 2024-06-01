@@ -24,13 +24,14 @@ Perhaps most importantly, **declaratively exposing to the platform the strategy 
 
 As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
 
-The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used to "reflect state" or styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api can serve that purpose, often more effectively.)
+The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api may perhaps serve that purpose more effectively.)
 
-How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effecive help is: 
+How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effectively help is: 
 
 1.  Will only the initial value ever be used?
 2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes.
-3.  If the developer only needs to know that the value is changed from before ("is dirty") and can lazy parse it when needed.
+3.  If the developer only needs to know that the value is changed from before ("is dirty") and can lazy parse it when needed on demand.
+4.  Allow for server-rendering to provide the initial value, prefer that frameworks pass in updates via props, but (reluctantly) provide for the more updating via attributes when useful.
 
 ## The proposal, in a nutshell
 
@@ -48,19 +49,33 @@ class ClubMember extends HTMLElement{
             //associated property name
             mapsTo: 'memberStartDt',
             //needed if not a string,
-            instanceOf: Date,
+            instanceOf: Date, //or 'Date'
             //optional
             customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue),
             //optional
             valIfNull: any,
-            //optional -- only respond to the initial value (other than null), ignore after that
+            /**
+             * optional -- only read, (optionally) parse, and trigger events on encountering 
+             * the initial value  (other than null), ignore after that.
+             * as far as triggering events, but provide for lazy parsing on demand as needed.
+             */
             once: true
         },
         {
-            name: 'lang',
-            //optional
-            isSourceOfTruth: true
+            name: 'chart-data',
+            instanceOf: 'Object',
+            mapsTo: 'chartData',
+            /**
+             * optional -- only read, (optionally) parse, and trigger events on encountering 
+             * the initial value (other than null), 
+             * trigger 'isDirty' indicator after that
+             */
+            lazyParse: true
         },
+        {
+            name: 'itemprop',
+            mapsTo: 'propName',
+        }
         {
             name: 'badge-color',
             mapsTo: '?.style?.backgroundColor',
