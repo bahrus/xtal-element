@@ -2,6 +2,12 @@ import { XForm } from "trans-render/types";
 import { PropInfo } from 'trans-render/froop/types';
 import {Scope} from 'trans-render/lib/types';
 
+export interface PropInferenceCriteria{
+    cssSelector: string,
+    attrForProp: string,
+
+}
+
 export interface EndUserProps<TProps = any, TActions = TProps> {
     aka?: string,
     inferProps?: boolean,
@@ -12,6 +18,7 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     propInfo: Partial<{[key in keyof TProps]: PropInfo}>;
     targetScope?: Scope,
     assumeCSR?: boolean,
+    propInferenceCriteria?: Array<PropInferenceCriteria>,
 }
 
 export interface AP extends EndUserProps{

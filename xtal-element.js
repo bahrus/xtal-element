@@ -29,6 +29,15 @@ export class XtalElement extends O {
                 type: 'Boolean',
                 attrName: 'infer-props',
                 parse: true
+            },
+            propInferenceCriteria: {
+                def: [{
+                        cssSelector: '[itemprop]',
+                        attrForProp: 'itemprop',
+                    }],
+                type: 'Object',
+                attrName: 'prop-inference-criteria',
+                parse: true
             }
         },
         actions: {
@@ -86,7 +95,38 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka, mainTemplate, assumeCSR } = self;
+        const { aka, mainTemplate, assumeCSR, inferProps } = self;
+        const inferredProps = {};
+        if (inferProps) {
+            const { propInferenceCriteria } = self;
+            const content = mainTemplate.content;
+            const { camelToLisp } = await import('trans-render/lib/camelToLisp.js');
+            for (const criteria of propInferenceCriteria) {
+                const { cssSelector, attrForProp } = criteria;
+                const matches = Array.from(content.querySelectorAll(cssSelector));
+                for (const match of matches) {
+                    const propName = match.getAttribute(attrForProp);
+                    const { localName } = match;
+                    let prop = {
+                        attrName: camelToLisp(propName),
+                    };
+                    if (match instanceof HTMLLinkElement) {
+                        const { href } = match;
+                        Object.assign(prop, {
+                            type: 'Boolean',
+                            def: !href ? undefined : href.endsWith('True') ? true : false
+                        });
+                        match.href = '';
+                    }
+                    else {
+                        prop = {
+                            type: 'String'
+                        };
+                    }
+                    inferredProps[propName] = prop;
+                }
+            }
+        }
         const ctr = class extends Mount {
             localize = localize;
             static config = {
@@ -94,6 +134,7 @@ export class XtalElement extends O {
                 mainTemplate: mainTemplate,
                 propInfo: {
                     ...super.mntCfgMxn.propInfo,
+                    ...inferredProps,
                 },
                 actions: {
                     ...super.mntCfgMxn.actions

@@ -5,6 +5,7 @@ import {Actions, AP, ProAP} from './types';
 import {MntCfg, Mount, MountActions, MountProps} from 'trans-render/Mount.js';
 import {localize} from 'trans-render/funions/Localizer.js';
 import { ITransformer, UnitOfWork } from 'trans-render/types.js';
+import { PropInfo } from './trans-render/froop/types';
 
 export class XtalElement extends O implements Actions{
     static override config: OConfig<AP, Actions> = {
@@ -32,6 +33,15 @@ export class XtalElement extends O implements Actions{
                 def: false,
                 type: 'Boolean',
                 attrName: 'infer-props',
+                parse: true
+            },
+            propInferenceCriteria:{
+                def: [{
+                    cssSelector: '[itemprop]',
+                    attrForProp: 'itemprop',
+                }],
+                type: 'Object',
+                attrName: 'prop-inference-criteria',
                 parse: true
             }
         },
@@ -90,7 +100,38 @@ export class XtalElement extends O implements Actions{
     }
 
     async define(self: this){
-        const {aka, mainTemplate, assumeCSR} = self;
+        const {aka, mainTemplate, assumeCSR, inferProps} = self;
+        const inferredProps: {[key: string]: PropInfo} = {};
+        if(inferProps){
+            const {propInferenceCriteria} = self;
+            const content = mainTemplate!.content;
+            
+            const {camelToLisp} = await import('trans-render/lib/camelToLisp.js');
+            for(const criteria of propInferenceCriteria!){
+                const {cssSelector, attrForProp} = criteria;
+                const matches = Array.from(content.querySelectorAll(cssSelector));
+                for(const match of matches){
+                    const propName = match.getAttribute(attrForProp)!;
+                    const {localName} = match;
+                    let prop: PropInfo = {
+                        attrName: camelToLisp(propName),
+                    }
+                    if(match instanceof HTMLLinkElement){
+                        const {href} = match;
+                        Object.assign(prop, {
+                            type: 'Boolean',
+                            def: !href ? undefined : href.endsWith('True') ? true : false
+                        } as PropInfo)
+                        match.href = '';
+                    }else{
+                        prop = {
+                            type: 'String'
+                        }
+                    }
+                    inferredProps[propName] = prop;
+                }
+            }
+        }
         const ctr = class extends Mount {
             localize = localize;
             static override config: MntCfg = {
@@ -98,6 +139,7 @@ export class XtalElement extends O implements Actions{
                 mainTemplate: mainTemplate!,
                 propInfo: {
                     ...super.mntCfgMxn.propInfo,
+                    ...inferredProps,
                 },
                 actions:{
                     ...super.mntCfgMxn.actions
