@@ -2,7 +2,7 @@
 
 Author:  Bruce B. Anderson
 
-Last update: 2024-03-31
+Last update: 2024-06-01
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -43,6 +43,11 @@ class ClubMember extends HTMLElement{
             customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue),
             //optional
             valIfNull: any,
+        },
+        {
+            name: 'lang',
+            //optional
+            isSourceOfTruth: true
         },
         {
             name: 'badge-color',
@@ -87,7 +92,9 @@ class ClubMember extends HTMLElement{
 ```
 ## Explanation
 
-The initialState constant above, retrieved from *customElements.parseObservedAttributes*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.  
+The initialState constant above, retrieved from *customElements.parseObservedAttributes*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.
+
+As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties that are string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack the presence of the attribute) as the "source of truth"
 
 In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).
 
