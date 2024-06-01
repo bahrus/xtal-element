@@ -103,7 +103,7 @@ class ClubMember extends HTMLElement{
         this.#doNotReflectToAttrs = false;
         
 
-        observer.addEventListener('attrChanged', e => {
+        observer.addEventListener('attrChange', e => {
             const {modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified} = e;
             console.log({modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified});
             this.#doNotReflectToAttrs = true;
