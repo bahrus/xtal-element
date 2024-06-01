@@ -28,8 +28,8 @@ The other factor that the latter article points out is that some attributes may 
 
 How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effecive help is: 
 
-1.  Will only initial value ever be used?
-2.  If the (parsed) attribute value needs to immediately, reactively trigger some action anytime it changes.
+1.  Will only the initial value ever be used?
+2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes.
 3.  If the developer only needs to know that the value is changed from before ("is dirty") and can lazy parse it when needed.
 
 ## The proposal, in a nutshell
@@ -53,7 +53,7 @@ class ClubMember extends HTMLElement{
             customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue),
             //optional
             valIfNull: any,
-            //optional
+            //optional -- only respond to the initial value (other than null), ignore after that
             once: true
         },
         {
@@ -99,6 +99,7 @@ class ClubMember extends HTMLElement{
         customElements.setAttributes(this, [
             {'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}
         ]);
+        const memberStartDt = await customElements.lazyParse(this).memberStartDt
         
     }
 }
