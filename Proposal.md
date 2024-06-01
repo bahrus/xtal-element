@@ -22,15 +22,15 @@ In discussions with the React framework team regarding ways React could be able 
 
 Perhaps most importantly, **declaratively exposing to the platform the strategy for how the custom element (or custom enhancement) goes about parsing its observed attributes would give the platform (and userland implementations) the opportunity to optimize this processing during template instantiation** -- scenarios where the attributes are repeatedly cloned and (if necessary) re-parsed.  If the platform ever makes it to the point where it provides official support for template instantiation, it could look for optimizing opportunities -- cache the parsed strings.  In the meantime, userland implementations of template instantiation could take advantage of the same sorts of optimizations **without requiring adopting a proprietary solution**, but rather, based on this standard.
 
-As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
+As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold much weigh as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
 
 The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api may perhaps serve that purpose more effectively.)
 
-How are the different ways attributes can be used relevant to the proposed API? I think the most relevant question for the developer, when publicly configuring how the platform could provide the most effective help for managing each attribute is: 
+How are the different ways attributes can be used relevant to the proposed API? I think the most relevant questions for the developer, when publicly configuring how the platform could provide the most effective help for managing each attribute are: 
 
 1.  Will only the initial value ever be used?
 2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes?
-3.  Will needing to know that the value is changed from before only the actual value only  be needed "on demand" later on?
+3.  Will needing to know that the value has changed from before be useful for "book-keeping purspose", knowing that when it comes time to know what the actual value is,  only then should we read the value(s) "on demand"?
 4.  Is the normal expectation that server-rendering of initial configuration and/or state will be provided for rapid, simple hydration purposes, but after that, the preference is for client-side code/frameworks to pass in updates via props, while (reluctantly) providing for responding to updates via attributes also supported (but frowned upon)?
 
 ## The proposal, in a nutshell
@@ -132,7 +132,7 @@ If the standard parsers don't satisfy a particular demand, the developer could p
 
 customElements.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
-The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).  For property values we don't need to parse right away, 
+The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).  For property values we don't need to parse right away, a list (in object format?) of such "dirty" attributes would be provided as "lazyParseFieldsModified".
 
 *Object.assignGingerly* would have special logic to set properties with keys starting with "?." in a manner similar to optional chaining property access (but in reverse?):
 
