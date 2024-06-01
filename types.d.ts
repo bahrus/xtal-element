@@ -11,6 +11,7 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     propDefaults?: Partial<TProps>,
     propInfo: Partial<{[key in keyof TProps]: PropInfo}>;
     targetScope?: Scope,
+    assumeCSR?: boolean,
 }
 
 export interface AP extends EndUserProps{

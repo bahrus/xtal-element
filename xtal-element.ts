@@ -21,6 +21,12 @@ export class XtalElement extends O implements Actions{
                 type: 'String',
                 attrName: 'aka',
                 parse: true,
+            },
+            assumeCSR: {
+                type: 'Boolean',
+                def: false,
+                attrName: 'assume-csr',
+                parse: true,
             }
         },
         actions: {
@@ -78,10 +84,11 @@ export class XtalElement extends O implements Actions{
     }
 
     async define(self: this){
-        const {aka, mainTemplate} = self;
+        const {aka, mainTemplate, assumeCSR} = self;
         const ctr = class extends Mount {
             localize = localize;
             static override config: MntCfg = {
+                assumeCSR,
                 mainTemplate: mainTemplate!,
                 propInfo: {
                     ...super.mntCfgMxn.propInfo,
