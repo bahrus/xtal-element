@@ -103,8 +103,8 @@ class ClubMember extends HTMLElement{
         this.#doNotReflectToAttrs = false;
         
 
-        observer.addEventListener('parsed-attrs-changed', e => {
-            const {modifiedObjectFieldValues, preModifiedFieldValues} = e;
+        observer.addEventListener('attrChanged', e => {
+            const {modifiedObjectFieldValues, preModifiedFieldValues, dirtyFieldNames} = e;
             console.log({modifiedObjectFieldValues, preModifiedFieldValues});
             this.#doNotReflectToAttrs = true;
             Object.assignGingerly(this, modifiedObjectFieldValues);
