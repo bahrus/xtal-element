@@ -90,7 +90,7 @@ Renders:
 ```
 
 > [!NOTE]
-> Why is the csr attribute necessary?  csr stands for "client-side-rendering" for the inital render.  Isn't it obvious we want to client side rendering if we are creating a web component.
+> Why is the csr attribute necessary?  csr stands for "client-side-rendering" for the inital render.  Isn't it obvious we want to client side rendering if we are creating a web component?
 > It is only necessary for web components that don't use declarative shadow DOM and don't use server-side-generated rendering, or server-side-generated rendering, or click-clackity keyboard typed rendering.  Here's the thinking:
 > 1. We don't want to do any unnecessary rendering.  So some sort of "message" protocol is required to reduce unecessary rendering. 
 > 2. The presence of declarative shadow DOM markup sends a strong signal that server side rendering was used.  Why go through the trouble of adding the template element if not?
