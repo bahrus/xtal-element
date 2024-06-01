@@ -51,7 +51,8 @@ class ClubMember extends HTMLElement{
         },
         {
             name: 'badge-color',
-            mapsTo: '?.style?.backgroundColor'
+            mapsTo: '?.style?.backgroundColor',
+            
         },
         {
             name: 'search-string',
@@ -94,9 +95,9 @@ class ClubMember extends HTMLElement{
 
 The initialState constant above, retrieved from *customElements.parseObservedAttributes*, would be a full object representation of all the (parsed) attribute values after the server rendering of the element tag (but not necessarily the children) has completed. Hopefully there is a distinct lifecycle event that the platform knows of when this could happen.  The keys of the object would be the attribute name (lower case?), unless a mapsTo field is provided.
 
-As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties that are string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack the presence of the attribute) as the "source of truth"
+As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties that are string, or boolean, the issue of "excessive string parsing" argument doesn't hold as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  Here it makes sense
 
-In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).
+In the case of observed attributes where that attribute isn't present on the element instance, that attribute key / mapsTo property would have a value of null (unless it is of Boolean type, in which case it would be false.  Other types might also treat lack of the attribute differently).  We use isSourceOfTruth to signify this.  Perhaps this should be assumed for string and boolean types.
 
 Standard (probably not locale sensitive) parsers for Date, Number, Boolean, Object (via JSON.parse), RegExp, maybe even URL's would be baked into the platform, that would be used to provide the values of the object mentioned above.  
 
