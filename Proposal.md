@@ -115,7 +115,7 @@ class ClubMember extends HTMLElement{
         customElements.setAttributes(this, [
             {'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}
         ]);
-        const memberStartDt = await customElements.lazyParse(this).memberStartDt
+        const memberStartDt = await customElements.lazyParse(this).memberStartDt;
         
     }
 }
