@@ -10,17 +10,17 @@
         <div>Hello, <span>world</span></div>
         <xtal-element></xtal-element>
     </hello-world>
-    <hello-world></hello-world>
+    <hello-world csr></hello-world>
 
     <script type=importmap>{
         "imports":{
-            "blow-dry/": "../../node_modules/blow-dry/",
-            "mount-observer/": "../../node_modules/mount-observer/",
-            "trans-render/": "../../node_modules/trans-render/"
+            "blow-dry/": "/node_modules/blow-dry/",
+            "mount-observer/": "/node_modules/mount-observer/",
+            "trans-render/": "/trans-render/"
         }
     }</script>
     <script type=module>
-        import '../../xtal-element.js';
+        import '/index.js';
     </script>
 </body>
 </html>

@@ -105,7 +105,7 @@ Renders:
 
 ## The assume-csr option
 
-To address the concern above, add the following attribute to indicate that subsequence instances should apply client side rendering to the initial rendering:
+To address the concern above, add the following attribute to indicate that subsequent instances should apply client side rendering to the initial rendering:
 
 ```html
 <div>
