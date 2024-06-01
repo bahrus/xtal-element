@@ -4,7 +4,7 @@ import {Actions, AP, ProAP} from './types';
 // used for generating the web component
 import {MntCfg, Mount, MountActions, MountProps} from 'trans-render/Mount.js';
 import {localize} from 'trans-render/funions/Localizer.js';
-import { ITransformer, UnitOfWork } from 'trans-render/types.js';
+import { ITransformer, UnitOfWork, XForm } from 'trans-render/types.js';
 import { PropInfo } from './trans-render/froop/types';
 
 export class XtalElement extends O implements Actions{
@@ -42,7 +42,12 @@ export class XtalElement extends O implements Actions{
                 }],
                 type: 'Object',
                 attrName: 'prop-inference-criteria',
-                parse: true
+                parse: true,
+            },
+            xform:{
+                type: 'Object',
+                attrName: 'xform',
+                parse: true,
             }
         },
         actions: {
@@ -100,8 +105,9 @@ export class XtalElement extends O implements Actions{
     }
 
     async define(self: this){
-        const {aka, mainTemplate, assumeCSR, inferProps} = self;
+        const {aka, mainTemplate, assumeCSR, inferProps, xform} = self;
         const inferredProps: {[key: string]: PropInfo} = {};
+        const inferredXForm: XForm<any, any> = {};
         if(inferProps){
             const {propInferenceCriteria} = self;
             const content = mainTemplate!.content;
@@ -115,6 +121,7 @@ export class XtalElement extends O implements Actions{
                     const {localName} = match;
                     let prop: PropInfo = {
                         attrName: camelToLisp(propName),
+                        parse: true,
                     }
                     if(match instanceof HTMLLinkElement){
                         const {href} = match;
@@ -124,11 +131,10 @@ export class XtalElement extends O implements Actions{
                         } as PropInfo)
                         match.href = '';
                     }else{
-                        prop = {
-                            type: 'String'
-                        }
+                        prop.type = 'String';
                     }
                     inferredProps[propName] = prop;
+                    inferredXForm[`| ${propName}`] = 0;
                 }
             }
         }
@@ -144,7 +150,7 @@ export class XtalElement extends O implements Actions{
                 actions:{
                     ...super.mntCfgMxn.actions
                 },
-                xform: {}
+                xform: {...inferredXForm, ...xform}
             }
         }
         await ctr.bootUp();

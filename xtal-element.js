@@ -37,7 +37,12 @@ export class XtalElement extends O {
                     }],
                 type: 'Object',
                 attrName: 'prop-inference-criteria',
-                parse: true
+                parse: true,
+            },
+            xform: {
+                type: 'Object',
+                attrName: 'xform',
+                parse: true,
             }
         },
         actions: {
@@ -95,8 +100,9 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka, mainTemplate, assumeCSR, inferProps } = self;
+        const { aka, mainTemplate, assumeCSR, inferProps, xform } = self;
         const inferredProps = {};
+        const inferredXForm = {};
         if (inferProps) {
             const { propInferenceCriteria } = self;
             const content = mainTemplate.content;
@@ -109,6 +115,7 @@ export class XtalElement extends O {
                     const { localName } = match;
                     let prop = {
                         attrName: camelToLisp(propName),
+                        parse: true,
                     };
                     if (match instanceof HTMLLinkElement) {
                         const { href } = match;
@@ -119,11 +126,10 @@ export class XtalElement extends O {
                         match.href = '';
                     }
                     else {
-                        prop = {
-                            type: 'String'
-                        };
+                        prop.type = 'String';
                     }
                     inferredProps[propName] = prop;
+                    inferredXForm[`| ${propName}`] = 0;
                 }
             }
         }
@@ -139,7 +145,7 @@ export class XtalElement extends O {
                 actions: {
                     ...super.mntCfgMxn.actions
                 },
-                xform: {}
+                xform: { ...inferredXForm, ...xform }
             };
         };
         await ctr.bootUp();
