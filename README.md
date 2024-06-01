@@ -45,7 +45,7 @@ The analogy is defining a variable, and assigning a value to the variable at the
 
 ...
 
-<hello-world></hello-world>
+<hello-world csr></hello-world>
 ```
 
 Here, *xtal-element* turns the content of the parent element into a web component.  So the *hello-world* tag would render as follows:
@@ -57,12 +57,13 @@ Here, *xtal-element* turns the content of the parent element into a web componen
     <xtal-element aka=hello-world></xtal-element>
 </div>
 ...
-<hello-world>
+<hello-world csr>
     <div>Hello, <span>world</span></div>
 </hello-world>
 ```
 
-**NB:** Shadow DOM is bypassed in this instance.  It makes sense in this case not to use Shadow DOM for consistency between the original, defining element, and subsequent instances, for styling consistency.
+> [!NOTE]
+> Shadow DOM is bypassed in this instance.  It makes sense in this case not to use Shadow DOM for consistency between the original, defining element, and subsequent instances, for styling consistency.
 
 In fact, the following may make more sense from a styling perspective, and also works:
 
@@ -73,7 +74,7 @@ In fact, the following may make more sense from a styling perspective, and also 
     <div>Hello, <span>world</span></div>
     <xtal-element></xtal-element>
 </hello-world>
-<hello-world></hello-world>
+<hello-world csr></hello-world>
 ```
 
 Renders:
@@ -83,10 +84,16 @@ Renders:
   <div>Hello, <span>world</span></div>
   <xtal-element></xtal-element>
 </hello-world>
-<hello-world>
+<hello-world csr>
   <div>Hello, <span>world</span></div>
 </hello-world>
 ```
+
+> [!NOTE]
+> Why is the csr attribute necessary?
+> It is only necessary for web components that don't use declarative shadow DOM.  Here's the thinking:
+> 1.  The presence of declarative shadow DOM sends a strong signal that server side rendering was used.  Why go through the trouble of adding the template element if not.
+> 2.  
 
 ## Example 2a:  With inline binding
 
