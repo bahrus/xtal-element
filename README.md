@@ -11,7 +11,7 @@
 
 Development of a xtal-element consists of checks and balances between these mental "branches" of development:
 
-1.  The "Majestic Definitive Branch".   An html file.  The developer can alternatively edit an mjs (or mts file with support for compile time checks), with the help of tagged template literals (though other syntaxes like the beautifully compact pug or the verbose JSX could certainly be supported, as long as the end result is the same html).  Developing xtal-element elements via *.mts works best in combination with the [may-it-be](https://github.com/bahrus/may-it-be) compiler, which for now is limited to providing tagged template literal support.  
+1.  The "Majestic Definitive Branch".   An html file.  The developer can alternatively edit an mjs (or mts file with support for compile time checks), with the help of tagged template literals (though other syntaxes like the beautifully compact pug or the verbose JSX could certainly be supported, as long as the end result is the same html).  Developing xtal-element elements via *.mts works best in combination with the [be-importing](https://github.com/bahrus/be-importing) compiler, which for now is limited to providing tagged template literal support.  
 2.  The "Concessional Branch":  CSS styling, imported via CSS Modules or via a style tag within the html file.  There are two strong reasons to keep the CSS in a separate file (but this is not a doctrinaire rule).  
     1.  Multiple components share the same CSS.
     2.  "Dependency injection":  with the help of the link preload tag (and/or, possibly, import maps), allow the consumer of the web component to define their own theme, with no penalty for the consumer from the original default css theme which the developer chose to forgo.
@@ -215,11 +215,12 @@ Editing JSON-in-html can be rather error prone.  A [VS Code extension](https://m
 
 And in practice, it is also quite ergonomic to edit these declarative web components in a *.mjs file that executes in node as the file changes, and compiles to an html file via the [may-it-be](https://github.com/bahrus/may-it-be) compiler.  This allows the attributes to be editable with JS-like syntax.  Typescript >4.6 supports compiling mts to mjs files, which then allows typing of the attributes.  Examples of this in practice are:
 
-1.  [xtal-side-nav](https://github.com/bahrus/xtal-side-nav)
-2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
-3.  [cotus](https://github.com/bahrus/cotus)
-4.  [plus-minus](https://github.com/bahrus/plus-minus)
-5.  [scratch-box](https://github.com/bahrus/scratch-box)
+1.  [up-down-counter](https://github.com/bahrus/up-down-counter)
+2.  [xtal-side-nav](https://github.com/bahrus/xtal-side-nav)
+3.  [xtal-editor](https://github.com/bahrus/xtal-editor)
+4.  [cotus](https://github.com/bahrus/cotus)
+5.  [plus-minus](https://github.com/bahrus/plus-minus)
+6.  [scratch-box](https://github.com/bahrus/scratch-box)
 
 Anyway.
 
