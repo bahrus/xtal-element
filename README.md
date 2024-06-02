@@ -116,7 +116,7 @@ To address the concern above, add the following attribute to indicate that subse
 <hello-world></hello-world>
 ```
 
-## Example 2a:  With inline binding
+## With inline, WHATWG-approved binding
 
 We can add implicit inline binding using microdata attributes:
 
@@ -149,7 +149,7 @@ So the first instance of the pattern displays without a single byte of Javascrip
 
 Subsequent instances take less bandwidth to download, and generate quite quickly due to use of templates.  It does require the xtal-element web component library to be loaded once.
 
-## Example 2b -- With dynamic properties, binding from a distance
+## With "binding from a distance"
 
 ```html
 <div>
@@ -192,7 +192,7 @@ Again, using Shadow DOM is somewhat iffy, as styling is fundamentally different 
 
 To enable ShadowDOM, use the "shadowRootMode" setting:
 
-## Example 2c -- with shadow DOM
+## With "binding from a distance" and with shadow DOM
 
 ```html
 <div>
@@ -223,7 +223,9 @@ And in practice, it is also quite ergonomic to edit these declarative web compon
 
 Anyway.
 
-The "xform" setting uses [TR](https://github.com/bahrus/trans-render) syntax, similar to CSS, in order to bind the template "from a distance", but *xtal-element* eagerly awaits inline binding with Template Instantiation being built into the platform as well, so the two approaches can collaborate.
+The "binding from a distance" refers to the xform property (which stands for "transform").
+
+The "xform" setting uses [Mount-observing transforms, or trans-rendering](https://github.com/bahrus/trans-render/wiki/V.--Mount%E2%80%90observing-transforms) syntax, similar to CSS, in order to bind the template "from a distance", but *xtal-element* eagerly awaits inline binding with Template Instantiation being built into the platform as well, so the two approaches can collaborate.
 
 
 ## Example 3a -- Pre-rendered web components that use streaming declarative Shadow DOM.
