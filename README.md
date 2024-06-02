@@ -37,7 +37,7 @@ The analogy is defining a variable, and assigning a value to the variable at the
 
 # Part I - no ShadowDOM custom elements
 
-## Example 1a -- Pre-rendered live DOM that is reused 
+## Pre-rendered live DOM that is reused, with manual CSR attribute
 
 ```html
 <div>
@@ -95,11 +95,11 @@ Renders:
 ```
 
 > [!NOTE]
-> Why is the csr attribute necessary?  csr stands for "client-side-rendering" for the initial render.  Isn't it obvious we want to client side rendering if we are creating a web component?
-> It is only necessary for web components that don't use declarative shadow DOM and don't use server-side-generated rendering, or server-side-generated rendering, or click-clackity keyboard typed rendering.  Here's the thinking:
+> Why is the csr attribute necessary?  csr stands for "client-side-rendering" for the initial render.  Isn't it obvious we want to client side render if we are creating a web component?
+> It is only necessary for web components that don't use declarative shadow DOM and don't use server-side-generated rendering, or server-side-generated rendering, or click-clackity keyboard typed rendering for the initial view.  Here's the thinking:
 > 1. We don't want to do any unnecessary rendering.  So some sort of "message" protocol is required to reduce unnecessary rendering. 
 > 2. The presence of declarative shadow DOM markup sends a strong signal that server side rendering was used.  Why go through the trouble of adding the template element if not?
-> 3. In the absence of declarative shadow DOM clues, what can we use if ShadowDOM is not used?  I was tempted to say "if children are found assume server side rendering" but then there's this [masterclass in Hamlet style indecision](https://github.com/WICG/webcomponents/issues/809).  So in the absence of mercy from the platform (a recurring pattern it seems) we are opting to err on the side of encouraging server-side rendering.
+> 3. In the absence of declarative shadow DOM clues, what can we use if ShadowDOM is not used?  I was tempted to say "if children are found assume server side rendering" but then there's this [masterclass in Hamlet-style indecision](https://github.com/WICG/webcomponents/issues/809).  So in the absence of mercy from the platform (a recurring pattern it seems) we are opting to err on the side of encouraging server-side rendering.
 > 4. I want to be clear, though, that it isn't clear in my mind if server-side rendering will always win out over csr for the second, and subsequent instances of a web component.  Yes, as far as the first instance, however, it's been a while since I've measured this, but I've seen instances where template cloning actually surpasses server-side rendering in some instances (without the help of [service workers](https://github.com/whatwg/dom/issues/1222), at least) so "do your own research", basically.
 > 5.  Shortly, we will see an option to configure the web component so that the "default" assumption is reversed, so that "no-csr" is needed to block the (unnecessary) initial render. (Spoiler alert -- "assumeCSR/assume-csr" is the config setting). 
 
