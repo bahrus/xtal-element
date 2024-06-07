@@ -30,7 +30,7 @@ How are the different ways attributes can be used relevant to the proposed API? 
 
 1.  Will only the initial value ever be used?
 2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes?
-3.  Will needing to know that the value has changed from before be useful for "book-keeping purspose", knowing that when it comes time to know what the actual value is,  only then should we read and parse the value(s) "on demand"?
+3.  Will needing to know that the value has changed from before be useful for "book-keeping purposes", knowing that when it comes time to know what the actual value is,  only then should we read and parse the value(s) "on demand"?
 4.  Is the normal expectation that server-rendering of initial configuration and/or state will be provided for rapid, simple hydration purposes, but after that, the preference is for client-side code/frameworks to pass in updates via props, while (reluctantly) continuing to provide support for updates passed via attributes  (but frowned upon)?
 
 ## The proposal, in a nutshell
@@ -132,7 +132,7 @@ If the standard parsers don't satisfy a particular demand, the developer could p
 
 customElements.observeObservedAttributes() would be useful, as it could allow multiple loosely coupled parties (including external users) to tap into the changes and the parsing.  In fact, all the new functionality mentioned here would be available to interested third parties. (Granted, mutation observers can provide this as well).
 
-The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).  For property values we don't need to parse right away, a list (in object format?) of such "dirty" attributes would be provided as "lazyParseFieldsModified".
+The modifiedObjectFieldValues, and preModifiedFieldValues would also be objects, partial objects of the full parsedObservedAttributes, indicating what changed (before and after).  For property values we don't need to parse right away, a list (as a set of strings?) of such "dirty" attributes would be provided as "lazyParseFieldsModified".
 
 *Object.assignGingerly* would have special logic to set properties with keys starting with "?." in a manner similar to optional chaining property access (but in reverse?):
 
