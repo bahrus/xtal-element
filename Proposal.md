@@ -24,7 +24,7 @@ Perhaps most importantly, **declaratively exposing to the platform the strategy 
 
 As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold much weight as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
 
-In the spirit of "the truth will set you free" I did a quick test of the timing difference between using attributes as the "source of truth" vs a property, focusing on the most "borderline" case -- where the property is of type number.  The results are in line with what I expected:
+In the spirit of "the source of truth will set you free" I did a quick test of the timing difference between using attributes as the "source of truth" vs a property, focusing on the most "borderline" case -- where the property is of type number.  The results are [in line](https://github.com/bahrus/xtal-element/blob/baseline/demo/misc/numerAttribTest.html) with what I expected:
 
 > 148.20000000298023 milliseconds passing number prop
 > 476.5 milliseconds passing via attribute
@@ -32,6 +32,8 @@ In the spirit of "the truth will set you free" I did a quick test of the timing 
 > 438.20000000298023 milliseconds passing via attribute
 > 196.59999999403954 milliseconds passing number prop
 > 357.69999998807907 milliseconds passing via attribute
+
+So it seems to me taking an "attribute-first" approach to data types other than strings and booleans will only add to global warming, just to avoid setting a flag saying "hold off on reflecting any of these attributes" (the code sample below will clarify what I mean).  The jury is still out on strings and booleans.
 
 The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api [may perhaps](https://knowler.dev/blog/please-keep-your-hands-arms-and-legs-inside-the-custom-element) serve that purpose more effectively.)
 
