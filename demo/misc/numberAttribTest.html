@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick=test1()>Test 1</button>
+    <button onclick=test2()>Test 2</button>
+    <div id=myElement></div>
+
+    <script>
+        const uBound = 100000;
+        function test1(){
+            const start = performance.now()
+            for(let i = 0; i < uBound; i++){
+                const num = Math.random();
+                myElement.tabIndex = num;
+                myElement.setAttribute('tab-idx', num);
+            }
+            const end = performance.now();
+            console.log(end - start + ' milliseconds passing number prop');
+        }
+
+        function test2(){
+            const start = performance.now()
+            for(let i = 0; i < uBound; i++){
+                const num = Math.random();
+                myElement.setAttribute('tab-idx', num);
+                myElement.tabIndex = Number(myElement.getAttribute('tab-idx'));
+            }
+            const end = performance.now();
+            console.log(end - start + ' milliseconds passing via attribute');
+        }
+    </script>
+</body>
+</html>

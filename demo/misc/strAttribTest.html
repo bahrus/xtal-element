@@ -13,23 +13,22 @@
     <script>
         const uBound = 100000;
         function test1(){
-            const start = performance.now()
+            const start = performance.now();
             for(let i = 0; i < uBound; i++){
-                const num = Math.random();
-                myElement.tabIndex = num;
-                myElement.setAttribute('tab-idx', num);
+                const str = Math.random().toString();
+                myElement.foo= str;
+                myElement.setAttribute('data-foo', str);
             }
             const end = performance.now();
-            console.log(end - start + ' milliseconds passing number prop');
+            console.log(end - start + ' milliseconds passing string prop');
         }
 
         function test2(){
-            const start = performance.now()
+            const start = performance.now();
             for(let i = 0; i < uBound; i++){
-                const num = Math.random();
-                myElement.tabIndex = num;
-                myElement.setAttribute('tab-idx', num);
-                myElement.tabIndex = Number(myElement.getAttribute('tab-idx'));
+                const str = Math.random().toString();
+                myElement.setAttribute('data-foo', str);
+                myElement.foo = myElement.getAttribute('data-foo');
             }
             const end = performance.now();
             console.log(end - start + ' milliseconds passing via attribute');

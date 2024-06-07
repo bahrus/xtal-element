@@ -24,16 +24,38 @@ Perhaps most importantly, **declaratively exposing to the platform the strategy 
 
 As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold much weight as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
 
-In the spirit of "the source of truth will set you free" I did a quick test of the timing difference between using attributes as the "source of truth" vs a property, focusing on the most "borderline" case -- where the property is of type number.  The results are [in line](https://github.com/bahrus/xtal-element/blob/baseline/demo/misc/numerAttribTest.html) with what I expected:
+In the spirit of "the source of truth will set you free" I did a quick test of the timing difference between using attributes as the "source of truth" vs a property, focusing on the most "borderline" case -- where the property is of type number.  The results are [in line](https://github.com/bahrus/xtal-element/blob/baseline/demo/misc/numberAttribTest.html) with what I expected:
 
-> 148.20000000298023 milliseconds passing number prop
-> 476.5 milliseconds passing via attribute
-> 222.29999999701977 milliseconds passing number prop
-> 438.20000000298023 milliseconds passing via attribute
-> 196.59999999403954 milliseconds passing number prop
-> 357.69999998807907 milliseconds passing via attribute
+> 149.5 milliseconds passing number prop
+> 238 milliseconds passing via attribute
+> 189 milliseconds passing number prop
+> 386.5 milliseconds passing via attribute
+> 227 milliseconds passing number prop
+> 275.09999999403954 milliseconds passing via attribute
+> 229.09999999403954 milliseconds passing number prop
+> 305.90000000596046 milliseconds passing via attribute
 
-So it seems to me taking an "attribute-first" approach to data types other than strings and booleans will only add to global warming, just to avoid setting a flag saying "hold off on reflecting any of these attributes" (the code sample below will clarify what I mean).  The jury is still out on strings and booleans.
+So it seems to me taking an "attribute-first" approach to data types other than strings and booleans will only add to global warming, just to avoid setting a flag saying "hold off on reflecting any of these attributes" (the code sample below will clarify what I mean).  
+
+Even using attributes as the source of truth for strings and booleans, which the platform seems to have adopted, appears to suffer from a smaller global warming catastrophe:
+
+> 119.59999999403954 milliseconds passing string prop
+> 181.40000000596046 milliseconds passing via attribute
+> 114.8999999910593 milliseconds passing string prop
+> 242.6000000089407 milliseconds passing via attribute
+> 139.40000000596046 milliseconds passing string prop
+> 258.69999998807907 milliseconds passing via attribute
+
+> 63.5 milliseconds passing boolean prop
+> 99.69999998807907 milliseconds passing via attribute
+> 75.2999999821186 milliseconds passing boolean prop
+> 78.90000000596046 milliseconds passing via attribute
+> 86.2999999821186 milliseconds passing boolean prop
+> 117.19999998807907 milliseconds passing via attribute
+
+Oops?
+
+
 
 The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api [may perhaps](https://knowler.dev/blog/please-keep-your-hands-arms-and-legs-inside-the-custom-element) serve that purpose more effectively.)
 
