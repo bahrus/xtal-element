@@ -2,7 +2,7 @@
 
 Author:  Bruce B. Anderson
 
-Last update: 2024-06-06
+Last update: 2024-06-07
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -52,6 +52,8 @@ Even using attributes as the source of truth for [strings](https://github.com/ba
 > 78.90000000596046 milliseconds passing via attribute
 > 86.2999999821186 milliseconds passing boolean prop
 > 117.19999998807907 milliseconds passing via attribute
+
+The same gap is observed in all three browsers.
 
 Oops?
 
@@ -179,7 +181,7 @@ I'm thinking that the most useful form that the lazyParseFieldsModified event ob
 
 If two arguments are passed into customElements.lazyParse, it looks at the second argument, and all the keys, and passes back a new object with the values of the keys provided based on the parsed attribute, again a sub-object of the fully parsed set of attributes.
 
-If only one argument is passed into customElements.lazyParse, it passes back a proxy, allowing for getting the specific property value of interest on demand (assuming no significant performance penalty from this approach).
+If only one argument is passed into customElements.lazyParse, it passes back an object with lazy getters, allowing for getting the parsed specific property value of interest on demand (assuming no significant performance penalty from this approach.  Another approach would be to use a proxy.  Maybe there are other tricks the browser vendors could find).
 
 In summary, the list of new methods this proposal calls for are:
 
