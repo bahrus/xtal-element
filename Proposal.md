@@ -37,7 +37,7 @@ In the spirit of "the source of truth will set you free" I did a quick test of t
 
 So it seems to me taking an "attribute-first" approach to data types other than strings and booleans will only add to global warming, just to avoid setting a flag saying "hold off on reflecting any of these attributes" (the code sample below will clarify what I mean).  
 
-Even using attributes as the source of truth for strings and booleans, which the platform seems to have adopted, appears to suffer from a smaller global warming catastrophe:
+Even using attributes as the source of truth for [strings](https://github.com/bahrus/xtal-element/blob/baseline/demo/misc/strAttribTest.html) and [booleans](https://github.com/bahrus/xtal-element/blob/baseline/demo/misc/boolAttribTest.html), which the platform seems to have adopted, appears to suffer from a smaller, but not insignificant global warming catastrophe:
 
 > 119.59999999403954 milliseconds passing string prop
 > 181.40000000596046 milliseconds passing via attribute
