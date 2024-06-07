@@ -2,7 +2,7 @@
 
 Author:  Bruce B. Anderson
 
-Last update: 2024-06-01
+Last update: 2024-06-06
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -12,7 +12,7 @@ It's true that managing the relationship between attributes and their associated
 
 Perhaps this decision was wise, as the best way to manage the relationship between attributes and properties might not always be obvious, especially as custom elements may tend to pioneer scenarios well beyond anything built-in elements have yet to tackle (such as supporting [JSON in attributes](https://www.webcomponents.org/element/@google-web-components/google-chart)).
 
-I don't know that we are anywhere closer to having a consensus on how best to manage them at present.  I suspect we won't until support for decorators has been built into all the browsers, for starters.
+I don't know that [we are anywhere closer](https://www.abeautifulsite.net/posts/reflection-and-custom-states-in-web-components/) to having a consensus on how best to manage them at present.  I suspect we won't until support for decorators has been built into all the browsers, for starters.
 
 But for now, this proposal is suggesting some minimal steps forward that I, at least, would find helpful.  I'm hoping they may be useful and uncontroversial primitives today, and that a more encompassing solution could leverage them in the future, when the time is right. But for the time being, the goal is that these primitives could already help reduce the footprint of web component libraries that assist with developer ergonomics.
 
@@ -26,12 +26,12 @@ As has been pointed out [here](https://web.dev/articles/custom-elements-best-pra
 
 The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api may perhaps serve that purpose more effectively.)
 
-How are the different ways attributes can be used relevant to the proposed API? I think the most relevant questions for the developer, when publicly configuring how the platform could provide the most effective help for managing each attribute are: 
+How are the different ways attributes can be used relevant to the proposed API? How can the platform provide the most effective help for managing attributes, given the different kinds of use cases we want to support?  I think the most relevant questions for the developer are: 
 
 1.  Will only the initial value ever be used?
 2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes?
-3.  Will needing to know that the value has changed from before be useful for "book-keeping purspose", knowing that when it comes time to know what the actual value is,  only then should we read the value(s) "on demand"?
-4.  Is the normal expectation that server-rendering of initial configuration and/or state will be provided for rapid, simple hydration purposes, but after that, the preference is for client-side code/frameworks to pass in updates via props, while (reluctantly) providing for responding to updates via attributes also supported (but frowned upon)?
+3.  Will needing to know that the value has changed from before be useful for "book-keeping purspose", knowing that when it comes time to know what the actual value is,  only then should we read and parse the value(s) "on demand"?
+4.  Is the normal expectation that server-rendering of initial configuration and/or state will be provided for rapid, simple hydration purposes, but after that, the preference is for client-side code/frameworks to pass in updates via props, while (reluctantly) continuing to provide support for updates passed via attributes  (but frowned upon)?
 
 ## The proposal, in a nutshell
 
@@ -144,9 +144,11 @@ if(this.enhancements.beSearching === undefined) this.enhancements.beSearching = 
 this.enhancements.beSearching.for = newVal;
 ```
 
-If two arguments are passed into customElements.lazyParse, it looks at the second argument, and all the keys, and passes back a new object with the values of the keys provided based on the parsed attribute.
+I'm thinking that the most useful form that the lazyParseFieldsModified event object parameter could take would be a Javascript Set\<string\> of the mapsTo names (if provided).  That way, the developer could maintain a running tab of all the "dirty" attribute values via the newly minted "union" method, and parse them all in one go as soon as any one of them is needed on demand. 
 
-If only one argument is passed into customElements.laxyParse, it passes back a proxy, allowing for getting the specific property value of interest on demand.
+If two arguments are passed into customElements.lazyParse, it looks at the second argument, and all the keys, and passes back a new object with the values of the keys provided based on the parsed attribute, again a sub-object of the fully parsed set of attributes.
+
+If only one argument is passed into customElements.lazyParse, it passes back a proxy, allowing for getting the specific property value of interest on demand (assuming no significant performance penalty from this approach).
 
 In summary, the list of new methods this proposal calls for are:
 
@@ -162,7 +164,7 @@ In summary, the list of new methods this proposal calls for are:
 
 The idea that developers could "register" a custom parser (or it seems this is what some are calling a "custom attribute") that is used across many different web components, so that we could specify a registered name as a string, rather than a function as shown above, would be rather nice, especially for declarative custom elements.  That is something that [this proposal](https://github.com/WICG/webcomponents/issues/1029) would appear to provide. 
 
-To be clear, the proposal linked to above is advocating more than registering a simple stateless function.  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement" field of the class instance, and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  (And that proposal even suggests being able to do this arbitrarily, independent of any suite of observed attributes). 
+To be clear, the proposal linked to above is advocating more than registering a simple stateless parser function.  There is a certain appeal to a number of individuals, I think, to build on the capabilities of the attribute node instance which gets instantiated with each live non-null attribute value, and be able to extend the Attribute class with a *custom class*, rather than a custom function, so that the modifications could be made to the "ownerElement" field of the class instance, and those modifications might not even be to a simple 1-1 correspondence between the name of the attribute and a top level property of the owner element.  (And that proposal even suggests being able to do this arbitrarily, independent of any suite of observed attributes). 
 
 For [example](https://github.com/lume/custom-attributes):
 
@@ -220,7 +222,7 @@ class ClubMember extends HTMLElement{
 
 So to take one possible way this could work, *if* the attributeChangedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have key '?.style?.backgroundColor' set to whatever value is returned, ready to be carefully merged in to the ownerElement (using Object.assignGingerly).  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
 
-If not, if the developer does *not* specify mapsTo, and does the merge internally, at the expense of less transparency to external users, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still partially benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
+If not, if the developer does *not* specify mapsTo, and does the merge internally, at the expense of less transparency to external parties such as template instantiation engines, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still partially benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
 
 In fact, this idea of granting the AttributeNode extra powers that could be used to "fine-tune" the element type class it is registered against, *might* actually make it more of a palatable alternative to the built-in extension "standard" that WebKit finds problematic.  
 
@@ -252,7 +254,7 @@ HTMLFormElement.attributeRegistry.define("be-form-like", BeFormLike);
 
 This would make custom elements that add this handler in their list of observedAttributes "Form Like", and the strange thing is we would want the custom element to be essentially behave like an HTMLFormElement, even if the "be-form-like" attribute isn't actually added to the element instance, I think.  It's just there as a reserved attribute name, that *could* be passed in values in some cases, when needed.  Or something.  Again, this isn't my proposal, I'm just spit-balling how I could sort of see the appeal of it.
 
-I must strenuously insist that we don't get carried away by the apparent appeal of this option.  This may solve one problem well (perhaps, I'm just spit-balling here), but I still strongly believe the platform should *also* push forward with a solution to support cross-cutting "decorator" patterns, which [the custom enhancement proposal provides](https://github.com/WICG/webcomponents/issues/1000), that follows the more traditional view of regarding a suite of attributes as simply carriers of information in support of a single unifying "behavior/enhancement".  There may be some problems where either proposal could solve it, but I strongly believe that a robust platform would provide support for both approaches (one that is more tightly coupled to the element type it is enhancing, similar to class extensions, (or the built-in extension "standard" as ish) and one which is loosely coupled, and provides more support for highly semantic markup, and which aligns with what the industry has done (React, JQueryUI, Knockout.js, closure, wiz etc) as far as attaching custom objects onto the DOM element directly).
+I must strenuously insist that we don't get carried away by the apparent appeal of this option.  This may solve one problem well (perhaps, I'm just spit-balling here), but I still strongly believe the platform should *also* push forward with a solution to support cross-cutting ["decorator" patterns](https://en.wikipedia.org/wiki/Decorator_pattern), which [the custom enhancement proposal provides](https://github.com/WICG/webcomponents/issues/1000), that follows the more traditional view of regarding a suite of (custom) attributes as simply carriers of information in support of a single unifying "behavior/enhancement".  There may be some problems where either proposal could solve it, but I strongly believe that a robust platform would provide support for both approaches (one that is more tightly coupled to the element type it is enhancing, similar to class extensions, (or the built-in extension "standard" as ish) and one which is loosely coupled, and provides more support for highly semantic markup, and which aligns with what the industry has done (React, JQueryUI, Knockout.js, closure, wiz etc) as far as attaching custom objects onto the DOM element directly).
 
 It is unfortunate that there is a tendency to view proposals that are somewhat related as a zero-sum game, pitting teams of developers against each other.  Yes, we don't want the platform to duplicate things unnecessarily (resulting in higher maintenance costs, learning curve, etc), but I think the differences are significant enough that these two proposal aren't an either-or.
 
@@ -262,7 +264,7 @@ If the issue is lack of resources able to implement both, maybe the WHATWG shoul
 
 If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative mechanism to be able to just register stateless handler functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
-A third option would be able to specify a method handler that is part of the owner element's protocol definition, that has the same signature as attributeChangedCallback, to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
+A third option would be able to specify a method handler that is part of the owner element's prototype definition, that has the same signature as attributeChangedCallback, to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
 
 I became aware, as a result of the discussions surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that have found it useful to update attributes frequently, on the client side.
 
