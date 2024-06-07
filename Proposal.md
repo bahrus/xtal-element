@@ -22,7 +22,7 @@ In discussions with the React framework team regarding ways React could be able 
 
 Perhaps most importantly, **declaratively exposing to the platform the strategy for how the custom element (or custom enhancement) goes about parsing its observed attributes would give the platform (and userland implementations) the opportunity to optimize this processing during template instantiation** -- scenarios where the attributes are repeatedly cloned and (if necessary) re-parsed.  If the platform ever makes it to the point where it provides official support for template instantiation, it could look for optimizing opportunities -- cache the parsed strings.  In the meantime, userland implementations of template instantiation could take advantage of the same sorts of optimizations **without requiring adopting a proprietary solution**, but rather, based on this standard.
 
-As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold much weight as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
+As has been pointed out [here](https://web.dev/articles/custom-elements-best-practices#avoid_reentrancy_issues) and [there](https://jakearchibald.com/2024/attributes-vs-properties/), for attributes/properties where the property is of type string, or boolean, the issue of "excessive string parsing" argument doesn't hold much weight, intuitively at least, as far as using the attribute value (or lack of the presence of the attribute) as the "source of truth" for the property values.  But this argument doesn't apply to other types (numeric, dates and especially JSON/Object types).
 
 In the spirit of "the source of truth will set you free" I did a quick test of the timing difference between using attributes as the "source of truth" vs a property, focusing on the most "borderline" case -- where the property is of type number.  The results are [in line](https://github.com/bahrus/xtal-element/blob/baseline/demo/misc/numberAttribTest.html) with what I expected:
 
@@ -57,7 +57,7 @@ The same gap is observed in all three browsers.
 
 Oops?
 
-The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api [may perhaps](https://knowler.dev/blog/please-keep-your-hands-arms-and-legs-inside-the-custom-element) serve that purpose more effectively.)
+The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used, at least after the initial hydrating handshake, primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api [may perhaps](https://knowler.dev/blog/please-keep-your-hands-arms-and-legs-inside-the-custom-element) serve that purpose more effectively.)
 
 How are the different ways attributes can be used relevant to the proposed API? How can the platform provide the most effective help for managing attributes, given the different kinds of use cases we want to support?  I think the most relevant questions for the developer are: 
 
@@ -84,7 +84,10 @@ class ClubMember extends HTMLElement{
             //needed if not a string,
             instanceOf: Date, //or 'Date'
             //optional
-            customParser: (newValue: string | null, oldValue: string | null, instance: Element) => new Date(newValue),
+            customParser: (
+                newValue: string | null, 
+                oldValue: string | null, 
+                instance: Element) => new Date(newValue),
             //optional
             valIfNull: any,
             /**
@@ -123,7 +126,7 @@ class ClubMember extends HTMLElement{
 
     // This is some custom private property a library might, 
     // for example, use to know that when the value is true,
-    // do not reflect changes to property values
+    // do not reflect changes applied to property values
     // back to the attributes, as that may risk getting into an 
     // infinite loop.
     #doNotReflectToAttrs = false;
