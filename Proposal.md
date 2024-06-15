@@ -2,7 +2,7 @@
 
 Author:  Bruce B. Anderson
 
-Last update: 2024-06-07
+Last update: 2024-06-15
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -57,9 +57,9 @@ The same gap is observed in all three browsers.
 
 Oops?
 
-The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used, at least after the initial hydrating handshake, primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api [may perhaps](https://knowler.dev/blog/please-keep-your-hands-arms-and-legs-inside-the-custom-element) serve that purpose more effectively.)
+The other factor that the latter article points out is that some attributes may be used only for configuration.  Other attributes may be used, at least after the initial hydrating handshake, primarily to "reflect state" for styling purposes (but the [newly adopted](https://caniuse.com/mdn-api_customstateset) custom state api [may perhaps](https://knowler.dev/blog/please-keep-your-hands-arms-and-legs-inside-the-custom-element) serve that purpose more effectively.)  Or [maybe not](https://www.abeautifulsite.net/posts/styling-custom-elements-without-reflecting-attributes/).
 
-How are the different ways attributes can be used relevant to the proposed API? How can the platform provide the most effective help for managing attributes, given the different kinds of use cases we want to support?  I think the most relevant questions for the developer are: 
+Anyway, how are the different ways attributes can be used relevant to the proposed API? How can the platform provide the most effective help for managing attributes, given the different kinds of use cases we want to support?  I think the most relevant questions for the developer are: 
 
 1.  Will only the initial value ever be used?
 2.  Will the (parsed) attribute value need to immediately, reactively trigger some action anytime it changes?
@@ -91,11 +91,17 @@ class ClubMember extends HTMLElement{
             //optional
             valIfNull: any,
             /**
-             * optional -- only read, (optionally) parse, and trigger "attrChange" event on encountering 
+             * optional -- only read, (optionally) parse, and trigger 
+             * "attrChange" event on encountering 
              * the initial value  (other than null), ignore after that.
              * Provide for lazy parsing on demand as needed after that.
              */
-            once: true
+            once: true,
+            /**
+             * optional -- if not provided, the stringify method does 
+             * propVal.toString() if not null (removes attribute if null)
+             */
+            toString: (propVal: any, instance: Element) => propVal.toString()
         },
         {
             name: 'chart-data',
@@ -106,7 +112,12 @@ class ClubMember extends HTMLElement{
              * an object with all the lazy parsed attributes which have changed / are initializing
              * which can be passed into the lazyParse method described below
              */
-            lazyParse: true
+            lazyParse: true,
+            /**
+             * 
+             * optional -- this means don't reflect essentially
+             */
+            toString: () => undefined,
         },
         {
             name: 'itemprop',
@@ -150,7 +161,9 @@ class ClubMember extends HTMLElement{
         });
         customElements.setAttributes(this, [
             {'my-legacy-attr-1': 'hello'}, {'membership-start-date': '2024-11-10'}
-        ]);
+        ], this);
+
+        customElements.stringify(this, {memberStartDt: new Date()}, this);
         const memberStartDt = await customElements.lazyParse(this).memberStartDt;
         
     }
@@ -186,14 +199,21 @@ If two arguments are passed into customElements.lazyParse, it looks at the secon
 
 If only one argument is passed into customElements.lazyParse, it passes back an object with lazy getters, allowing for getting the parsed specific property value of interest on demand (assuming no significant performance penalty from this approach.  Another approach would be to use a proxy.  Maybe there are other tricks the browser vendors could find).
 
+I became aware, as a result of the discussions surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that have found it useful to update attributes frequently, on the client side.
+
+I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of customElements.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility?  This could also serve the purpose of putting less of a burden on custom element authors to weed out inconsistent states, when frameworks have to update attributes one by one.  I don't think this is very high priority, but I think it is at least worth considering.
+
+Perhaps even more useful would be if customElements.setAttributes accepted a third optional argument -- the 'originator' of the attribute changes.  This originator would be passed as a property of the attrChange event -- originator?  This way custom element libraries could easily filter out attribute changes that were made via reflection vs. from other sources.  
+
 In summary, the list of new methods this proposal calls for are:
 
 1.  customElements.observeObservedAttributes(instance);
 2.  customElements.parseObservedAttributes(instance);
 3.  customElements.lazyParse(instance)[propName];
 4.  customElements.lazyParse(instance, propObjectModelToUseForParsing)
-3.  Object.assignGingerly(instance, propObject);
-4.  customElements.setAttributes(instance, attrNameValuePairArray);
+5.  Object.assignGingerly(instance, propObject);
+6.  customElements.setAttributes(instance, attrNameValuePairArray, [originator]);
+7.  customElements.stringify(instance, partialPropsOfInstance, [originator])
 
 
 ## A registry of custom attribute parsers / handlers?
@@ -301,10 +321,6 @@ If the issue is lack of resources able to implement both, maybe the WHATWG shoul
 If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative mechanism to be able to just register stateless handler functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
 A third option would be able to specify a method handler that is part of the owner element's prototype definition, that has the same signature as attributeChangedCallback, to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
-
-I became aware, as a result of the discussions surrounding custom attributes / behaviors / enhancements, that there are some developers / frameworks that have found it useful to update attributes frequently, on the client side.
-
-I think for those scenarios, it would be helpful to  add "transactional and bulk support", so that multiple attributes could be changed in one go, spawning a single parse and event notification.  That would be the purpose of customElements.setAttributes.  Or maybe it would make more sense to add another method to the base element, without breaking backwards compatibility?  This could also serve the purpose of putting less of a burden on custom element authors to weed out inconsistent states, when frameworks have to update attributes one by one.  I don't think this is very high priority, but I think it is at least worth considering.
 
 As mentioned previously, this proposal is still shying away from actually officially *setting* property values of the custom element from the attributes automatically, without tapping into the custom features discussed above, as that may veer into "tipping the scales" unnecessarily, where there is less consensus amongst libraries.
 
