@@ -151,7 +151,12 @@ class ClubMember extends HTMLElement{
         
 
         observer.addEventListener('attrChange', e => {
-            const {modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified} = e;
+            const {
+                modifiedObjectFieldValues, 
+                preModifiedFieldValues, 
+                lazyParseFieldsModified,
+                originator, //undefined if not passed to setAttributes or stringify
+            } = e;
             console.log({modifiedObjectFieldValues, preModifiedFieldValues, lazyParseFieldsModified});
             this.#doNotReflectToAttrs = true;
             const parsedLazyModifiedFields = customElements.lazyParse(this, lazyParseFieldsModified);
