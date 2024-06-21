@@ -26,8 +26,8 @@
     "./xtal-element.js": "./xtal-element.js"
   },
   "dependencies": {
-    "blow-dry": "0.0.8",
-    "trans-render": "0.0.781"
+    "blow-dry": "0.0.9",
+    "trans-render": "0.0.784"
   },
   "devDependencies": {
     "@playwright/test": "1.44.1",
