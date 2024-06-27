@@ -5,7 +5,7 @@ import {Actions, AP, ProAP} from './types';
 import {MntCfg, Mount, MountActions, MountProps} from 'trans-render/Mount.js';
 import {localize} from 'trans-render/funions/Localizer.js';
 import { ITransformer, UnitOfWork, XForm } from 'trans-render/types.js';
-import { PropInfo } from './trans-render/froop/types';
+import { PropInfo } from 'trans-render/froop/types';
 
 export class XtalElement extends O implements Actions{
     static override config: OConfig<AP, Actions> = {

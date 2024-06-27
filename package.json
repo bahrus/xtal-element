@@ -27,11 +27,11 @@
   },
   "dependencies": {
     "blow-dry": "0.0.9",
-    "trans-render": "0.0.784"
+    "trans-render": "0.0.787"
   },
   "devDependencies": {
-    "@playwright/test": "1.44.1",
-    "may-it-serve": "0.0.6",
+    "@playwright/test": "1.45.0",
+    "may-it-serve": "0.0.7",
     "xtal-shell": "0.0.27"
   },
   "repository": {
