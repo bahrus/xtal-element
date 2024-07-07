@@ -328,9 +328,8 @@ If the issue is lack of resources able to implement both, maybe the WHATWG shoul
 
 If the cost of instantiating an extension to Attribute class is significant enough, I think an alternative mechanism to be able to just register stateless handler functions would be beneficial to declarative custom elements as well.  Maybe both could be supported?
 
-A third option would be able to specify a method handler that is part of the owner element's prototype definition, that has the same signature as attributeChangedCallback, to pass the changed values to.  That request seems like the lowest value-add this proposal contains.   
+A third option would be able to specify a method handler that is part of the owner element's prototype definition, that has the same signature as changedCallback, to pass the changed values to, and another optional method reference for stringifying the mapsTo property.  That request seems like the lowest value-add this proposal contains.   
 
-As mentioned previously, this proposal is still shying away from actually officially *setting* property values of the custom element from the attributes automatically, without tapping into the custom features discussed above, as that may veer into "tipping the scales" unnecessarily, where there is less consensus amongst libraries.
 
 
 
