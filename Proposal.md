@@ -298,7 +298,8 @@ class BeFormLike extends Attribute {
     elementInternals; //grants access to the element internals of elements that list this handler in the observedAttributes list
 
     /**
-     * Called after the ownerElement is connected to the DOM fragment, even if the attribute isn't actually present.
+     * Called after the ownerElement is connected to the DOM fragment,
+     * even if the attribute isn't actually present.
      * Maybe?
      *
      * */
