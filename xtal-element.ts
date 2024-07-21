@@ -63,6 +63,11 @@ export class XtalElement extends O implements Actions{
                 type: 'String',
                 attrName: 'shadow-root-mode',
                 parse: true,
+            },
+            inherits:{
+                type: 'String',
+                attrName: 'inherits',
+                parse: true,
             }
         },
         actions: {
@@ -121,7 +126,7 @@ export class XtalElement extends O implements Actions{
 
     async define(self: this){
         const {aka, mainTemplate, assumeCSR, inferProps, xform,
-            propInfo, propDefaults, shadowRootMode
+            propInfo, propDefaults, shadowRootMode, inherits
         } = self;
         const inferredProps: {[key: string]: PropInfo} = {};
         const inferredXForm: XForm<any, any> = {};
@@ -160,6 +165,12 @@ export class XtalElement extends O implements Actions{
             shadowRootInit = {
                 mode: shadowRootMode
             }
+        }
+        let inheritingClass = Mount;
+        switch(typeof inherits){
+            case 'string':
+                inheritingClass = (await customElements.whenDefined(inherits)) as typeof Mount;
+                break;
         }
         const ctr = class extends Mount {
             localize = localize;
