@@ -2,7 +2,7 @@
 
 Author:  Bruce B. Anderson
 
-Last update: 2024-06-15
+Last update: 2024-07-07
 
 An interesting, unexpected (to me) point was raised as part of the discussion about how the platform can support custom attributes / behaviors / [enhancements](https://github.com/WICG/webcomponents/issues/1000).  Paraphrasing the concern in a way that makes sense to me:
 
@@ -107,6 +107,7 @@ class ClubMember extends HTMLElement{
             name: 'chart-data',
             instanceOf: 'Object',
             mapsTo: 'chartData',
+            ignoreIfNull: true,
             /**
              * optional -- triggers "attrChange" event, however doesn't parse.  It provides
              * an JS Set with all the lazy parsed mapsTo keys which have changed / are initializing
