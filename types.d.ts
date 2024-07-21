@@ -19,7 +19,7 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     targetScope?: Scope,
     assumeCSR?: boolean,
     propInferenceCriteria?: Array<PropInferenceCriteria>,
-    inherits?: string | {new(): HTMLElement};
+    inherits?: string | {new(): HTMLElement} | (() => Promise<{new(): HTMLElement}>)
 }
 
 export interface AP extends EndUserProps{
