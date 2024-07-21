@@ -302,6 +302,10 @@ Its goal is to apply the "transform(s)" specified above, but in the cloud (or se
 
 To evaluate dynamic expressions with full access to the JavaScript runtime engine, set attribute onload=doEval, as shown above.
 
+## The Ecmascript branch
+
+The preferred mechanism to incorporate custom JavaScript, though, is not to use the onload=eval, but rather to "use the platform" and to define a JavaScript class.  The JavaScript class must extend (at the "bottom" of the hierarchy) trans-render/Mount.js;
+
 [TODO]: document
 
 ## Example 4b -- Support for external source
