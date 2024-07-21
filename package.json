@@ -26,12 +26,12 @@
     "./xtal-element.js": "./xtal-element.js"
   },
   "dependencies": {
-    "blow-dry": "0.0.9",
-    "trans-render": "0.0.787"
+    "blow-dry": "0.0.11",
+    "trans-render": "0.0.801"
   },
   "devDependencies": {
-    "@playwright/test": "1.45.0",
-    "may-it-serve": "0.0.7",
+    "@playwright/test": "1.45.2",
+    "may-it-serve": "0.0.8",
     "xtal-shell": "0.0.27"
   },
   "repository": {
