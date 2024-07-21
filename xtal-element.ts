@@ -171,8 +171,18 @@ export class XtalElement extends O implements Actions{
             case 'string':
                 inheritingClass = (await customElements.whenDefined(inherits)) as typeof Mount;
                 break;
+            case 'function':
+                if((<any>inherits).bootUp) {
+                    inheritingClass = inherits as typeof Mount;
+                }else{
+                    if(inherits.constructor.name === 'AsyncFunction'){
+                        inheritingClass = (await (<any>inherits)()) as typeof Mount;
+                    }
+                    
+                }
+
         }
-        const ctr = class extends Mount {
+        const ctr = class extends inheritingClass {
             localize = localize;
             static override config: MntCfg = {
                 assumeCSR,

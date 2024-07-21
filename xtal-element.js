@@ -58,6 +58,11 @@ export class XtalElement extends O {
                 type: 'String',
                 attrName: 'shadow-root-mode',
                 parse: true,
+            },
+            inherits: {
+                type: 'String',
+                attrName: 'inherits',
+                parse: true,
             }
         },
         actions: {
@@ -115,7 +120,7 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode } = self;
+        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode, inherits } = self;
         const inferredProps = {};
         const inferredXForm = {};
         if (inferProps) {
@@ -154,7 +159,22 @@ export class XtalElement extends O {
                 mode: shadowRootMode
             };
         }
-        const ctr = class extends Mount {
+        let inheritingClass = Mount;
+        switch (typeof inherits) {
+            case 'string':
+                inheritingClass = (await customElements.whenDefined(inherits));
+                break;
+            case 'function':
+                if (inherits.bootUp) {
+                    inheritingClass = inherits;
+                }
+                else {
+                    if (inherits.constructor.name === 'AsyncFunction') {
+                        inheritingClass = (await inherits());
+                    }
+                }
+        }
+        const ctr = class extends inheritingClass {
             localize = localize;
             static config = {
                 assumeCSR,
