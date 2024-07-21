@@ -304,7 +304,9 @@ To evaluate dynamic expressions with full access to the JavaScript runtime engin
 
 ## The Ecmascript branch
 
-The preferred mechanism to incorporate custom JavaScript, though, is not to use the onload=eval, but rather to "use the platform" and to define a JavaScript class.  The JavaScript class must extend (at the "bottom" of the hierarchy) [trans-render/Mount.js](https://github.com/bahrus/trans-render/wiki/VI.--Mount%E2%80%90based-web-components);
+The preferred mechanism to incorporate custom JavaScript, though, is not to use the onload=eval, but rather to "use the platform" and to define a JavaScript class.  The JavaScript class must extend (at the "bottom" of the hierarchy) [trans-render/Mount.js](https://github.com/bahrus/trans-render/wiki/VI.--Mount%E2%80%90based-web-components), and be registered as a web component if using the declarative support of this package.
+
+The nice thing is this allows us to reuse the same web component base with different UI definitions, something I've found to be quite useful, personally.
 
 [TODO]: document
 
