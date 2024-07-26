@@ -11,7 +11,7 @@
 
 Development of a xtal-element consists of checks and balances between these mental "branches" of development:
 
-1.  The "Majestic Definitive Branch".   An html file.  The developer can alternatively edit an mjs (or mts file with support for compile time checks), with the help of tagged template literals (though other syntaxes like the beautifully compact pug or the verbose JSX could certainly be supported, as long as the end result is the same html).  Developing xtal-element elements via *.mts works best in combination with the [be-importing](https://github.com/bahrus/be-importing) compiler, which for now is limited to providing tagged template literal support.  
+1.  The "Majestic Definitive Branch".   An mjs file that is used to build an html file.  Developers can skip this step, if they prefer to edit the html file directly.  Developing xtal-element elements via *.mjs works best in combination with the [be-importing](https://github.com/bahrus/be-importing) compiler, which for now is limited to providing tagged template literal support.  
 2.  The "Concessional Branch":  CSS styling, imported via CSS Modules or via a style tag within the html file.  There are two strong reasons to keep the CSS in a separate file (but this is not a doctrinaire rule).  
     1.  Multiple components share the same CSS.
     2.  "Dependency injection":  with the help of the link preload tag (and/or, possibly, import maps), allow the consumer of the web component to define their own theme, with no penalty for the consumer from the original default css theme which the developer chose to forgo.

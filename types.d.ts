@@ -22,7 +22,7 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     inherits?: string | {new(): HTMLElement} | (() => Promise<{new(): HTMLElement}>)
 }
 
-export interface AP extends EndUserProps{
+export interface AP<TProps = any, TActions = TProps> extends EndUserProps<TProps, TActions>{
     mainTemplate?: HTMLTemplateElement,
     styles?: string,
 }
