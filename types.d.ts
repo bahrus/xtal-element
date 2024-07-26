@@ -1,5 +1,5 @@
 import { XForm } from "trans-render/types";
-import { PropInfo } from 'trans-render/froop/types';
+import { PropInfo, Actions } from 'trans-render/froop/types';
 import {Scope} from 'trans-render/lib/types';
 
 export interface PropInferenceCriteria{
@@ -19,7 +19,8 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     targetScope?: Scope,
     assumeCSR?: boolean,
     propInferenceCriteria?: Array<PropInferenceCriteria>,
-    inherits?: string | {new(): HTMLElement} | (() => Promise<{new(): HTMLElement}>)
+    inherits?: string | {new(): HTMLElement} | (() => Promise<{new(): HTMLElement}>),
+    actions?: Actions<TProps, TActions>,
 }
 
 export interface AP<TProps = any, TActions = TProps> extends EndUserProps<TProps, TActions>{

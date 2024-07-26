@@ -39,6 +39,11 @@ export class XtalElement extends O implements Actions{
                 attrName: 'prop-info',
                 parse: true,
             },
+            actions:{
+                type: 'Object',
+                attrName: 'actions',
+                parse: true,
+            },
             inferProps:{
                 def: false,
                 type: 'Boolean',
@@ -126,7 +131,7 @@ export class XtalElement extends O implements Actions{
 
     async define(self: this){
         const {aka, mainTemplate, assumeCSR, inferProps, xform,
-            propInfo, propDefaults, shadowRootMode, inherits
+            propInfo, propDefaults, shadowRootMode, inherits, actions
         } = self;
         const inferredProps: {[key: string]: PropInfo} = {};
         const inferredXForm: XForm<any, any> = {};
@@ -197,7 +202,8 @@ export class XtalElement extends O implements Actions{
                     ...propInfo
                 },
                 actions:{
-                    ...super.mntCfgMxn.actions
+                    ...super.mntCfgMxn.actions,
+                    ...actions
                 },
                 xform: {...inferredXForm, ...xform}
             }
