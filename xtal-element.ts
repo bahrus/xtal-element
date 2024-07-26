@@ -44,6 +44,11 @@ export class XtalElement extends O implements Actions{
                 attrName: 'actions',
                 parse: true,
             },
+            formAss:{
+                type: 'Boolean',
+                attrName: 'form-associated',
+                parse: true,
+            },
             inferProps:{
                 def: false,
                 type: 'Boolean',
