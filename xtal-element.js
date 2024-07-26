@@ -34,6 +34,16 @@ export class XtalElement extends O {
                 attrName: 'prop-info',
                 parse: true,
             },
+            actions: {
+                type: 'Object',
+                attrName: 'actions',
+                parse: true,
+            },
+            formAss: {
+                type: 'Boolean',
+                attrName: 'form-associated',
+                parse: true,
+            },
             inferProps: {
                 def: false,
                 type: 'Boolean',
@@ -120,7 +130,7 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode, inherits } = self;
+        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode, inherits, actions } = self;
         const inferredProps = {};
         const inferredXForm = {};
         if (inferProps) {
@@ -189,7 +199,8 @@ export class XtalElement extends O {
                     ...propInfo
                 },
                 actions: {
-                    ...super.mntCfgMxn.actions
+                    ...super.mntCfgMxn.actions,
+                    ...actions
                 },
                 xform: { ...inferredXForm, ...xform }
             };
