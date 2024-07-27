@@ -20,7 +20,7 @@ Development of a xtal-element consists of checks and balances between these ment
 
 Additional files that are optional, but definitely helpful / expected for an xtal-element-based custom element:
 
-1.  A TypeScript types file.
+1.  A TypeScript types file.  Note that using build-less, [ts-check](https://devblogs.microsoft.com/typescript/announcing-typescript-5-5/#the-jsdoc-import-tag) mjs files, rather than global warming inducing typescript building, is encouraged!
 2.  A custom element manifest file (auto-generated.)
 
 A potentially fourth branch of development involves JavaScript that influences the HTML markup of the declarative HTML web component -- either in an HTMLRewriter (supported by Cloudflare), and/or in a service worker, which, [w3c willing](https://discourse.wicg.io/t/proposal-support-cloudflares-htmlrewriter-api-in-workers/5721), could have a similar api, which would make [life good](https://dev.to/thepassle/service-worker-side-rendering-swsr-cb1). 
