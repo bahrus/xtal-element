@@ -136,7 +136,7 @@ export class XtalElement extends O implements Actions{
 
     async define(self: this){
         const {aka, mainTemplate, assumeCSR, inferProps, xform,
-            propInfo, propDefaults, shadowRootMode, inherits, actions
+            propInfo, propDefaults, shadowRootMode, inherits, actions, styles
         } = self;
         const inferredProps: {[key: string]: PropInfo} = {};
         const inferredXForm: XForm<any, any> = {};
@@ -210,7 +210,8 @@ export class XtalElement extends O implements Actions{
                     ...super.mntCfgMxn.actions,
                     ...actions
                 },
-                xform: {...inferredXForm, ...xform}
+                xform: {...inferredXForm, ...xform},
+                styles
             }
         }
         await ctr.bootUp();

@@ -130,7 +130,7 @@ export class XtalElement extends O {
         };
     }
     async define(self) {
-        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode, inherits, actions } = self;
+        const { aka, mainTemplate, assumeCSR, inferProps, xform, propInfo, propDefaults, shadowRootMode, inherits, actions, styles } = self;
         const inferredProps = {};
         const inferredXForm = {};
         if (inferProps) {
@@ -202,7 +202,8 @@ export class XtalElement extends O {
                     ...super.mntCfgMxn.actions,
                     ...actions
                 },
-                xform: { ...inferredXForm, ...xform }
+                xform: { ...inferredXForm, ...xform },
+                styles
             };
         };
         await ctr.bootUp();
