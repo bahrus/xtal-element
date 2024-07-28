@@ -29,6 +29,11 @@ export class XtalElement extends O implements Actions{
                 attrName: 'assume-csr',
                 parse: true,
             },
+            compacts: {
+                type: 'Object',
+                attrName: 'compacts',
+                parse: true,
+            },
             propDefaults: {
                 type: 'Object',
                 attrName: 'prop-defaults',
@@ -136,7 +141,7 @@ export class XtalElement extends O implements Actions{
 
     async define(self: this){
         const {aka, mainTemplate, assumeCSR, inferProps, xform,
-            propInfo, propDefaults, shadowRootMode, inherits, actions, styles, fa
+            propInfo, propDefaults, shadowRootMode, inherits, actions, styles, fa, compacts
         } = self;
         const inferredProps: {[key: string]: PropInfo} = {};
         const inferredXForm: XForm<any, any> = {};
@@ -206,6 +211,9 @@ export class XtalElement extends O implements Actions{
                     ...super.mntCfgMxn.propInfo,
                     ...inferredProps,
                     ...propInfo
+                },
+                compacts: {
+                    ...compacts,
                 },
                 actions:{
                     ...super.mntCfgMxn.actions,

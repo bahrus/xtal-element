@@ -15,7 +15,8 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     lcXform?: XForm<TProps, TActions>,
     shadowRootMode?:  ShadowRootMode,
     propDefaults?: Partial<TProps>,
-    propInfo: Partial<{[key in keyof TProps]: PropInfo}>;
+    propInfo: Partial<{[key in keyof TProps]: PropInfo}>,
+    compacts: Compacts<TProps, TActions>,
     targetScope?: Scope,
     assumeCSR?: boolean,
     propInferenceCriteria?: Array<PropInferenceCriteria>,
