@@ -44,6 +44,11 @@ export class XtalElement extends O implements Actions{
                 attrName: 'actions',
                 parse: true,
             },
+            fa: {
+                type: 'Boolean',
+                attrName: 'form-associated',
+                parse: true,
+            },
             inferProps:{
                 def: false,
                 type: 'Boolean',
@@ -131,7 +136,7 @@ export class XtalElement extends O implements Actions{
 
     async define(self: this){
         const {aka, mainTemplate, assumeCSR, inferProps, xform,
-            propInfo, propDefaults, shadowRootMode, inherits, actions, styles
+            propInfo, propDefaults, shadowRootMode, inherits, actions, styles, fa
         } = self;
         const inferredProps: {[key: string]: PropInfo} = {};
         const inferredXForm: XForm<any, any> = {};
@@ -189,6 +194,7 @@ export class XtalElement extends O implements Actions{
         }
         const ctr = class extends inheritingClass {
             localize = localize;
+            static formAssociated = fa;
             static override config: MntCfg = {
                 assumeCSR,
                 mainTemplate: mainTemplate!,
