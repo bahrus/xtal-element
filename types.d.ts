@@ -21,7 +21,9 @@ export interface EndUserProps<TProps = any, TActions = TProps> {
     propInferenceCriteria?: Array<PropInferenceCriteria>,
     inherits?: string | {new(): HTMLElement} | (() => Promise<{new(): HTMLElement}>),
     actions?: Actions<TProps, TActions>,
-    //form associated
+    /**
+     * form associated
+     */
     fa?: boolean,
     mainTemplate?: string | HTMLTemplateElement
 }
