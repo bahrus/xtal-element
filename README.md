@@ -312,7 +312,7 @@ The nice thing is this allows us to reuse the same web component base with diffe
 
 ## Example 4b -- Support for external source
 
-# Real world example
+# Real world examples
 
 ## Example 1 up-down-counter
 
