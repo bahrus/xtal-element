@@ -6,11 +6,8 @@
   "module": "xtal-element.js",
   "scripts": {
     "test": "playwright test",
-    "serve": "node node_modules/may-it-serve/serve.js",
-    "start": "es-dev-server --app-index demo/index.html --node-resolve --watch --open",
-    "package-check": "package-check",
-    "pub": "git commit -m \"...\" && git push && npm version patch && npm publish && git pull && git push",
-    "safari": "npx playwright wk http://localhost:3030",
+    "serve": "python3 ./node_modules/ssi-server/ssi_server.py",
+    "safari": "npx playwright wk http://localhost:8000",
     "update": "ncu -u && npm install"
   },
   "keywords": [
@@ -20,19 +17,18 @@
     "types.d.ts",
     "*.js"
   ],
-  "typings": "types.d.ts",
+  "typings": "./ts-refs/xtal-element/types.d.ts",
   "exports": {
     ".": "./xtal-element.js",
     "./xtal-element.js": "./xtal-element.js"
   },
   "dependencies": {
     "blow-dry": "0.0.11",
-    "trans-render": "0.0.847"
+    "trans-render": "0.0.848"
   },
   "devDependencies": {
-    "@playwright/test": "1.47.2",
-    "may-it-serve": "0.0.8",
-    "xtal-shell": "0.0.27"
+    "@playwright/test": "1.48.0",
+    "ssi-server": "0.0.1"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
 import {O, OConfig} from 'trans-render/froop/O.js';
-import {Actions, AP, ProAP} from './types';
+import {Actions, AP, ProAP} from './ts-refs/xtal-element/types';
 
 // used for generating the web component
 import {MntCfg, Mount, MountActions, MountProps} from 'trans-render/Mount.js';
