@@ -96,7 +96,7 @@ Renders:
 
 > [!NOTE]
 > Why is the csr attribute necessary?  csr stands for "client-side-rendering" for the initial render.  Isn't it obvious we want to client side render if we are creating a web component?
-> It is only necessary for web components that don't use declarative shadow DOM and don't use server-side-generated rendering, or server-side-generated rendering, or click-clackity keyboard typed rendering for the initial view.  Here's the thinking:
+> It is only necessary for web components that don't use declarative shadow DOM and don't use server-side-rendering, or server-side-generated rendering, or click-clackity keyboard typed rendering for the initial view.  Here's the thinking:
 > 1. We don't want to do any unnecessary rendering.  So some sort of "message" protocol is required to reduce unnecessary rendering. 
 > 2. The presence of declarative shadow DOM markup sends a strong signal that server side rendering was used.  Why go through the trouble of adding the template element if not?
 > 3. In the absence of declarative shadow DOM clues, what can we use if ShadowDOM is not used?  I was tempted to say "if children are found assume server side rendering" but then there's this [masterclass in Hamlet-style indecision](https://github.com/WICG/webcomponents/issues/809).  So in the absence of mercy from the platform (a recurring pattern it seems) we are opting to err on the side of encouraging server-side rendering.
