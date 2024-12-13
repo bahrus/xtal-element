@@ -339,7 +339,7 @@ This assumes the document imports a js file, for example, that registers a custo
         }'
     >
         <script>
-            document.currenScript.o = [
+            document.currentScript.o = [
                 (place) => ({
                     greeting: `Hello, ${place}`
                 })
