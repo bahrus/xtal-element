@@ -5,7 +5,7 @@ import {Actions, AP, ProAP} from './ts-refs/xtal-element/types';
 import {MntCfg, Mount, MountActions, MountProps} from 'trans-render/Mount.js';
 import {localize} from 'trans-render/funions/Localizer.js';
 import { ITransformer, UnitOfWork, XForm } from './ts-refs/trans-render/types.js';
-import { PropInfo } from './ts-refs/trans-render/froop/types';
+import { Infractions, PropInfo } from './ts-refs/trans-render/froop/types';
 
 export class XtalElement extends O implements Actions{
     static override config: OConfig<AP, Actions> = {
@@ -197,6 +197,11 @@ export class XtalElement extends O implements Actions{
                 }
 
         }
+        const innerScript = this.querySelector('script');
+        let infractions: Infractions | undefined = undefined;
+        if(innerScript !== null){
+            infractions = (<any>innerScript).o as Infractions;
+        }
         const ctr = class extends inheritingClass {
             localize = localize;
             static formAssociated = fa;
@@ -219,6 +224,7 @@ export class XtalElement extends O implements Actions{
                     ...super.mntCfgMxn.actions,
                     ...actions
                 },
+                infractions,
                 xform: {...inferredXForm, ...xform},
                 styles
             }

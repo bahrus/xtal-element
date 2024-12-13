@@ -328,10 +328,8 @@ This assumes the document imports a js file, for example, that registers a custo
     <template shadowrootmode=open>
     <div></div>
     <xtal-element 
-        prop-defaults='{
-            "place": "Venus"
-        }' 
         prop-info='{
+            "place": {},
             "greeting": {}
         }'
         xform='{

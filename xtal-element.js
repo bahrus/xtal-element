@@ -189,6 +189,11 @@ export class XtalElement extends O {
                     }
                 }
         }
+        const innerScript = this.querySelector('script');
+        let infractions = undefined;
+        if (innerScript !== null) {
+            infractions = innerScript.o;
+        }
         const ctr = class extends inheritingClass {
             localize = localize;
             static formAssociated = fa;
@@ -211,6 +216,7 @@ export class XtalElement extends O {
                     ...super.mntCfgMxn.actions,
                     ...actions
                 },
+                infractions,
                 xform: { ...inferredXForm, ...xform },
                 styles
             };
