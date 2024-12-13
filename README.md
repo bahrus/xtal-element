@@ -308,6 +308,20 @@ The preferred mechanism to incorporate custom JavaScript, though, is not to use 
 
 The nice thing is this allows us to reuse the same web component base with different UI definitions, something I've found to be quite useful, personally.
 
+## The inherits attribute / property with a string value:
+
+```html
+<xtal-element
+    inherits=plus-minus-base
+>
+    ...
+</xtal-element>
+```
+
+This assumes the document imports a js file, for example, that registers a custom element with name "plus-minus-base".
+
+
+
 [TODO]: document
 
 ## Example 4b -- Support for external source
