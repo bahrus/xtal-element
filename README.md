@@ -321,10 +321,37 @@ The nice thing is this allows us to reuse the same web component base with diffe
 This assumes the document imports a js file, for example, that registers a custom element with name "plus-minus-base".
 
 
+## Example 4b -- Support for inline script tag [TODO]
 
-[TODO]: document
+```html
+<hello-world place=Earth>
+    <template shadowrootmode=open>
+    <div></div>
+    <xtal-element 
+        prop-defaults='{
+            "place": "Venus"
+        }' 
+        prop-info='{
+            "greeting": {}
+        }'
+        xform='{
+            "div": "greeting"
+        }'
+    >
+        <script>
+            document.currenScript.o = [
+                (place) => ({
+                    greeting: `Hello, ${place}`
+                })
+            ]
+        </script>
+    </xtal-element>
+  </template>
+</hello-world>
+<hello-world place=Mars></hello-world>
+<hello-world place=Venus></hello-world>
+```
 
-## Example 4b -- Support for external source
 
 # Real world examples
 
