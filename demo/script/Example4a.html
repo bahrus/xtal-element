@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>With inner script</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <hello-world place=Earth>
+        <template shadowrootmode=open>
+        <div></div>
+        <xtal-element 
+            prop-info='{
+                "place": {},
+                "greeting": {}
+            }'
+            xform='{
+                "div": "greeting"
+            }'
+        >
+            <script>
+                document.currentScript.o = [
+                    (place) => ({
+                        greeting: `Hello, ${place}`
+                    })
+                ]
+            </script>
+        </xtal-element>
+      </template>
+    </hello-world>
+    <hello-world place=Mars></hello-world>
+    <hello-world place=Venus></hello-world>
+    <script type=module>
+        import '/index.js';
+    </script>
+</body>
+</html>

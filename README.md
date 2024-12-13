@@ -321,7 +321,7 @@ The nice thing is this allows us to reuse the same web component base with diffe
 This assumes the document imports a js file, for example, that registers a custom element with name "plus-minus-base".
 
 
-## Example 4b -- Support for inline script tag [TODO]
+## Example 4b -- Support for inner script tag [TODO]
 
 ```html
 <hello-world place=Earth>
@@ -350,7 +350,7 @@ This assumes the document imports a js file, for example, that registers a custo
 <hello-world place=Venus></hello-world>
 ```
 
-
+Another death-blow [against progressive enhancement](https://github.com/WICG/webcomponents/issues/477).
 # Real world examples
 
 ## Example 1 up-down-counter
