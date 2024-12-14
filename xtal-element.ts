@@ -197,10 +197,16 @@ export class XtalElement extends O implements Actions{
                 }
 
         }
-        const innerScript = this.querySelector('script');
+        const innerScript = this.querySelector('script[nomodule]');
         let infractions: Infractions | undefined = undefined;
         if(innerScript !== null){
-            infractions = (<any>innerScript).o as Infractions;
+            const infractionsText = innerScript.innerHTML;
+            const infractionsScript = document.createElement('script');
+            const guid = `a_${crypto.randomUUID()}`;
+            infractionsScript.innerHTML = `document.currentScript['${guid}'] = ${infractionsText}`;
+            document.head.appendChild(infractionsScript);
+
+            infractions = (<any>infractionsScript)[guid] as Infractions;
         }
         const ctr = class extends inheritingClass {
             localize = localize;

@@ -11,21 +11,19 @@
         <template shadowrootmode=open>
         <div></div>
         <xtal-element 
+            prop-defaults='{
+                "place": ""
+            }'
             prop-info='{
-                "place": {},
                 "greeting": {}
             }'
             xform='{
                 "div": "greeting"
             }'
         >
-            <script>
-                document.currentScript.o = [
-                    (place) => ({
-                        greeting: `Hello, ${place}`
-                    })
-                ]
-            </script>
+            <script nomodule=>[
+                ({place}) => ({greeting: `Hello, ${place}`})
+            ]</script>
         </xtal-element>
       </template>
     </hello-world>

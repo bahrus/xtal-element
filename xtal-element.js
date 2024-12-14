@@ -189,10 +189,15 @@ export class XtalElement extends O {
                     }
                 }
         }
-        const innerScript = this.querySelector('script');
+        const innerScript = this.querySelector('script[nomodule]');
         let infractions = undefined;
         if (innerScript !== null) {
-            infractions = innerScript.o;
+            const infractionsText = innerScript.innerHTML;
+            const infractionsScript = document.createElement('script');
+            const guid = `a_${crypto.randomUUID()}`;
+            infractionsScript.innerHTML = `document.currentScript['${guid}'] = ${infractionsText}`;
+            document.head.appendChild(infractionsScript);
+            infractions = infractionsScript[guid];
         }
         const ctr = class extends inheritingClass {
             localize = localize;
