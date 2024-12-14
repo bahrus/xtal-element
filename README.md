@@ -327,9 +327,11 @@ This assumes the document imports a js file, for example, that registers a custo
 <hello-world place=Earth>
     <template shadowrootmode=open>
     <div></div>
-    <xtal-element 
+    <xtal-element
+        prop-defaults='{
+            "place": "Earth"
+        }'
         prop-info='{
-            "place": {},
             "greeting": {}
         }'
         xform='{
