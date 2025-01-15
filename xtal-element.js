@@ -162,6 +162,7 @@ export class XtalElement extends O {
                     }
                     else {
                         prop.type = 'String';
+                        prop.def = '';
                     }
                     inferredProps[propName] = prop;
                     inferredXForm[`| ${propName}`] = 0;

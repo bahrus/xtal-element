@@ -169,6 +169,7 @@ export class XtalElement extends O implements Actions{
                         match.href = '';
                     }else{
                         prop.type = 'String';
+                        prop.def = '';
                     }
                     inferredProps[propName] = prop;
                     inferredXForm[`| ${propName}`] = 0;
