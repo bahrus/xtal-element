@@ -24,10 +24,10 @@
   },
   "dependencies": {
     "blow-dry": "0.0.11",
-    "trans-render": "0.0.880"
+    "trans-render": "0.0.930"
   },
   "devDependencies": {
-    "@playwright/test": "1.49.1",
+    "@playwright/test": "1.55.0",
     "ssi-server": "0.0.1"
   },
   "repository": {
