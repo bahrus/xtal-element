@@ -24,11 +24,11 @@
   },
   "dependencies": {
     "blow-dry": "0.0.11",
-    "trans-render": "0.0.957"
+    "trans-render": "0.0.958"
   },
   "devDependencies": {
     "@playwright/test": "1.55.0",
-    "spa-ssi": "0.0.9"
+    "spa-ssi": "0.0.10"
   },
   "repository": {
     "type": "git",
