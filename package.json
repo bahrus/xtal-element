@@ -23,7 +23,7 @@
     "./xtal-element.js": "./xtal-element.js"
   },
   "dependencies": {
-    "blow-dry": "0.0.12",
+    "blow-dry": "0.0.14",
     "trans-render": "0.0.960"
   },
   "devDependencies": {
