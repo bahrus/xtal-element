@@ -254,9 +254,9 @@ customAttributes.default.define('bg-color', BgColor)
 
 I'm lukewarm about that appeal personally, but there are probably some important use cases that I don't know about that makes the appeal of this seem to be so strong to some prominent members of the community. 
 
-In fact, an [alternative way](https://chromestatus.com/feature/4680129030651904) of achieving this particular use case seems have significant momentum recently.  But the ability to carefully merge in settings to sub-objects doesn't end with styling.
+In fact, an [alternative way](https://chromestatus.com/feature/4680129030651904) of achieving this particular use case is now shipping in Chromium based browsers.  But the ability to carefully merge in settings to sub-objects doesn't end with styling.
 
-Another murky use case where I could possibly see the appeal is if the string that needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.  
+Another murky use case where I could possibly see the appeal is if the string that needs parsing is so complex, it would be helpful to maintain state as the value changes.  For example, maybe the back history of previous values is relevant to how the current value should be interpreted.  A related example:  This could be an excellent way to cache previously parsed values.  
 
 It certainly would be more appealing to be able to have a single class that can bundle together the two methods going in opposite directions -- the customParser, and the toString custom function.   
 
@@ -280,12 +280,17 @@ class ClubMember extends HTMLElement{
             //optional
             mapsTo: '?.style?.backgroundColor',
             handler: 'MyCustomAttributeHandlerClassNameAsRegisteredInSomeRegistryOrOther',
+        },
+        {
+            name: 'UrlLinkToFamoriteNovel',
+            mapsTo: 'pithyQuote',
+            handler:  MyNonRegisteredCustomAttributeClassHandlerThatUsesAIToPullACatchyQuoteFromTheNovelAndCachesIt
         }
     ]
 }
 ```
 
-So to take one possible way this could work, *if* the changedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have key '?.style?.backgroundColor' set to whatever value is returned, ready to be carefully merged in to the ownerElement (using Object.assignGingerly).  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
+So to take one possible way this could work, *if* the changedCallback method of the CustomAttribute class returns a value, *and if* mapsTo is defined as above, with a dot delimiter, the parsed object would have key '?.style?.backgroundColor' or 'pithyQuote' set to whatever values are returned, ready to be carefully merged in to the ownerElement (using Object.assignGingerly).  Note that a simple Object.assign would throw an error, due to the style property having special protections that disallow Object.assign working in this way.
 
 If not, if the developer does *not* specify mapsTo, and does the merge internally, at the expense of less transparency to external parties such as template instantiation engines, this would also be supported. I could see the appeal of keeping that internal logic private in some cases, while still partially benefitting from the declarative support this proposal provides, and the ability to share logic across different components.  In fact, if the platform could provide these "Custom Attributes" access to the *private* data fields of the owner element, that would seem to make the utility of this feature significantly higher.
 
@@ -320,7 +325,7 @@ HTMLFormElement.attributeRegistry.define("be-form-like", BeFormLike);
 
 This would make custom elements that add this handler in their list of observedAttributes "Form Like", and the strange thing is we would want the custom element to essentially behave like an HTMLFormElement, even if the "be-form-like" attribute isn't actually added to the element instance, I think.  It's just there as a reserved attribute name, that *could* be passed in values in some cases, when needed.  Or something.  Again, this isn't my proposal, I'm just spit-balling how I could sort of see the appeal of it.
 
-I must strenuously insist that we don't get carried away by the apparent appeal of this option.  This may solve one problem well (perhaps, I'm just spit-balling here), but I still strongly believe the platform should *also* push forward with a solution to support cross-cutting ["decorator" patterns](https://en.wikipedia.org/wiki/Decorator_pattern), which [the custom enhancement proposal provides](https://github.com/WICG/webcomponents/issues/1000), that follows the more traditional view of regarding a suite of (custom) attributes as simply carriers of information in support of a single unifying "behavior/enhancement".  There may be some problems where either proposal could solve it, but I strongly believe that a robust platform would provide support for both approaches (one that is more tightly coupled to the element type it is enhancing, similar to class extensions, (or the built-in extension "standard" as ish) and one which is loosely coupled, and provides more support for highly semantic markup, and which aligns with what the industry has done (React, JQueryUI, Knockout.js, closure, wiz etc) as far as attaching custom objects onto the DOM element directly).
+I must strenuously insist that we don't get carried away by the apparent appeal of this option.  This may solve one problem well (perhaps, I'm just spit-balling here), but I still strongly believe the platform should *also* push forward with a solution to support cross-cutting ["decorator-like" patterns](https://en.wikipedia.org/wiki/Decorator_pattern), which [the custom enhancement proposal provides](https://github.com/WICG/webcomponents/issues/1000), that follows the more traditional view of regarding a suite of (custom) attributes as simply carriers of information in support of a single unifying "behavior/enhancement".  There may be some problems where either proposal could solve it, but I strongly believe that a robust platform would provide support for both approaches (one that is more tightly coupled to the element type it is enhancing, similar to class extensions, (or the built-in extension "standard" as ish) and one which is loosely coupled, and provides more support for highly semantic markup, and which aligns with what the industry has done (React, JQueryUI, Knockout.js, closure, wiz etc) as far as attaching custom objects onto the DOM element directly).
 
 It is unfortunate that there is a tendency to view proposals that are somewhat related as a zero-sum game, pitting teams of developers against each other.  Yes, we don't want the platform to duplicate things unnecessarily (resulting in higher maintenance costs, learning curve, etc), but I think the differences are significant enough that these two proposal aren't an either-or.
 
