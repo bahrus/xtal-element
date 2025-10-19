@@ -15,12 +15,14 @@
   ],
   "files": [
     "types.d.ts",
-    "*.js"
+    "*.js",
+    "*.mjs"
   ],
   "typings": "./ts-refs/xtal-element/types.d.ts",
   "exports": {
     ".": "./xtal-element.js",
-    "./xtal-element.js": "./xtal-element.js"
+    "./xtal-element.js": "./xtal-element.js",
+    "./makeXtalElement.mjs": "./makeXtalElement.mjs"
   },
   "dependencies": {
     "blow-dry": "0.0.14",
