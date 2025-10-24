@@ -25,7 +25,7 @@
     "./makeXtalElement.mjs": "./makeXtalElement.mjs"
   },
   "dependencies": {
-    "blow-dry": "0.0.14",
+    "blow-dry": "0.0.15",
     "trans-render": "0.0.960"
   },
   "devDependencies": {
